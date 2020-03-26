@@ -6,6 +6,7 @@ var otherUserNodeNames = [];
 var otherUserNodePositions = [];
 var clickedNodeName;
 var clickedNodePosition;
+var animationJSON;
 
 function getNodesNames() {
 	console.log('getNodesNames()');
@@ -194,10 +195,43 @@ function showMap() {
     $('#map').toggle();
 }
 
+function showBookmarks() {
+	console.log('toogle bookmarks');
+	$('#bookmarks').toggle();
+	var bookmarksDiv = document.getElementById('bookmarks');
+	animationJSON.nodes.forEach(function (element) {
+		//console.log('node: ' + element.name);
+		if (element.name + "_Clone" == clickedNodeName) {
+			//console.log('clickedNodeName');
+			element.actions.forEach(function (element) {
+				//console.log('actions');
+				element.bookmarks.forEach(function (element) {
+					//console.log('bookmark: ' + element.name);
+					var bookmarkDiv = document.getElementById(element.name);
+					if (typeof (bookmarkDiv) != 'undefined' && bookmarkDiv != null) {
+						bookmarkDiv.innerHTML = element.name;
+						console.log('already bookmark div: ' + element.name);
+					}
+					else {
+						var newDiv = document.createElement('div');
+						newDiv.id = element.name;
+						newDiv.innerHTML = element.name;
+						newDiv.addEventListener('click', function () {
+							//setClickedElement?
+						});
+						bookmarksDiv.appendChild(newDiv);
+						console.log('new bookmark div: ' + element.name);
+					}
+				});
+			});
+		}
+	});
+}
+
 function parseAnimationJSON() {
 	console.log('parseAnimationJSON');
-	//$.get("http://srv.mvv.sztaki.hu/temp/vlft/Animation/animation.json", function (json) {
-	$.get("../../../../../../../../../samples/virtualLearningFactory/Animation/animation.json", function (json) {
+	$.get("http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/local/apeVLFTAnimationPlayerPlugin.json", function (json) {
+		animationJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
 	});
 }
@@ -216,12 +250,13 @@ $(document).ready(function () {
 	getOtherUserNodePositions();
 	$('#map').toggle();
 	$('#users').toggle();
+	$('#bookmarks').toggle();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
     		//updateMap();
-    		updateProperties();
+    		//updateProperties();
     	}, 500);
     }
     sock.onerror = (e)=>{
