@@ -81,6 +81,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mIsSkipCurrentAnimation = false;
 	mIsPauseCurrentAnimation = false;
 	mIsStopAnimations = false;
+	mSpaghettiLines = std::vector<ape::IndexedLineSetGeometryWeakPtr>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -173,6 +174,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigne
 					ape::Color color(1, 0, 0);
 					spagetthiLineSection->setParameters(coordinates, indices, color);
 					spagetthiLineSection->setParentNode(spaghettiLineNode);
+					mSpaghettiLines.push_back(spagetthiLineSection);
 				}
 				//APE_LOG_DEBUG("nodeName: " << nodeName << " positions: " << positions[i].toString() << " orientations: " << orientations[i].toString());
 			}
@@ -190,7 +192,24 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK: " << browser->getClickedElementName());
 			if (browser->getClickedElementName() == "play")
 			{
+				mCurrentFrameTimeFactor = 1.0f;
+				mIsPauseCurrentAnimation = false;
+				mIsSkipCurrentAnimation = false;
+				mIsStopAnimations = false;
+				for (auto const& nodeSpaghettiNode : mNodeSpaghettiNode)
+				{
+					mpSceneManager->deleteNode(nodeSpaghettiNode.second);
+				}
+				for (auto const& spaghettiLineWP : mSpaghettiLines)
+				{
+					if (auto spaghettiLine = spaghettiLineWP.lock())
+					{
+						mpSceneManager->deleteEntity(spaghettiLine->getName());
+					}
+				}
 				mTimeStampThreads = std::vector<std::thread>();
+				mNodeSpaghettiNode = std::map<std::string, std::string>();
+				mSpaghettiLines = std::vector<ape::IndexedLineSetGeometryWeakPtr>();
 				for (auto const& animation : mParsedAnimations)
 				{
 					mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this, animation.nodeName, animation.delay, animation.fps, animation.positions, animation.orientations));
@@ -215,11 +234,34 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "pause")
 			{
-				mIsPauseCurrentAnimation = true;
+				if (!mIsPauseCurrentAnimation)
+					mIsPauseCurrentAnimation = true;
+				else
+					mIsPauseCurrentAnimation = false;
 			}
 			else if (browser->getClickedElementName() == "stop")
 			{
-				mIsStopAnimations = true;
+				if (!mIsStopAnimations)
+				{
+					mIsStopAnimations = true;
+					for (auto const& nodeSpaghettiNode : mNodeSpaghettiNode)
+					{
+						mpSceneManager->deleteNode(nodeSpaghettiNode.second);
+						//APE_LOG_DEBUG("deleteNode: " << nodeSpaghettiNode.second);
+					}
+					for (auto const& spaghettiLineWP : mSpaghettiLines)
+					{
+						if (auto spaghettiLine = spaghettiLineWP.lock())
+						{
+							mpSceneManager->deleteEntity(spaghettiLine->getName());
+							//APE_LOG_DEBUG("deleteEntity: " << spaghettiLine->getName());
+						}
+					}
+					mTimeStampThreads = std::vector<std::thread>();
+					mNodeSpaghettiNode = std::map<std::string, std::string>();
+					mSpaghettiLines = std::vector<ape::IndexedLineSetGeometryWeakPtr>();
+					mCurrentFrameTimeFactor = 1.0f;
+				}
 			}
 			else if (browser->getClickedElementName().find("@") != std::string::npos)
 			{

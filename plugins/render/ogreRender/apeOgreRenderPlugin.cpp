@@ -196,7 +196,10 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 				if (mpOgreSceneManager->hasSceneNode(event.subjectName))
 					ogreNode = mpOgreSceneManager->getSceneNode(event.subjectName);
 				if (ogreNode)
+				{
 					ogreNode->removeAndDestroyAllChildren();
+					APE_LOG_DEBUG("delete: " << event.subjectName);
+				}
 			}
 		}
 		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
@@ -1009,7 +1012,6 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 				}
 					break;
 				case ape::Event::Type::GEOMETRY_INDEXEDLINESET_DELETE:
-					;
 					break;
 				case ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS:
 				{
