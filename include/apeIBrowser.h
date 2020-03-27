@@ -116,6 +116,10 @@ namespace ape
 		virtual void setClickedElementName(std::string clickedElementName) = 0;
 
 		virtual std::string getClickedElementName() = 0;
+
+		virtual void fireHoverIn() = 0;
+
+		virtual void fireHoverOut() = 0;
 	};
 }
 

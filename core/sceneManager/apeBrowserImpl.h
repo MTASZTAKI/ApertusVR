@@ -84,6 +84,10 @@ namespace ape
 
 		std::string getClickedElementName() override;
 
+		void fireHoverIn() override;
+
+		void fireHoverOut() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;

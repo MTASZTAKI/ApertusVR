@@ -183,6 +183,16 @@ std::string ape::BrowserImpl::getClickedElementName()
 	return mClickedElementName;
 }
 
+void ape::BrowserImpl::fireHoverIn()
+{
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_HOVER_IN));
+}
+
+void ape::BrowserImpl::fireHoverOut()
+{
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_HOVER_OUT));
+}
+
 void ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);

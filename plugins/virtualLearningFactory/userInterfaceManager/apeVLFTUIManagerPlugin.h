@@ -82,6 +82,8 @@ namespace ape
 
 		bool mIsBrowserClicked;
 
+		bool mIsBrowserHovered;
+
 		int mMouseScrolledValue;
 
 		void parseNodeJsPluginConfig();
@@ -99,8 +101,6 @@ namespace ape
 		void eventCallBack(const ape::Event& event);
 
 		void eraseClickedNodeName(ape::NodeSharedPtr node);
-
-		void rayQueryIfNotBrowserClick();
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateVLFTUIManagerPlugin()

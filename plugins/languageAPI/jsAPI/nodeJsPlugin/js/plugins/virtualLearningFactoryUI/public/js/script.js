@@ -113,9 +113,26 @@ function setNodeOrientation(nodeName, ori) {
 	});
 }
 
+function fireHoverIn() {
+	console.log('fireHoverIn()');
+	var commandMSG = { command: 'fireHoverIn' };
+	doPostRequest(apiEndPoint + "/overLayBrowserFireHoverIn", commandMSG, function (res) {
+		console.log('fireHoverIn(): res: ', res);
+	});
+}
+
+function fireHoverOut() {
+	console.log('fireHoverOut(): ');
+	var commandMSG = { command: 'fireHoverOut' };
+	doPostRequest(apiEndPoint + "/overLayBrowserFireHoverOut", commandMSG, function (res) {
+		console.log('fireHoverOut(): res: ', res);
+	});
+}
+
 function setClickedElement(clickedElementName) {
 	console.log('setClickedElement(): ', clickedElementName);
-	doPostRequest(apiEndPoint + "/overLayBrowser/setClickedElement/" + clickedElementName, clickedElementName, function (res) {
+	var clickedElementNameMSG = { name: clickedElementName };
+	doPostRequest(apiEndPoint + "/overLayBrowserSetClickedElement", clickedElementNameMSG, function (res) {
 		console.log('setClickedElement(): res: ', res);
 	});
 }
@@ -294,8 +311,30 @@ $(document).ready(function () {
     });
     $("button").hover(
     function () {
+    	if (this.id != "")
     	$(this).css('background', 'LightGray')
     }, function () {
+    	if (this.id != "")
     	$(this).css('background', 'Grey')
     });
+    $("div").hover(
+    function () {
+    	if (this.id != "")
+    		console.log('hover in: ' + this.id);
+    	    fireHoverIn();
+    }, function () {
+    	if (this.id != "")
+    		console.log('hover out: ' + this.id);
+    		fireHoverOut();
+    });
+    $("iframe").hover(
+   function () {
+   	if (this.id != "")
+   		console.log('hover in: ' + this.id);
+   	    fireHoverIn();
+   }, function () {
+   	if (this.id != "")
+   		console.log('hover out: ' + this.id);
+   		fireHoverOut();
+   });
 });

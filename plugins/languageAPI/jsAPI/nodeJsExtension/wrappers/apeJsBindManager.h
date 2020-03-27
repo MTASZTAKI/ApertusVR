@@ -630,6 +630,20 @@ public:
 		return mpUserInputMacro->setOverLayBrowserClickedElement(clickedElementName);
 	}
 
+	void fireOverlayBrowserHoverIn()
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return mpUserInputMacro->fireOverLayBrowserHoverIn();
+	}
+
+	void fireOverlayBrowserHoverOut()
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return mpUserInputMacro->fireOverLayBrowserHoverOut();
+	}
+
 private:
 	ape::ISceneManager* mpSceneManager;
 	ape::ICoreConfig* mpCoreConfig;
@@ -689,7 +703,10 @@ NBIND_CLASS(JsBindManager)
 	method(getPointCloud);
 
 	method(getFolderPath);
+
 	method(setOverlayBrowserClickedElement);
+	method(fireOverlayBrowserHoverIn);
+	method(fireOverlayBrowserHoverOut);
 }
 
 #endif

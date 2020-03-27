@@ -275,6 +275,10 @@ namespace ape
 
 		void setOverLayBrowserClickedElement(std::string clickedElementName);
 
+		void fireOverLayBrowserHoverIn();
+
+		void fireOverLayBrowserHoverOut();
+
 		void showOverlayBrowser(bool show);
 
 		bool isOverlayBrowserShowed();

@@ -628,18 +628,50 @@ app.post('/nodes/:name/:ownerID/owner', function (req, res) {
 	});
 });
 
-app.post('/overLayBrowser/setClickedElement/:clickedElementName', function (req, res) {
+app.post('/overLayBrowserFireHoverIn', function (req, res) {
 	var respObj = new resp(req);
-	respObj.setDescription('Sets the clicked element of the overlay browser.');
+	respObj.setDescription('Fire hoverIn overlay browser.');
 
 	// handle http param validation errors
-	req.checkParams('clickedElementName', 'UrlParam is not presented').notEmpty()
+	req.checkBody('command', 'BodyParam is not presented').notEmpty();
 	if (!respObj.validateHttpParams(req, res)) {
 		res.status(400).send(respObj.toJSonString());
 		return;
 	}
 
-	var clickedElementName = req.params.clickedElementName;
+	ape.nbind.JsBindManager().fireOverlayBrowserHoverIn();
+	respObj.addDataItem({ msg: 'fireOverlayBrowserHoverIn' });
+	res.send(respObj.toJSonString());
+});
+
+app.post('/overLayBrowserFireHoverOut', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Fire hoverOut overlay browser.');
+
+	// handle http param validation errors
+	req.checkBody('command', 'BodyParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	ape.nbind.JsBindManager().fireOverlayBrowserHoverOut();
+	respObj.addDataItem({ msg: 'fireOverlayBrowserHoverOut' });
+	res.send(respObj.toJSonString());
+});
+
+app.post('/overLayBrowserSetClickedElement', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Sets the clicked element of the overlay browser.');
+
+	// handle http param validation errors
+	req.checkBody('name', 'UrlParam is not presented').notEmpty()
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var clickedElementName = req.body.name;
 	ape.nbind.JsBindManager().setOverlayBrowserClickedElement(clickedElementName);
 	respObj.addDataItem({ clickedElementName: clickedElementName });
 	res.send(respObj.toJSonString());

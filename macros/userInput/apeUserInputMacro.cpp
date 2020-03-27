@@ -453,6 +453,22 @@ void ape::UserInputMacro::setOverLayBrowserClickedElement(std::string clickedEle
 	}
 }
 
+void ape::UserInputMacro::fireOverLayBrowserHoverIn()
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		overlayBrowser->fireHoverIn();
+	}
+}
+
+void ape::UserInputMacro::fireOverLayBrowserHoverOut()
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		overlayBrowser->fireHoverOut();
+	}
+}
+
 bool ape::UserInputMacro::isOverlayBrowserShowed()
 {
 	if (auto overlayBrowser = mOverlayBrowser.lock())

@@ -20,6 +20,7 @@ ape::VLFTUIManagerPlugin::VLFTUIManagerPlugin()
 	mClickedNodeNames = std::vector<std::string>();
 	mClickedNode = ape::NodeWeakPtr();
 	mIsBrowserClicked = false;
+	mIsBrowserHovered = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -64,18 +65,6 @@ void ape::VLFTUIManagerPlugin::keyPressedStringEventCallback(const std::string &
 	mpUserInputMacro->setOverlayBrowserKeyValue(keyValue);
 }
 
-void ape::VLFTUIManagerPlugin::rayQueryIfNotBrowserClick()
-{
-	std::this_thread::sleep_for(std::chrono::milliseconds(150));
-	if (!mIsBrowserClicked)
-	{
-		mpUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
-	}
-	else
-	{
-		mIsBrowserClicked = false;
-	}
-}
 
 void ape::VLFTUIManagerPlugin::mousePressedStringEventCallback(const std::string & keyValue)
 {
@@ -84,8 +73,8 @@ void ape::VLFTUIManagerPlugin::mousePressedStringEventCallback(const std::string
 		mOverlayBrowserCursor.cursorClick = true;
 		mOverlayBrowserCursor.cursorClickType = ape::Browser::MouseClick::LEFT,
 		mpUserInputMacro->updateOverLayBrowserCursor(mOverlayBrowserCursor);
-		auto rayQueryIfNotBrowserClickThread = std::thread(&VLFTUIManagerPlugin::rayQueryIfNotBrowserClick, this);
-		rayQueryIfNotBrowserClickThread.detach();
+		if (!mIsBrowserHovered)
+			mpUserInputMacro->rayQuery(ape::Vector3(mMouseMovedValueAbs.x, mMouseMovedValueAbs.y, 0));
 	}
 }
 
@@ -169,12 +158,28 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 			}
 		}
 	}
-	if (event.type == ape::Event::Type::BROWSER_ELEMENT_CLICK)
+	else if (event.type == ape::Event::Type::BROWSER_ELEMENT_CLICK)
 	{
 		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			//APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
 			mIsBrowserClicked = true;
+		}
+	}
+	else if (event.type == ape::Event::Type::BROWSER_HOVER_IN)
+	{
+		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			//APE_LOG_DEBUG("BROWSER_HOVER_IN");
+			mIsBrowserHovered = true;
+		}
+	}
+	else if (event.type == ape::Event::Type::BROWSER_HOVER_OUT)
+	{
+		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			//APE_LOG_DEBUG("BROWSER_HOVER_OUT");
+			mIsBrowserHovered = false;
 		}
 	}
 }
