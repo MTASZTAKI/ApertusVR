@@ -36,16 +36,16 @@ namespace quicktype {
 
 	private:
 		std::string name;
-		std::string frame_id;
+		std::string time;
 
 	public:
 		const std::string & get_name() const { return name; }
 		std::string & get_mutable_name() { return name; }
 		void set_name(const std::string & value) { this->name = value; }
 
-		const std::string & get_frame_id() const { return frame_id; }
-		std::string & get_mutable_frame_id() { return frame_id; }
-		void set_frame_id(const std::string & value) { this->frame_id = value; }
+		const std::string & get_time() const { return time; }
+		std::string & get_mutable_time() { return time; }
+		void set_time(const std::string & value) { this->time = value; }
 	};
 
 	class Event {
@@ -75,7 +75,6 @@ namespace quicktype {
 	private:
 		quicktype::Event trigger;
 		quicktype::Event event;
-		std::vector<quicktype::Bookmark> bookmarks;
 
 	public:
 		const quicktype::Event & get_trigger() const { return trigger; }
@@ -85,10 +84,6 @@ namespace quicktype {
 		const quicktype::Event & get_event() const { return event; }
 		quicktype::Event & get_mutable_event() { return event; }
 		void set_event(const quicktype::Event & value) { this->event = value; }
-
-		const std::vector<quicktype::Bookmark> & get_bookmarks() const { return bookmarks; }
-		std::vector<quicktype::Bookmark> & get_mutable_bookmarks() { return bookmarks; }
-		void set_bookmarks(const std::vector<quicktype::Bookmark> & value) { this->bookmarks = value; }
 	};
 
 	class Node {
@@ -117,11 +112,16 @@ namespace quicktype {
 
 	private:
 		std::vector<quicktype::Node> nodes;
+		std::vector<quicktype::Bookmark> bookmarks;
 
 	public:
 		const std::vector<quicktype::Node> & get_nodes() const { return nodes; }
 		std::vector<quicktype::Node> & get_mutable_nodes() { return nodes; }
 		void set_nodes(const std::vector<quicktype::Node> & value) { this->nodes = value; }
+
+		const std::vector<quicktype::Bookmark> & get_bookmarks() const { return bookmarks; }
+		std::vector<quicktype::Bookmark> & get_mutable_bookmarks() { return bookmarks; }
+		void set_bookmarks(const std::vector<quicktype::Bookmark> & value) { this->bookmarks = value; }
 	};
 }
 
@@ -144,13 +144,13 @@ namespace nlohmann {
 
 		inline void from_json(const json & j, quicktype::Bookmark& x) {
 			x.set_name(j.at("name").get<std::string>());
-			x.set_frame_id(j.at("frameID").get<std::string>());
+			x.set_time(j.at("time").get<std::string>());
 		}
 
 		inline void to_json(json & j, const quicktype::Bookmark & x) {
 			j = json::object();
 			j["name"] = x.get_name();
-			j["frameID"] = x.get_frame_id();
+			j["time"] = x.get_time();
 		}
 
 		inline void from_json(const json & j, quicktype::Event& x) {
@@ -167,14 +167,12 @@ namespace nlohmann {
 		inline void from_json(const json & j, quicktype::Action& x) {
 			x.set_trigger(j.at("trigger").get<quicktype::Event>());
 			x.set_event(j.at("event").get<quicktype::Event>());
-			x.set_bookmarks(j.at("bookmarks").get<std::vector<quicktype::Bookmark>>());
 		}
 
 		inline void to_json(json & j, const quicktype::Action & x) {
 			j = json::object();
 			j["trigger"] = x.get_trigger();
 			j["event"] = x.get_event();
-			j["bookmarks"] = x.get_bookmarks();
 		}
 
 		inline void from_json(const json & j, quicktype::Node& x) {
@@ -190,11 +188,13 @@ namespace nlohmann {
 
 		inline void from_json(const json & j, quicktype::Animations& x) {
 			x.set_nodes(j.at("nodes").get<std::vector<quicktype::Node>>());
+			x.set_bookmarks(j.at("bookmarks").get<std::vector<quicktype::Bookmark>>());
 		}
 
 		inline void to_json(json & j, const quicktype::Animations & x) {
 			j = json::object();
 			j["nodes"] = x.get_nodes();
+			j["bookmarks"] = x.get_bookmarks();
 		}
 	}
 }

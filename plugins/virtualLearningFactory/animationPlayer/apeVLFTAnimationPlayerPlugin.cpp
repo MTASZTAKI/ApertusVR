@@ -221,8 +221,9 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			{
 				mIsStopAnimations = true;
 			}
-			else if (browser->getClickedElementName() == "bookmark")
+			else if (browser->getClickedElementName().find("@") != std::string::npos)
 			{
+
 			}
 			else if (browser->getClickedElementName() == "spaghetti")
 			{

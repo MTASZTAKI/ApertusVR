@@ -216,31 +216,22 @@ function showBookmarks() {
 	console.log('toogle bookmarks');
 	$('#bookmarks').toggle();
 	var bookmarksDiv = document.getElementById('bookmarks');
-	animationJSON.nodes.forEach(function (element) {
-		//console.log('node: ' + element.name);
-		if (element.name == clickedNodeName) {
-			//console.log('clickedNodeName');
-			element.actions.forEach(function (element) {
-				//console.log('actions');
-				element.bookmarks.forEach(function (element) {
-					//console.log('bookmark: ' + element.name);
-					var bookmarkDiv = document.getElementById(element.name);
-					if (typeof (bookmarkDiv) != 'undefined' && bookmarkDiv != null) {
-						bookmarkDiv.innerHTML = element.name;
-						console.log('already bookmark div: ' + element.name);
-					}
-					else {
-						var newDiv = document.createElement('div');
-						newDiv.id = element.name;
-						newDiv.innerHTML = element.name;
-						newDiv.addEventListener('click', function () {
-							//setClickedElement?
-						});
-						bookmarksDiv.appendChild(newDiv);
-						console.log('new bookmark div: ' + element.name);
-					}
-				});
+	animationJSON.bookmarks.forEach(function (element) {
+		//console.log('bookmark: ' + element.name);
+		var bookmarkDiv = document.getElementById(element.name);
+		if (typeof (bookmarkDiv) != 'undefined' && bookmarkDiv != null) {
+			bookmarkDiv.innerHTML = element.name + '@' + element.time / 1000 + ' sec(s)';
+			console.log('already bookmark div: ' + element.name);
+		}
+		else {
+			var newDiv = document.createElement('div');
+			newDiv.id = element.name;
+			newDiv.innerHTML = element.name + '@' + element.time / 1000 + ' sec(s)';
+			newDiv.addEventListener('click', function () {
+				setClickedElement(element.name + '@' + element.time);
 			});
+			bookmarksDiv.appendChild(newDiv);
+			console.log('new bookmark div: ' + element.name);
 		}
 	});
 }
