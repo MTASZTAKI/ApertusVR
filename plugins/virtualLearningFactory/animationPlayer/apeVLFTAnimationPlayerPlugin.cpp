@@ -81,14 +81,13 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mParsedAnimations = std::vector<Animation>();
 	mClickedNode = ape::NodeWeakPtr();
 	mBookmarkTimes = std::vector<unsigned long long>();
+	mChoosedBookmarkedAnimationID = 0;
 	mBookmarkID = 0;
 	mClickedBookmarkTime = 0;
 	mTimeToSleepFactor = 1.0f;
-	mIsSkipBwdClicked = false;
-	mIsSkipFwdClicked = false;
 	mIsPauseClicked = false;
 	mIsStopClicked = false;
-	mIsPlayClicked = false;
+	mIsPlayRunning = false;
 	mAnimatedNodeNames = std::vector<std::string>();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -151,7 +150,7 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 
 void ape::VLFTAnimationPlayerPlugin::playAnimation()
 {
-	mIsPlayClicked = true;
+	mIsPlayRunning = true;
 	std::vector<std::string> previousOwnerNames;
 	std::vector<std::string> spaghettiNodeNames;
 	for (auto animatedNodeName : mAnimatedNodeNames)
@@ -169,30 +168,22 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	}
 	std::vector<std::string> spaghettiLineNames;
 	unsigned long long previousTimeToSleep = 0;
-	for (auto const& parsedAnimation : mParsedAnimations)
+	for (int i = mChoosedBookmarkedAnimationID; i < mParsedAnimations.size(); i++)
 	{
 		while (mIsPauseClicked)
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		if (mIsStopClicked)
 			break;
-		unsigned long long timeToSleep = parsedAnimation.time - previousTimeToSleep;
-		if (!mClickedBookmarkTime)
+		unsigned long long timeToSleep = mParsedAnimations[i].time - previousTimeToSleep;
+		std::this_thread::sleep_for(std::chrono::milliseconds((int)round(timeToSleep * mTimeToSleepFactor)));
+		previousTimeToSleep = mParsedAnimations[i].time;
+		if (auto node = mpSceneManager->getNode(mParsedAnimations[i].nodeName).lock())
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds((int)round(timeToSleep * mTimeToSleepFactor)));
-		}
-		else
-		{
-			//TODO jump to the desired animation
-			mClickedBookmarkTime = 0;
-		}
-		previousTimeToSleep = parsedAnimation.time;
-		if (auto node = mpSceneManager->getNode(parsedAnimation.nodeName).lock())
-		{
-			if (auto spaghettiLineNode = mpSceneManager->getNode(parsedAnimation.nodeName + "_spaghettiLineNode").lock())
+			if (auto spaghettiLineNode = mpSceneManager->getNode(mParsedAnimations[i].nodeName + "_spaghettiLineNode").lock())
 			{
 				auto previousPosition = node->getDerivedPosition();
-				node->setPosition(parsedAnimation.position);
-				node->setOrientation(parsedAnimation.orientation);
+				node->setPosition(mParsedAnimations[i].position);
+				node->setOrientation(mParsedAnimations[i].orientation);
 				auto currentPosition = node->getDerivedPosition();
 				std::chrono::microseconds uuid = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
 				if (auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(spaghettiLineNode->getName() + std::to_string(uuid.count()), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
@@ -227,7 +218,13 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			node->setOwner(previousOwnerNames[i]);
 		}
 	}
-	mIsPlayClicked = false;
+	mIsPlayRunning = false;
+}
+
+void ape::VLFTAnimationPlayerPlugin::startPlayAnimationThread()
+{
+	mAnimationThread = std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this);
+	mAnimationThread.detach();
 }
 
 void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
@@ -239,17 +236,15 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK: " << browser->getClickedElementName());
 			if (browser->getClickedElementName() == "play")
 			{
-				if (!mIsPlayClicked)
+				if (!mIsPlayRunning)
 				{
+					mChoosedBookmarkedAnimationID = 0;
 					mClickedBookmarkTime = 0;
 					mBookmarkID = 0;
 					mTimeToSleepFactor = 1.0f;
 					mIsPauseClicked = false;
-					mIsSkipBwdClicked = false;
-					mIsSkipFwdClicked = false;
 					mIsStopClicked = false;
-					mAnimationThread = std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this);
-					mAnimationThread.detach();
+					startPlayAnimationThread();
 				}
 			}
 			else if (browser->getClickedElementName() == "skip_backward")
@@ -262,31 +257,54 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "backward")
 			{
-				if (!mIsSkipBwdClicked)
+				mIsStopClicked = true;
+				while (mIsPlayRunning)
+					std::this_thread::sleep_for(std::chrono::milliseconds(20));
+				if (mBookmarkID > 0)
 				{
-					if (mBookmarkID > 0)
+					mBookmarkID--;
+					mClickedBookmarkTime = mBookmarkTimes[mBookmarkID];
+					for (int i = 0; i < mParsedAnimations.size(); i++)
 					{
-						mBookmarkID--;
-						mClickedBookmarkTime = mBookmarkTimes[mBookmarkID];
-						mIsSkipBwdClicked = true;
+						if (mParsedAnimations[i].time == mClickedBookmarkTime)
+						{
+							mChoosedBookmarkedAnimationID = i;
+							mChoosedBookmarkedAnimationID = 0;
+							mClickedBookmarkTime = 0;
+							mBookmarkID = 0;
+							mTimeToSleepFactor = 1.0f;
+							mIsPauseClicked = false;
+							mIsStopClicked = false;
+							startPlayAnimationThread();
+							break;
+						}
 					}
 				}
-				else
-					mIsSkipBwdClicked = false;
 			}
 			else if (browser->getClickedElementName() == "forward")
 			{
-				if (!mIsSkipFwdClicked)
+				mIsStopClicked = true;
+				while (mIsPlayRunning)
+					std::this_thread::sleep_for(std::chrono::milliseconds(20));
+				if (mBookmarkID < mBookmarkTimes.size())
 				{
-					if (mBookmarkID < mBookmarkTimes.size())
+					mBookmarkID++;
+					mClickedBookmarkTime = mBookmarkTimes[mBookmarkID];
+					for (int i = 0; i < mParsedAnimations.size(); i++)
 					{
-						mBookmarkID++;
-						mClickedBookmarkTime = mBookmarkTimes[mBookmarkID];
-						mIsSkipFwdClicked = true;
+						if (mParsedAnimations[i].time == mClickedBookmarkTime)
+						{
+							mChoosedBookmarkedAnimationID = i;
+							mClickedBookmarkTime = 0;
+							mBookmarkID = 0;
+							mTimeToSleepFactor = 1.0f;
+							mIsPauseClicked = false;
+							mIsStopClicked = false;
+							startPlayAnimationThread();
+							break;
+						}
 					}
 				}
-				else
-					mIsSkipFwdClicked = false;
 			}
 			else if (browser->getClickedElementName() == "pause")
 			{

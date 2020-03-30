@@ -91,17 +91,15 @@ namespace ape
 
 		float mTimeToSleepFactor;
 
-		bool mIsSkipBwdClicked;
-
-		bool mIsSkipFwdClicked;
-
 		bool mIsPauseClicked;
 
 		bool mIsStopClicked;
 
-		bool mIsPlayClicked;
+		bool mIsPlayRunning;
 
 		unsigned long long mClickedBookmarkTime;
+
+		int mChoosedBookmarkedAnimationID;
 
 	public:
 		VLFTAnimationPlayerPlugin();
@@ -111,6 +109,8 @@ namespace ape
 		void playBinFile(std::string name, quicktype::Action action);
 
 		void playAnimation();
+
+		void startPlayAnimationThread();
 
 		void eventCallBack(const ape::Event& event);
 		
