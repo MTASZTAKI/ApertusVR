@@ -81,9 +81,7 @@ namespace ape
 
 		std::vector<Animation> mParsedAnimations;
 
-		std::vector<ape::IndexedLineSetGeometryWeakPtr> mSpaghettiLines;
-
-		std::map<std::string, std::string> mNodeSpaghettiNode;
+		std::vector<std::string> mAnimatedNodeNames;
 
 		ape::NodeWeakPtr mClickedNode;
 

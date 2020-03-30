@@ -198,7 +198,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 				if (ogreNode)
 				{
 					ogreNode->removeAndDestroyAllChildren();
-					APE_LOG_DEBUG("delete: " << event.subjectName);
+					//APE_LOG_DEBUG("delete: " << event.subjectName);
 				}
 			}
 		}
@@ -1004,14 +1004,12 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARENTNODE:
 				{
-					if (auto ogreGeometry = mpOgreSceneManager->getEntity(geometryName))
+					if (auto ogreGeometry = mpOgreSceneManager->getManualObject(geometryName))
 					{
 						if (auto ogreParentNode = mpOgreSceneManager->getSceneNode(parentNodeName))
 							ogreParentNode->attachObject(ogreGeometry);
 					}
 				}
-					break;
-				case ape::Event::Type::GEOMETRY_INDEXEDLINESET_DELETE:
 					break;
 				case ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS:
 				{
@@ -1035,13 +1033,18 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 							indexIndex++;
 						}
 						ogreManual->end();
-						ogreManual->convertToMesh(geometryName);
-						mpOgreSceneManager->createEntity(geometryName, geometryName);
-						mpOgreSceneManager->destroyManualObject(geometryName);
 					}
 
 				}
 					break;
+				}
+			}
+			else if (event.type == ape::Event::Type::GEOMETRY_INDEXEDLINESET_DELETE)
+			{
+				if (auto ogreManual = mpOgreSceneManager->getManualObject(event.subjectName))
+				{
+					mpOgreSceneManager->destroyManualObject(event.subjectName);
+					//APE_LOG_DEBUG(event.subjectName);
 				}
 			}
 		}
