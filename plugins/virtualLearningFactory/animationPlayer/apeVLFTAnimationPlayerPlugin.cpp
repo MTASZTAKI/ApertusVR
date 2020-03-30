@@ -80,7 +80,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mParsedAnimations = std::vector<Animation>();
 	mClickedNode = ape::NodeWeakPtr();
-	mCurrentFrameTimeFactor = 1.0f;
+	mTimeToSleepFactor = 1.0f;
 	mIsSkipFwdClicked = false;
 	mIsPauseClicked = false;
 	mIsStopClicked = false;
@@ -172,7 +172,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 		if (mIsStopClicked)
 			break;
 		unsigned long long timeToSleep = parsedAnimation.time - previousTimeToSleep;
-		std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
+		std::this_thread::sleep_for(std::chrono::milliseconds((int)round(timeToSleep * mTimeToSleepFactor)));
 		previousTimeToSleep = parsedAnimation.time;
 		if (auto node = mpSceneManager->getNode(parsedAnimation.nodeName).lock())
 		{
@@ -229,7 +229,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			{
 				if (!mIsPlayClicked)
 				{
-					mCurrentFrameTimeFactor = 1.0f;
+					mTimeToSleepFactor = 1.0f;
 					mIsPauseClicked = false;
 					mIsSkipFwdClicked = false;
 					mIsStopClicked = false;
@@ -239,11 +239,11 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "skip_backward")
 			{
-				mCurrentFrameTimeFactor = 2.0f;
+				mTimeToSleepFactor += 0.5f;
 			}
 			else if (browser->getClickedElementName() == "skip_forward")
 			{
-				mCurrentFrameTimeFactor = 0.5f;
+				mTimeToSleepFactor -= 0.5f;
 			}
 			else if (browser->getClickedElementName() == "backward")
 			{

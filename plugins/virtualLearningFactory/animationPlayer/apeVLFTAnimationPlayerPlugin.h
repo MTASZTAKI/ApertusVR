@@ -85,7 +85,7 @@ namespace ape
 
 		ape::NodeWeakPtr mClickedNode;
 
-		float mCurrentFrameTimeFactor;
+		float mTimeToSleepFactor;
 
 		bool mIsSkipFwdClicked;
 
