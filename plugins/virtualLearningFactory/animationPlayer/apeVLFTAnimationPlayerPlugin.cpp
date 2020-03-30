@@ -176,7 +176,15 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 		if (mIsStopClicked)
 			break;
 		unsigned long long timeToSleep = parsedAnimation.time - previousTimeToSleep;
-		std::this_thread::sleep_for(std::chrono::milliseconds((int)round(timeToSleep * mTimeToSleepFactor)));
+		if (!mClickedBookmarkTime)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds((int)round(timeToSleep * mTimeToSleepFactor)));
+		}
+		else
+		{
+			//TODO jump to the desired animation
+			mClickedBookmarkTime = 0;
+		}
 		previousTimeToSleep = parsedAnimation.time;
 		if (auto node = mpSceneManager->getNode(parsedAnimation.nodeName).lock())
 		{
