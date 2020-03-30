@@ -83,9 +83,15 @@ namespace ape
 
 		std::vector<std::string> mAnimatedNodeNames;
 
+		std::vector<unsigned long long> mBookmarkTimes;
+
+		int mBookmarkID;
+
 		ape::NodeWeakPtr mClickedNode;
 
 		float mTimeToSleepFactor;
+
+		bool mIsSkipBwdClicked;
 
 		bool mIsSkipFwdClicked;
 
@@ -94,6 +100,8 @@ namespace ape
 		bool mIsStopClicked;
 
 		bool mIsPlayClicked;
+
+		unsigned long long mClickedBookmarkTime;
 
 	public:
 		VLFTAnimationPlayerPlugin();
