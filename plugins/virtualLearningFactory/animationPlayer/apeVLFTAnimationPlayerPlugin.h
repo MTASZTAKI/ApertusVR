@@ -83,7 +83,7 @@ namespace ape
 
 		std::vector<std::string> mAnimatedNodeNames;
 
-		std::vector<unsigned long long> mBookmarkTimes;
+		std::vector<unsigned long long> mParsedBookmarkTimes;
 
 		int mBookmarkID;
 
