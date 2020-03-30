@@ -173,7 +173,11 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 		if (i > mChoosedBookmarkedAnimationID)
 		{
 			while (mIsPauseClicked)
+			{
 				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+				if (mIsStopClicked)
+					break;
+			}
 		}
 		if (mIsStopClicked)
 			break;
