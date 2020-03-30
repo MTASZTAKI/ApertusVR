@@ -81,9 +81,10 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mParsedAnimations = std::vector<Animation>();
 	mClickedNode = ape::NodeWeakPtr();
 	mCurrentFrameTimeFactor = 1.0f;
-	mIsSkipCurrentAnimation = false;
-	mIsPauseCurrentAnimation = false;
-	mIsStopAnimations = false;
+	mIsSkipFwdClicked = false;
+	mIsPauseClicked = false;
+	mIsStopClicked = false;
+	mIsPlayClicked = false;
 	mAnimatedNodeNames = std::vector<std::string>();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -146,6 +147,7 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 
 void ape::VLFTAnimationPlayerPlugin::playAnimation()
 {
+	mIsPlayClicked = true;
 	std::vector<std::string> previousOwnerNames;
 	std::vector<std::string> spaghettiNodeNames;
 	for (auto animatedNodeName : mAnimatedNodeNames)
@@ -165,14 +167,15 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	unsigned long long previousTimeToSleep = 0;
 	for (auto const& parsedAnimation : mParsedAnimations)
 	{
-		while (mIsPauseCurrentAnimation)
+		while (mIsPauseClicked)
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		if (mIsStopClicked)
+			break;
 		unsigned long long timeToSleep = parsedAnimation.time - previousTimeToSleep;
 		std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
 		previousTimeToSleep = parsedAnimation.time;
 		if (auto node = mpSceneManager->getNode(parsedAnimation.nodeName).lock())
 		{
-			//APE_LOG_DEBUG("animate: " << parsedAnimation.nodeName << " pos: " << parsedAnimation.position.toString());
 			if (auto spaghettiLineNode = mpSceneManager->getNode(parsedAnimation.nodeName + "_spaghettiLineNode").lock())
 			{
 				auto previousPosition = node->getDerivedPosition();
@@ -194,6 +197,8 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			}
 		}
 	}
+	while (!mIsStopClicked)
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	for (auto spaghettiLineName : spaghettiLineNames)
 	{
 		mpSceneManager->deleteEntity(spaghettiLineName);
@@ -210,6 +215,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			node->setOwner(previousOwnerNames[i]);
 		}
 	}
+	mIsPlayClicked = false;
 }
 
 void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
@@ -221,12 +227,15 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK: " << browser->getClickedElementName());
 			if (browser->getClickedElementName() == "play")
 			{
-				mCurrentFrameTimeFactor = 1.0f;
-				mIsPauseCurrentAnimation = false;
-				mIsSkipCurrentAnimation = false;
-				mIsStopAnimations = false;
-				mAnimationThread = std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this);
-				mAnimationThread.detach();
+				if (!mIsPlayClicked)
+				{
+					mCurrentFrameTimeFactor = 1.0f;
+					mIsPauseClicked = false;
+					mIsSkipFwdClicked = false;
+					mIsStopClicked = false;
+					mAnimationThread = std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this);
+					mAnimationThread.detach();
+				}
 			}
 			else if (browser->getClickedElementName() == "skip_backward")
 			{
@@ -242,21 +251,22 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "forward")
 			{
-				mIsSkipCurrentAnimation = true;
+				mIsSkipFwdClicked = true;
 			}
 			else if (browser->getClickedElementName() == "pause")
 			{
-				if (!mIsPauseCurrentAnimation)
-					mIsPauseCurrentAnimation = true;
+				if (!mIsPauseClicked)
+					mIsPauseClicked = true;
 				else
-					mIsPauseCurrentAnimation = false;
+					mIsPauseClicked = false;
 			}
 			else if (browser->getClickedElementName() == "stop")
 			{
-				if (!mIsStopAnimations)
+				if (!mIsStopClicked)
 				{
-					mIsStopAnimations = true;
-					mCurrentFrameTimeFactor = 1.0f;
+					mIsStopClicked = true;
+					if (mIsPauseClicked)
+						mIsPauseClicked = false;
 				}
 			}
 			else if (browser->getClickedElementName().find("@") != std::string::npos)

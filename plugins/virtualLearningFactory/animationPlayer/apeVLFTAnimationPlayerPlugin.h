@@ -87,11 +87,13 @@ namespace ape
 
 		float mCurrentFrameTimeFactor;
 
-		bool mIsSkipCurrentAnimation;
+		bool mIsSkipFwdClicked;
 
-		bool mIsPauseCurrentAnimation;
+		bool mIsPauseClicked;
 
-		bool mIsStopAnimations;
+		bool mIsStopClicked;
+
+		bool mIsPlayClicked;
 
 	public:
 		VLFTAnimationPlayerPlugin();
