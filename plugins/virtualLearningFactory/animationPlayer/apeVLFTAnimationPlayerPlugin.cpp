@@ -8,6 +8,11 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
+bool compareAnimationTime(ape::VLFTAnimationPlayerPlugin::Animation animation1, ape::VLFTAnimationPlayerPlugin::Animation animation2)
+{
+	return (animation1.time < animation2.time);
+}
+
 int GetEncoderClsid(const WCHAR* format, CLSID* pClsid) 
 {
 	using namespace Gdiplus;
@@ -73,7 +78,6 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&VLFTAnimationPlayerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
-	mTimeStampThreads = std::vector<std::thread>();
 	mParsedAnimations = std::vector<Animation>();
 	mNodeSpaghettiNode = std::map<std::string, std::string>();
 	mClickedNode = ape::NodeWeakPtr();
@@ -141,31 +145,27 @@ void ape::VLFTAnimationPlayerPlugin::playBinFile(std::string name, quicktype::Ac
 	}
 }
 
-void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigned int delay, unsigned int fps, std::vector<ape::Vector3> positions, std::vector<ape::Quaternion> orientations)
+void ape::VLFTAnimationPlayerPlugin::playAnimation()
 {
-	if (auto node = mpSceneManager->getNode(nodeName).lock())
+	//TODO set owners for aniamted nodes
+	//std::string previousOwner = node->getOwner();
+	//node->setOwner(mpCoreConfig->getNetworkGUID());
+	//TODO set visibility of the animated nodes
+	//if (!node->isVisible())
+		//node->setVisible(true);
+	for (auto const& parsedAnimation : mParsedAnimations)
 	{
-		std::string previousOwner = node->getOwner();
-		node->setOwner(mpCoreConfig->getNetworkGUID());
-		unsigned int frameTime = (1.0f / fps) * 1000;
-		APE_LOG_DEBUG("nodeName: " << nodeName << " delay: " << delay << " fps: " << fps << " frameTime: " << frameTime << " size: " << positions.size());
-		std::this_thread::sleep_for(std::chrono::seconds(delay));
-		node->setVisible(true);
-		if (auto spaghettiLineNode = mpSceneManager->createNode(nodeName + "spaghettiLine", true, mpCoreConfig->getNetworkGUID()).lock())
+		//TODO calculate the sleep time by parsedAnimation.time
+		if (auto node = mpSceneManager->getNode(parsedAnimation.nodeName).lock())
 		{
-			mNodeSpaghettiNode[node->getName()] = spaghettiLineNode->getName();
-			for (int i = 0; i < positions.size(); i++)
+			if (auto spaghettiLineNode = mpSceneManager->createNode(parsedAnimation.nodeName + "spaghettiLine", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
-				while (mIsPauseCurrentAnimation)
-					std::this_thread::sleep_for(std::chrono::milliseconds(100));
-				if (mIsSkipCurrentAnimation || mIsStopAnimations)
-					break;
-				std::this_thread::sleep_for(std::chrono::milliseconds((int)round(frameTime * mCurrentFrameTimeFactor)));
+				mNodeSpaghettiNode[node->getName()] = spaghettiLineNode->getName();
 				auto previousPosition = node->getDerivedPosition();
-				node->setPosition(positions[i]);
-				node->setOrientation(orientations[i]);
+				node->setPosition(parsedAnimation.position);
+				node->setOrientation(parsedAnimation.orientation);
 				auto currentPosition = node->getDerivedPosition();
-				if (auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(spaghettiLineNode->getName() + std::to_string(i), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
+				if (auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(spaghettiLineNode->getName() + parsedAnimation.position.toString(), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					ape::GeometryCoordinates coordinates = {
 						previousPosition.x, previousPosition.y, previousPosition.z,
@@ -176,11 +176,14 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation(std::string nodeName, unsigne
 					spagetthiLineSection->setParentNode(spaghettiLineNode);
 					mSpaghettiLines.push_back(spagetthiLineSection);
 				}
-				//APE_LOG_DEBUG("nodeName: " << nodeName << " positions: " << positions[i].toString() << " orientations: " << orientations[i].toString());
 			}
 		}
-		node->setOwner(previousOwner);
 	}
+	//TODO set visibility of the animated nodes
+	//if (node->isVisible())
+		//node->setVisible(false);
+	//TODO give back the animated node to its previous owner
+	//node->setOwner(previousOwner);
 }
 
 void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
@@ -207,14 +210,10 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 						mpSceneManager->deleteEntity(spaghettiLine->getName());
 					}
 				}
-				mTimeStampThreads = std::vector<std::thread>();
 				mNodeSpaghettiNode = std::map<std::string, std::string>();
 				mSpaghettiLines = std::vector<ape::IndexedLineSetGeometryWeakPtr>();
-				for (auto const& animation : mParsedAnimations)
-				{
-					mTimeStampThreads.push_back(std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this, animation.nodeName, animation.delay, animation.fps, animation.positions, animation.orientations));
-				}
-				std::for_each(mTimeStampThreads.begin(), mTimeStampThreads.end(), std::mem_fn(&std::thread::detach));
+				mAnimationThread = std::thread(&VLFTAnimationPlayerPlugin::playAnimation, this);
+				mAnimationThread.detach();
 			}
 			else if (browser->getClickedElementName() == "skip_backward")
 			{
@@ -257,7 +256,6 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 							//APE_LOG_DEBUG("deleteEntity: " << spaghettiLine->getName());
 						}
 					}
-					mTimeStampThreads = std::vector<std::thread>();
 					mNodeSpaghettiNode = std::map<std::string, std::string>();
 					mSpaghettiLines = std::vector<ape::IndexedLineSetGeometryWeakPtr>();
 					mCurrentFrameTimeFactor = 1.0f;
@@ -331,8 +329,7 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 				std::getline(file, dataCount);
 				std::string fps;
 				std::getline(file, fps);
-				std::vector<ape::Vector3> positions;
-				std::vector<ape::Quaternion> orientations;
+				std::vector<Animation> mCurrentAnimations;
 				for (int i = 0; i < atoi(dataCount.c_str()); i++)
 				{
 					std::string postionData;
@@ -345,9 +342,13 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 					postionData = postionData.substr(posY + 2, postionData.length());
 					auto posZ = postionData.find_first_of("]") - 1;
 					float z = atof(postionData.substr(0, posZ).c_str());
-					positions.push_back(ape::Vector3(x, y, z));
+					Animation animation;
+					animation.nodeName = node.get_name();
+					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
+					animation.position = ape::Vector3(x, y, z);
+					mCurrentAnimations.push_back(animation);
 				}
-				for (int i = 0; i < atoi(dataCount.c_str()); i++)
+				for (auto currentAnimation : mCurrentAnimations)
 				{
 					std::string orientationData;
 					std::getline(file, orientationData);
@@ -362,19 +363,13 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 					orientationData = orientationData.substr(posY + 2, orientationData.length());
 					auto posZ = orientationData.find_first_of("]" - 1);
 					float z = atof(orientationData.substr(0, posZ).c_str());
-					orientations.push_back(ape::Quaternion(w, x, y, z));
+					currentAnimation.orientation = ape::Quaternion(w, x, y, z);
+					mParsedAnimations.push_back(currentAnimation);
 				}
-				//APE_LOG_DEBUG("nodeName: " << node.get_name() << " delay: " << atoi(action.get_trigger().get_data().c_str()) << " fps: " << atoi(fps.c_str()) << " dataCount: " << dataCount);
-				Animation animation;
-				animation.nodeName = node.get_name();
-				animation.delay = atoi(action.get_trigger().get_data().c_str());
-				animation.fps = atoi(fps.c_str());
-				animation.positions = positions;
-				animation.orientations = orientations;
-				mParsedAnimations.push_back(animation);
 			}
 		}
 	}
+	std::sort(mParsedAnimations.begin(), mParsedAnimations.end(), compareAnimationTime);
 	APE_LOG_FUNC_LEAVE();
 }
 

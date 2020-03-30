@@ -56,15 +56,15 @@ namespace ape
 {
 	class VLFTAnimationPlayerPlugin : public ape::IPlugin
 	{
-	private:
+	public:
 		struct Animation
 		{
 			std::string nodeName;
-			unsigned int delay;
-			unsigned int fps;
-			std::vector<ape::Vector3> positions;
-			std::vector<ape::Quaternion> orientations;
+			unsigned long long time;
+			ape::Vector3 position;
+			ape::Quaternion orientation;
 		};
+	private:
 		ape::ISceneManager* mpSceneManager;
 
 		ape::IEventManager* mpEventManager;
@@ -77,7 +77,7 @@ namespace ape
 
 		quicktype::Animations mAnimations;
 
-		std::vector<std::thread> mTimeStampThreads;
+		std::thread mAnimationThread;
 
 		std::vector<Animation> mParsedAnimations;
 
@@ -102,7 +102,7 @@ namespace ape
 
 		void playBinFile(std::string name, quicktype::Action action);
 
-		void playAnimation(std::string nodeName, unsigned int delay, unsigned int fps, std::vector<ape::Vector3> positions, std::vector<ape::Quaternion> orientations);
+		void playAnimation();
 
 		void eventCallBack(const ape::Event& event);
 		
