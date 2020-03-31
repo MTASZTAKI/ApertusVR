@@ -159,12 +159,11 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 		{
 			previousOwnerNames.push_back(node->getOwner());
 			node->setOwner(mpCoreConfig->getNetworkGUID());
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			node->setVisible(true);
-			if (auto spaghettiLineNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiLineNode", true, mpCoreConfig->getNetworkGUID()).lock())
+			/*if (auto spaghettiLineNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiLineNode", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				spaghettiNodeNames.push_back(spaghettiLineNode->getName());
-			}
+			}*/
 		}
 	}
 	std::vector<std::string> spaghettiLineNames;
@@ -226,9 +225,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			node->setPosition(ape::Vector3(0, 0, 0));
 			node->setOrientation(ape::Quaternion(1, 0, 0, 0));
 			node->setVisible(false);
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			node->setOwner(previousOwnerNames[i]);
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 	}
 	mIsPlayRunning = false;
