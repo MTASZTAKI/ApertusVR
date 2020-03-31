@@ -263,8 +263,8 @@ $(document).ready(function () {
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
-    		//updateMap();
-    		//updateProperties();
+    		updateMap();
+    		updateProperties();
     	}, 500);
     }
     sock.onerror = (e)=>{
