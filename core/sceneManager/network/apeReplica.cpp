@@ -120,14 +120,9 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Co
 				//APE_LOG_DEBUG("Replica: " << mReplicaName << " is serialized by: " << mOwnerID << " therefore, it is not serialized");
 				return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
 			}
-			else if (destinationConnection->GetRakNetGUID().ToString() != mOwnerID)
-			{
-				//APE_LOG_DEBUG("Replica: " << mReplicaName << " is serialized by the host to: " << destinationConnection->GetRakNetGUID().ToString());
-				return RakNet::RM3QSR_CALL_SERIALIZE;
-			}
 		}
 	}
-	if (mIsHost && (destinationConnection->GetRakNetGUID() != creatingSystemGUID))
+	if (mIsHost && (destinationConnection->GetRakNetGUID() != creatingSystemGUID) && (destinationConnection->GetRakNetGUID().ToString() != mOwnerID))
 	{
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	}
