@@ -59,6 +59,10 @@ namespace ape
 		ape::ISceneManager* mpSceneManager;
 
 		ape::GeometryIndexedLineSetParameters mParameters;
+
+		int mCoordinatesSize;
+
+		int mIndicesSize;
 	};
 }
 

@@ -27,6 +27,8 @@ ape::IndexedLineSetGeometryImpl::IndexedLineSetGeometryImpl(std::string name, bo
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mParameters = ape::GeometryIndexedLineSetParameters();
+	mCoordinatesSize = 0;
+	mIndicesSize = 0;
 }
 
 ape::IndexedLineSetGeometryImpl::~IndexedLineSetGeometryImpl()
@@ -36,6 +38,8 @@ ape::IndexedLineSetGeometryImpl::~IndexedLineSetGeometryImpl()
 
 void ape::IndexedLineSetGeometryImpl::setParameters(ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::Color color)
 {
+	mCoordinatesSize = static_cast<int>(coordinates.size());
+	mIndicesSize = static_cast<int>(indices.size());
 	mParameters.coordinates = coordinates;
 	mParameters.indices = indices;
 	mParameters.color = color;
@@ -77,21 +81,51 @@ void ape::IndexedLineSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *
 
 RakNet::RM3SerializationResult ape::IndexedLineSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-	mVariableDeltaSerializer.EndSerialize(&serializationContext);
-	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+	if (serializeParameters->whenLastSerialized == 0)
+	{
+		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
+		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCoordinatesSize);
+		for (auto item : mParameters.coordinates)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIndicesSize);
+		for (auto item : mParameters.indices)
+			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters.color);
+		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+		mVariableDeltaSerializer.EndSerialize(&serializationContext);
+		return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+	}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 void ape::IndexedLineSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters))
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCoordinatesSize))
+	{
+		while (mParameters.coordinates.size() < mCoordinatesSize)
+		{
+			float item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.coordinates.push_back(item);
+		}
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIndicesSize))
+	{
+		while (mParameters.indices.size() < mIndicesSize)
+		{
+			int item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.indices.push_back(item);
+		}
+	}
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters.color))
+	{
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDLINESET_PARAMETERS));
+	}
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{

@@ -152,6 +152,8 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 {
 	mIsPlayRunning = true;
 	std::vector<std::string> previousOwnerNames;
+	std::vector<std::string> spaghettiNodeNames;
+	std::vector<std::string> spaghettiLineNames;
 	for (auto animatedNodeName : mAnimatedNodeNames)
 	{
 		if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
@@ -159,6 +161,10 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			previousOwnerNames.push_back(node->getOwner());
 			node->setOwner(mpCoreConfig->getNetworkGUID());
 			node->setVisible(true);
+			if (auto spaghettiNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiNode", true, mpCoreConfig->getNetworkGUID()).lock())
+			{
+				spaghettiNodeNames.push_back(spaghettiNode->getName());
+			}
 		}
 	}
 	unsigned long long previousTimeToSleep = 0;
@@ -181,14 +187,37 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 		previousTimeToSleep = mParsedAnimations[i].time;
 		if (auto node = mpSceneManager->getNode(mParsedAnimations[i].nodeName).lock())
 		{
-			auto previousPosition = node->getDerivedPosition();
-			node->setPosition(mParsedAnimations[i].position);
-			node->setOrientation(mParsedAnimations[i].orientation);
-			auto currentPosition = node->getDerivedPosition();
+			if (auto spaghettiNode = mpSceneManager->getNode(mParsedAnimations[i].nodeName + "_spaghettiNode").lock())
+			{
+				auto previousPosition = node->getDerivedPosition();
+				node->setPosition(mParsedAnimations[i].position);
+				node->setOrientation(mParsedAnimations[i].orientation);
+				auto currentPosition = node->getDerivedPosition();
+				std::chrono::nanoseconds uuid = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch());
+				if (auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(std::to_string(uuid.count()), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
+				{
+					ape::GeometryCoordinates coordinates = {
+						previousPosition.x, previousPosition.y, previousPosition.z,
+						currentPosition.x, currentPosition.y, currentPosition.z, };
+					ape::GeometryIndices indices = { 0, 1, -1 };
+					ape::Color color(1, 0, 0);
+					spagetthiLineSection->setParameters(coordinates, indices, color);
+					spagetthiLineSection->setParentNode(spaghettiNode);
+					spaghettiLineNames.push_back(spagetthiLineSection->getName());
+				}
+			}
 		}
 	}
 	while (!mIsStopClicked)
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	for (auto spaghettiLineName : spaghettiLineNames)
+	{
+		mpSceneManager->deleteEntity(spaghettiLineName);
+	}
+	for (auto spaghettiNodeName : spaghettiNodeNames)
+	{
+		mpSceneManager->deleteNode(spaghettiNodeName);
+	}
 	for (int i = 0; i < mAnimatedNodeNames.size(); i++)
 	{
 		if (auto node = mpSceneManager->getNode(mAnimatedNodeNames[i]).lock())
@@ -325,7 +354,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			{
 				if (auto clickedNode = mClickedNode.lock())
 				{
-					if (auto spaghettiNode = mpSceneManager->getNode(clickedNode->getName() + "_spaghettiLineNode").lock())
+					if (auto spaghettiNode = mpSceneManager->getNode(clickedNode->getName() + "_spaghettiNode").lock())
 					{
 						if (spaghettiNode->isVisible())
 							spaghettiNode->setVisible(false);
