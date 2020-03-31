@@ -152,7 +152,6 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 {
 	mIsPlayRunning = true;
 	std::vector<std::string> previousOwnerNames;
-	std::vector<std::string> spaghettiNodeNames;
 	for (auto animatedNodeName : mAnimatedNodeNames)
 	{
 		if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
@@ -160,13 +159,8 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			previousOwnerNames.push_back(node->getOwner());
 			node->setOwner(mpCoreConfig->getNetworkGUID());
 			node->setVisible(true);
-			/*if (auto spaghettiLineNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiLineNode", true, mpCoreConfig->getNetworkGUID()).lock())
-			{
-				spaghettiNodeNames.push_back(spaghettiLineNode->getName());
-			}*/
 		}
 	}
-	std::vector<std::string> spaghettiLineNames;
 	unsigned long long previousTimeToSleep = 0;
 	for (int i = 0; i < mParsedAnimations.size(); i++)
 	{
@@ -187,37 +181,14 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 		previousTimeToSleep = mParsedAnimations[i].time;
 		if (auto node = mpSceneManager->getNode(mParsedAnimations[i].nodeName).lock())
 		{
-			if (auto spaghettiLineNode = mpSceneManager->getNode(mParsedAnimations[i].nodeName + "_spaghettiLineNode").lock())
-			{
-				auto previousPosition = node->getDerivedPosition();
-				node->setPosition(mParsedAnimations[i].position);
-				node->setOrientation(mParsedAnimations[i].orientation);
-				auto currentPosition = node->getDerivedPosition();
-				std::chrono::microseconds uuid = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
-				if (auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(spaghettiLineNode->getName() + std::to_string(uuid.count()), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
-				{
-					ape::GeometryCoordinates coordinates = {
-						previousPosition.x, previousPosition.y, previousPosition.z,
-						currentPosition.x, currentPosition.y, currentPosition.z, };
-					ape::GeometryIndices indices = { 0, 1, -1 };
-					ape::Color color(1, 0, 0);
-					spagetthiLineSection->setParameters(coordinates, indices, color);
-					spagetthiLineSection->setParentNode(spaghettiLineNode);
-					spaghettiLineNames.push_back(spagetthiLineSection->getName());
-				}
-			}
+			auto previousPosition = node->getDerivedPosition();
+			node->setPosition(mParsedAnimations[i].position);
+			node->setOrientation(mParsedAnimations[i].orientation);
+			auto currentPosition = node->getDerivedPosition();
 		}
 	}
 	while (!mIsStopClicked)
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-	for (auto spaghettiLineName : spaghettiLineNames)
-	{
-		mpSceneManager->deleteEntity(spaghettiLineName);
-	}
-	for (auto spaghettiNodeName : spaghettiNodeNames)
-	{
-		mpSceneManager->deleteNode(spaghettiNodeName);
-	}
 	for (int i = 0; i < mAnimatedNodeNames.size(); i++)
 	{
 		if (auto node = mpSceneManager->getNode(mAnimatedNodeNames[i]).lock())
