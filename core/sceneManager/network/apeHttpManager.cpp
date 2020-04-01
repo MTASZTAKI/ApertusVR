@@ -123,16 +123,19 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 			{
 				filePath << location << "/" << fileName;
 			}
-			found = location.find("./");
-			if (found != std::string::npos)
-			{
-				filePath << location << "/" << fileName;
-			}
 			else
 			{
-				std::stringstream resourceLocationPath;
-				resourceLocationPath << APE_SOURCE_DIR << location;
-				filePath << resourceLocationPath.str() << "/" << fileName;
+				found = location.find("./");
+				if (found != std::string::npos)
+				{
+					filePath << location << "/" << fileName;
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location;
+					filePath << resourceLocationPath.str() << "/" << fileName;
+				}
 			}
 			APE_LOG_DEBUG("try to open local md5 hash from: " << filePath.str());
 			std::ifstream localMD5(filePath.str().c_str());
@@ -168,16 +171,19 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 			{
 				md5FilePath << location << "/" << md5FileName;
 			}
-			md5Found = location.find("./");
-			if (md5Found != std::string::npos)
-			{
-				md5FilePath << location << "/" << md5FileName;
-			}
 			else
 			{
-				std::stringstream resourceLocationPath;
-				resourceLocationPath << APE_SOURCE_DIR << location;
-				md5FilePath << resourceLocationPath.str() << "/" << md5FileName;
+				md5Found = location.find("./");
+				if (md5Found != std::string::npos)
+				{
+					md5FilePath << location << "/" << md5FileName;
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location;
+					md5FilePath << resourceLocationPath.str() << "/" << md5FileName;
+				}
 			}
 			APE_LOG_DEBUG("try to download from: " << md5 << " to: " << md5FilePath.str());
 			downloadedMd5Hash = fopen(md5FilePath.str().c_str(), "wb");
@@ -207,16 +213,19 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 			{
 				zipFilePath << location << "/" << zipFileName;
 			}
-			zipFound = location.find("./");
-			if (zipFound != std::string::npos)
-			{
-				zipFilePath << location << "/" << zipFileName;
-			}
 			else
 			{
-				std::stringstream resourceLocationPath;
-				resourceLocationPath << APE_SOURCE_DIR << location;
-				zipFilePath << resourceLocationPath.str() << "/" << zipFileName;
+				zipFound = location.find("./");
+				if (zipFound != std::string::npos)
+				{
+					zipFilePath << location << "/" << zipFileName;
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location;
+					zipFilePath << resourceLocationPath.str() << "/" << zipFileName;
+				}
 			}
 			APE_LOG_DEBUG("try to download from: " << url << " to: " << zipFilePath.str());
 			downloadedZip = fopen(zipFilePath.str().c_str(), "wb");
@@ -243,16 +252,19 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 			{
 				extractLocation << location;
 			}
-			found = location.find("./");
-			if (found != std::string::npos)
-			{
-				extractLocation << location;
-			}
 			else
 			{
-				std::stringstream resourceLocationPath;
-				resourceLocationPath << APE_SOURCE_DIR << location;
-				extractLocation << resourceLocationPath.str();
+				found = location.find("./");
+				if (found != std::string::npos)
+				{
+					extractLocation << location;
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location;
+					extractLocation << resourceLocationPath.str();
+				}
 			}
 			APE_LOG_DEBUG("try to unzip: " << zipFilePath.str() << " to: " << extractLocation.str());
 			int arg = 2;

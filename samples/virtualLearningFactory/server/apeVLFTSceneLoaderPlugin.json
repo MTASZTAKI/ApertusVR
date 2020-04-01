@@ -173,10 +173,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Z.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Z.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
           "unit": 0.001
         }
       ]
@@ -186,10 +186,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.OBJ",
           "unit": 0.001
         }
       ]
@@ -199,10 +199,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Vibrating_Bowl_Clip.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Vibrating_Bowl_Clip.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Vibrating_Bowl_Clip.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Vibrating_Bowl_Clip.OBJ",
           "unit": 0.001
         }
       ]
@@ -212,10 +212,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_X.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_X.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
           "unit": 0.001
         }
       ]
@@ -225,10 +225,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Static.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Static.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Static.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Static.OBJ",
           "unit": 0.001
         }
       ]
@@ -238,10 +238,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Y.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Y.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
           "unit": 0.001
         }
       ]
@@ -251,10 +251,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.OBJ",
           "unit": 0.001
         }
       ]
@@ -324,10 +324,10 @@
       "type": "http://www.ontoeng.com/factory#PalletType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/Pallet/Pallet_Wing.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/Pallet/Pallet_Wing.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/Pallet/Pallet_Wing.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/Pallet/Pallet_Wing.OBJ",
           "unit": 0.001
         }
       ]
@@ -493,10 +493,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElementType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Conveyor_Main.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Conveyor_Main.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Conveyor_Main.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Conveyor_Main.OBJ",
           "unit": 0.001
         }
       ]
@@ -506,10 +506,10 @@
       "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElementType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Lateral_Conveyor.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Lateral_Conveyor.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/Lateral_Conveyor.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/Lateral_Conveyor.OBJ",
           "unit": 0.001
         }
       ]
@@ -519,10 +519,10 @@
       "type": "http://www.ontoeng.com/factory#PalletType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/Pallet/Pallet.JPG"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/Pallet/Pallet.JPG"
         },
         {
-          "file": "/samples/virtualLearningFactory/models/Pallet/Pallet.OBJ",
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/Pallet/Pallet.OBJ",
           "unit": 0.001
         }
       ]
@@ -636,7 +636,7 @@
       "type": "http://www.ontoeng.com/factory#MachineToolType",
       "representations": [
         {
-          "file": "/samples/virtualLearningFactory/models/PickAndPlace/3D_Pick_and_Place_Station.jpg"
+          "file": "C:/VLFT_Gamification/10//samples/virtualLearningFactory/models/PickAndPlace/3D_Pick_and_Place_Station.jpg"
         }
       ]
     },

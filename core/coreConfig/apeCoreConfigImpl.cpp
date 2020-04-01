@@ -134,16 +134,19 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						{
 							mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
 						}
-						found = resourceLocationStr.find("./");
-						if (found != std::string::npos)
-						{
-							mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
-						}
 						else
 						{
-							std::stringstream resourceLocationPath;
-							resourceLocationPath << APE_SOURCE_DIR << resourceLocation.GetString();
-							mNetworkConfig.resourceLocations.push_back(resourceLocationPath.str());
+							found = resourceLocationStr.find("./");
+							if (found != std::string::npos)
+							{
+								mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
+							}
+							else
+							{
+								std::stringstream resourceLocationPath;
+								resourceLocationPath << APE_SOURCE_DIR << resourceLocation.GetString();
+								mNetworkConfig.resourceLocations.push_back(resourceLocationPath.str());
+							}
 						}
 					}
 				}

@@ -111,16 +111,19 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 				{
 					assimpAssetFileNamePath << resourceLocationStr;
 				}
-				found = resourceLocationStr.find("./");
-				if (found != std::string::npos)
-				{
-					assimpAssetFileNamePath << resourceLocationStr;
-				}
 				else
 				{
-					std::stringstream resourceLocationPath;
-					resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
-					assimpAssetFileNamePath << resourceLocationPath.str();
+					found = resourceLocationStr.find("./");
+					if (found != std::string::npos)
+					{
+						assimpAssetFileNamePath << resourceLocationStr;
+					}
+					else
+					{
+						std::stringstream resourceLocationPath;
+						resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
+						assimpAssetFileNamePath << resourceLocationPath.str();
+					}
 				}
 				assetConfig.file = assimpAssetFileNamePath.str();
 				mAssimpAssetConfigs.push_back(assetConfig);
@@ -449,16 +452,19 @@ void ape::AssimpAssetLoaderPlugin::loadConfig()
 						{
 							assimpAssetFileNamePath << resourceLocationStr;
 						}
-						found = resourceLocationStr.find("./");
-						if (found != std::string::npos)
-						{
-							assimpAssetFileNamePath << resourceLocationStr;
-						}
 						else
 						{
-							std::stringstream resourceLocationPath;
-							resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
-							assimpAssetFileNamePath << resourceLocationPath.str();
+							found = resourceLocationStr.find("./");
+							if (found != std::string::npos)
+							{
+								assimpAssetFileNamePath << resourceLocationStr;
+							}
+							else
+							{
+								std::stringstream resourceLocationPath;
+								resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
+								assimpAssetFileNamePath << resourceLocationPath.str();
+							}
 						}
 						assetConfig.file = assimpAssetFileNamePath.str();
 						//APE_LOG_DEBUG("assetConfig.file " << assetConfig.file);
