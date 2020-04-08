@@ -87,7 +87,7 @@ namespace ape
 
 		std::vector<ape::UserInputMacro::ViewPose> mViewPoses;
 
-		bool mIsKeyboardLockedByBrowser;
+		bool mIsBrowserHovered;
 
 		int mViewPosesToggleIndex;
 

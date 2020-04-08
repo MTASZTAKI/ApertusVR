@@ -514,12 +514,11 @@ std::string ape::UserInputMacro::getOverlayBrowserURL()
 
 void ape::UserInputMacro::setOverlayBrowserKeyValue(std::string keyValue)
 {
+	if (keyValue == "shift" || keyValue == "right shift" || keyValue == "alt" || keyValue == "right alt" || keyValue == "ctrl")
+		return;
 	if (auto overlayBrowser = mOverlayBrowser.lock())
 	{
 		//APE_LOG_DEBUG("setOverlayBrowserKeyValue: " << keyValue);
-		if (keyValue != "shift" && keyValue != "right shift")
-			std::transform(keyValue.begin(), keyValue.end(), keyValue.begin(), ::tolower);
-
 		std::wstring keyAsWString(keyValue.begin(), keyValue.end());
 		if (keyValue== "backspace")
 			keyAsWString = 8;
@@ -527,8 +526,6 @@ void ape::UserInputMacro::setOverlayBrowserKeyValue(std::string keyValue)
 			keyAsWString = 9;
 		else if (keyValue== "enter")
 			keyAsWString = 13;
-		else if (keyValue== "shift" || keyValue == "right shift")
-			keyAsWString = 14;
 		else if (keyValue== "space")
 			keyAsWString = 32;
 		else if (keyValue== "end")
@@ -547,7 +544,6 @@ void ape::UserInputMacro::setOverlayBrowserKeyValue(std::string keyValue)
 			keyAsWString = 46;
 		else if (keyValue== "esc")
 			keyAsWString = 1046;
-
 		overlayBrowser->keyASCIIValue(keyAsWString[0]);
 	}
 }
