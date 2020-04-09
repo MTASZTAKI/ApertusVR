@@ -483,6 +483,15 @@ void ape::VLFTAnimationPlayerPlugin::Step()
 void ape::VLFTAnimationPlayerPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
+	if (!mIsStopClicked)
+	{
+		mIsStopClicked = true;
+		if (mIsPauseClicked)
+			mIsPauseClicked = false;
+		while (mIsPlayRunning)
+			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	}
+	//TODO deattach studendts if needed  
 	APE_LOG_FUNC_LEAVE();
 }
 

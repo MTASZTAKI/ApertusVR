@@ -57,6 +57,7 @@ void ape::System::Start(const char* configFolderPath, bool isBlocking, std::func
 
 void ape::System::Stop()
 {
+	gpPluginManagerImpl->StopPlugins();
 	delete gpEventManagerImpl;
 	delete gpSceneManagerImpl;
 	delete gpPluginManagerImpl;

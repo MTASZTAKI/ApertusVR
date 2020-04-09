@@ -75,6 +75,8 @@ namespace ape
 
 		void InitAndRunPlugins();
 
+		void StopPlugins();
+
 		void joinThreads();
 
 		void registerUserThreadFunction(std::function<void()> userThreadFunction);

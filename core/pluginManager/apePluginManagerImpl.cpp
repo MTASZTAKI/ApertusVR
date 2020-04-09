@@ -71,6 +71,14 @@ void ape::PluginManagerImpl::InitAndRunPlugin(ape::IPlugin* plugin)
 	//ape::PluginFactory::UnregisterPlugin(pluginname, plugin);
 }
 
+void ape::PluginManagerImpl::StopPlugins()
+{
+	for (auto const& plugin : mPluginVector)
+	{
+		plugin->Stop();
+	}
+}
+
 void ape::PluginManagerImpl::InitAndRunPlugins()
 {
 	for (std::vector<ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
