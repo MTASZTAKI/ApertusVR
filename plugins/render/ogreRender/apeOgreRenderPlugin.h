@@ -114,6 +114,7 @@ SOFTWARE.*/
 #include "OgreD3D11RenderSystem.h"
 #include "OgreD3D11Texture.h"
 #include "D3D11.h"
+#include "OgreWindowEventUtilities.h"
 #include "ProceduralStableHeaders.h"
 #include "Procedural.h"
 #include "Hydrax.h"
@@ -130,7 +131,7 @@ SOFTWARE.*/
 
 namespace ape
 {
-	class OgreRenderPlugin : public IPlugin, public Ogre::FrameListener, public Ogre::LodWorkQueueInjectorListener
+	class OgreRenderPlugin : public IPlugin, public Ogre::FrameListener, public Ogre::LodWorkQueueInjectorListener, public Ogre::WindowEventListener
 	{
 	public:
 		OgreRenderPlugin();
@@ -158,6 +159,8 @@ namespace ape
 		bool shouldInject(Ogre::LodWorkQueueRequest* request) override;
 
 		void injectionCompleted(Ogre::LodWorkQueueRequest* request) override;
+
+		void windowResized(Ogre::RenderWindow* rw) override;
 
 	private:
 		Ogre::Root* mpRoot;
@@ -201,6 +204,8 @@ namespace ape
 		SkyX::BasicController* mpSkyxBasicController;
 
 		std::map<std::string, Ogre::PbsMaterial*> mPbsMaterials;
+
+		Ogre::WindowEventUtilities* mpWindowEventUtilities;
 
 		ape::ISceneManager* mpSceneManager;
 

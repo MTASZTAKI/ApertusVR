@@ -89,6 +89,8 @@ namespace ape
 
 		bool mIsBrowserHovered;
 
+		bool mIsKeyboardLockedByBrowser;
+
 		int mViewPosesToggleIndex;
 
 		float mTranslateSpeedFactorKeyboard;

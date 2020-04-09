@@ -25,6 +25,7 @@ ape::ViewPointManagerPlugin::ViewPointManagerPlugin()
 	mControllerLastTouchAxis = ape::Vector2();
 	mIsControllerTouchPressed = false;
 	mIsBrowserHovered = false;
+	mIsKeyboardLockedByBrowser = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -38,7 +39,7 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 {
 	//APE_LOG_DEBUG("keyPressedStringEventCallback: " << keyValue);
 	mIsKeyReleased = false;
-	if (!mIsBrowserHovered)
+	if (!mIsBrowserHovered && !mIsKeyboardLockedByBrowser)
 	{
 		if (keyValue == "r")
 		{
@@ -135,6 +136,17 @@ void ape::ViewPointManagerPlugin::eventCallBack(const ape::Event& event)
 		{
 			//APE_LOG_DEBUG("BROWSER_HOVER_OUT");
 			mIsBrowserHovered = false;
+		}
+	}
+	else if (event.type == ape::Event::Type::BROWSER_FOCUS_ON_EDITABLE_FIELD)
+	{
+		//APE_LOG_DEBUG("BROWSER_FOCUS_ON_EDITABLE_FIELD: " << event.subjectName);
+		if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			if (browser->isFocusOnEditableField())
+				mIsKeyboardLockedByBrowser = true;
+			else
+				mIsKeyboardLockedByBrowser = false;
 		}
 	}
 }

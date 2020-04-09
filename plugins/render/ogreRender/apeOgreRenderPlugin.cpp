@@ -57,6 +57,7 @@ ape::OgreRenderPlugin::OgreRenderPlugin( )
 	mpSkyxSunlight = nullptr;
 	mpSkyxSkylight = nullptr;
 	mpSkyxBasicController = nullptr;
+	mpWindowEventUtilities = nullptr;
 	mOgrePointCloudMeshes = std::map<std::string, ape::OgrePointCloud*>();
 	mRttList = std::vector<ape::ManualTextureWeakPtr>();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
@@ -2056,6 +2057,14 @@ void ape::OgreRenderPlugin::injectionCompleted(Ogre::LodWorkQueueRequest* reques
 	mMeshSerializer.exportMesh(mCurrentlyLoadingMeshEntityLodConfig.mesh.getPointer(), filePath.str());
 }
 
+void ape::OgreRenderPlugin::windowResized(Ogre::RenderWindow * rw)
+{
+	//APE_LOG_DEBUG(rw->getViewport(0)->getActualWidth());
+	auto oldWindowConfig = mpCoreConfig->getWindowConfig();
+	ape::WindowConfig windowConfig(oldWindowConfig.name, oldWindowConfig.renderSystem, oldWindowConfig.handle, rw->getViewport(0)->getActualWidth(), rw->getViewport(0)->getActualHeight());
+	mpCoreConfig->setWindowConfig(windowConfig);
+}
+
 bool ape::OgreRenderPlugin::frameStarted( const Ogre::FrameEvent& evt )
 {
 	return Ogre::FrameListener::frameStarted( evt );
@@ -2426,9 +2435,10 @@ void ape::OgreRenderPlugin::Init()
 		else
 			APE_LOG_DEBUG("Problem in the RTSS init");
 	}
-
 	int mainWindowID = 0; //first window will be the main window
 	Ogre::RenderWindowDescription mainWindowDesc = winDescList[mainWindowID];
+	mpWindowEventUtilities = new Ogre::WindowEventUtilities();
+	mpWindowEventUtilities->addWindowEventListener(mRenderWindows[mainWindowDesc.name], this);
 	mRenderWindows[mainWindowDesc.name]->getCustomAttribute("WINDOW", &mainWindowHnd);
 	std::ostringstream windowHndStr;
 	windowHndStr << mainWindowHnd;

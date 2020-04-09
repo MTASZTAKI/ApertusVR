@@ -130,6 +130,11 @@ void ape::OISUserInputPlugin::Run()
 		if (mpMouse)
 			mpMouse->capture();
 		std::this_thread::sleep_for (std::chrono::milliseconds(20));
+		const OIS::MouseState &ms = mpMouse->getMouseState();
+		if (ms.width != mpCoreConfig->getWindowConfig().width)
+			ms.width = mpCoreConfig->getWindowConfig().width;
+		if (ms.height != mpCoreConfig->getWindowConfig().height)
+			ms.height = mpCoreConfig->getWindowConfig().height;
 	}
 	APE_LOG_FUNC_LEAVE();
 }
