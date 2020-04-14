@@ -14,16 +14,18 @@
 </head>
   <body>
 	  <div class="d-inline-block">
-	  	<div id="leftButtons" class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
-	  		<button id="play" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-play"></span></button>
-	  		<button id="skip_forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-forward"></span></button>
-	  		<button id="skip_backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-backward"></span></button>
-	  		<button id="forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-forward"></span></button>
-	  		<button id="backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-backward"></span></button>
-	  		<button id="pause" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-pause"></span></button>
-	  		<button id="stop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop"></span></button>
-	  		<button id="bookmark" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-bookmark" onClick="showBookmarks();"></span></button>
-	  	</div>
+		  <div id="leftButtonsPlay" class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
+		  	<button id="play" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-play" onClick="showPauseAndSkipButtons();"></span></button>
+		  	<div id="leftButtonsPauseSkip" class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
+		  		<button id="pause" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-pause"></span></button>
+		  		<button id="skip_forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-forward"></span></button>
+		  		<button id="skip_backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-backward"></span></button>
+		  	</div>
+		  	<button id="forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-forward" onClick="hidePauseAndSkipButtons();"></span></button>
+		  	<button id="backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-backward" onClick="hidePauseAndSkipButtons();"></span></button>
+		  	<button id="stop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop" onClick="hidePauseAndSkipButtons();"></span></button>
+		  	<button id="bookmark" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-bookmark" onClick="showBookmarks();"></span></button>
+		  </div>
 	  	<div id="bookmarks" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7); max-width: 18rem;">
 	  	</div>
 	  	<div id="info" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7); max-width: 18rem;">

@@ -99,6 +99,8 @@ namespace ape
 		void setOwner(std::string ownerID) override;
 
 		std::string getOwner() override;
+
+		std::string getCreator() override;
 		
 		void translate(Vector3 transformVector, ape::Node::TransformationSpace nodeTransformSpace) override;
 		
@@ -141,6 +143,8 @@ namespace ape
 		bool mIsInheritOrientation;
 
 		bool mIsReplicated;
+
+		std::string mCreatorID;
 	};
 }
 

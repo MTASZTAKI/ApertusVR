@@ -267,49 +267,25 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "backward")
 			{
-				if (mBookmarkID > -1)
-				{
-					mIsStopClicked = true;
-					while (mIsPlayRunning)
-						std::this_thread::sleep_for(std::chrono::milliseconds(20));
-					mBookmarkID--;
-					mClickedBookmarkTime = mParsedBookmarkTimes[mBookmarkID];
-					for (int i = 0; i < mParsedAnimations.size(); i++)
-					{
-						if (mParsedAnimations[i].time == mClickedBookmarkTime)
-						{
-							mChoosedBookmarkedAnimationID = i;
-							mTimeToSleepFactor = 1.0f;
-							mIsPauseClicked = true;
-							mIsStopClicked = false;
-							startPlayAnimationThread();
-							break;
-						}
-					}
-				}
+				mIsStopClicked = true;
+				while (mIsPlayRunning)
+					std::this_thread::sleep_for(std::chrono::milliseconds(20));
+				mChoosedBookmarkedAnimationID = 0;
+				mTimeToSleepFactor = 1.0f;
+				mIsPauseClicked = true;
+				mIsStopClicked = false;
+				startPlayAnimationThread();
 			}
 			else if (browser->getClickedElementName() == "forward")
 			{
-				if (mBookmarkID < (int)mParsedBookmarkTimes.size())
-				{
-					mIsStopClicked = true;
-					while (mIsPlayRunning)
-						std::this_thread::sleep_for(std::chrono::milliseconds(20));
-					mBookmarkID++;
-					mClickedBookmarkTime = mParsedBookmarkTimes[mBookmarkID];
-					for (int i = 0; i < mParsedAnimations.size(); i++)
-					{
-						if (mParsedAnimations[i].time == mClickedBookmarkTime)
-						{
-							mChoosedBookmarkedAnimationID = i;
-							mTimeToSleepFactor = 1.0f;
-							mIsPauseClicked = true;
-							mIsStopClicked = false;
-							startPlayAnimationThread();
-							break;
-						}
-					}
-				}
+				mIsStopClicked = true;
+				while (mIsPlayRunning)
+					std::this_thread::sleep_for(std::chrono::milliseconds(20));
+				mChoosedBookmarkedAnimationID = mParsedAnimations.size() - 1;
+				mTimeToSleepFactor = 1.0f;
+				mIsPauseClicked = true;
+				mIsStopClicked = false;
+				startPlayAnimationThread();
 			}
 			else if (browser->getClickedElementName() == "pause")
 			{
@@ -491,7 +467,20 @@ void ape::VLFTAnimationPlayerPlugin::Stop()
 		while (mIsPlayRunning)
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	//TODO deattach studendts if needed  
+	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
+	{
+		for (auto childNodeWP : userNode->getChildNodes())
+		{
+			if (auto childNode = childNodeWP.lock())
+			{
+				if (childNode->getName().find("vlft") != std::string::npos)
+				{
+					childNode->detachFromParentNode();
+					childNode->setOwner(childNode->getCreator());
+				}
+			}
+		}
+	}
 	APE_LOG_FUNC_LEAVE();
 }
 

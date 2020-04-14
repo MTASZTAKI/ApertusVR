@@ -37,6 +37,7 @@ ape::NodeImpl::NodeImpl(std::string name, bool replicate, std::string ownerID, b
 	mIsFixedYaw = false;
 	mIsInheritOrientation = true;
 	mIsReplicated = replicate;
+	mCreatorID = ownerID;
 }
 
 ape::NodeImpl::~NodeImpl()
@@ -268,6 +269,11 @@ void ape::NodeImpl::setOwner(std::string ownerID)
 std::string ape::NodeImpl::getOwner()
 {
 	return mOwnerID;
+}
+
+std::string ape::NodeImpl::getCreator()
+{
+	return mCreatorID;
 }
 
 void ape::NodeImpl::translate(Vector3 transformVector, ape::Node::TransformationSpace nodeTransformSpace )

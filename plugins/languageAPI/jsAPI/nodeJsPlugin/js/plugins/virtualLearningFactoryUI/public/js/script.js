@@ -1,5 +1,5 @@
 var apiEndPoint = 'http://localhost:3000/api/v1/';
-var userNodeName;
+var userNodeName = '';
 var userID;
 var userNodePostion;
 var otherUserNodeNames = [];
@@ -153,6 +153,16 @@ function doPostRequest(apiEndPointUrl, data, callback) {
     }, "json");
 }
 
+function showPauseAndSkipButtons() {
+	console.log('showPauseAndSkipButtons');
+	$('#leftButtonsPauseSkip').show();
+}
+
+function hidePauseAndSkipButtons() {
+	console.log('hidePauseAndSkipButtons');
+	$('#leftButtonsPauseSkip').hide();
+}
+
 function showChat() {
     console.log('toogle chat');
 	$('#chat').toggle();
@@ -213,6 +223,7 @@ function showMap() {
 }
 
 function showBookmarks() {
+	hidePauseAndSkipButtons();
 	console.log('toogle bookmarks');
 	$('#bookmarks').toggle();
 	var bookmarksDiv = document.getElementById('bookmarks');
@@ -250,22 +261,48 @@ function updateProperties() {
 	document.getElementById('properties').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
 }
 
+function hideTeacherButtons() {
+	console.log('hideTeacherButtons');
+	$('#attach').hide();
+	$('#otherusers').hide();
+}
+
+function hideMultiUserButtons() {
+	console.log('hideMultiUserButtons');
+	$('#attach').hide();
+	$('#otherusers').hide();
+	$('#messenger').hide();
+	$('#chat').hide();
+}
+
 $(document).ready(function () {
 	parseAnimationJSON();
 	getUserNodeNameAndID();
 	getOtherUserNodeNames();
 	getUserNodePosition();
 	getOtherUserNodePositions();
+	//hideTeacherButtons();
+	//hideMultiUserButtons();
 	$('#map').toggle();
 	$('#users').toggle();
 	$('#bookmarks').toggle();
+	hidePauseAndSkipButtons();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
     	console.log('open')
     	window.setInterval(function () {
     		updateMap();
     		updateProperties();
-    	}, 500);
+		}, 100);
+		getUserNodeNameAndID();
+		var isStudent = userNodeName.indexOf("VLFT_Student");
+		if (isStudent != -1) {
+			hideTeacherButtons();
+		}
+		var isLocal = userNodeName.indexOf("VLFT_Local");
+		if (isLocal != -1) {
+			hideMultiUserButtons();
+		}
     }
     sock.onerror = (e)=>{
         console.log('error',e)
