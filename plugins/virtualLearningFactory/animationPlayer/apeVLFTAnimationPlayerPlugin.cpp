@@ -8,6 +8,25 @@
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+	DWORD wndPid;
+	GetWindowThreadProcessId(hwnd, &wndPid);
+	int len = GetWindowTextLength(hwnd) + 1;
+	std::string s;
+	s.reserve(len);
+	GetWindowText(hwnd, const_cast<char*>(s.c_str()), len - 1);
+	if (wndPid == (DWORD)lParam)
+	{
+		::PostMessage(hwnd, WM_CLOSE, 0, 0);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 bool compareAnimationTime(ape::VLFTAnimationPlayerPlugin::Animation animation1, ape::VLFTAnimationPlayerPlugin::Animation animation2)
 {
 	return (animation1.time < animation2.time);
@@ -237,6 +256,15 @@ void ape::VLFTAnimationPlayerPlugin::startPlayAnimationThread()
 	mAnimationThread.detach();
 }
 
+void ape::VLFTAnimationPlayerPlugin::screenCast()
+{
+	std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+	std::stringstream command;
+	command << "/c ffmpeg -f gdigrab -framerate 30 -i desktop ../../screencasts/" << uuid.count() << ".mkv";
+	STARTUPINFO info = { sizeof(info) };
+	CreateProcess("C:\\windows\\system32\\cmd.exe", LPTSTR((LPCTSTR)command.str().c_str()), NULL, NULL, TRUE, 0, NULL, NULL, &info, &mScreenCastProcessInfo);
+}
+
 void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 {
 	if (event.type == ape::Event::Type::BROWSER_ELEMENT_CLICK)
@@ -354,10 +382,14 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "screencast")
 			{
-				std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-				std::stringstream command;
-				command << "ffmpeg -f gdigrab -framerate 30 -i desktop ../../screencasts/" << uuid.count() << ".mkv";
-				system(command.str().c_str());
+				auto screenCastThread = std::thread(&VLFTAnimationPlayerPlugin::screenCast, this);
+				screenCastThread.detach();
+			}
+			else if (browser->getClickedElementName() == "screencastStop")
+			{
+				HANDLE ps = OpenProcess(SYNCHRONIZE | PROCESS_TERMINATE, FALSE, mScreenCastProcessInfo.dwProcessId);
+				EnumWindows(EnumWindowsProc, mScreenCastProcessInfo.dwProcessId);
+				CloseHandle(ps);
 			}
 		}
 	}

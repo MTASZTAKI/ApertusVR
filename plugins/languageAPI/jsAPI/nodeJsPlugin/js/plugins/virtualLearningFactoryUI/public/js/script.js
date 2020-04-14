@@ -7,6 +7,50 @@ var otherUserNodePositions = [];
 var clickedNodeName;
 var clickedNodePosition;
 var animationJSON;
+var animationSpeedFactor = 1;
+var isPaused = false;
+var timeBegan = null, timeStopped = null, stoppedDuration = 0, started = null;
+
+function start() {
+	if (timeBegan === null) {
+		timeBegan = new Date();
+	}
+	if (timeStopped !== null) {
+		stoppedDuration += (new Date() - timeStopped);
+	}
+	console.log(stoppedDuration);
+	started = setInterval(clockRunning, 10);
+}
+
+function stop() {
+	timeStopped = new Date();
+	clearInterval(started);
+}
+
+function reset() {
+	clearInterval(started);
+	stoppedDuration = 0;
+	timeBegan = null;
+	timeStopped = null;
+	var stopWatchDiv = document.getElementById('stopWatch');
+	stopWatchDiv.innerHTML = "00:00:00.000";
+}
+
+function clockRunning() {
+	var currentTime = new Date()
+		, timeElapsed = new Date(currentTime - timeBegan - stoppedDuration)
+		, hour = timeElapsed.getUTCHours()
+		, min = timeElapsed.getUTCMinutes()
+		, sec = timeElapsed.getUTCSeconds()
+		, ms = timeElapsed.getUTCMilliseconds();
+
+	var stopWatchDiv = document.getElementById('stopWatch');
+	stopWatchDiv.innerHTML =
+		(hour > 9 ? hour : "0" + hour) + ":" +
+		(min > 9 ? min : "0" + min) + ":" +
+		(sec > 9 ? sec : "0" + sec) + "." +
+		(ms > 99 ? ms : ms > 9 ? "0" + ms : "00" + ms);
+};
 
 function getNodesNames() {
 	console.log('getNodesNames()');
@@ -61,6 +105,22 @@ function getOtherUserNodePositions() {
 			otherUserNodePositions.push(res.data.items[0].position);
 		});
 	});
+}
+
+function freeMe() {
+	console.log('try to freeMe');
+	doPostRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + userID + '/owner', function (res) {
+		var ownerID = res.data.items[0].ownerID;
+		console.log('post setOwner() res: ', ownerID);
+		doPostRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + "root" + '/parent', function (res) {
+			var parentNodeName = res.data.items[0].parentName;
+			console.log('post setParent() zero: res: ', parentNodeName);
+		});
+	});
+	var pos = { x: 0, y: 0, z: 0 };
+	setNodePosition(userNodeName, pos);
+	var ori = { w: 1, x: 0, y: 0, z: 0 };
+	setNodeOrientation(userNodeName, ori);
 }
 
 function attachOtherUserNode2Me(otherUserNodeName) {
@@ -153,13 +213,45 @@ function doPostRequest(apiEndPointUrl, data, callback) {
     }, "json");
 }
 
+function pauseTimer() {
+	console.log('pauseTimer');
+	if (!isPaused) {
+		isPaused = true;
+		stop();
+	}
+	else {
+		isPaused = false;
+		start();
+	}
+}
+
+function fwdTimer() {
+	animationSpeedFactor = animationSpeedFactor - 0.5;
+	console.log('fwdTimer: ' + animationSpeedFactor);
+	clearInterval(started);
+	started = setInterval(clockRunning, 10 * animationSpeedFactor);
+}
+
+function bwdTimer() {
+	animationSpeedFactor = animationSpeedFactor + 0.5;
+	console.log('bwdTimer: ' + animationSpeedFactor);
+	clearInterval(started);
+	started = setInterval(clockRunning, 10 * animationSpeedFactor);
+}
+
 function showPauseAndSkipButtons() {
 	console.log('showPauseAndSkipButtons');
+	if (timeBegan === null) {
+		start();
+	}
 	$('#leftButtonsPauseSkip').show();
 }
 
 function hidePauseAndSkipButtons() {
 	console.log('hidePauseAndSkipButtons');
+	animationSpeedFactor = 1;
+	isPaused = false;
+	reset();
 	$('#leftButtonsPauseSkip').hide();
 }
 
@@ -261,6 +353,11 @@ function updateProperties() {
 	document.getElementById('properties').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
 }
 
+function hideStudentButtons() {
+	console.log('hideStudentButtons');
+	$('#freeMe').hide();
+}
+
 function hideTeacherButtons() {
 	console.log('hideTeacherButtons');
 	$('#attach').hide();
@@ -275,6 +372,11 @@ function hideMultiUserButtons() {
 	$('#chat').hide();
 }
 
+function toggleScreencastStop() {
+	$('#screencast').toggle();
+	$('#screencastStop').toggle();
+}
+
 $(document).ready(function () {
 	parseAnimationJSON();
 	getUserNodeNameAndID();
@@ -286,6 +388,7 @@ $(document).ready(function () {
 	$('#map').toggle();
 	$('#users').toggle();
 	$('#bookmarks').toggle();
+	$('#screencastStop').toggle();
 	hidePauseAndSkipButtons();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
@@ -302,6 +405,12 @@ $(document).ready(function () {
 		var isLocal = userNodeName.indexOf("VLFT_Local");
 		if (isLocal != -1) {
 			hideMultiUserButtons();
+			hideStudentButtons();
+			hideTeacherButtons();
+		}
+		var isTeacher = userNodeName.indexOf("VLFT_Teacher");
+		if (isTeacher != -1) {
+			hideStudentButtons();
 		}
     }
     sock.onerror = (e)=>{

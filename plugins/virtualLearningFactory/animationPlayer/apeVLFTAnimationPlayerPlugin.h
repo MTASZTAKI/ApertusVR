@@ -97,6 +97,10 @@ namespace ape
 
 		bool mIsPlayRunning;
 
+		PROCESS_INFORMATION mScreenCastProcessInfo;
+
+		DWORD mScreenCastProcessExitCode;
+
 		unsigned long long mClickedBookmarkTime;
 
 		int mChoosedBookmarkedAnimationID;
@@ -111,6 +115,8 @@ namespace ape
 		void playAnimation();
 
 		void startPlayAnimationThread();
+
+		void screenCast();
 
 		void eventCallBack(const ape::Event& event);
 		
