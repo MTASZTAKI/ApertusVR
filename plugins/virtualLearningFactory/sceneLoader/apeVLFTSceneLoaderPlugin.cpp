@@ -64,10 +64,16 @@ std::string ape::VLFTSceneLoaderPlugin::findGeometryNameByModelName(std::string 
 			{
 				return fileGeometry->getName();
 			}
-			findGeometryNameByModelName(modelID.second);
 		}
 	}
-	return std::string();
+	if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(modelName).lock()))
+	{
+		return fileGeometry->getName();
+	}
+	else
+	{
+		return std::string();
+	}
 }
 
 void ape::VLFTSceneLoaderPlugin::cloneGeometry(ape::FileGeometrySharedPtr fileGeometry, std::string id, ape::NodeSharedPtr parentNode)
@@ -90,28 +96,18 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 			std::weak_ptr<std::string> model = asset.get_model();
 			if (model.lock())
 			{
-				if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(*asset.get_model()).lock()))
+				auto fileGeometryName = findGeometryNameByModelName(*asset.get_model());
+				//APE_LOG_DEBUG("findGeometryNameByModelName: " << fileGeometryName << " model: " << *asset.get_model());
+				if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
 				{
-					if (!fileGeometry->getParentNode().lock())
-						fileGeometry->setParentNode(node);
-					else
-						cloneGeometry(fileGeometry, asset.get_id(), node);
+					cloneGeometry(fileGeometry, asset.get_id(), node);
 				}
 				else
 				{
-					auto fileGeometryName = findGeometryNameByModelName(*asset.get_model());
-					//APE_LOG_DEBUG("findGeometryNameByModelName: " << fileGeometryName << " model: " << *asset.get_model());
-					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
+					if (auto pureNode = mpSceneManager->getNode(*asset.get_model()).lock())
 					{
-						cloneGeometry(fileGeometry, asset.get_id(), node);
-					}
-					else
-					{
-						if (auto pureNode = mpSceneManager->getNode(*asset.get_model()).lock())
-						{
-							pureNode->setParentNode(node);
-							//APE_LOG_DEBUG("pureNode: " << *asset.get_model() << " attached to: " << asset.get_id());
-						}
+						pureNode->setParentNode(node);
+						//APE_LOG_DEBUG("pureNode: " << *asset.get_model() << " attached to: " << asset.get_id());
 					}
 				}
 			}
