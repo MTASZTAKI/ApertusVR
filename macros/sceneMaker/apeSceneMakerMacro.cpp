@@ -64,7 +64,7 @@ void ape::SceneMakerMacro::makeGround()
 			planeMaterial->setSpecularColor(ape::Color(0.3f, 0.3f, 0.2f));
 			if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(mpSceneManager->createEntity("plane", ape::Entity::GEOMETRY_PLANE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
-				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(1000, 1000), ape::Vector2(1, 1));
+				plane->setParameters(ape::Vector2(1, 1), ape::Vector2(3000, 3000), ape::Vector2(1, 1));
 				plane->setParentNode(planeNode);
 				plane->setMaterial(planeMaterial);
 			}

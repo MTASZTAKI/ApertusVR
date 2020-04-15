@@ -92,9 +92,9 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 			{
 				if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(*asset.get_model()).lock()))
 				{
-					/*if (!fileGeometry->getParentNode().lock())
+					if (!fileGeometry->getParentNode().lock())
 						fileGeometry->setParentNode(node);
-					else*/
+					else
 						cloneGeometry(fileGeometry, asset.get_id(), node);
 				}
 				else
