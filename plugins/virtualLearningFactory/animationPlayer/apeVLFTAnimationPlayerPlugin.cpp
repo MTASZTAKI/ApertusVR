@@ -189,6 +189,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	unsigned long long previousTimeToSleep = 0;
 	for (int i = 0; i < mParsedAnimations.size(); i++)
 	{
+		mpUserInputMacro->sendOverlayBrowserMessage(std::to_string(mParsedAnimations[i].time));
 		if (i > mChoosedBookmarkedAnimationID)
 		{
 			while (mIsPauseClicked)
@@ -406,6 +407,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 void ape::VLFTAnimationPlayerPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeVLFTAnimationPlayerPlugin.json";
 	FILE* apeVLFTAnimationPlayerPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -499,7 +501,7 @@ void ape::VLFTAnimationPlayerPlugin::Stop()
 		while (mIsPlayRunning)
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	if (auto userNode = mpApeUserInputMacro->getUserNode().lock())
+	if (auto userNode = mpUserInputMacro->getUserNode().lock())
 	{
 		for (auto childNodeWP : userNode->getChildNodes())
 		{

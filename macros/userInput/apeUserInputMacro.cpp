@@ -469,6 +469,22 @@ void ape::UserInputMacro::fireOverLayBrowserHoverOut()
 	}
 }
 
+void ape::UserInputMacro::sendOverlayBrowserMessage(std::string message)
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		overlayBrowser->sendMessage(message);
+	}
+}
+
+std::string ape::UserInputMacro::getOverlayBrowserLastMessage()
+{
+	if (auto overlayBrowser = mOverlayBrowser.lock())
+	{
+		return overlayBrowser->getLastMessage();
+	}
+}
+
 bool ape::UserInputMacro::isOverlayBrowserShowed()
 {
 	if (auto overlayBrowser = mOverlayBrowser.lock())

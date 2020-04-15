@@ -69,7 +69,7 @@ namespace ape
 
 		ape::IEventManager* mpEventManager;
 
-		ape::UserInputMacro* mpApeUserInputMacro;
+		ape::UserInputMacro* mpUserInputMacro;
 
 		ape::SceneMakerMacro* mpSceneMakerMacro;
 

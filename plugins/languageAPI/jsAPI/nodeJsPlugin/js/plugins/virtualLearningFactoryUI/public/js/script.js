@@ -9,47 +9,32 @@ var clickedNodePosition;
 var animationJSON;
 var animationSpeedFactor = 1;
 var isPaused = false;
-var timeBegan = null, timeStopped = null, stoppedDuration = 0, started = null;
+var updateMapInterval;
+var updatePropertiesInterval;
+var updateAnimationTimeInterval;
+var currentAnimationTime;
+var updateOverlayBrowserLastMessageInterval;
 
-function start() {
-	if (timeBegan === null) {
-		timeBegan = new Date();
-	}
-	if (timeStopped !== null) {
-		stoppedDuration += (new Date() - timeStopped);
-	}
-	console.log(stoppedDuration);
-	started = setInterval(clockRunning, 10);
+function getOverlayBrowserLastMessage() {
+	console.log('getOverlayBrowserLastMessage()');
+	doGetRequest(apiEndPoint + '/overLayBrowserGetLastMessage', function (res) {
+		lastMessage = res.data.items[0].lastMessage;
+		console.log('getOverlayBrowserLastMessage(): res: ', lastMessage);
+		updateAnimationTime(lastMessage);
+	});
 }
 
-function stop() {
-	timeStopped = new Date();
-	clearInterval(started);
-}
-
-function reset() {
-	clearInterval(started);
-	stoppedDuration = 0;
-	timeBegan = null;
-	timeStopped = null;
-	var stopWatchDiv = document.getElementById('stopWatch');
-	stopWatchDiv.innerHTML = "00:00:00.000";
-}
-
-function clockRunning() {
-	var currentTime = new Date()
-		, timeElapsed = new Date(currentTime - timeBegan - stoppedDuration)
-		, hour = timeElapsed.getUTCHours()
-		, min = timeElapsed.getUTCMinutes()
-		, sec = timeElapsed.getUTCSeconds()
-		, ms = timeElapsed.getUTCMilliseconds();
-
+function updateAnimationTime(time) {
+	var ms = Math.floor((time / 100) % 10);
+	var sec = Math.floor((time / 1000) % 60);
+	var min = Math.floor((time / (1000 * 60)) % 60);
+	var hour = Math.floor((time / (1000 * 60 * 60)) % 24);
 	var stopWatchDiv = document.getElementById('stopWatch');
 	stopWatchDiv.innerHTML =
 		(hour > 9 ? hour : "0" + hour) + ":" +
 		(min > 9 ? min : "0" + min) + ":" +
 		(sec > 9 ? sec : "0" + sec) + "." +
-		(ms > 99 ? ms : ms > 9 ? "0" + ms : "00" + ms);
+		(ms > 9 ? ms : ms);
 };
 
 function getNodesNames() {
@@ -72,6 +57,7 @@ function getUserNodeNameAndID() {
 		console.log('userID(): res: ', userID);
 	});
 }
+
 function getClickedNodePosition() {
 	console.log('getClickedNodeDerivedPosition(): ' + clickedNodeName);
 	var nodeName = { name: clickedNodeName};
@@ -80,7 +66,6 @@ function getClickedNodePosition() {
 		console.log('getClickedNodeDerivedPosition(): res: ', clickedNodePosition);
 	});
 }
-
 
 function getUserNodePosition() {
 	console.log('getUserNodePosition()');
@@ -213,46 +198,18 @@ function doPostRequest(apiEndPointUrl, data, callback) {
     }, "json");
 }
 
-function pauseTimer() {
-	console.log('pauseTimer');
-	if (!isPaused) {
-		isPaused = true;
-		stop();
-	}
-	else {
-		isPaused = false;
-		start();
-	}
-}
-
-function fwdTimer() {
-	animationSpeedFactor = animationSpeedFactor - 0.5;
-	console.log('fwdTimer: ' + animationSpeedFactor);
-	clearInterval(started);
-	started = setInterval(clockRunning, 10 * animationSpeedFactor);
-}
-
-function bwdTimer() {
-	animationSpeedFactor = animationSpeedFactor + 0.5;
-	console.log('bwdTimer: ' + animationSpeedFactor);
-	clearInterval(started);
-	started = setInterval(clockRunning, 10 * animationSpeedFactor);
-}
-
 function showPauseAndSkipButtons() {
 	console.log('showPauseAndSkipButtons');
-	if (timeBegan === null) {
-		start();
-	}
 	$('#leftButtonsPauseSkip').show();
+	$('#play').hide();
+	updateOverlayBrowserLastMessageInterval = setInterval(getOverlayBrowserLastMessage, 50);
 }
 
 function hidePauseAndSkipButtons() {
 	console.log('hidePauseAndSkipButtons');
-	animationSpeedFactor = 1;
-	isPaused = false;
-	reset();
 	$('#leftButtonsPauseSkip').hide();
+	$('#play').show();
+	clearInterval(updateOverlayBrowserLastMessageInterval);
 }
 
 function showChat() {
@@ -311,11 +268,18 @@ function updateMap() {
 
 function showMap() {
     console.log('toogle map');
-    $('#map').toggle();
+	$('#map').toggle();
+	if ($('#map').is(":hidden")) {
+		clearInterval(updateMapInterval);
+	}
+	else {
+		updateMapInterval = setInterval(updateMap, 40);
+	}
 }
 
 function showBookmarks() {
-	hidePauseAndSkipButtons();
+	$('#leftButtonsPauseSkip').toggle();
+	$('#play').toggle();
 	console.log('toogle bookmarks');
 	$('#bookmarks').toggle();
 	var bookmarksDiv = document.getElementById('bookmarks');
@@ -383,8 +347,6 @@ $(document).ready(function () {
 	getOtherUserNodeNames();
 	getUserNodePosition();
 	getOtherUserNodePositions();
-	//hideTeacherButtons();
-	//hideMultiUserButtons();
 	$('#map').toggle();
 	$('#users').toggle();
 	$('#bookmarks').toggle();
@@ -392,11 +354,7 @@ $(document).ready(function () {
 	hidePauseAndSkipButtons();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
-    	console.log('open')
-    	window.setInterval(function () {
-    		updateMap();
-    		updateProperties();
-		}, 100);
+		console.log('open');
 		getUserNodeNameAndID();
 		var isStudent = userNodeName.indexOf("VLFT_Student");
 		if (isStudent != -1) {
@@ -429,16 +387,7 @@ $(document).ready(function () {
 			clickedNodeName = eventObj.subjectName;
 			console.log(' show bounding box - select: ', clickedNodeName);
 			document.getElementById('selectedNodeNameTitle').innerHTML = clickedNodeName;
-
-			/*console.log('try to attach server created node to me: ', nodeName);
-			doPostRequest(apiEndPoint + "/nodes/" + nodeName + "/" + userID + '/owner', function (res) {
-				var ownerID = res.data.items[0].ownerID;
-				console.log('post setOwner() res: ', ownerID);
-				doPostRequest(apiEndPoint + "/nodes/" + nodeName + "/" + userNodeName + '/parent', function (res) {
-					var parentNodeName = res.data.items[0].parentName;
-					console.log('post attachNodeToMe res: ', parentNodeName);
-				});
-			});*/
+			updatePropertiesInterval = setInterval(updateProperties, 40);
         }
     }
     $("button").click(function () {

@@ -120,6 +120,10 @@ namespace ape
 		virtual void fireHoverIn() = 0;
 
 		virtual void fireHoverOut() = 0;
+
+		virtual void sendMessage(std::string message) = 0;
+
+		virtual std::string getLastMessage() = 0;
 	};
 }
 

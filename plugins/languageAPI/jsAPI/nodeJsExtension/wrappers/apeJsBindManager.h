@@ -644,6 +644,13 @@ public:
 		return mpUserInputMacro->fireOverLayBrowserHoverOut();
 	}
 
+	std::string getOverlayBrowserLastMessage()
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return mpUserInputMacro->getOverlayBrowserLastMessage();
+	}
+
 private:
 	ape::ISceneManager* mpSceneManager;
 	ape::ICoreConfig* mpCoreConfig;
@@ -707,6 +714,7 @@ NBIND_CLASS(JsBindManager)
 	method(setOverlayBrowserClickedElement);
 	method(fireOverlayBrowserHoverIn);
 	method(fireOverlayBrowserHoverOut);
+	method(getOverlayBrowserLastMessage);
 }
 
 #endif

@@ -677,6 +677,15 @@ app.post('/overLayBrowserSetClickedElement', function (req, res) {
 	res.send(respObj.toJSonString());
 });
 
+app.get('/overLayBrowserGetLastMessage', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Get the last message of the overlay browser.');
+
+	var lastMessage = ape.nbind.JsBindManager().getOverlayBrowserLastMessage();
+	respObj.addDataItem({ lastMessage: lastMessage });
+	res.send(respObj.toJSonString());
+});
+
 app.get('/nodes/:name/euler', function(req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Gets the Euler (yaw, pitch, roll) of the specified node.');

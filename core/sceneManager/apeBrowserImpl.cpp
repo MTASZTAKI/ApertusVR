@@ -41,6 +41,7 @@ ape::BrowserImpl::BrowserImpl(std::string name, bool replicate, std::string owne
 	mIsFocusOnEditableField = false;
 	mReloadDeltaTrigger = false;
 	mClickedElementName = std::string();
+	mLastMessage = std::string();
 }
 
 ape::BrowserImpl::~BrowserImpl()
@@ -191,6 +192,17 @@ void ape::BrowserImpl::fireHoverIn()
 void ape::BrowserImpl::fireHoverOut()
 {
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_HOVER_OUT));
+}
+
+void ape::BrowserImpl::sendMessage(std::string message)
+{
+	mLastMessage = message;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_MESSAGE));
+}
+
+std::string ape::BrowserImpl::getLastMessage()
+{
+	return mLastMessage;
 }
 
 void ape::BrowserImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const

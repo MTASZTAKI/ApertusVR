@@ -279,6 +279,10 @@ namespace ape
 
 		void fireOverLayBrowserHoverOut();
 
+		void sendOverlayBrowserMessage(std::string message);
+
+		std::string getOverlayBrowserLastMessage();
+
 		void showOverlayBrowser(bool show);
 
 		bool isOverlayBrowserShowed();

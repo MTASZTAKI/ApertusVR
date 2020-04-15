@@ -88,6 +88,10 @@ namespace ape
 
 		void fireHoverOut() override;
 
+		void sendMessage(std::string message) override;
+
+		std::string getLastMessage() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -128,6 +132,8 @@ namespace ape
 		bool mReloadDeltaTrigger;
 
 		std::string mClickedElementName;
+
+		std::string mLastMessage;
 	};
 }
 
