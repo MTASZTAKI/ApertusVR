@@ -80,9 +80,11 @@ namespace ape
 
 		void parseVisibleNodes();
 
+		void cloneGeometry(ape::FileGeometrySharedPtr fileGeometry, std::string id, ape::NodeSharedPtr parentNode);
+
 		std::map<std::string, ape::Vector3> mFileGeometryNamesScales;
 
-		std::map<std::string, std::string> mModelsIDs;
+		std::multimap<std::string, std::string> mModelsIDs;
 
 		std::string findGeometryNameByModelName(std::string modelName);
 

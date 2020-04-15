@@ -1,0 +1,422 @@
+# 
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 5 5.0.2.1477 Release
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+# 
+
+newmtl Corpo9_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo57_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo131_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo19_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo138_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo128_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo117_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Paint_Matte_Blue_
+Ka 0 0 0
+Kd 0.00226561 0.421417 0.9025
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Paint_Matte_Red_
+Ka 0 0 0
+Kd 0.902495 0.00225829 0.00226046
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo148_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Paint_Matte_Grey_
+Ka 0 0 0
+Kd 0.515023 0.515023 0.515022
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo3_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl N_912_M_4_x_40_STEP_4_solid1_co
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo67_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo82_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo37_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo94_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo87_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo25_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo154_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo142_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Paint_Matte_Yellow_
+Ka 0 0 0
+Kd 0.98 0.840351 0.0489933
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo133_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl N_912_M_4_x_40_STEP_2_solid1_co
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo77_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Corpo107_color_202_209_238__
+Ka 0 0 0
+Kd 0.792157 0.819608 0.933333
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 

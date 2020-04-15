@@ -1561,8 +1561,8 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 								}
 								if (raySpaceNode == mpUserInputMacro->getUserNode().lock())
 								{
-									ray = mOgreCameras[0]->getCameraToViewportRay(rayOverlayNode->getPosition().x / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].width,
-										rayOverlayNode->getPosition().y / mOgreRenderPluginConfig.ogreRenderWindowConfigList[0].height);
+									ray = mOgreCameras[0]->getCameraToViewportRay(rayOverlayNode->getPosition().x / (float)mpCoreConfig->getWindowConfig().width,
+										rayOverlayNode->getPosition().y / (float)mpCoreConfig->getWindowConfig().height);
 								}
 								Ogre::RaySceneQuery *raySceneQuery = mpOgreSceneManager->createRayQuery(ray, Ogre::SceneManager::ENTITY_TYPE_MASK);
 								if (raySceneQuery != NULL)

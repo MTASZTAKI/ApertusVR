@@ -45,8 +45,19 @@
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
       "/macros/sceneMaker/resources",
-      "/samples/virtualLearningFactory/models/pickAndPlace",
-      "/samples/virtualLearningFactory/models/pallet"
+      "/samples/virtualLearningFactory/models/Box",
+      "/samples/virtualLearningFactory/models/Camera",
+      "/samples/virtualLearningFactory/models/Conveyor",
+      "/samples/virtualLearningFactory/models/Hinge",
+      "/samples/virtualLearningFactory/models/Pallet",
+      "/samples/virtualLearningFactory/models/PickAndPlace",
+      "/samples/virtualLearningFactory/models/PinInsertion",
+      "/samples/virtualLearningFactory/models/Riveting",
+      "/samples/virtualLearningFactory/models/RoboticArm",
+      "/samples/virtualLearningFactory/models/RotatingTable",
+      "/samples/virtualLearningFactory/models/Tightener",
+      "/samples/virtualLearningFactory/models/UniversalRobot",
+      "/samples/virtualLearningFactory/models/VibratingBowl"
     ]
   }
 }
