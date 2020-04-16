@@ -2938,7 +2938,7 @@
                     "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_Static.JPG"
                 },
                 {
-                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_Static_avoid.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_Static.OBJ",
                     "unit": 0.001
                 }
             ]

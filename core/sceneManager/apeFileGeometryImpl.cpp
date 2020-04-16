@@ -144,8 +144,8 @@ RakNet::RM3SerializationResult ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mUnitScale);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mFileName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mFileName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsExportMesh);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsSubMeshesMerged);
@@ -158,12 +158,6 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mUnitScale);
-	RakNet::RakString fileName;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, fileName))
-	{
-		mFileName = fileName.C_String();
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_FILENAME));
-	}
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{
@@ -173,6 +167,12 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 			mParentNodeName = parentName.C_String();
 			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PARENTNODE));
 		}
+	}
+	RakNet::RakString fileName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, fileName))
+	{
+		mFileName = fileName.C_String();
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_FILENAME));
 	}
 	RakNet::RakString materialName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
