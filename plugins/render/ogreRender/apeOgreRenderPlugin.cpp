@@ -169,7 +169,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						case ape::Event::Type::NODE_VISIBILITY:
 						{
 							ogreNode->setVisible(node->isVisible(), false);
-							//APE_LOG_DEBUG(nodeName << " visibility: " << node->isVisible());
+							//APE_LOG_DEBUG(nodeName << " visibility: " << node->isVisible() << " numChild: " << ogreNode->numChildren() << " numEntities: " << ogreNode->numAttachedObjects());
 						}
 							break;
 						case ape::Event::Type::NODE_FIXEDYAW:
@@ -1168,6 +1168,10 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 								if (auto ogreParentNode = mpOgreSceneManager->getSceneNode(parentNodeName))
 								{
 									ogreParentNode->attachObject(ogreEntity);
+									if (auto parentNode = geometryClone->getParentNode().lock())
+									{
+										ogreParentNode->setVisible(parentNode->isVisible(), false);
+									}
 								}
 							}
 						}
