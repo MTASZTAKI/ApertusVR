@@ -31,6 +31,7 @@ ape::AssimpAssetLoaderPlugin::~AssimpAssetLoaderPlugin()
 void ape::AssimpAssetLoaderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	loadConfig();
 	mpAssimpImporter = new Assimp::Importer();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -38,7 +39,6 @@ void ape::AssimpAssetLoaderPlugin::Init()
 void ape::AssimpAssetLoaderPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	loadConfig();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
@@ -611,6 +611,8 @@ void ape::AssimpAssetLoaderPlugin::loadScene(const aiScene* assimpScene, int ID)
 					rootNode->setOrientation(mAssimpAssetConfigs[ID].orientation);
 					rootNode->setPosition(mAssimpAssetConfigs[ID].position);
 					assimpSceneRootNode->setParentNode(rootNode);
+					assimpSceneRootNode->setVisible(mAssimpAssetConfigs[ID].visible);
+					rootNode->setVisible(mAssimpAssetConfigs[ID].visible);
 				}
 				else
 				{
