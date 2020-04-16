@@ -110,8 +110,6 @@ namespace ape
 
 		~VLFTAnimationPlayerPlugin();
 
-		void playBinFile(std::string name, quicktype::Action action);
-
 		void playAnimation();
 
 		void startPlayAnimationThread();
