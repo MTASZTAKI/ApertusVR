@@ -90,14 +90,6 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 				{
 					assetConfig.rootNodeName = rootNode->getName();
 					//APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
-					assetConfig.scale = rootNode->getScale();
-					assetConfig.position = rootNode->getPosition();
-					assetConfig.orientation = rootNode->getOrientation();
-				}
-				else
-				{
-					assetConfig.rootNodeName = fileGeometry->getName();
-					//APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
 					assetConfig.scale = ape::Vector3(1, 1, 1);
 					assetConfig.position = ape::Vector3(0, 0, 0);
 					assetConfig.orientation = ape::Quaternion(1, 0, 0, 0);

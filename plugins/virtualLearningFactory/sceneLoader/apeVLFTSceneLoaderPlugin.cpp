@@ -41,12 +41,16 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 				std::string fileExtension = filePath.substr(filePath.find_last_of("."));
 				if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".JPG" && fileExtension != ".PNG")
 				{
-					float unitScale = *representation.get_unit() / 0.01f;
-					if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 					{
-						//APE_LOG_DEBUG("fileGeometry: " << asset.get_id() << " filename: " << filePath);
-						fileGeometry->setUnitScale(unitScale);
-						fileGeometry->setFileName(filePath);
+						float unitScale = *representation.get_unit() / 0.01f;
+						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+						{
+							//APE_LOG_DEBUG("fileGeometry: " << asset.get_id() << " filename: " << filePath);
+							fileGeometry->setUnitScale(unitScale);
+							fileGeometry->setParentNode(node);
+							fileGeometry->setFileName(filePath);
+						}
 					}
 				}
 			}
