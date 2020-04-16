@@ -43,6 +43,7 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 				{
 					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 					{
+						node->setVisible(false);
 						float unitScale = *representation.get_unit() / 0.01f;
 						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, false, mpCoreConfig->getNetworkGUID()).lock()))
 						{
