@@ -340,8 +340,7 @@ RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mPosition);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mOrientation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-	//TODO: can cause confilct with the simple visibility
-	//mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mChildrenVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mVisibility);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsInheritOrientation);
@@ -375,9 +374,8 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 			setParentNode(mParentNode);
 		}
 	}
-	//TODO: can cause confilct with the simple visibility
-	/*if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mChildrenVisibility))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_CHILDVISIBILITY));*/
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mChildrenVisibility))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_CHILDVISIBILITY));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mVisibility))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_VISIBILITY));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsFixedYaw))

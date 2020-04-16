@@ -43,7 +43,7 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 				{
 					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 					{
-						node->setVisible(false);
+						node->setChildrenVisibility(false);
 						float unitScale = *representation.get_unit() / 0.01f;
 						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
@@ -196,7 +196,7 @@ void ape::VLFTSceneLoaderPlugin::parseVisibleNodes()
 			if (auto node = mpSceneManager->getNode(asset.get_id()).lock())
 			{
 				//APE_LOG_DEBUG("not visible: " << asset.get_id());
-				node->setVisible(false);
+				node->setChildrenVisibility(false);
 			}
 		}
 	}
