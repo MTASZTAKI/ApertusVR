@@ -6,7 +6,7 @@
     "apeAssimpAssetLoaderPlugin"
   ],
   "network": {
-    "user": "vlft_student_htcVive",
+    "user": "VLFT_Student_htcVive",
     "participant": "guest",
     "internet": {
       "natPunchThrough": {

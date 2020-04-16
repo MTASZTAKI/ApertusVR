@@ -11,7 +11,7 @@
 	  "apeVLFTAnimationPlayerPlugin"
   ],
   "network": {
-    "user": "vlft_teacher",
+    "user": "VLFT_Teacher",
     "participant": "guest",
     "internet": {
       "natPunchThrough": {
