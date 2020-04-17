@@ -30,7 +30,7 @@ ape::Replica::Replica(RakNet::RakString objectType, std::string name, std::strin
 	mObjectType = objectType;
 	mOwnerID = ownerID;
 	mIsHost = isHost;
-	mIsLastTickSerializedByMe = false;
+	mIsOwnedByMe4TheLastTick = false;
 }
 
 ape::Replica::~Replica()
@@ -109,59 +109,20 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Co
 {
 	if (mOwnerID == mpCoreConfig->getNetworkGUID())
 	{
+		mIsOwnedByMe4TheLastTick = true;
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	}
 	if (mIsHost && (destinationConnection->GetRakNetGUID().ToString() != mOwnerID))
 	{
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	}
+	if (mIsOwnedByMe4TheLastTick)
+	{
+		mIsOwnedByMe4TheLastTick = false;
+		return RakNet::RM3QSR_CALL_SERIALIZE;
+	}
+	mIsOwnedByMe4TheLastTick = false;
 	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
-
-
-	/*if (creatingSystemGUID == replicaManager->GetRakPeerInterface()->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS))
-	{
-		if (mOwnerID == creatingSystemGUID.ToString())
-		{
-			return RakNet::RM3QSR_CALL_SERIALIZE;
-		}
-		else
-		{
-			if (!mIsHost)
-			{
-				//APE_LOG_DEBUG("Replica: " << mReplicaName << " is serialized by: " << mOwnerID << " therefore, it is not serialized");
-				return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
-			}
-		}
-	}
-	if (mIsHost && (destinationConnection->GetRakNetGUID() != creatingSystemGUID) && (destinationConnection->GetRakNetGUID().ToString() != mOwnerID))
-	{
-		return RakNet::RM3QSR_CALL_SERIALIZE;
-	}
-	if (mIsHost && (destinationConnection->GetRakNetGUID().ToString() != mOwnerID))
-	{
-		mIsLastTickSerializedByMe = true;
-		//APE_LOG_DEBUG("Replica: " << mReplicaName << " is serialized by the host to: " << destinationConnection->GetRakNetGUID().ToString());
-		return RakNet::RM3QSR_CALL_SERIALIZE;
-	}
-	if (mIsHost && (destinationConnection->GetRakNetGUID().ToString() == mOwnerID) && mIsLastTickSerializedByMe)
-	{
-		mIsLastTickSerializedByMe = false;
-		//APE_LOG_DEBUG("Replica: " << mReplicaName << " is serialized by the host to for a last time: " << destinationConnection->GetRakNetGUID().ToString());
-		return RakNet::RM3QSR_CALL_SERIALIZE;
-	}
-	if ((mOwnerID != creatingSystemGUID.ToString()) && (mOwnerID == mpCoreConfig->getNetworkGUID()))
-	{
-		mIsLastTickSerializedByMe = true;
-		//APE_LOG_DEBUG("serialize this replica: " << mReplicaName << " creator: " << creatingSystemGUID.ToString() << " to the host");
-		return RakNet::RM3QSR_CALL_SERIALIZE;
-	}
-	if ((mOwnerID == creatingSystemGUID.ToString()) && (mOwnerID != mpCoreConfig->getNetworkGUID()) && mIsLastTickSerializedByMe)
-	{
-		mIsLastTickSerializedByMe = false;
-		//APE_LOG_DEBUG("serialize this replica for a last time: " << mReplicaName << " and new owner is: " << mOwnerID << " to the host");
-		return RakNet::RM3QSR_CALL_SERIALIZE;
-	}
-	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;*/
 }
 
 void ape::Replica::OnUserReplicaPreSerializeTick()
