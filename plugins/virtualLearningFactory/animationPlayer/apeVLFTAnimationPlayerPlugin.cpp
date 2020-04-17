@@ -342,6 +342,56 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 				EnumWindows(EnumWindowsProc, mScreenCastProcessInfo.dwProcessId);
 				CloseHandle(ps);
 			}
+			else if (browser->getClickedElementName() == "attachUsers")
+			{
+				auto nodes = mpSceneManager->getNodes();
+				for (auto node : nodes)
+				{
+					if (auto nodeSP = node.second.lock())
+					{
+						std::string nodeName = nodeSP->getName();
+						std::size_t pos = nodeName.find("_HeadNode");
+						if (pos != std::string::npos)
+						{
+							if (auto userNode = nodeSP->getParentNode().lock())
+							{
+								if (userNode->getName() != mpUserInputMacro->getUserNode().lock()->getName())
+								{
+									userNode->setOwner(mpCoreConfig->getNetworkGUID());
+									userNode->setPosition(ape::Vector3(0, 0, 0));
+									userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
+									userNode->setParentNode(mpUserInputMacro->getUserNode());
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (browser->getClickedElementName() == "freeUsers")
+			{
+				auto nodes = mpSceneManager->getNodes();
+				for (auto node : nodes)
+				{
+					if (auto nodeSP = node.second.lock())
+					{
+						std::string nodeName = nodeSP->getName();
+						std::size_t pos = nodeName.find("_HeadNode");
+						if (pos != std::string::npos)
+						{
+							if (auto userNode = nodeSP->getParentNode().lock())
+							{
+								if (userNode->getName() != mpUserInputMacro->getUserNode().lock()->getName())
+								{
+									userNode->detachFromParentNode();
+									userNode->setPosition(ape::Vector3(0, 0, 0));
+									userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
+									userNode->setOwner(userNode->getCreator());
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	else if (event.type == ape::Event::Type::NODE_SHOWBOUNDINGBOX)

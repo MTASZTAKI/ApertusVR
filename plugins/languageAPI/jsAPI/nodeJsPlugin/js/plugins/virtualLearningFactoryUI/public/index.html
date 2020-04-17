@@ -49,21 +49,22 @@
 		<div id="rightButtons" class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
 			<button id="reload" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-reload" onClick="javascript: location.reload(true);"></span></button>
 			<button id="messenger" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-chat" onClick="showChat();"></span></button>
-			<button id="attach" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-people" onClick="showUsers();"></span></button>
+			<button id="attachUsers" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-lock-locked" onClick="toogleFreeUsers();"></span></button>
+			<button id="freeUsers" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-lock-unlocked" onClick="toogleFreeUsers();"></span></button>
 			<button id="freeMe" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-lock-unlocked" onClick="freeMe();"></span></button>
 			<button id="otherusers" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-map" onClick="showMap();"></span></button>
 			<button id="screenshot" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-camera-slr"></span></button>
 			<button id="screencast" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-video" onClick="toggleScreencastStop();"></span></button>
 			<button id="screencastStop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop" onClick="toggleScreencastStop();"></span></button>
-		</div>
-		<div class="d-inline-block" style="width:100%">
-			<div id="users" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 			</div>
-			<div id="map" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
-				<canvas id="mapCanvas" width="250" height="250" style="border:1px solid #d3d3d3;"> Your browser does not support the canvas element. </canvas>
+			<div class="d-inline-block" style="width:100%">
+				<div id="users" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+				</div>
+				<div id="map" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+					<canvas id="mapCanvas" width="250" height="250" style="border:1px solid #d3d3d3;"> Your browser does not support the canvas element. </canvas>
+				</div>
+				<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:350px;color:rgba(255, 255, 255);opacity:0.7"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
 			</div>
-			<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:350px;color:rgba(255, 255, 255);opacity:0.7"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
 		</div>
-	</div>
 </body>
 </html>

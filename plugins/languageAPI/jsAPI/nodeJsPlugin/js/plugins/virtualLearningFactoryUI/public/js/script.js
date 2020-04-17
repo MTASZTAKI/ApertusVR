@@ -226,6 +226,16 @@ function showChat() {
 	$('#chat').toggle();
 }
 
+function toogleFreeMe() {
+	$('#attachMe').toggle();
+	$('#freeMe').toggle();
+}
+
+function toogleFreeUsers() {
+	$('#attachUsers').toggle();
+	$('#freeUsers').toggle();
+}
+
 function showUsers() {
 	console.log('toogle users');
 	$('#users').toggle();
@@ -344,7 +354,7 @@ function hideStudentButtons() {
 
 function hideTeacherButtons() {
 	console.log('hideTeacherButtons');
-	$('#attach').hide();
+	$('#attachUsers').hide();
 	$('#otherusers').hide();
 }
 
@@ -375,6 +385,7 @@ $(document).ready(function () {
 	$('#users').toggle();
 	$('#bookmarks').toggle();
 	$('#screencastStop').toggle();
+	$('#freeUsers').toggle();
 	hidePauseAndSkipButtons();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
