@@ -12,56 +12,58 @@
 	<script src="js/script.js"></script>
 	<title></title>
 </head>
-  <body>
-	  <div class="d-inline-block">
-		  <div id="leftButtonsPlay" class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
-		  	<button id="play" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-play" onClick="showPauseAndSkipButtons();"></span></button>
-		  	<div id="leftButtonsPauseSkip" class="btn-group-vertical">
-		  		<div id="stopWatch" class="card border-dark mb-3"></div>
-		  		<button id="pause" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-pause"></span></button>
-		  		<button id="skip_forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-forward"></span></button>
-		  		<button id="skip_backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-backward"></span></button>
-		  		<button id="forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-forward" onClick="hidePauseAndSkipButtons();"></span></button>
-		  		<button id="backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-backward" onClick="hidePauseAndSkipButtons();"></span></button>
-		  		<button id="stop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop" onClick="hidePauseAndSkipButtons();"></span></button>
-		  	</div>
-		  	<button id="bookmark" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-bookmark" onClick="toogleBookmarks();"></span></button>
-		  	<button id="info" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-info" onClick="toggleInfoSection();"></span></button>
-		  </div>
-	  	<div id="bookmarks" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7); max-width: 18rem;">
-	  	</div>
-	  	<div id="infoSection" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7); max-width: 18rem;">
-	  		<div id="selectedNodeNameTitle" class="card-header"></div>
-	  		<div class="card-body text-dark">
-	  			<h5 class="card-title">Status: N/A</h5>
-	  			<p class="card-text">Specification: N/A </p>
-	  			<p id="properties" class="card-text">Properties: N/A </p>
-	  		</div>
-	  		<div class="btn-group-horizontal">
-	  			<button id="view" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-eye"></span></button>
-	  			<button id="edit" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-pencil"></span></button>
-	  			<button id="performance" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-graph"></span></button>
-	  			<button id="spaghetti" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-command"></span></button>
-	  		</div>
-	  	</div>
-	  </div>
-	  <div class="d-inline-block float-right">
-		  <div id="rightButtons" class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
-		  	<button id="reload" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-reload" onClick="javascript: location.reload(true);"></span></button>
-		  	<button id="messenger" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-chat" onClick="showChat();"></span></button>
-		  	<button id="attach" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-people" onClick="showUsers();"></span></button>
-		  	<button id="freeMe" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-lock-unlocked" onClick="freeMe();"></span></button>
-		  	<button id="otherusers" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-map" onClick="showMap();"></span></button>
-		  	<button id="screenshot" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-camera-slr"></span></button>
-		  	<button id="screencast" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-video" onClick="toggleScreencastStop();"></span></button>
-		  	<button id="screencastStop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop" onClick="toggleScreencastStop();"></span></button>
-		  </div>
-  	<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:400px;background-color:rgba(255, 255, 255, 0.7)" allowtransparency="true"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
-		  <div id="map" class="card border-dark mb-3 float-right" style="background-color:rgba(255, 255, 255, 0.7); max-width: 18rem;">
-		<canvas id="mapCanvas" width="250" height="250" style="border:1px solid #d3d3d3;"> Your browser does not support the canvas element. </canvas>
+<body>
+	<div class="d-inline-block float-left">
+		<div id="leftButtonsPlay" class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
+			<button id="play" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-play" onClick="showPauseAndSkipButtons();"></span></button>
+			<div id="leftButtonsPauseSkip" class="btn-group-vertical">
+				<div id="stopWatch" class="card border-dark mb-3"></div>
+				<button id="pause" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-pause"></span></button>
+				<button id="skip_forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-forward"></span></button>
+				<button id="skip_backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-backward"></span></button>
+				<button id="forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-forward" onClick="hidePauseAndSkipButtons();"></span></button>
+				<button id="backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-backward" onClick="hidePauseAndSkipButtons();"></span></button>
+				<button id="stop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop" onClick="hidePauseAndSkipButtons();"></span></button>
+			</div>
+			<button id="bookmark" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-bookmark" onClick="toogleBookmarks();"></span></button>
+			<button id="info" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-info" onClick="toggleInfoSection();"></span></button>
+		</div>
+		<div id="bookmarks" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+		</div>
+		<div id="infoSection" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+			<div id="selectedNodeNameTitle" class="card-header"></div>
+			<div class="card-body text-dark">
+				<h5 class="card-title">Status: N/A</h5>
+				<p class="card-text">Specification: N/A </p>
+				<p id="properties" class="card-text">Properties: N/A </p>
+			</div>
+			<div class="btn-group-horizontal">
+				<button id="view" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-eye"></span></button>
+				<button id="edit" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-pencil"></span></button>
+				<button id="performance" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-graph"></span></button>
+				<button id="spaghetti" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-command"></span></button>
+			</div>
+		</div>
 	</div>
-  	<div id="users" class="card border-dark mb-3 float-right" style="background-color:rgba(255, 255, 255, 0.7); max-width: 18rem;">
-  	</div>
-  </div>
+	<div class="d-inline-block float-right">
+		<div id="rightButtons" class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
+			<button id="reload" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-reload" onClick="javascript: location.reload(true);"></span></button>
+			<button id="messenger" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-chat" onClick="showChat();"></span></button>
+			<button id="attach" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-people" onClick="showUsers();"></span></button>
+			<button id="freeMe" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-lock-unlocked" onClick="freeMe();"></span></button>
+			<button id="otherusers" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-map" onClick="showMap();"></span></button>
+			<button id="screenshot" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-camera-slr"></span></button>
+			<button id="screencast" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-video" onClick="toggleScreencastStop();"></span></button>
+			<button id="screencastStop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop" onClick="toggleScreencastStop();"></span></button>
+		</div>
+		<div class="d-inline-block" style="width:100%">
+			<div id="users" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+			</div>
+			<div id="map" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+				<canvas id="mapCanvas" width="250" height="250" style="border:1px solid #d3d3d3;"> Your browser does not support the canvas element. </canvas>
+			</div>
+			<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:350px;color:rgba(255, 255, 255);opacity:0.7"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
+		</div>
+	</div>
 </body>
 </html>
