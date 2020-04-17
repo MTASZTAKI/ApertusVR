@@ -51,6 +51,8 @@ namespace ape
 
 		std::string mOwnerID;
 
+		std::string mLastOwnerID;
+
 		RakNet::VariableDeltaSerializer mVariableDeltaSerializer;
 
 	public:

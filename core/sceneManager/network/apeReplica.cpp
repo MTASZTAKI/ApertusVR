@@ -31,6 +31,7 @@ ape::Replica::Replica(RakNet::RakString objectType, std::string name, std::strin
 	mOwnerID = ownerID;
 	mIsHost = isHost;
 	mIsOwnedByMe4TheLastTick = false;
+	mLastOwnerID = ownerID;
 }
 
 ape::Replica::~Replica()
@@ -105,16 +106,31 @@ void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 		mpSceneManager->deleteEntity(mReplicaName);
 }
 
-RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Connection_RM3 *destinationConnection )
+RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization(RakNet::Connection_RM3 *destinationConnection)
 {
 	if (mOwnerID == mpCoreConfig->getNetworkGUID())
 	{
 		mIsOwnedByMe4TheLastTick = true;
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	}
-	if (mIsHost && (destinationConnection->GetRakNetGUID().ToString() != mOwnerID))
+	if (mIsHost)
 	{
-		return RakNet::RM3QSR_CALL_SERIALIZE;
+		if (mLastOwnerID == mOwnerID)
+		{
+			if (destinationConnection->GetRakNetGUID().ToString() != mOwnerID)
+			{
+				mLastOwnerID = mOwnerID;
+				return RakNet::RM3QSR_CALL_SERIALIZE;
+			}
+		}
+		else
+		{
+			if (destinationConnection->GetRakNetGUID().ToString() != mLastOwnerID)
+			{
+				mLastOwnerID = mOwnerID;
+				return RakNet::RM3QSR_CALL_SERIALIZE;
+			}
+		}
 	}
 	if (mIsOwnedByMe4TheLastTick)
 	{
