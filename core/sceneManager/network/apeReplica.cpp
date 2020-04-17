@@ -107,7 +107,18 @@ void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 
 RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Connection_RM3 *destinationConnection )
 {
-	if (creatingSystemGUID == replicaManager->GetRakPeerInterface()->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS))
+	if (mOwnerID == mpCoreConfig->getNetworkGUID())
+	{
+		return RakNet::RM3QSR_CALL_SERIALIZE;
+	}
+	if (mIsHost && (destinationConnection->GetRakNetGUID().ToString() != mOwnerID))
+	{
+		return RakNet::RM3QSR_CALL_SERIALIZE;
+	}
+	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
+
+
+	/*if (creatingSystemGUID == replicaManager->GetRakPeerInterface()->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS))
 	{
 		if (mOwnerID == creatingSystemGUID.ToString())
 		{
@@ -150,7 +161,7 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization( RakNet::Co
 		//APE_LOG_DEBUG("serialize this replica for a last time: " << mReplicaName << " and new owner is: " << mOwnerID << " to the host");
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	}
-	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
+	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;*/
 }
 
 void ape::Replica::OnUserReplicaPreSerializeTick()
