@@ -114,15 +114,6 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization(RakNet::Con
 			mLastOwnerID = mOwnerID;
 			return RakNet::RM3QSR_CALL_SERIALIZE;
 		}
-		if (mLastOwnerID != mOwnerID)
-		{
-			if (destinationConnection->GetRakNetGUID().ToString() == mOwnerID)
-			{
-				APE_LOG_DEBUG("replica: " << mReplicaName << " serialized to new owner: " << mOwnerID);
-				mLastOwnerID = mOwnerID;
-				return RakNet::RM3QSR_CALL_SERIALIZE;
-			}
-		}
 		if (destinationConnection->GetRakNetGUID().ToString() != mOwnerID)
 		{
 			mLastOwnerID = mOwnerID;
@@ -131,18 +122,19 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization(RakNet::Con
 	}
 	else
 	{
+		if (mLastOwnerID != mOwnerID && mLastOwnerID != mpCoreConfig->getNetworkGUID())
+		{
+			APE_LOG_DEBUG("would like to own replica: " << mReplicaName << " therefore let's serialize to the host");
+			mLastOwnerID = mOwnerID;
+			return RakNet::RM3QSR_CALL_SERIALIZE;
+		}
 		if (mOwnerID == mpCoreConfig->getNetworkGUID())
 		{
 			mLastOwnerID = mOwnerID;
 			return RakNet::RM3QSR_CALL_SERIALIZE;
 		}
-		if (mLastOwnerID != mOwnerID && mLastOwnerID == mpCoreConfig->getNetworkGUID())
-		{
-			APE_LOG_DEBUG("replica: " << mReplicaName << " serizalied to the host and the new owner is: " << mOwnerID);
-			mLastOwnerID = mOwnerID;
-			return RakNet::RM3QSR_CALL_SERIALIZE;
-		}
 	}
+	mLastOwnerID = mOwnerID;
 	return RakNet::RM3QSR_DO_NOT_CALL_SERIALIZE;
 }
 
