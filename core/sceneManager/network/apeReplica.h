@@ -44,8 +44,6 @@ namespace ape
 
 		std::string mReplicaName;
 
-		bool mIsOwnedByMe4TheLastTick;
-
 	protected:
 		RakNet::RakString mObjectType;
 
