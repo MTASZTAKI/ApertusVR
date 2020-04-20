@@ -385,6 +385,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 									userNode->detachFromParentNode();
 									userNode->setPosition(ape::Vector3(0, 0, 0));
 									userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
+									//APE_LOG_DEBUG("setOwner: " << userNode->getCreator());
 									userNode->setOwner(userNode->getCreator());
 								}
 							}

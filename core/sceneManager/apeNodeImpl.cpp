@@ -384,7 +384,7 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INHERITORIENTATION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, ownerID))
 	{
-		setOwner(ownerID.C_String());
+		mOwnerID = ownerID.C_String();
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

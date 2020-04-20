@@ -115,26 +115,25 @@ RakNet::RM3QuerySerializationResult ape::Replica::QuerySerialization(RakNet::Con
 	}
 	if (mIsHost)
 	{
-		if (mLastOwnerID == mOwnerID)
+		if (mLastOwnerID != mOwnerID)
 		{
-			if (destinationConnection->GetRakNetGUID().ToString() != mOwnerID)
+			if (destinationConnection->GetRakNetGUID().ToString() == mOwnerID)
 			{
+				APE_LOG_DEBUG("bring back this replica: " << mReplicaName << " to: " << mOwnerID);
 				mLastOwnerID = mOwnerID;
 				return RakNet::RM3QSR_CALL_SERIALIZE;
 			}
 		}
-		else
+		if (destinationConnection->GetRakNetGUID().ToString() != mOwnerID)
 		{
-			if (destinationConnection->GetRakNetGUID().ToString() != mLastOwnerID)
-			{
-				mLastOwnerID = mOwnerID;
-				return RakNet::RM3QSR_CALL_SERIALIZE;
-			}
+			mLastOwnerID = mOwnerID;
+			return RakNet::RM3QSR_CALL_SERIALIZE;
 		}
 	}
 	if (mIsOwnedByMe4TheLastTick)
 	{
 		mIsOwnedByMe4TheLastTick = false;
+		APE_LOG_DEBUG("bring back this replica: " << mReplicaName << " to: " << mOwnerID);
 		return RakNet::RM3QSR_CALL_SERIALIZE;
 	}
 	mIsOwnedByMe4TheLastTick = false;
