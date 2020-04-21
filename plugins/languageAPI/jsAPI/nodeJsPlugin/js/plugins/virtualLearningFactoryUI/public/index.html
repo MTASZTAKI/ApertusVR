@@ -15,18 +15,18 @@
 <body>
 	<div class="d-inline-block float-left">
 		<div id="leftButtonsPlay" class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
-			<button id="play" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-play" onClick="showPauseAndSkipButtons();"></span></button>
+			<button id="play" type="button" class="btn btn-outline-dark btn-lg" onClick="showPauseAndSkipButtons();"><span class="oi oi-media-play"></span></button>
 			<div id="leftButtonsPauseSkip" class="btn-group-vertical">
 				<div id="stopWatch" class="card border-dark mb-3"></div>
 				<button id="pause" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-pause"></span></button>
 				<button id="skip_forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-forward"></span></button>
 				<button id="skip_backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-backward"></span></button>
-				<button id="forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-forward" onClick="hidePauseAndSkipButtons();"></span></button>
-				<button id="backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-step-backward" onClick="hidePauseAndSkipButtons();"></span></button>
-				<button id="stop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop" onClick="hidePauseAndSkipButtons();"></span></button>
+				<button id="forward" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-step-forward"></span></button>
+				<button id="backward" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-step-backward"></span></button>
+				<button id="stop" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-stop"></span></button>
 			</div>
-			<button id="bookmark" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-bookmark" onClick="toogleBookmarks();"></span></button>
-			<button id="info" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-info" onClick="toggleInfoSection();"></span></button>
+			<button id="bookmark" type="button" class="btn btn-outline-dark btn-lg" onClick="toogleBookmarks();"><span class="oi oi-bookmark"></span></button>
+			<button id="info" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleInfoSection();"><span class="oi oi-info"></span></button>
 		</div>
 		<div id="bookmarks" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 		</div>
@@ -47,15 +47,15 @@
 	</div>
 	<div class="d-inline-block float-right">
 		<div id="rightButtons" class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
-			<button id="reload" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-reload" onClick="javascript: location.reload(true);"></span></button>
-			<button id="messenger" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-chat" onClick="showChat();"></span></button>
-			<button id="attachUsers" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-lock-locked" onClick="toogleFreeUsers();"></span></button>
-			<button id="freeUsers" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-lock-unlocked" onClick="toogleFreeUsers();"></span></button>
-			<button id="freeMe" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-lock-unlocked" onClick="freeMe();"></span></button>
-			<button id="otherusers" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-map" onClick="showMap();"></span></button>
+			<button id="reload" type="button" class="btn btn-outline-dark btn-lg" onClick="javascript: location.reload(true);"><span class="oi oi-reload"></span></button>
+			<button id="messenger" type="button" class="btn btn-outline-dark btn-lg" onClick="showChat();"><span class="oi oi-chat"></span></button>
+			<button id="attachUsers" type="button" class="btn btn-outline-dark btn-lg" onClick="toogleFreeUsers();"><span class="oi oi-lock-locked"></span></button>
+			<button id="freeUsers" type="button" class="btn btn-outline-dark btn-lg" onClick="toogleFreeUsers();"><span class="oi oi-lock-unlocked"></span></button>
+			<button id="freeMe" type="button" class="btn btn-outline-dark btn-lg" onClick="freeMe();"><span class="oi oi-lock-unlocked"></span></button>
+			<button id="otherusers" type="button" class="btn btn-outline-dark btn-lg" onClick="showMap();"><span class="oi oi-map"></span></button>
 			<button id="screenshot" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-camera-slr"></span></button>
-			<button id="screencast" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-video" onClick="toggleScreencastStop();"></span></button>
-			<button id="screencastStop" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-stop" onClick="toggleScreencastStop();"></span></button>
+			<button id="screencast" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleScreencastStop();"><span class="oi oi-video"></span></button>
+			<button id="screencastStop" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleScreencastStop();"><span class="oi oi-media-stop"></span></button>
 			</div>
 			<div class="d-inline-block" style="width:100%">
 				<div id="users" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
