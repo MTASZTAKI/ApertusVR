@@ -15,6 +15,22 @@
 #include <stdexcept>
 #include <regex>
 
+#ifndef NLOHMANN_OPT_HELPER
+#define NLOHMANN_OPT_HELPER
+namespace nlohmann {
+	template <typename T>
+	struct adl_serializer<std::shared_ptr<T>> {
+		static void to_json(json & j, const std::shared_ptr<T> & opt) {
+			if (!opt) j = nullptr; else j = *opt;
+		}
+
+		static std::shared_ptr<T> from_json(const json & j) {
+			if (j.is_null()) return std::unique_ptr<T>(); else return std::unique_ptr<T>(new T(j.get<T>()));
+		}
+	};
+}
+#endif
+
 namespace quicktype {
 	using nlohmann::json;
 
@@ -27,6 +43,19 @@ namespace quicktype {
 
 	inline json get_untyped(const json & j, std::string property) {
 		return get_untyped(j, property.data());
+	}
+
+	template <typename T>
+	inline std::shared_ptr<T> get_optional(const json & j, const char * property) {
+		if (j.find(property) != j.end()) {
+			return j.at(property).get<std::shared_ptr<T>>();
+		}
+		return std::shared_ptr<T>();
+	}
+
+	template <typename T>
+	inline std::shared_ptr<T> get_optional(const json & j, std::string property) {
+		return get_optional<T>(j, property.data());
 	}
 
 	class Bookmark {
@@ -48,19 +77,45 @@ namespace quicktype {
 		void set_time(const std::string & value) { this->time = value; }
 	};
 
+	enum class EventType : int { ANIMATION, HIDE, SHOW };
+
 	class Event {
 	public:
 		Event() = default;
 		virtual ~Event() = default;
 
 	private:
-		std::string type;
+		quicktype::EventType type;
+		std::shared_ptr<std::string> placement_rel_to;
+		std::shared_ptr<std::string> data;
+
+	public:
+		const quicktype::EventType & get_type() const { return type; }
+		quicktype::EventType & get_mutable_type() { return type; }
+		void set_type(const quicktype::EventType & value) { this->type = value; }
+
+		std::shared_ptr<std::string> get_placement_rel_to() const { return placement_rel_to; }
+		void set_placement_rel_to(std::shared_ptr<std::string> value) { this->placement_rel_to = value; }
+
+		std::shared_ptr<std::string> get_data() const { return data; }
+		void set_data(std::shared_ptr<std::string> value) { this->data = value; }
+	};
+
+	enum class TriggerType : int { TIMESTAMP };
+
+	class Trigger {
+	public:
+		Trigger() = default;
+		virtual ~Trigger() = default;
+
+	private:
+		quicktype::TriggerType type;
 		std::string data;
 
 	public:
-		const std::string & get_type() const { return type; }
-		std::string & get_mutable_type() { return type; }
-		void set_type(const std::string & value) { this->type = value; }
+		const quicktype::TriggerType & get_type() const { return type; }
+		quicktype::TriggerType & get_mutable_type() { return type; }
+		void set_type(const quicktype::TriggerType & value) { this->type = value; }
 
 		const std::string & get_data() const { return data; }
 		std::string & get_mutable_data() { return data; }
@@ -73,13 +128,13 @@ namespace quicktype {
 		virtual ~Action() = default;
 
 	private:
-		quicktype::Event trigger;
+		quicktype::Trigger trigger;
 		quicktype::Event event;
 
 	public:
-		const quicktype::Event & get_trigger() const { return trigger; }
-		quicktype::Event & get_mutable_trigger() { return trigger; }
-		void set_trigger(const quicktype::Event & value) { this->trigger = value; }
+		const quicktype::Trigger & get_trigger() const { return trigger; }
+		quicktype::Trigger & get_mutable_trigger() { return trigger; }
+		void set_trigger(const quicktype::Trigger & value) { this->trigger = value; }
 
 		const quicktype::Event & get_event() const { return event; }
 		quicktype::Event & get_mutable_event() { return event; }
@@ -133,6 +188,9 @@ namespace nlohmann {
 		void from_json(const json & j, quicktype::Event & x);
 		void to_json(json & j, const quicktype::Event & x);
 
+		void from_json(const json & j, quicktype::Trigger & x);
+		void to_json(json & j, const quicktype::Trigger & x);
+
 		void from_json(const json & j, quicktype::Action & x);
 		void to_json(json & j, const quicktype::Action & x);
 
@@ -141,6 +199,12 @@ namespace nlohmann {
 
 		void from_json(const json & j, quicktype::Animations & x);
 		void to_json(json & j, const quicktype::Animations & x);
+
+		void from_json(const json & j, quicktype::EventType & x);
+		void to_json(json & j, const quicktype::EventType & x);
+
+		void from_json(const json & j, quicktype::TriggerType & x);
+		void to_json(json & j, const quicktype::TriggerType & x);
 
 		inline void from_json(const json & j, quicktype::Bookmark& x) {
 			x.set_name(j.at("name").get<std::string>());
@@ -154,18 +218,31 @@ namespace nlohmann {
 		}
 
 		inline void from_json(const json & j, quicktype::Event& x) {
-			x.set_type(j.at("type").get<std::string>());
-			x.set_data(j.at("data").get<std::string>());
+			x.set_type(j.at("type").get<quicktype::EventType>());
+			x.set_placement_rel_to(quicktype::get_optional<std::string>(j, "placementRelTo"));
+			x.set_data(quicktype::get_optional<std::string>(j, "data"));
 		}
 
 		inline void to_json(json & j, const quicktype::Event & x) {
+			j = json::object();
+			j["type"] = x.get_type();
+			j["placementRelTo"] = x.get_placement_rel_to();
+			j["data"] = x.get_data();
+		}
+
+		inline void from_json(const json & j, quicktype::Trigger& x) {
+			x.set_type(j.at("type").get<quicktype::TriggerType>());
+			x.set_data(j.at("data").get<std::string>());
+		}
+
+		inline void to_json(json & j, const quicktype::Trigger & x) {
 			j = json::object();
 			j["type"] = x.get_type();
 			j["data"] = x.get_data();
 		}
 
 		inline void from_json(const json & j, quicktype::Action& x) {
-			x.set_trigger(j.at("trigger").get<quicktype::Event>());
+			x.set_trigger(j.at("trigger").get<quicktype::Trigger>());
 			x.set_event(j.at("event").get<quicktype::Event>());
 		}
 
@@ -196,5 +273,34 @@ namespace nlohmann {
 			j["nodes"] = x.get_nodes();
 			j["bookmarks"] = x.get_bookmarks();
 		}
+
+		inline void from_json(const json & j, quicktype::EventType & x) {
+			if (j == "animation") x = quicktype::EventType::ANIMATION;
+			else if (j == "hide") x = quicktype::EventType::HIDE;
+			else if (j == "show") x = quicktype::EventType::SHOW;
+			else throw "Input JSON does not conform to schema";
+		}
+
+		inline void to_json(json & j, const quicktype::EventType & x) {
+			switch (x) {
+			case quicktype::EventType::ANIMATION: j = "animation"; break;
+			case quicktype::EventType::HIDE: j = "hide"; break;
+			case quicktype::EventType::SHOW: j = "show"; break;
+			default: throw "This should not happen";
+			}
+		}
+
+		inline void from_json(const json & j, quicktype::TriggerType & x) {
+			if (j == "timestamp") x = quicktype::TriggerType::TIMESTAMP;
+			else throw "Input JSON does not conform to schema";
+		}
+
+		inline void to_json(json & j, const quicktype::TriggerType & x) {
+			switch (x) {
+			case quicktype::TriggerType::TIMESTAMP: j = "timestamp"; break;
+			default: throw "This should not happen";
+			}
+		}
 	}
 }
+

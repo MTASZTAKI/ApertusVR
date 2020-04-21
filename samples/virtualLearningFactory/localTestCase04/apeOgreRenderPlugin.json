@@ -7,7 +7,7 @@
     "renderWindows": [
         {
             "monitorIndex": 0,
-            "name": "vlft_local",
+            "name": "vlft_local_testCase04",
           "resolution": {
             "width": 1280,
             "height": 760,

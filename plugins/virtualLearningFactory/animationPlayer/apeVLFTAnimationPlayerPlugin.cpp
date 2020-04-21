@@ -418,50 +418,53 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 		mAnimatedNodeNames.push_back(node.get_name());
 		for (const auto& action : node.get_actions())
 		{
-			if (action.get_trigger().get_type() == "timestamp")
+			if (action.get_trigger().get_type() == quicktype::TriggerType::TIMESTAMP)
 			{
-				std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + action.get_event().get_data();
-				std::ifstream file(fileNamePath);
-				std::string dataCount;
-				std::getline(file, dataCount);
-				std::string fps;
-				std::getline(file, fps);
-				std::vector<Animation> mCurrentAnimations;
-				for (int i = 0; i < atoi(dataCount.c_str()); i++)
+				if (action.get_event().get_data())
 				{
-					std::string postionData;
-					std::getline(file, postionData);
-					auto posX = postionData.find_first_of(",") - 1;
-					float x = atof(postionData.substr(1, posX).c_str());
-					postionData = postionData.substr(posX + 2, postionData.length());
-					auto posY = postionData.find_first_of(",") - 1;
-					float y = atof(postionData.substr(0, posY).c_str());
-					postionData = postionData.substr(posY + 2, postionData.length());
-					auto posZ = postionData.find_first_of("]") - 1;
-					float z = atof(postionData.substr(0, posZ).c_str());
-					Animation animation;
-					animation.nodeName = node.get_name();
-					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
-					animation.position = ape::Vector3(x, y, z);
-					mCurrentAnimations.push_back(animation);
-				}
-				for (auto currentAnimation : mCurrentAnimations)
-				{
-					std::string orientationData;
-					std::getline(file, orientationData);
-					auto posW = orientationData.find_first_of(",") - 1;
-					float w = atof(orientationData.substr(1, posW).c_str());
-					orientationData = orientationData.substr(posW + 2, orientationData.length());
-					auto posX = orientationData.find_first_of(",") - 1;
-					float x = atof(orientationData.substr(0, posX).c_str());
-					orientationData = orientationData.substr(posX + 2, orientationData.length());
-					auto posY = orientationData.find_first_of(",") - 1;
-					float y = atof(orientationData.substr(0, posY).c_str());
-					orientationData = orientationData.substr(posY + 2, orientationData.length());
-					auto posZ = orientationData.find_first_of("]" - 1);
-					float z = atof(orientationData.substr(0, posZ).c_str());
-					currentAnimation.orientation = ape::Quaternion(w, x, y, z);
-					mParsedAnimations.push_back(currentAnimation);
+					std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + *action.get_event().get_data();
+					std::ifstream file(fileNamePath);
+					std::string dataCount;
+					std::getline(file, dataCount);
+					std::string fps;
+					std::getline(file, fps);
+					std::vector<Animation> mCurrentAnimations;
+					for (int i = 0; i < atoi(dataCount.c_str()); i++)
+					{
+						std::string postionData;
+						std::getline(file, postionData);
+						auto posX = postionData.find_first_of(",") - 1;
+						float x = atof(postionData.substr(1, posX).c_str());
+						postionData = postionData.substr(posX + 2, postionData.length());
+						auto posY = postionData.find_first_of(",") - 1;
+						float y = atof(postionData.substr(0, posY).c_str());
+						postionData = postionData.substr(posY + 2, postionData.length());
+						auto posZ = postionData.find_first_of("]") - 1;
+						float z = atof(postionData.substr(0, posZ).c_str());
+						Animation animation;
+						animation.nodeName = node.get_name();
+						animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
+						animation.position = ape::Vector3(x, y, z);
+						mCurrentAnimations.push_back(animation);
+					}
+					for (auto currentAnimation : mCurrentAnimations)
+					{
+						std::string orientationData;
+						std::getline(file, orientationData);
+						auto posW = orientationData.find_first_of(",") - 1;
+						float w = atof(orientationData.substr(1, posW).c_str());
+						orientationData = orientationData.substr(posW + 2, orientationData.length());
+						auto posX = orientationData.find_first_of(",") - 1;
+						float x = atof(orientationData.substr(0, posX).c_str());
+						orientationData = orientationData.substr(posX + 2, orientationData.length());
+						auto posY = orientationData.find_first_of(",") - 1;
+						float y = atof(orientationData.substr(0, posY).c_str());
+						orientationData = orientationData.substr(posY + 2, orientationData.length());
+						auto posZ = orientationData.find_first_of("]" - 1);
+						float z = atof(orientationData.substr(0, posZ).c_str());
+						currentAnimation.orientation = ape::Quaternion(w, x, y, z);
+						mParsedAnimations.push_back(currentAnimation);
+					}
 				}
 			}
 		}

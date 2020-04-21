@@ -136,5 +136,15 @@
         }
       ]
     }
+  ],
+  "bookmarks": [
+    {
+      "name": "bookmark_1",
+      "time": "7500"
+    },
+    {
+      "name": "bookmark_2",
+      "time": "1200"
+    }
   ]
 }

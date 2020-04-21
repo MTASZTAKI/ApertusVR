@@ -2,7 +2,7 @@
     "context": {
         "UnitOfMeasureScale": 0.01,
         "Zup": false,
-        "RepoPath": "C:/VLFT_Gamification/10/samples/"
+        "RepoPath": "/samples/"
     },
     "scene": [
         "http://www.ontoeng.com/VLFT_Test02#WS05.URPPs_Robot",
@@ -324,10 +324,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_X.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_X.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_X.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -337,10 +337,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_1.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -350,10 +350,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Static.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Static.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Static.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Static.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -363,10 +363,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PinInsertion/Pin_Insertion_Floating_X.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PinInsertion/Pin_Insertion_Floating_X.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PinInsertion/Pin_Insertion_Floating_X.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PinInsertion/Pin_Insertion_Floating_X.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -376,10 +376,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PinInsertion/Pin_Insertion_Static.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PinInsertion/Pin_Insertion_Static.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PinInsertion/Pin_Insertion_Static.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PinInsertion/Pin_Insertion_Static.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -389,10 +389,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Box/Box.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Box/Box.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Box/Box.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Box/Box.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -402,10 +402,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Riveting/Riveting_Floating_X1.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Riveting/Riveting_Floating_X1.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Riveting/Riveting_Floating_X1.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Riveting/Riveting_Floating_X1.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -415,10 +415,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Riveting/Riveting_Floating_X2.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Riveting/Riveting_Floating_X2.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Riveting/Riveting_Floating_X2.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Riveting/Riveting_Floating_X2.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -428,10 +428,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Floating_Y.JPG"
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Floating_Y.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Floating_Y.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Floating_Y.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -441,10 +441,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/RA_Gripper_2.JPG"
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/RA_Gripper_2.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/RA_Gripper_2.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/RA_Gripper_2.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -454,10 +454,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Riveting/Riveting_Static.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Riveting/Riveting_Static.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Riveting/Riveting_Static.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Riveting/Riveting_Static.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -467,10 +467,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Static.JPG"
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Static.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Static.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Static.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -480,10 +480,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/PP_Gripper_2.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -493,10 +493,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/RA_Gripper_1.JPG"
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/RA_Gripper_1.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/RA_Gripper_1.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/RA_Gripper_1.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -506,10 +506,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Y.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Y.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Y.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -519,11 +519,11 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Tightener/Tightener_Floating_Y.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Tightener/Tightener_Floating_Y.OBJ",
                     "unit": 0.001
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Tightener/Tightener_Floating_Y.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Tightener/Tightener_Floating_Y.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -533,10 +533,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Floating_X.JPG"
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Floating_X.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Floating_X.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/RoboticArm/Robotic_Arm_Floating_X.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -546,11 +546,11 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Tightener/Tightener_Static.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Tightener/Tightener_Static.OBJ",
                     "unit": 0.001
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Tightener/Tightener_Static.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Tightener/Tightener_Static.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -560,10 +560,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_End_Effector.JPG"
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_End_Effector.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_End_Effector.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_End_Effector.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -573,10 +573,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/UniversalRobot/UR_Gripper_1.JPG"
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Gripper_1.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/UniversalRobot/UR_Gripper_1.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Gripper_1.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -586,10 +586,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Z.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Z.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Pick_and_Place_Floating_Z.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -599,10 +599,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Camera/Camera.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Camera/Camera.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Camera/Camera.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Camera/Camera.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -612,11 +612,11 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Screws.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Screws.OBJ",
                     "unit": 0.001
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Screws.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Screws.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -626,10 +626,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/UniversalRobot/UR_Gripper_2.JPG"
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Gripper_2.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/UniversalRobot/UR_Gripper_2.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Gripper_2.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -639,10 +639,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Pins.JPG"
+                    "file": "/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Pins.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Pins.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Pins.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -652,10 +652,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Clip.JPG"
+                    "file": "/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Clip.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Clip.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Clip.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -665,10 +665,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementComponentType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Wing.JPG"
+                    "file": "/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Wing.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Wing.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/VibratingBowl/Vibrating_Bowl_Wing.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -1037,10 +1037,10 @@
             "type": "http://www.ontoeng.com/factory#RobotType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_Static.JPG"
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_Static.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_Static.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/UniversalRobot/UR_Pick_and_Place_Static.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -2755,10 +2755,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElementType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Conveyor/Conveyor_Main.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Conveyor/Conveyor_Main.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Conveyor/Conveyor_Main.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Conveyor/Conveyor_Main.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -2804,10 +2804,10 @@
             "type": "http://www.ontoeng.com/factory#PalletType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Pallet/Pallet_Wing.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Pallet/Pallet_Wing.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Pallet/Pallet_Wing.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Pallet/Pallet_Wing.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -2817,10 +2817,10 @@
             "type": "http://www.ontoeng.com/factory#PalletType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Pallet/Pallet.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Pallet/Pallet.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Pallet/Pallet.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Pallet/Pallet.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -2830,10 +2830,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElementType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RotatingTable/Rotating_Table.JPG"
+                    "file": "/samples/virtualLearningFactory/models/RotatingTable/Rotating_Table.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/RotatingTable/Rotating_Table.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/RotatingTable/Rotating_Table.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -2843,10 +2843,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElementType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Lateral_Conveyor.JPG"
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Lateral_Conveyor.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/PickAndPlace/Lateral_Conveyor.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/PickAndPlace/Lateral_Conveyor.OBJ",
                     "unit": 0.001
                 }
             ]
@@ -2856,10 +2856,10 @@
             "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcTransportElementType",
             "representations": [
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Conveyor/Conveyor_Wing.JPG"
+                    "file": "/samples/virtualLearningFactory/models/Conveyor/Conveyor_Wing.JPG"
                 },
                 {
-                    "file": "C:/VLFT_Gamification/10/samples/virtualLearningFactory/models/Conveyor/Conveyor_Wing.OBJ",
+                    "file": "/samples/virtualLearningFactory/models/Conveyor/Conveyor_Wing.OBJ",
                     "unit": 0.001
                 }
             ]
