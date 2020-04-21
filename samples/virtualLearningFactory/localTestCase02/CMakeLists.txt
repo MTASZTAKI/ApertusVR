@@ -31,8 +31,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    VirtualLearningFactoryLocal ALL
+    VirtualLearningFactoryLocalTestCase02 ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET VirtualLearningFactoryLocal PROPERTY FOLDER "Samples/VirtualLearningFactory")
+set_property (TARGET VirtualLearningFactoryLocalTestCase02  PROPERTY FOLDER "Samples/VirtualLearningFactory")

@@ -21,17 +21,13 @@
 #SOFTWARE.
 
 set (CONFIGS
-	apeNodeJsPlugin.json
-	apeAssimpAssetLoaderPlugin.json
-	apeOgreRenderPlugin.json
-	apeViewPointManagerPlugin.json
-	apeVLFTAnimationPlayerPlugin.json
+    apeVLFTSceneLoaderPlugin.json
 	apeCore.json
 	)
 
 add_custom_target(
-    VirtualLearningFactoryTeacher ALL
+    VirtualLearningFactoryServerTestCase02  ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET VirtualLearningFactoryTeacher PROPERTY FOLDER "Samples/VirtualLearningFactory")
+set_property (TARGET VirtualLearningFactoryServerTestCase02  PROPERTY FOLDER "Samples/VirtualLearningFactory")
