@@ -59,7 +59,9 @@ namespace ape
 	public:
 		struct Animation
 		{
+			quicktype::EventType type;
 			std::string nodeName;
+			std::string parentNodeName;
 			unsigned long long time;
 			ape::Vector3 position;
 			ape::Quaternion orientation;
@@ -82,6 +84,8 @@ namespace ape
 		std::vector<Animation> mParsedAnimations;
 
 		std::vector<std::string> mAnimatedNodeNames;
+
+		std::vector<ape::NodeWeakPtr> mAttachedUsers;
 
 		std::vector<unsigned long long> mParsedBookmarkTimes;
 
@@ -111,6 +115,10 @@ namespace ape
 		~VLFTAnimationPlayerPlugin();
 
 		void playAnimation();
+
+		void drawSpaghettiSection(const ape::Vector3& startPosition, const ape::NodeSharedPtr& node, std::string& spaghettiSectionName);
+
+		bool attach2NewAnimationNode(const std::string& parentNodeName, const ape::NodeSharedPtr& node);
 
 		void startPlayAnimationThread();
 

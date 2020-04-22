@@ -108,6 +108,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mIsStopClicked = false;
 	mIsPlayRunning = false;
 	mAnimatedNodeNames = std::vector<std::string>();
+	mAttachedUsers = std::vector<ape::NodeWeakPtr>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -117,19 +118,52 @@ ape::VLFTAnimationPlayerPlugin::~VLFTAnimationPlayerPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
+void ape::VLFTAnimationPlayerPlugin::drawSpaghettiSection(const ape::Vector3& startPosition, const ape::NodeSharedPtr& node, std::string& spaghettiSectionName)
+{
+	if (auto spaghettiNode = mpSceneManager->getNode(node->getName() + "_spaghettiNode").lock())
+	{
+		auto currentPosition = node->getDerivedPosition();
+		//APE_LOG_DEBUG("startPosition: " << startPosition.toString());
+		//APE_LOG_DEBUG("currentPosition: " << currentPosition.toString());
+		std::chrono::nanoseconds uuid = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch());
+		if (auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(std::to_string(uuid.count()), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
+		{
+			ape::GeometryCoordinates coordinates = {
+				startPosition.x, startPosition.y, startPosition.z,
+				currentPosition.x, currentPosition.y, currentPosition.z, };
+			ape::GeometryIndices indices = { 0, 1, -1 };
+			ape::Color color(1, 0, 0);
+			spagetthiLineSection->setParameters(coordinates, indices, color);
+			spagetthiLineSection->setParentNode(spaghettiNode);
+			spaghettiSectionName = spagetthiLineSection->getName();
+		}
+	}
+}
+
+bool ape::VLFTAnimationPlayerPlugin::attach2NewAnimationNode(const std::string& parentNodeName, const ape::NodeSharedPtr& node)
+{
+	if (auto newParentNode = mpSceneManager->getNode(parentNodeName).lock())
+	{
+		auto currentParentNode = node->getParentNode().lock();
+		if (newParentNode != currentParentNode)
+		{
+			node->setParentNode(newParentNode);
+			return true;
+		}
+	}
+	return false;
+}
+
 void ape::VLFTAnimationPlayerPlugin::playAnimation()
 {
 	mIsPlayRunning = true;
-	std::vector<std::string> previousOwnerNames;
 	std::vector<std::string> spaghettiNodeNames;
 	std::vector<std::string> spaghettiLineNames;
 	for (auto animatedNodeName : mAnimatedNodeNames)
 	{
 		if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
 		{
-			previousOwnerNames.push_back(node->getOwner());
 			node->setOwner(mpCoreConfig->getNetworkGUID());
-			node->setVisible(true);
 			if (auto spaghettiNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiNode", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
 				spaghettiNodeNames.push_back(spaghettiNode->getName());
@@ -139,7 +173,6 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	unsigned long long previousTimeToSleep = 0;
 	for (int i = 0; i < mParsedAnimations.size(); i++)
 	{
-		mpUserInputMacro->sendOverlayBrowserMessage(std::to_string(mParsedAnimations[i].time));
 		if (i > mChoosedBookmarkedAnimationID)
 		{
 			while (mIsPauseClicked)
@@ -154,27 +187,31 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 		unsigned long long timeToSleep = mParsedAnimations[i].time - previousTimeToSleep;
 		if (i > mChoosedBookmarkedAnimationID)
 			std::this_thread::sleep_for(std::chrono::milliseconds((int)round(timeToSleep * mTimeToSleepFactor)));
+		mpUserInputMacro->sendOverlayBrowserMessage(std::to_string(mParsedAnimations[i].time));
 		previousTimeToSleep = mParsedAnimations[i].time;
 		if (auto node = mpSceneManager->getNode(mParsedAnimations[i].nodeName).lock())
 		{
-			if (auto spaghettiNode = mpSceneManager->getNode(mParsedAnimations[i].nodeName + "_spaghettiNode").lock())
+			if (mParsedAnimations[i].type == quicktype::EventType::SHOW)
+			{
+				attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node);
+				node->setVisible(true);
+			}
+			if (mParsedAnimations[i].type == quicktype::EventType::HIDE)
+			{
+				node->setVisible(false);
+			}
+			if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION)
 			{
 				auto previousPosition = node->getDerivedPosition();
+				if (!attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
+				{
+					previousPosition = node->getDerivedPosition();
+				}
 				node->setPosition(mParsedAnimations[i].position);
 				node->setOrientation(mParsedAnimations[i].orientation);
-				auto currentPosition = node->getDerivedPosition();
-				std::chrono::nanoseconds uuid = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch());
-				if (auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(std::to_string(uuid.count()), ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
-				{
-					ape::GeometryCoordinates coordinates = {
-						previousPosition.x, previousPosition.y, previousPosition.z,
-						currentPosition.x, currentPosition.y, currentPosition.z, };
-					ape::GeometryIndices indices = { 0, 1, -1 };
-					ape::Color color(1, 0, 0);
-					spagetthiLineSection->setParameters(coordinates, indices, color);
-					spagetthiLineSection->setParentNode(spaghettiNode);
-					spaghettiLineNames.push_back(spagetthiLineSection->getName());
-				}
+				std::string spaghettiSectionName;
+				drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
+				spaghettiLineNames.push_back(spaghettiSectionName);
 			}
 		}
 	}
@@ -188,14 +225,15 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	{
 		mpSceneManager->deleteNode(spaghettiNodeName);
 	}
-	for (int i = 0; i < mAnimatedNodeNames.size(); i++)
+	for (auto animatedNodeName : mAnimatedNodeNames)
 	{
-		if (auto node = mpSceneManager->getNode(mAnimatedNodeNames[i]).lock())
+		if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
 		{
+			node->detachFromParentNode();
 			node->setPosition(ape::Vector3(0, 0, 0));
 			node->setOrientation(ape::Quaternion(1, 0, 0, 0));
 			node->setVisible(false);
-			node->setOwner(previousOwnerNames[i]);
+			node->setOwner(node->getCreator());
 		}
 	}
 	mIsPlayRunning = false;
@@ -361,6 +399,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 									userNode->setPosition(ape::Vector3(0, 0, 0));
 									userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
 									userNode->setParentNode(mpUserInputMacro->getUserNode());
+									mAttachedUsers.push_back(userNode);
 								}
 							}
 						}
@@ -369,27 +408,14 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "freeUsers")
 			{
-				auto nodes = mpSceneManager->getNodes();
-				for (auto node : nodes)
+				for (auto attachedUserWP : mAttachedUsers)
 				{
-					if (auto nodeSP = node.second.lock())
+					if (auto attachedUser = attachedUserWP.lock())
 					{
-						std::string nodeName = nodeSP->getName();
-						std::size_t pos = nodeName.find("_HeadNode");
-						if (pos != std::string::npos)
-						{
-							if (auto userNode = nodeSP->getParentNode().lock())
-							{
-								if (userNode->getName() != mpUserInputMacro->getUserNode().lock()->getName())
-								{
-									userNode->detachFromParentNode();
-									userNode->setPosition(ape::Vector3(0, 0, 0));
-									userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
-									//APE_LOG_DEBUG("setOwner: " << userNode->getCreator());
-									userNode->setOwner(userNode->getCreator());
-								}
-							}
-						}
+						attachedUser->setPosition(ape::Vector3(0, 0, 0));
+						attachedUser->setOrientation(ape::Quaternion(1, 0, 0, 0));
+						attachedUser->detachFromParentNode();
+						attachedUser->setOwner(attachedUser->getCreator());
 					}
 				}
 			}
@@ -420,7 +446,25 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 		{
 			if (action.get_trigger().get_type() == quicktype::TriggerType::TIMESTAMP)
 			{
-				if (action.get_event().get_data())
+				if (action.get_event().get_type() == quicktype::EventType::SHOW)
+				{
+					Animation animation;
+					animation.type = action.get_event().get_type();
+					animation.nodeName = node.get_name();
+					animation.parentNodeName = *action.get_event().get_placement_rel_to();
+					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000);
+					mParsedAnimations.push_back(animation);
+				}
+				if (action.get_event().get_type() == quicktype::EventType::HIDE)
+				{
+					Animation animation;
+					animation.type = action.get_event().get_type();
+					animation.nodeName = node.get_name();
+					animation.parentNodeName = "";
+					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000);
+					mParsedAnimations.push_back(animation);
+				}
+				if (action.get_event().get_type() == quicktype::EventType::ANIMATION)
 				{
 					std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + *action.get_event().get_data();
 					std::ifstream file(fileNamePath);
@@ -428,39 +472,41 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 					std::getline(file, dataCount);
 					std::string fps;
 					std::getline(file, fps);
-					std::vector<Animation> mCurrentAnimations;
+					std::vector<Animation> currentAnimations;
 					for (int i = 0; i < atoi(dataCount.c_str()); i++)
 					{
 						std::string postionData;
 						std::getline(file, postionData);
-						auto posX = postionData.find_first_of(",") - 1;
+						auto posX = postionData.find_first_of(",");
 						float x = atof(postionData.substr(1, posX).c_str());
-						postionData = postionData.substr(posX + 2, postionData.length());
-						auto posY = postionData.find_first_of(",") - 1;
+						postionData = postionData.substr(posX + 1, postionData.length());
+						auto posY = postionData.find_first_of(",");
 						float y = atof(postionData.substr(0, posY).c_str());
-						postionData = postionData.substr(posY + 2, postionData.length());
-						auto posZ = postionData.find_first_of("]") - 1;
+						postionData = postionData.substr(posY + 1, postionData.length());
+						auto posZ = postionData.find_first_of("]");
 						float z = atof(postionData.substr(0, posZ).c_str());
 						Animation animation;
+						animation.type = action.get_event().get_type();
 						animation.nodeName = node.get_name();
+						animation.parentNodeName = *action.get_event().get_placement_rel_to();
 						animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
 						animation.position = ape::Vector3(x, y, z);
-						mCurrentAnimations.push_back(animation);
+						currentAnimations.push_back(animation);
 					}
-					for (auto currentAnimation : mCurrentAnimations)
+					for (auto currentAnimation : currentAnimations)
 					{
 						std::string orientationData;
 						std::getline(file, orientationData);
-						auto posW = orientationData.find_first_of(",") - 1;
+						auto posW = orientationData.find_first_of(",");
 						float w = atof(orientationData.substr(1, posW).c_str());
-						orientationData = orientationData.substr(posW + 2, orientationData.length());
-						auto posX = orientationData.find_first_of(",") - 1;
+						orientationData = orientationData.substr(posW + 1, orientationData.length());
+						auto posX = orientationData.find_first_of(",");
 						float x = atof(orientationData.substr(0, posX).c_str());
-						orientationData = orientationData.substr(posX + 2, orientationData.length());
-						auto posY = orientationData.find_first_of(",") - 1;
+						orientationData = orientationData.substr(posX + 1, orientationData.length());
+						auto posY = orientationData.find_first_of(",");
 						float y = atof(orientationData.substr(0, posY).c_str());
-						orientationData = orientationData.substr(posY + 2, orientationData.length());
-						auto posZ = orientationData.find_first_of("]" - 1);
+						orientationData = orientationData.substr(posY + 1, orientationData.length());
+						auto posZ = orientationData.find_first_of("]");
 						float z = atof(orientationData.substr(0, posZ).c_str());
 						currentAnimation.orientation = ape::Quaternion(w, x, y, z);
 						mParsedAnimations.push_back(currentAnimation);
@@ -505,18 +551,14 @@ void ape::VLFTAnimationPlayerPlugin::Stop()
 		while (mIsPlayRunning)
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
-	if (auto userNode = mpUserInputMacro->getUserNode().lock())
+	for (auto attachedUserWP : mAttachedUsers)
 	{
-		for (auto childNodeWP : userNode->getChildNodes())
+		if (auto attachedUser = attachedUserWP.lock())
 		{
-			if (auto childNode = childNodeWP.lock())
-			{
-				if (childNode->getName().find("vlft") != std::string::npos)
-				{
-					childNode->detachFromParentNode();
-					childNode->setOwner(childNode->getCreator());
-				}
-			}
+			attachedUser->setPosition(ape::Vector3(0, 0, 0));
+			attachedUser->setOrientation(ape::Quaternion(1, 0, 0, 0));
+			attachedUser->detachFromParentNode();
+			attachedUser->setOwner(attachedUser->getCreator());
 		}
 	}
 	APE_LOG_FUNC_LEAVE();
