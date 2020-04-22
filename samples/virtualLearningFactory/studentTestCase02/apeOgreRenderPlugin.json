@@ -7,7 +7,7 @@
     "renderWindows": [
         {
             "monitorIndex": 0,
-            "name": "vlft_student",
+            "name": "vlft_student_TestCase02",
             "resolution": {
                 "width": 1280,
                 "height": 760,
