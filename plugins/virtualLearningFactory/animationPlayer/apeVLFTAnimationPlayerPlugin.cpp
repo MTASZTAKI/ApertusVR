@@ -488,7 +488,10 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 						Animation animation;
 						animation.type = action.get_event().get_type();
 						animation.nodeName = node.get_name();
-						animation.parentNodeName = *action.get_event().get_placement_rel_to();
+						if (action.get_event().get_placement_rel_to())
+							animation.parentNodeName = *action.get_event().get_placement_rel_to();
+						else
+							animation.parentNodeName = "";
 						animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
 						animation.position = ape::Vector3(x, y, z);
 						currentAnimations.push_back(animation);
