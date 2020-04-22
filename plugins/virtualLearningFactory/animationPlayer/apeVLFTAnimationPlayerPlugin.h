@@ -87,6 +87,8 @@ namespace ape
 
 		std::vector<ape::NodeWeakPtr> mAttachedUsers;
 
+		std::vector<ape::NodeWeakPtr> mAttach2NewAnimationNode;
+
 		std::vector<unsigned long long> mParsedBookmarkTimes;
 
 		int mBookmarkID;

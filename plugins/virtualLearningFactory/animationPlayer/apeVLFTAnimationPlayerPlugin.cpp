@@ -109,6 +109,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mIsPlayRunning = false;
 	mAnimatedNodeNames = std::vector<std::string>();
 	mAttachedUsers = std::vector<ape::NodeWeakPtr>();
+	mAttach2NewAnimationNode = std::vector<ape::NodeWeakPtr>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -148,6 +149,7 @@ bool ape::VLFTAnimationPlayerPlugin::attach2NewAnimationNode(const std::string& 
 		if (newParentNode != currentParentNode)
 		{
 			node->setParentNode(newParentNode);
+			mAttach2NewAnimationNode.push_back(node);
 			return true;
 		}
 	}
@@ -229,9 +231,19 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	{
 		if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
 		{
+			for (auto attach2NewAnimationNode : mAttach2NewAnimationNode)
+			{
+				if (node == attach2NewAnimationNode.lock())
+				{
+					node->detachFromParentNode();
+					node->setPosition(ape::Vector3(0, 0, 0));
+					node->setOrientation(ape::Quaternion(1, 0, 0, 0));
+				}
+			}
 			node->setOwner(node->getCreator());
 		}
 	}
+	mAttach2NewAnimationNode = std::vector<ape::NodeWeakPtr>();
 	mIsPlayRunning = false;
 }
 
