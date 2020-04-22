@@ -229,10 +229,6 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	{
 		if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
 		{
-			node->detachFromParentNode();
-			node->setPosition(ape::Vector3(0, 0, 0));
-			node->setOrientation(ape::Quaternion(1, 0, 0, 0));
-			node->setVisible(false);
 			node->setOwner(node->getCreator());
 		}
 	}
@@ -382,6 +378,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "attachUsers")
 			{
+				mAttachedUsers = std::vector<ape::NodeWeakPtr>();
 				auto nodes = mpSceneManager->getNodes();
 				for (auto node : nodes)
 				{
