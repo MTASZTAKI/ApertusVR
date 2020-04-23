@@ -39,29 +39,35 @@ void ape::ViewPointManagerPlugin::keyPressedStringEventCallback(const std::strin
 {
 	//APE_LOG_DEBUG("keyPressedStringEventCallback: " << keyValue);
 	mIsKeyReleased = false;
-	if (!mIsBrowserHovered && !mIsKeyboardLockedByBrowser)
+	if (auto userNode = mpUserInputMacro->getUserNode().lock())
 	{
-		if (keyValue == "r")
+		if (userNode->getOwner() == userNode->getCreator())
 		{
-			mpUserInputMacro->saveViewPose();
-			return;
+			if (!mIsBrowserHovered && !mIsKeyboardLockedByBrowser)
+			{
+				if (keyValue == "r")
+				{
+					mpUserInputMacro->saveViewPose();
+					return;
+				}
+				else if (keyValue == "t")
+				{
+					toggleViewPoses(false);
+					return;
+				}
+				else if (keyValue == "i")
+				{
+					toggleViewPoses(true);
+					return;
+				}
+				else if (keyValue == "space")
+				{
+					mGeneralSpeedFactor += 3;
+				}
+				std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
+				updateViewPoseByKeyBoardThread.detach();
+			}
 		}
-		else if (keyValue == "t")
-		{
-			toggleViewPoses(false);
-			return;
-		}
-		else if (keyValue == "i")
-		{
-			toggleViewPoses(true);
-			return;
-		}
-		else if (keyValue == "space")
-		{
-			mGeneralSpeedFactor += 3;
-		}
-		std::thread updateViewPoseByKeyBoardThread(&ViewPointManagerPlugin::updateViewPoseByKeyBoard, this, keyValue);
-		updateViewPoseByKeyBoardThread.detach();
 	}
 }
 
