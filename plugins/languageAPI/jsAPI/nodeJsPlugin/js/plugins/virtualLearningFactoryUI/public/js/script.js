@@ -34,6 +34,9 @@ function updateMeAttached() {
 		if (currentParentNodeName.length) {
 			$('#freeMe').show();
 		}
+		else {
+			$('#freeMe').hide();
+		}
 	});
 }
 

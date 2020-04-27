@@ -390,7 +390,6 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			}
 			else if (browser->getClickedElementName() == "attachUsers")
 			{
-				mAttachedUsers = std::vector<ape::NodeWeakPtr>();
 				auto nodes = mpSceneManager->getNodes();
 				for (auto node : nodes)
 				{
@@ -421,12 +420,16 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 				{
 					if (auto attachedUser = attachedUserWP.lock())
 					{
-						attachedUser->detachFromParentNode();
-						attachedUser->setPosition(ape::Vector3(0, 0, 0));
-						attachedUser->setOrientation(ape::Quaternion(1, 0, 0, 0));
-						attachedUser->setOwner(attachedUser->getCreator());
+						if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
+						{
+							attachedUser->detachFromParentNode();
+							attachedUser->setPosition(ape::Vector3(0, 100, 0));
+							attachedUser->setOrientation(ape::Quaternion(0, 0, 1, 0));
+							attachedUser->setOwner(attachedUser->getCreator());
+						}
 					}
 				}
+				mAttachedUsers = std::vector<ape::NodeWeakPtr>();
 			}
 			else if (browser->getClickedElementName() == "freeMe")
 			{
@@ -434,8 +437,8 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 				{
 					userNode->setOwner(mpCoreConfig->getNetworkGUID());
 					userNode->detachFromParentNode();
-					userNode->setPosition(ape::Vector3(0, 0, 0));
-					userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
+					userNode->setPosition(ape::Vector3(0, 100, 0));
+					userNode->setOrientation(ape::Quaternion(0, 0, 1, 0));
 				}
 			}
 		}
@@ -577,10 +580,13 @@ void ape::VLFTAnimationPlayerPlugin::Stop()
 	{
 		if (auto attachedUser = attachedUserWP.lock())
 		{
-			attachedUser->setPosition(ape::Vector3(0, 0, 0));
-			attachedUser->setOrientation(ape::Quaternion(1, 0, 0, 0));
-			attachedUser->detachFromParentNode();
-			attachedUser->setOwner(attachedUser->getCreator());
+			if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
+			{
+				attachedUser->detachFromParentNode();
+				attachedUser->setPosition(ape::Vector3(0, 0, 0));
+				attachedUser->setOrientation(ape::Quaternion(1, 0, 0, 0));
+				attachedUser->setOwner(attachedUser->getCreator());
+			}
 		}
 	}
 	APE_LOG_FUNC_LEAVE();
