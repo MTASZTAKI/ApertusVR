@@ -405,9 +405,9 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 								if (userNode->getName() != mpUserInputMacro->getUserNode().lock()->getName())
 								{
 									userNode->setOwner(mpCoreConfig->getNetworkGUID());
+									userNode->setParentNode(mpUserInputMacro->getUserNode());
 									userNode->setPosition(ape::Vector3(0, 0, 0));
 									userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
-									userNode->setParentNode(mpUserInputMacro->getUserNode());
 									mAttachedUsers.push_back(userNode);
 								}
 							}
@@ -421,11 +421,21 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 				{
 					if (auto attachedUser = attachedUserWP.lock())
 					{
+						attachedUser->detachFromParentNode();
 						attachedUser->setPosition(ape::Vector3(0, 0, 0));
 						attachedUser->setOrientation(ape::Quaternion(1, 0, 0, 0));
-						attachedUser->detachFromParentNode();
 						attachedUser->setOwner(attachedUser->getCreator());
 					}
+				}
+			}
+			else if (browser->getClickedElementName() == "freeMe")
+			{
+				if (auto userNode = mpUserInputMacro->getUserNode().lock())
+				{
+					userNode->setOwner(mpCoreConfig->getNetworkGUID());
+					userNode->detachFromParentNode();
+					userNode->setPosition(ape::Vector3(0, 0, 0));
+					userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
 				}
 			}
 		}

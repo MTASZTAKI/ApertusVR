@@ -14,6 +14,7 @@ var updatePropertiesInterval;
 var updateAnimationTimeInterval;
 var currentAnimationTime;
 var updateOverlayBrowserLastMessageInterval;
+var updateMeAttachedInterval;
 
 function convertHex(hex, opacity) {
 	hex = hex.replace('#', '');
@@ -22,6 +23,18 @@ function convertHex(hex, opacity) {
 	b = parseInt(hex.substring(4, 6), 16);
 	result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
 	return result;
+}
+
+function updateMeAttached() {
+	//console.log('updateMeAttached);
+	var currentParentNodeName;
+	doGetRequest(apiEndPoint + "/nodes/" + userNodeName + "/" + currentParentNodeName + '/parent', function (res) {
+		currentParentNodeName = res.data.items[0].parentName;
+		console.log('updateMeAttached: ', currentParentNodeName);
+		if (currentParentNodeName.length) {
+			$('#freeMe').show();
+		}
+	});
 }
 
 function getOverlayBrowserLastMessage() {
@@ -227,7 +240,6 @@ function showChat() {
 }
 
 function toogleFreeMe() {
-	$('#attachMe').toggle();
 	$('#freeMe').toggle();
 }
 
@@ -386,6 +398,7 @@ $(document).ready(function () {
 	$('#bookmarks').toggle();
 	$('#screencastStop').toggle();
 	$('#freeUsers').toggle();
+	$('#freeMe').toggle();
 	hidePauseAndSkipButtons();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{
@@ -394,6 +407,7 @@ $(document).ready(function () {
 		var isStudent = userNodeName.indexOf("VLFT_Student");
 		if (isStudent != -1) {
 			hideTeacherButtons();
+			updateMeAttachedInterval = setInterval(updateMeAttached, 40);
 		}
 		var isLocal = userNodeName.indexOf("VLFT_Local");
 		if (isLocal != -1) {
