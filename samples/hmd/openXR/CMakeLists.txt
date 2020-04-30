@@ -27,8 +27,8 @@ set (CONFIGS
 	)
 
 add_custom_target(
-    HtcVive ALL
+    OpenXR ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET HtcVive PROPERTY FOLDER "Samples/HMD")
+set_property (TARGET OpenXR PROPERTY FOLDER "Samples/HMD")

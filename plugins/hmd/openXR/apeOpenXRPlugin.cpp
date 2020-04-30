@@ -1,5 +1,6 @@
 #include "apeOpenXRPlugin.h"
 
+
 ape::OpenXRPlugin::OpenXRPlugin()
 {
 	APE_LOG_FUNC_ENTER();

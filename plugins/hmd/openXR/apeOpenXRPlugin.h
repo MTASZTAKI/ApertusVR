@@ -27,7 +27,13 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "openxr/openxr.h"
+#include "pch.h"
+#include "common.h"
+#include "options.h"
+#include "platformdata.h"
+#include "platformplugin.h"
+#include "graphicsplugin.h"
+#include "openxr_program.h"
 #include "apePluginAPI.h"
 #include "apeIEventManager.h"
 #include "apeILogManager.h"

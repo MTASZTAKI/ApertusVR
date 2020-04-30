@@ -7,7 +7,7 @@
   "shading": "perPixel",
   "renderWindows": [
     {
-      "name": "htcVive",
+      "name": "openVR",
       "monitorIndex": 0,
       "hidden": true,
       "resolution": {
