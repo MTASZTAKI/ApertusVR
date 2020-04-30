@@ -27,15 +27,34 @@ void ape::OpenXRPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	APE_LOG_DEBUG("try to initialize openXR HMD");
 }
 
 void ape::OpenXRPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	APE_LOG_DEBUG("try to initialize openXR HMD");
+	std::shared_ptr<Options> options = std::make_shared<Options>();
+	std::shared_ptr<PlatformData> data = std::make_shared<PlatformData>();
+	std::shared_ptr<IPlatformPlugin> platformPlugin = CreatePlatformPlugin(options, data);
+	std::shared_ptr<IGraphicsPlugin> graphicsPlugin = CreateGraphicsPlugin(options, platformPlugin);
+	std::shared_ptr<IOpenXrProgram> program = CreateOpenXrProgram(options, platformPlugin, graphicsPlugin);
+	program->CreateInstance();
+	program->InitializeSystem();
+	program->InitializeSession();
+	program->CreateSwapchains();
+	APE_LOG_DEBUG("try to run openXR HMD");
 	while (true)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		program->PollEvents(false, false);
+		if (program->IsSessionRunning()) 
+		{
+			program->PollActions();
+			program->RenderFrame();
+		}
+		else 
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(250));
+		}
 	}
 	APE_LOG_FUNC_LEAVE();
 }

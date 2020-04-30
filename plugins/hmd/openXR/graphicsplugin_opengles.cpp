@@ -6,7 +6,7 @@
 #ifdef XR_USE_GRAPHICS_API_OPENGL_ES
 
 #include "common/gfxwrapper_opengl.h"
-#include <common/xr_linear.h>
+#include "common/xr_linear.h"
 
 namespace {
 constexpr float DarkSlateGray[] = {0.184313729f, 0.309803933f, 0.309803933f, 1.0f};
