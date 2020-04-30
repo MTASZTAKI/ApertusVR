@@ -20,5 +20,6 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (htcVive)
+add_subdirectory (openVR)
+add_subdirectory (openXR)
 
