@@ -1,12 +1,12 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
-    "apeHtcVivePlugin",
+    "apeOpenXRPlugin",
     "apeViewPointManagerPlugin",
     "apeHelloWorldScenePlugin"
   ],
   "network": {
-    "user": "HtcVive",
+    "user": "OpenXR",
     "participant": "none",
     "internet": {
       "natPunchThrough": {
