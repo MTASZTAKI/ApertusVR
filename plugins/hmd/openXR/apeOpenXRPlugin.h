@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include <iostream>
 #include <memory>
 #include <thread>
+#include "openxr/openxr.h"
 #include "apePluginAPI.h"
 #include "apeIEventManager.h"
 #include "apeILogManager.h"

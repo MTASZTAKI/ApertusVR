@@ -20,6 +20,56 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/openxr/build)
+		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/openxr/build)
+endif()
+set (OPENXR_BUILD_DIR ${CMAKE_BINARY_DIR}/openxr/build)
+set (OPENXR_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/openxr)
+set (OPENXR_READY FALSE)
+
+
+#error function
+function (reportError what and when)
+	if (${${when}})
+		message (${${what}})
+	endif ()
+endfunction ()
+
+#find openxr
+if(EXISTS ${OPENXR_BUILD_DIR}/src/loader/Debug/openxr_loader.lib AND EXISTS ${OPENXR_BUILD_DIR}/src/loader/Release/openxr_loader.lib)
+	set(OPENXR_READY TRUE)
+	message (STATUS "openxr is installed" )
+else ()
+	set(OPENXR_READY FALSE)
+	message (STATUS "openxr is not installed" )
+endif ()
+if (NOT OPENXR_READY)
+#build openxr
+	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
+		message (STATUS "Configuring openxr for ${CONF}, please wait.....")
+		execute_process ( 
+				COMMAND ${CMAKE_COMMAND} 
+				-G ${CMAKE_GENERATOR} 
+				${OPENXR_HOME}
+				WORKING_DIRECTORY ${OPENXR_BUILD_DIR}
+				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
+				)		
+		reportError (output if error)
+		message (STATUS "Building openxr for ${CONF}, please wait.....")
+		execute_process ( 
+			COMMAND ${CMAKE_COMMAND} --build ${OPENXR_BUILD_DIR} --config ${CONF} --target ALL_BUILD
+			WORKING_DIRECTORY ${OPENXR_BUILD_DIR}
+			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
+		reportError (output if error)
+	endforeach ()
+endif ()
+#use openxr
+add_library(MY_OPENXR STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OPENXR PROPERTY IMPORTED_LOCATION_DEBUG ${OPENXR_BUILD_DIR}/src/loader/Debug/openxr_loader.lib)
+	set_property(TARGET MY_OPENXR PROPERTY IMPORTED_LOCATION_RELEASE ${OPENXR_BUILD_DIR}/src/loader/Release/openxr_loader.lib)
+endif ()
+
 # Add all header and cpp files in the directory to the project
 set (HEADERS
 	apeOpenXRPlugin.h
@@ -27,32 +77,19 @@ set (HEADERS
 
 set (SOURCES 
 	apeOpenXRPlugin.cpp
-	)
-	
-set(OPENXR_HOME ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/openxr)
-add_library(OPENXR_LIB STATIC IMPORTED)
-if (WIN32)
-	set_property(TARGET OPENXR_LIB PROPERTY IMPORTED_LOCATION_DEBUG ${OPENXR_HOME}/lib/win64/openxr.lib)
-	set_property(TARGET OPENXR_LIB PROPERTY IMPORTED_LOCATION_RELEASE ${OPENXR_HOME}/lib/win64/openxr.lib)
-endif ()	
+	)	
 
 include_directories(
-	${OPENXR_HOME}/headers
+	${OPENXR_HOME}/include
 	)
 
 add_library (apeOpenXRPlugin SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (apeOpenXRPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro OPENXR_LIB)
+target_link_libraries (apeOpenXRPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro MY_OPENXR)
 
 set_property (TARGET apeOpenXRPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
 set_property (TARGET apeOpenXRPlugin PROPERTY FOLDER "Plugins/HMD")
 
-if (WIN32)
-	#file(COPY ${OPENXR_HOME}/bin/win64/openxr.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	#file(COPY ${OPENXR_HOME}/bin/win64/openxr.pdb DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	#file(COPY ${OPENXR_HOME}/bin/win64/openxr.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	#file(COPY ${OPENXR_HOME}/bin/win64/openxr.pdb DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-endif ()
 
 
