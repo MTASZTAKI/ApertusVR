@@ -70,8 +70,6 @@ inline XrExtTable xrCreateExtensionTable(XrInstance instance) {
 	return result;
 }
 
-#define DeclarePrivateType(name) struct _ ## name; typedef struct _ ## name *name;
-
 #define THIS_PLUGINNAME "apeOpenXRPlugin"
 
 namespace ape
@@ -79,7 +77,6 @@ namespace ape
 	class OpenXRPlugin : public ape::IPlugin
 	{
 	public:
-		DeclarePrivateType(tex_t);
 		enum tex_format_ 
 		{
 			tex_format_rgba32 = 0,
@@ -89,14 +86,6 @@ namespace ape
 			tex_format_depthstencil,
 			tex_format_depth32,
 			tex_format_depth16,
-		};
-		struct swapchain_t 
-		{
-			XrSwapchain handle;
-			int32_t width;
-			int32_t height;
-			std::vector<XrSwapchainImageD3D11KHR> surface_images;
-			std::vector<tex_t> surface_data;
 		};
 	private:
 		ape::IEventManager* mpEventManager;
@@ -136,8 +125,6 @@ namespace ape
 		std::vector<ape::Matrix4> mOpenXRViewPointView;
 
 		std::vector<ape::Matrix4> mOpenXRViewPointProjection;
-
-		swapchain_t mOpenXRSwapchains;
 
 		XrSessionState mOpenXRSessionState;
 

@@ -188,7 +188,7 @@ void ape::OpenXRPlugin::openXRPollActions()
 	if (mOpenXRSessionState != XR_SESSION_STATE_FOCUSED)
 		return;
 	XrSpaceLocation space_location = { XR_TYPE_SPACE_LOCATION };
-	XrResult        res = xrLocateSpace(mOpenXRHeadSpace, mOpenXRAppSpace, mOpenXRTime, &space_location);
+	XrResult res = xrLocateSpace(mOpenXRHeadSpace, mOpenXRAppSpace, mOpenXRTime, &space_location);
 	if (XR_UNQUALIFIED_SUCCESS(res) && openXRLocValid(space_location))
 	{
 		//TODO put it to the camera
@@ -327,8 +327,8 @@ void ape::OpenXRPlugin::Init()
 		APE_LOG_DEBUG("xrEnumerateViewConfigurationViews failed " << result);
 	}
 	XrViewConfigurationView &view = mOpenXRConfigViews[0];
-	XrSwapchainCreateInfo    swapchain_info = { XR_TYPE_SWAPCHAIN_CREATE_INFO };
-	XrSwapchain              handle = {};
+	XrSwapchainCreateInfo swapchain_info = { XR_TYPE_SWAPCHAIN_CREATE_INFO };
+	XrSwapchain handle = {};
 	swapchain_info.arraySize = view_count;
 	swapchain_info.mipCount = 1;
 	swapchain_info.faceCount = 1;
@@ -344,13 +344,9 @@ void ape::OpenXRPlugin::Init()
 	}
 	uint32_t surface_count = 0;
 	xrEnumerateSwapchainImages(handle, 0, &surface_count, nullptr);
-	mOpenXRSwapchains = {};
-	mOpenXRSwapchains.width = swapchain_info.width;
-	mOpenXRSwapchains.height = swapchain_info.height;
-	mOpenXRSwapchains.handle = handle;
-	mOpenXRSwapchains.surface_images.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_D3D11_KHR });
-	mOpenXRSwapchains.surface_data.resize(surface_count, {});
-	result = xrEnumerateSwapchainImages(mOpenXRSwapchains.handle, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)mOpenXRSwapchains.surface_images.data());
+	std::vector<XrSwapchainImageD3D11KHR> surface_images;
+	surface_images.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_D3D11_KHR });
+	result = xrEnumerateSwapchainImages(handle, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)surface_images.data());
 	if (XR_FAILED(result)) 
 	{
 		APE_LOG_DEBUG("xrEnumerateSwapchainImages failed " << result);
@@ -358,11 +354,6 @@ void ape::OpenXRPlugin::Init()
 	for (uint32_t s = 0; s < surface_count; s++)
 	{
 		APE_LOG_DEBUG("renderTarget: " << s);
-		//TODO create apeTextures
-		/*mOpenXRSwapchains.surface_data[s] = tex_create(tex_type_rendertarget, tex_format_rgba32);
-		tex_set_id(mOpenXRSwapchains.surface_data[s], name);
-		tex_setsurface(mOpenXRSwapchains.surface_data[s], mOpenXRSwapchains.surface_images[s].texture, color_format);
-		tex_add_zbuffer(mOpenXRSwapchains.surface_data[s], depth_format);*/
 	}
 	APE_LOG_DEBUG("openxr_init OK");
 }
