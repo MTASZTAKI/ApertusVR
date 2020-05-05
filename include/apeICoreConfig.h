@@ -198,6 +198,8 @@ namespace ape
 
 		void* handle;
 
+		void* device;
+
 		unsigned int width;
 
 		unsigned int height;
@@ -207,6 +209,7 @@ namespace ape
 			this->name = std::string();
 			this->renderSystem = std::string();
 			this->handle = nullptr;
+			this->device = nullptr;
 			this->width = unsigned int();
 			this->height = unsigned int();
 		}
@@ -215,6 +218,7 @@ namespace ape
 		    std::string name,
 			std::string renderSystem,
 			void* handle,
+			void* device,
 			unsigned int width,
 			unsigned int height
 		)
@@ -222,6 +226,7 @@ namespace ape
 			this->name = name;
 			this->renderSystem = renderSystem;
 			this->handle = handle;
+			this->device = device;
 			this->width = width;
 			this->height = height;
 		}

@@ -230,7 +230,7 @@ void ape::OpenXRPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	APE_LOG_DEBUG("waiting for main window");
-	while (mpCoreConfig->getWindowConfig().handle == nullptr)
+	while (mpCoreConfig->getWindowConfig().handle == nullptr && mpCoreConfig->getWindowConfig().device == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	APE_LOG_DEBUG("main window was found");
 	APE_LOG_DEBUG("try to initialize openXR HMD");
@@ -266,7 +266,7 @@ void ape::OpenXRPlugin::Init()
 	{
 		APE_LOG_DEBUG("xrGetD3D11GraphicsRequirementsKHR failed " << result);
 	}
-	uint32_t                       blend_count = 0;
+	uint32_t blend_count = 0;
 	std::vector<XrEnvironmentBlendMode> blend_modes;
 	result = xrEnumerateEnvironmentBlendModes(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, 0, &blend_count, nullptr);
 	blend_modes.resize(blend_count);
@@ -286,8 +286,7 @@ void ape::OpenXRPlugin::Init()
 		}
 	}
 	XrGraphicsBindingD3D11KHR d3d_binding = { XR_TYPE_GRAPHICS_BINDING_D3D11_KHR };
-	//TODO get devicce from mpCoreConfig window
-	//d3d_binding.device = d3d_device;
+	d3d_binding.device = (ID3D11Device*) mpCoreConfig->getWindowConfig().device;
 	XrSessionCreateInfo sessionInfo = { XR_TYPE_SESSION_CREATE_INFO };
 	sessionInfo.next = &d3d_binding;
 	sessionInfo.systemId = mOpenXRSystemID;
@@ -358,8 +357,7 @@ void ape::OpenXRPlugin::Init()
 	}
 	for (uint32_t s = 0; s < surface_count; s++)
 	{
-		char name[64];
-		APE_LOG_DEBUG("renderTarget: " << name);
+		APE_LOG_DEBUG("renderTarget: " << s);
 		//TODO create apeTextures
 		/*mOpenXRSwapchains.surface_data[s] = tex_create(tex_type_rendertarget, tex_format_rgba32);
 		tex_set_id(mOpenXRSwapchains.surface_data[s], name);

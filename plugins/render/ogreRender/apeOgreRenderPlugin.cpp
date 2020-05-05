@@ -2065,7 +2065,7 @@ void ape::OgreRenderPlugin::windowResized(Ogre::RenderWindow * rw)
 {
 	//APE_LOG_DEBUG(rw->getViewport(0)->getActualWidth());
 	auto oldWindowConfig = mpCoreConfig->getWindowConfig();
-	ape::WindowConfig windowConfig(oldWindowConfig.name, oldWindowConfig.renderSystem, oldWindowConfig.handle, rw->getViewport(0)->getActualWidth(), rw->getViewport(0)->getActualHeight());
+	ape::WindowConfig windowConfig(oldWindowConfig.name, oldWindowConfig.renderSystem, oldWindowConfig.handle, oldWindowConfig.device, rw->getViewport(0)->getActualWidth(), rw->getViewport(0)->getActualHeight());
 	mpCoreConfig->setWindowConfig(windowConfig);
 }
 
@@ -2381,6 +2381,7 @@ void ape::OgreRenderPlugin::Init()
 	Ogre::RenderWindowList renderWindowList;
 	Ogre::RenderWindowDescriptionList winDescList;
 	void* mainWindowHnd = 0;
+	void* device = 0;
 	for (int i = 0; i < mOgreRenderPluginConfig.ogreRenderWindowConfigList.size(); i++)
 	{
 		if (mOgreRenderPluginConfig.ogreRenderWindowConfigList[i].enable)
@@ -2447,7 +2448,11 @@ void ape::OgreRenderPlugin::Init()
 	std::ostringstream windowHndStr;
 	windowHndStr << mainWindowHnd;
 	mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].windowHandler = windowHndStr.str();
-	ape::WindowConfig windowConfig(mainWindowDesc.name, mOgreRenderPluginConfig.renderSystem, mainWindowHnd, mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].width,
+	if (mOgreRenderPluginConfig.renderSystem == "DX11")
+	{
+		mRenderWindows[mainWindowDesc.name]->getCustomAttribute("D3DDEVICE", &device);
+	}
+	ape::WindowConfig windowConfig(mainWindowDesc.name, mOgreRenderPluginConfig.renderSystem, mainWindowHnd, device, mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].width,
 		mOgreRenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].height);
 	mpCoreConfig->setWindowConfig(windowConfig);
 	APE_LOG_FUNC_LEAVE();
