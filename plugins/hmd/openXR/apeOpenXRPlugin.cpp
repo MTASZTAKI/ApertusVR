@@ -161,6 +161,7 @@ bool ape::OpenXRPlugin::openXRLocValid(XrSpaceLocation &loc)
 
 void ape::OpenXRPlugin::openXRPollEvents() 
 {
+	//APE_LOG_DEBUG("openXRPollEvents: ");
 	XrEventDataBuffer event_buffer = { XR_TYPE_EVENT_DATA_BUFFER };
 	while (xrPollEvent(mOpenXRInstance, &event_buffer) == XR_SUCCESS) 
 	{
@@ -192,6 +193,7 @@ void ape::OpenXRPlugin::openXRPollEvents()
 
 void ape::OpenXRPlugin::openXRPollActions()
 {
+	//APE_LOG_DEBUG("openXRPollActions: " << mOpenXRTime);
 	if (mOpenXRSessionState != XR_SESSION_STATE_FOCUSED)
 		return;
 	XrSpaceLocation space_location = { XR_TYPE_SPACE_LOCATION };
@@ -266,10 +268,11 @@ void ape::OpenXRPlugin::openXRRenderFrame()
 	bool session_active = mOpenXRSessionState == XR_SESSION_STATE_VISIBLE || mOpenXRSessionState == XR_SESSION_STATE_FOCUSED;
 	//APE_LOG_DEBUG("mOpenXRSessionState: " << mOpenXRSessionState);
 	//APE_LOG_DEBUG("mOpenXRTime: " << mOpenXRTime);
-	if (session_active && openXRRenderLayer(frame_state.predictedDisplayTime, views, layer_proj))
+	//TODO
+	/*if (session_active && openXRRenderLayer(frame_state.predictedDisplayTime, views, layer_proj))
 	{
 		layer = (XrCompositionLayerBaseHeader*)&layer_proj;
-	}
+	}*/
 	XrFrameEndInfo end_info{ XR_TYPE_FRAME_END_INFO };
 	end_info.displayTime = frame_state.predictedDisplayTime;
 	end_info.environmentBlendMode = mOpenXRBlend;
@@ -281,8 +284,11 @@ void ape::OpenXRPlugin::openXRRenderFrame()
 void ape::OpenXRPlugin::submitTextureLeftToOpenXR()
 {
 	//APE_LOG_DEBUG("submitTextureLeftToOpenXR");
-	openXRPollActions();
-	openXRRenderFrame();
+	if (mIsOpenXRRunning)
+	{
+		openXRPollActions();
+		openXRRenderFrame();
+	}
 }
 
 void ape::OpenXRPlugin::submitTextureRightToOpenXR()
@@ -515,7 +521,7 @@ void ape::OpenXRPlugin::Run()
 	}
 	APE_LOG_DEBUG("RTT textures are successfully created...");
 	APE_LOG_DEBUG("try to run OpenXR");
-	while (mIsOpenXRRunning)
+	while (true)
 	{
 		openXRPollEvents();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
