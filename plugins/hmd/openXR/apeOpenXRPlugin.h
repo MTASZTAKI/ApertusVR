@@ -87,6 +87,13 @@ namespace ape
 			tex_format_depth32,
 			tex_format_depth16,
 		};
+		struct swapchain_t 
+		{
+			XrSwapchain handle;
+			int32_t     width;
+			int32_t     height;
+			std::vector<XrSwapchainImageD3D11KHR> surface_images;
+		};
 	private:
 		ape::IEventManager* mpEventManager;
 
@@ -130,6 +137,18 @@ namespace ape
 
 		bool mIsOpenXRRunning;
 
+		std::vector<XrView> mOpenXRViews;
+
+		ape::ManualTextureWeakPtr mManualTextureRightEye;
+
+		ape::ManualTextureWeakPtr mManualTextureLeftEye;
+
+		ape::CameraWeakPtr mCameraLeft;
+
+		ape::CameraWeakPtr mCameraRight;
+
+		swapchain_t mOpenXRSwapchains;
+
 		void eventCallBack(const ape::Event& event);
 
 		void openXRPreferredExtensions(uint32_t &out_extension_count, const char **out_extensions);
@@ -145,6 +164,12 @@ namespace ape
 		void openXRPollActions();
 
 		void openXRRenderFrame();
+
+		bool openXRRenderLayer(XrTime predictedTime, std::vector<XrCompositionLayerProjectionView> &views, XrCompositionLayerProjection &layer);
+
+		void submitTextureLeftToOpenXR();
+
+		void submitTextureRightToOpenXR();
 
 	public:
 		OpenXRPlugin();

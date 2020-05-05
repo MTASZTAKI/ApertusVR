@@ -6,6 +6,8 @@ ape::OpenXRPlugin::OpenXRPlugin()
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&OpenXRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&OpenXRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&OpenXRPlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mOpenXRDepthLsr = false;
 	mOpenXRAppConfigForm = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
@@ -18,6 +20,9 @@ ape::OpenXRPlugin::OpenXRPlugin()
 	mOpenXRViewPointProjection = std::vector<ape::Matrix4>();
 	mOpenXRSessionState = XR_SESSION_STATE_UNKNOWN;
 	mIsOpenXRRunning = false;
+	mCameraLeft = ape::CameraWeakPtr();
+	mCameraRight = ape::CameraWeakPtr();
+	mOpenXRViews = std::vector<XrView>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -25,6 +30,8 @@ ape::OpenXRPlugin::~OpenXRPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&OpenXRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&OpenXRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&OpenXRPlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -191,10 +198,60 @@ void ape::OpenXRPlugin::openXRPollActions()
 	XrResult res = xrLocateSpace(mOpenXRHeadSpace, mOpenXRAppSpace, mOpenXRTime, &space_location);
 	if (XR_UNQUALIFIED_SUCCESS(res) && openXRLocValid(space_location))
 	{
-		//TODO put it to the camera
+		//TODO send it like in openVR plugin
 		//memcpy(&out_pose.position, &space_location.pose.position, sizeof(vec3));
 		//memcpy(&out_pose.orientation, &space_location.pose.orientation, sizeof(quat));
 	}
+}
+
+bool ape::OpenXRPlugin::openXRRenderLayer(XrTime predictedTime, std::vector<XrCompositionLayerProjectionView> &views, XrCompositionLayerProjection &layer) 
+{
+	uint32_t view_count = 0;
+	XrViewState view_state = { XR_TYPE_VIEW_STATE };
+	XrViewLocateInfo locate_info = { XR_TYPE_VIEW_LOCATE_INFO };
+	locate_info.viewConfigurationType = mOpenXRAppConfigView;
+	locate_info.displayTime = predictedTime;
+	locate_info.space = mOpenXRAppSpace;
+	xrLocateViews(mOpenXRSession, &locate_info, &view_state, (uint32_t)mOpenXRViews.size(), &view_count, mOpenXRViews.data());
+	uint32_t img_id;
+	XrSwapchainImageAcquireInfo acquire_info = { XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO };
+	xrAcquireSwapchainImage(mOpenXRSwapchains.handle, &acquire_info, &img_id);
+	XrSwapchainImageWaitInfo wait_info = { XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO };
+	wait_info.timeout = XR_INFINITE_DURATION;
+	xrWaitSwapchainImage(mOpenXRSwapchains.handle, &wait_info);
+	views.resize(view_count);
+	for (uint32_t i = 0; i < view_count; i++) 
+	{
+		views[i] = { XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW };
+		views[i].pose = mOpenXRViews[i].pose;
+		views[i].fov = mOpenXRViews[i].fov;
+		views[i].subImage.imageArrayIndex = i;
+		views[i].subImage.swapchain = mOpenXRSwapchains.handle;
+		views[i].subImage.imageRect.offset = { 0, 0 };
+		views[i].subImage.imageRect.extent = { mOpenXRSwapchains.width, mOpenXRSwapchains.height };
+		float xr_projection[16];
+		//TODO
+		/*openxr_projection(views[i].fov, 0.1f, 50, xr_projection);
+		memcpy(&xr_viewpt_proj[i], xr_projection, sizeof(float) * 16);
+		matrix_inverse(matrix_trs((vec3&)views[i].pose.position, (quat&)views[i].pose.orientation, vec3_one), xr_viewpt_view[i]);*/
+	}
+	//TODO
+	/*tex_t target = xr_swapchains.surface_data[img_id];
+	tex_rtarget_clear(target, sk_info.display_type == display_opaque
+		? color32{ 0,0,0,255 }
+	: color32{ 0,0,0,0 });
+	tex_rtarget_set_active(target);
+	D3D11_VIEWPORT viewport = CD3D11_VIEWPORT(0.0f, 0.0f, (float)xr_swapchains.width, (float)xr_swapchains.height);
+	d3d_context->RSSetViewports(1, &viewport);
+	render_draw_matrix(&xr_viewpt_view[0], &xr_viewpt_proj[0], view_count);*/
+
+	XrSwapchainImageReleaseInfo release_info = { XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO };
+	xrReleaseSwapchainImage(mOpenXRSwapchains.handle, &release_info);
+	layer.space = mOpenXRAppSpace;
+	layer.viewCount = (uint32_t)views.size();
+	layer.views = views.data();
+	layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
+	return true;
 }
 
 void ape::OpenXRPlugin::openXRRenderFrame() 
@@ -203,15 +260,16 @@ void ape::OpenXRPlugin::openXRRenderFrame()
 	xrWaitFrame(mOpenXRSession, nullptr, &frame_state);
 	xrBeginFrame(mOpenXRSession, nullptr);
 	mOpenXRTime = frame_state.predictedDisplayTime + frame_state.predictedDisplayPeriod;
-	XrCompositionLayerBaseHeader *layer = nullptr;
+	XrCompositionLayerBaseHeader* layer = nullptr;
 	XrCompositionLayerProjection layer_proj = { XR_TYPE_COMPOSITION_LAYER_PROJECTION };
 	std::vector<XrCompositionLayerProjectionView> views;
 	bool session_active = mOpenXRSessionState == XR_SESSION_STATE_VISIBLE || mOpenXRSessionState == XR_SESSION_STATE_FOCUSED;
-	//TODO tell that you submit to texture is open
-	/*if (session_active && openxr_render_layer(frame_state.predictedDisplayTime, views, layer_proj)) 
+	//APE_LOG_DEBUG("mOpenXRSessionState: " << mOpenXRSessionState);
+	//APE_LOG_DEBUG("mOpenXRTime: " << mOpenXRTime);
+	if (session_active && openXRRenderLayer(frame_state.predictedDisplayTime, views, layer_proj))
 	{
 		layer = (XrCompositionLayerBaseHeader*)&layer_proj;
-	}*/
+	}
 	XrFrameEndInfo end_info{ XR_TYPE_FRAME_END_INFO };
 	end_info.displayTime = frame_state.predictedDisplayTime;
 	end_info.environmentBlendMode = mOpenXRBlend;
@@ -220,9 +278,34 @@ void ape::OpenXRPlugin::openXRRenderFrame()
 	xrEndFrame(mOpenXRSession, &end_info);
 }
 
-void ape::OpenXRPlugin::eventCallBack(const ape::Event& event)
+void ape::OpenXRPlugin::submitTextureLeftToOpenXR()
+{
+	//APE_LOG_DEBUG("submitTextureLeftToOpenXR");
+	openXRPollActions();
+	openXRRenderFrame();
+}
+
+void ape::OpenXRPlugin::submitTextureRightToOpenXR()
 {
 	
+}
+
+void ape::OpenXRPlugin::eventCallBack(const ape::Event& event)
+{
+	if (event.type == ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID)
+	{
+		if (auto textureManual = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			if (event.subjectName == "OpenXRRenderTextureLeft")
+			{
+				textureManual->registerFunction(std::bind(&OpenXRPlugin::submitTextureLeftToOpenXR, this));
+			}
+			else if (event.subjectName == "OpenXRRenderTextureRight")
+			{
+				textureManual->registerFunction(std::bind(&OpenXRPlugin::submitTextureRightToOpenXR, this));
+			}
+		}
+	}
 }
 
 void ape::OpenXRPlugin::Init()
@@ -344,9 +427,12 @@ void ape::OpenXRPlugin::Init()
 	}
 	uint32_t surface_count = 0;
 	xrEnumerateSwapchainImages(handle, 0, &surface_count, nullptr);
-	std::vector<XrSwapchainImageD3D11KHR> surface_images;
-	surface_images.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_D3D11_KHR });
-	result = xrEnumerateSwapchainImages(handle, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)surface_images.data());
+	mOpenXRSwapchains = {};
+	mOpenXRSwapchains.width = swapchain_info.width;
+	mOpenXRSwapchains.height = swapchain_info.height;
+	mOpenXRSwapchains.handle = handle;
+	mOpenXRSwapchains.surface_images.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_D3D11_KHR });
+	result = xrEnumerateSwapchainImages(mOpenXRSwapchains.handle, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)mOpenXRSwapchains.surface_images.data());
 	if (XR_FAILED(result)) 
 	{
 		APE_LOG_DEBUG("xrEnumerateSwapchainImages failed " << result);
@@ -356,17 +442,83 @@ void ape::OpenXRPlugin::Init()
 		APE_LOG_DEBUG("renderTarget: " << s);
 	}
 	APE_LOG_DEBUG("openxr_init OK");
+	APE_LOG_DEBUG("try to set up ApertusVR rendertargets(render2textures) and cameras");
+	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenXRRenderTextureLeft", ape::Entity::TEXTURE_MANUAL, false, "").lock()))
+	{
+		manualTexture->setParameters(swapchain_info.width, swapchain_info.height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
+		mManualTextureLeftEye = manualTexture;
+	}
+	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenXRRenderTextureRight", ape::Entity::TEXTURE_MANUAL, false, "").lock()))
+	{
+		manualTexture->setParameters(swapchain_info.width, swapchain_info.height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
+		mManualTextureRightEye = manualTexture;
+	}
+	mCameraLeft = mpApeUserInputMacro->createCamera("OpenVRHmdLeftCamera");
+	mCameraRight = mpApeUserInputMacro->createCamera("OpenVRHmdRightCamera");
+	//TODO
+	//vr::HmdMatrix44_t projectionLeft = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Left, 1, 10000);
+	//vr::HmdMatrix44_t projectionRight = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Right, 1, 10000);
+	if (auto cameraLeft = mCameraLeft.lock())
+	{
+		cameraLeft->setAutoAspectRatio(true);
+		if (auto cameraNode = cameraLeft->getParentNode().lock())
+		{
+			ape::Vector3 scale;
+			ape::Quaternion rotation;
+			ape::Vector3 translate;
+			//TODO
+			//conversionFromOpenVR(mpOpenVrSystem->GetEyeToHeadTransform(vr::Eye_Left)).makeTransform(scale, rotation, translate);
+			cameraNode->setPosition(translate);
+		}
+		if (auto texture = mManualTextureLeftEye.lock())
+			texture->setSourceCamera(cameraLeft);
+		//TODO
+		//cameraLeft->setProjection(conversionFromOpenVR(projectionLeft));
+	}
+	if (auto cameraRight = mCameraRight.lock())
+	{
+		cameraRight->setAutoAspectRatio(true);
+		if (auto cameraNode = cameraRight->getParentNode().lock())
+		{
+			ape::Vector3 scale;
+			ape::Quaternion rotation;
+			ape::Vector3 translate;
+			//TODO
+			//conversionFromOpenVR(mpOpenVrSystem->GetEyeToHeadTransform(vr::Eye_Right)).makeTransform(scale, rotation, translate);
+			cameraNode->setPosition(translate);
+		}
+		if (auto texture = mManualTextureRightEye.lock())
+			texture->setSourceCamera(cameraRight);
+		//TODO
+		//cameraRight->setProjection(conversionFromOpenVR(projectionRight));
+	}
+	APE_LOG_DEBUG("init end");
 }
 
 void ape::OpenXRPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+	APE_LOG_DEBUG("Wait while RTT textures are created...");
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		if (auto manualTextureRightEye = mManualTextureRightEye.lock())
+		{
+			if (auto manualTextureLeftEye = mManualTextureLeftEye.lock())
+			{
+				if ((manualTextureRightEye->getGraphicsApiID() != nullptr) && (manualTextureLeftEye->getGraphicsApiID() != nullptr))
+				{
+					break;
+				}
+			}
+		}
+	}
+	APE_LOG_DEBUG("RTT textures are successfully created...");
 	APE_LOG_DEBUG("try to run OpenXR");
 	while (mIsOpenXRRunning)
 	{
 		openXRPollEvents();
-		openXRPollActions();
-		openXRRenderFrame();
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 	APE_LOG_FUNC_LEAVE();
 }
