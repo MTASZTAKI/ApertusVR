@@ -237,16 +237,6 @@ bool ape::OpenXRPlugin::openXRRenderLayer(XrTime predictedTime, std::vector<XrCo
 		memcpy(&xr_viewpt_proj[i], xr_projection, sizeof(float) * 16);
 		matrix_inverse(matrix_trs((vec3&)views[i].pose.position, (quat&)views[i].pose.orientation, vec3_one), xr_viewpt_view[i]);*/
 	}
-	//TODO
-	/*tex_t target = xr_swapchains.surface_data[img_id];
-	tex_rtarget_clear(target, sk_info.display_type == display_opaque
-		? color32{ 0,0,0,255 }
-	: color32{ 0,0,0,0 });
-	tex_rtarget_set_active(target);
-	D3D11_VIEWPORT viewport = CD3D11_VIEWPORT(0.0f, 0.0f, (float)xr_swapchains.width, (float)xr_swapchains.height);
-	d3d_context->RSSetViewports(1, &viewport);
-	render_draw_matrix(&xr_viewpt_view[0], &xr_viewpt_proj[0], view_count);*/
-
 	XrSwapchainImageReleaseInfo release_info = { XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO };
 	xrReleaseSwapchainImage(mOpenXRSwapchains.handle, &release_info);
 	layer.space = mOpenXRAppSpace;
@@ -268,11 +258,10 @@ void ape::OpenXRPlugin::openXRRenderFrame()
 	bool session_active = mOpenXRSessionState == XR_SESSION_STATE_VISIBLE || mOpenXRSessionState == XR_SESSION_STATE_FOCUSED;
 	//APE_LOG_DEBUG("mOpenXRSessionState: " << mOpenXRSessionState);
 	//APE_LOG_DEBUG("mOpenXRTime: " << mOpenXRTime);
-	//TODO
-	/*if (session_active && openXRRenderLayer(frame_state.predictedDisplayTime, views, layer_proj))
+	if (session_active && openXRRenderLayer(frame_state.predictedDisplayTime, views, layer_proj))
 	{
 		layer = (XrCompositionLayerBaseHeader*)&layer_proj;
-	}*/
+	}
 	XrFrameEndInfo end_info{ XR_TYPE_FRAME_END_INFO };
 	end_info.displayTime = frame_state.predictedDisplayTime;
 	end_info.environmentBlendMode = mOpenXRBlend;
@@ -407,7 +396,7 @@ void ape::OpenXRPlugin::Init()
 	uint32_t view_count = 0;
 	xrEnumerateViewConfigurationViews(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, 0, &view_count, nullptr);
 	mOpenXRConfigViews.resize(view_count, { XR_TYPE_VIEW_CONFIGURATION_VIEW });
-	mOpenXRConfigViews.resize(view_count, { XR_TYPE_VIEW });
+	mOpenXRViews.resize(view_count, { XR_TYPE_VIEW });
 	mOpenXRViewPointView.resize(view_count, { });
 	mOpenXRViewPointProjection.resize(view_count, { });
 	result = xrEnumerateViewConfigurationViews(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, view_count, &view_count, mOpenXRConfigViews.data());
@@ -445,7 +434,7 @@ void ape::OpenXRPlugin::Init()
 	}
 	for (uint32_t s = 0; s < surface_count; s++)
 	{
-		APE_LOG_DEBUG("renderTarget: " << s);
+		APE_LOG_DEBUG("xrSwapchain images: " << mOpenXRSwapchains.surface_images[s].texture);
 	}
 	APE_LOG_DEBUG("openxr_init OK");
 	APE_LOG_DEBUG("try to set up ApertusVR rendertargets(render2textures) and cameras");
@@ -459,8 +448,8 @@ void ape::OpenXRPlugin::Init()
 		manualTexture->setParameters(swapchain_info.width, swapchain_info.height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
 		mManualTextureRightEye = manualTexture;
 	}
-	mCameraLeft = mpApeUserInputMacro->createCamera("OpenVRHmdLeftCamera");
-	mCameraRight = mpApeUserInputMacro->createCamera("OpenVRHmdRightCamera");
+	mCameraLeft = mpApeUserInputMacro->createCamera("OpenXRHmdLeftCamera");
+	mCameraRight = mpApeUserInputMacro->createCamera("OpenXRHmdRightCamera");
 	//TODO
 	//vr::HmdMatrix44_t projectionLeft = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Left, 1, 10000);
 	//vr::HmdMatrix44_t projectionRight = mpOpenVrSystem->GetProjectionMatrix(vr::Eye_Right, 1, 10000);
@@ -514,17 +503,17 @@ void ape::OpenXRPlugin::Run()
 			{
 				if ((manualTextureRightEye->getGraphicsApiID() != nullptr) && (manualTextureLeftEye->getGraphicsApiID() != nullptr))
 				{
+					APE_LOG_DEBUG("RTT textures are successfully created: " << manualTextureRightEye->getGraphicsApiID() << " ; " << manualTextureLeftEye->getGraphicsApiID());
 					break;
 				}
 			}
 		}
 	}
-	APE_LOG_DEBUG("RTT textures are successfully created...");
 	APE_LOG_DEBUG("try to run OpenXR");
 	while (true)
 	{
 		openXRPollEvents();
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 	APE_LOG_FUNC_LEAVE();
 }
