@@ -1,4 +1,5 @@
 #include "apeOpenXRPlugin.h"
+#include <wrl/client.h>
 
 ape::OpenXRPlugin::OpenXRPlugin()
 {
@@ -191,6 +192,25 @@ void ape::OpenXRPlugin::openXRPollEvents()
 	}
 }
 
+void ape::OpenXRPlugin::openXRProjection(XrFovf fov, float clip_near, float clip_far, float *result) 
+{
+	const float tanLeft = tanf(fov.angleLeft);
+	const float tanRight = tanf(fov.angleRight);
+	const float tanDown = tanf(fov.angleDown);
+	const float tanUp = tanf(fov.angleUp);
+	const float tanAngleWidth = tanRight - tanLeft;
+	const float tanAngleHeight = tanUp - tanDown;
+	const float range = clip_far / (clip_near - clip_far);
+	memset(result, 0, sizeof(float) * 16);
+	result[0] = 2 / tanAngleWidth;                   
+	result[5] = 2 / tanAngleHeight;                   
+	result[8] = (tanRight + tanLeft) / tanAngleWidth; 
+	result[9] = (tanUp + tanDown) / tanAngleHeight;  
+	result[10] = range;                               
+	result[11] = -1;                                  
+	result[14] = range * clip_near;                  
+}
+
 void ape::OpenXRPlugin::openXRPollActions()
 {
 	//APE_LOG_DEBUG("openXRPollActions: " << mOpenXRTime);
@@ -232,10 +252,26 @@ bool ape::OpenXRPlugin::openXRRenderLayer(XrTime predictedTime, std::vector<XrCo
 		views[i].subImage.imageRect.offset = { 0, 0 };
 		views[i].subImage.imageRect.extent = { mOpenXRSwapchains.width, mOpenXRSwapchains.height };
 		float xr_projection[16];
+		openXRProjection(views[i].fov, 0.1f, 50, xr_projection);
+		memcpy(&mOpenXRViewPointProjection[i], xr_projection, sizeof(float) * 16);
 		//TODO
-		/*openxr_projection(views[i].fov, 0.1f, 50, xr_projection);
-		memcpy(&xr_viewpt_proj[i], xr_projection, sizeof(float) * 16);
-		matrix_inverse(matrix_trs((vec3&)views[i].pose.position, (quat&)views[i].pose.orientation, vec3_one), xr_viewpt_view[i]);*/
+		//matrix_inverse(matrix_trs((vec3&)views[i].pose.position, (quat&)views[i].pose.orientation, vec3_one), mOpenXRViewPointView[i]);
+	}
+	if (auto manualTextureLeftEye = mManualTextureLeftEye.lock())
+	{
+		Microsoft::WRL::ComPtr<ID3D11Device> dev11;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
+		mOpenXRSwapchains.surface_images[0].texture->GetDevice(&dev11);
+		dev11->GetImmediateContext(&devcon11);
+		devcon11->CopyResource(mOpenXRSwapchains.surface_images[0].texture, (ID3D11Texture2D*)manualTextureLeftEye->getGraphicsApiID());
+	}
+	if (auto manualTextureRightEye = mManualTextureRightEye.lock())
+	{
+		Microsoft::WRL::ComPtr<ID3D11Device> dev11;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
+		mOpenXRSwapchains.surface_images[1].texture->GetDevice(&dev11);
+		dev11->GetImmediateContext(&devcon11);
+		devcon11->CopyResource(mOpenXRSwapchains.surface_images[1].texture, (ID3D11Texture2D*)manualTextureRightEye->getGraphicsApiID());
 	}
 	XrSwapchainImageReleaseInfo release_info = { XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO };
 	xrReleaseSwapchainImage(mOpenXRSwapchains.handle, &release_info);

@@ -167,6 +167,8 @@ namespace ape
 
 		bool openXRRenderLayer(XrTime predictedTime, std::vector<XrCompositionLayerProjectionView> &views, XrCompositionLayerProjection &layer);
 
+		void openXRProjection(XrFovf fov, float clip_near, float clip_far, float *result);
+
 		void submitTextureLeftToOpenXR();
 
 		void submitTextureRightToOpenXR();
