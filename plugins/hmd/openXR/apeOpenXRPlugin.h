@@ -89,10 +89,10 @@ namespace ape
 		};
 		struct swapchain_t 
 		{
-			XrSwapchain handle;
-			int32_t     width;
-			int32_t     height;
-			std::vector<XrSwapchainImageD3D11KHR> surface_images;
+			XrSwapchain xrSwapchain;
+			int32_t     xrSwapchainWidth;
+			int32_t     xrSwapchainHeight;
+			std::vector<XrSwapchainImageD3D11KHR> xrSwapchainTextures;
 		};
 	private:
 		ape::IEventManager* mpEventManager;
@@ -147,7 +147,7 @@ namespace ape
 
 		ape::CameraWeakPtr mCameraRight;
 
-		swapchain_t mOpenXRSwapchains;
+		swapchain_t mOpenXRSwapchainContainer;
 
 		void eventCallBack(const ape::Event& event);
 
