@@ -24,6 +24,8 @@ ape::OpenXRPlugin::OpenXRPlugin()
 	mCameraLeft = ape::CameraWeakPtr();
 	mCameraRight = ape::CameraWeakPtr();
 	mOpenXRViews = std::vector<XrView>();
+	mOpenXRSwapchains = std::vector<XrSwapchain>();
+	mOpenXRSwapchainTextures = std::vector<XrSwapchainImageD3D11KHR>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -235,46 +237,53 @@ bool ape::OpenXRPlugin::openXRRenderLayer(XrTime predictedTime, std::vector<XrCo
 	locate_info.displayTime = predictedTime;
 	locate_info.space = mOpenXRAppSpace;
 	xrLocateViews(mOpenXRSession, &locate_info, &view_state, (uint32_t)mOpenXRViews.size(), &view_count, mOpenXRViews.data());
-	uint32_t img_id;
-	XrSwapchainImageAcquireInfo acquire_info = { XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO };
-	xrAcquireSwapchainImage(mOpenXRSwapchainContainer.xrSwapchain, &acquire_info, &img_id);
-	XrSwapchainImageWaitInfo wait_info = { XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO };
-	wait_info.timeout = XR_INFINITE_DURATION;
-	xrWaitSwapchainImage(mOpenXRSwapchainContainer.xrSwapchain, &wait_info);
 	views.resize(view_count);
 	for (uint32_t i = 0; i < view_count; i++) 
 	{
+		uint32_t img_id;
+		XrSwapchainImageAcquireInfo acquire_info = { XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO };
+		xrAcquireSwapchainImage(mOpenXRSwapchains[i], &acquire_info, &img_id);
+		//APE_LOG_DEBUG("mOpenXRSwapchains: " << mOpenXRSwapchains[i] << " img_id: " << img_id);
+		XrSwapchainImageWaitInfo wait_info = { XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO };
+		wait_info.timeout = XR_INFINITE_DURATION;
+		xrWaitSwapchainImage(mOpenXRSwapchains[i], &wait_info);
 		views[i] = { XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW };
 		views[i].pose = mOpenXRViews[i].pose;
 		views[i].fov = mOpenXRViews[i].fov;
-		views[i].subImage.imageArrayIndex = i;
-		views[i].subImage.swapchain = mOpenXRSwapchainContainer.xrSwapchain;
+		views[i].subImage.swapchain = mOpenXRSwapchains[i];
 		views[i].subImage.imageRect.offset = { 0, 0 };
-		views[i].subImage.imageRect.extent = { mOpenXRSwapchainContainer.xrSwapchainWidth, mOpenXRSwapchainContainer.xrSwapchainHeight };
+		views[i].subImage.imageRect.extent = { (int32_t)mpCoreConfig->getWindowConfig().width, (int32_t)mpCoreConfig->getWindowConfig().height };
 		float xr_projection[16];
 		openXRProjection(views[i].fov, 0.1f, 50, xr_projection);
 		memcpy(&mOpenXRViewPointProjection[i], xr_projection, sizeof(float) * 16);
 		//TODO
 		//matrix_inverse(matrix_trs((vec3&)views[i].pose.position, (quat&)views[i].pose.orientation, vec3_one), mOpenXRViewPointView[i]);
+		int textureID = (i + 1) * img_id;
+		if (i == 0)
+		{
+			if (auto manualTextureLeftEye = mManualTextureLeftEye.lock())
+			{
+				Microsoft::WRL::ComPtr<ID3D11Device> dev11;
+				Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
+				mOpenXRSwapchainTextures[textureID].texture->GetDevice(&dev11);
+				dev11->GetImmediateContext(&devcon11);
+				devcon11->CopyResource(mOpenXRSwapchainTextures[textureID].texture, (ID3D11Texture2D*)manualTextureLeftEye->getGraphicsApiID());
+			}
+		}
+		else
+		{
+			if (auto manualTextureRightEye = mManualTextureRightEye.lock())
+			{
+				Microsoft::WRL::ComPtr<ID3D11Device> dev11;
+				Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
+				mOpenXRSwapchainTextures[textureID].texture->GetDevice(&dev11);
+				dev11->GetImmediateContext(&devcon11);
+				devcon11->CopyResource(mOpenXRSwapchainTextures[textureID].texture, (ID3D11Texture2D*)manualTextureRightEye->getGraphicsApiID());
+			}
+		}
+		XrSwapchainImageReleaseInfo release_info = { XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO };
+		xrReleaseSwapchainImage(mOpenXRSwapchains[i], &release_info);
 	}
-	if (auto manualTextureLeftEye = mManualTextureLeftEye.lock())
-	{
-		Microsoft::WRL::ComPtr<ID3D11Device> dev11;
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
-		mOpenXRSwapchainContainer.xrSwapchainTextures[0].texture->GetDevice(&dev11);
-		dev11->GetImmediateContext(&devcon11);
-		devcon11->CopyResource(mOpenXRSwapchainContainer.xrSwapchainTextures[0].texture, (ID3D11Texture2D*)manualTextureLeftEye->getGraphicsApiID());
-	}
-	if (auto manualTextureRightEye = mManualTextureRightEye.lock())
-	{
-		Microsoft::WRL::ComPtr<ID3D11Device> dev11;
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
-		mOpenXRSwapchainContainer.xrSwapchainTextures[1].texture->GetDevice(&dev11);
-		dev11->GetImmediateContext(&devcon11);
-		devcon11->CopyResource(mOpenXRSwapchainContainer.xrSwapchainTextures[1].texture, (ID3D11Texture2D*)manualTextureRightEye->getGraphicsApiID());
-	}
-	XrSwapchainImageReleaseInfo release_info = { XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO };
-	xrReleaseSwapchainImage(mOpenXRSwapchainContainer.xrSwapchain, &release_info);
 	layer.space = mOpenXRAppSpace;
 	layer.viewCount = (uint32_t)views.size();
 	layer.views = views.data();
@@ -440,48 +449,56 @@ void ape::OpenXRPlugin::Init()
 	{
 		APE_LOG_DEBUG("xrEnumerateViewConfigurationViews failed " << result);
 	}
-	XrViewConfigurationView &view = mOpenXRConfigViews[0];
-	XrSwapchainCreateInfo swapchain_info = { XR_TYPE_SWAPCHAIN_CREATE_INFO };
-	XrSwapchain xrSwapchain = {};
-	swapchain_info.arraySize = view_count;
-	swapchain_info.mipCount = 1;
-	swapchain_info.faceCount = 1;
-	swapchain_info.format = color_format;
-	swapchain_info.width = view.recommendedImageRectWidth;
-	swapchain_info.height = view.recommendedImageRectHeight;
-	swapchain_info.sampleCount = view.recommendedSwapchainSampleCount;
-	swapchain_info.usageFlags = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT;
-	result = xrCreateSwapchain(mOpenXRSession, &swapchain_info, &xrSwapchain);
-	if (XR_FAILED(result)) 
+	for (auto openXRConfigViews : mOpenXRConfigViews)
 	{
-		APE_LOG_DEBUG("xrCreateSwapchain failed " << result);
+		XrSwapchainCreateInfo swapchain_info = { XR_TYPE_SWAPCHAIN_CREATE_INFO };
+		XrSwapchain xrSwapchain;
+		swapchain_info.arraySize = 1;
+		swapchain_info.mipCount = 1;
+		swapchain_info.faceCount = 1;
+		swapchain_info.format = color_format;
+		swapchain_info.width = openXRConfigViews.recommendedImageRectWidth;
+		swapchain_info.height = openXRConfigViews.recommendedImageRectHeight;
+		swapchain_info.sampleCount = openXRConfigViews.recommendedSwapchainSampleCount;
+		swapchain_info.usageFlags = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT;
+		result = xrCreateSwapchain(mOpenXRSession, &swapchain_info, &xrSwapchain);
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrCreateSwapchain failed " << result);
+		}
+		uint32_t surface_count = 0;
+		xrEnumerateSwapchainImages(xrSwapchain, 0, &surface_count, nullptr);
+		std::vector<XrSwapchainImageD3D11KHR> openXRSwapchainTextures;
+		openXRSwapchainTextures.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_D3D11_KHR });
+		result = xrEnumerateSwapchainImages(xrSwapchain, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)openXRSwapchainTextures.data());
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrEnumerateSwapchainImages failed " << result);
+		}
+		for (auto openXRSwapchainTexture : openXRSwapchainTextures)
+		{
+			mOpenXRSwapchainTextures.push_back(openXRSwapchainTexture);
+		}
+		mOpenXRSwapchains.push_back(xrSwapchain);
 	}
-	uint32_t surface_count = 0;
-	xrEnumerateSwapchainImages(xrSwapchain, 0, &surface_count, nullptr);
-	mOpenXRSwapchainContainer = {};
-	mOpenXRSwapchainContainer.xrSwapchainWidth = swapchain_info.width;
-	mOpenXRSwapchainContainer.xrSwapchainHeight = swapchain_info.height;
-	mOpenXRSwapchainContainer.xrSwapchain = xrSwapchain;
-	mOpenXRSwapchainContainer.xrSwapchainTextures.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_D3D11_KHR });
-	result = xrEnumerateSwapchainImages(mOpenXRSwapchainContainer.xrSwapchain, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)mOpenXRSwapchainContainer.xrSwapchainTextures.data());
-	if (XR_FAILED(result)) 
+	for (auto openXRSwapchain : mOpenXRSwapchains)
 	{
-		APE_LOG_DEBUG("xrEnumerateSwapchainImages failed " << result);
+		APE_LOG_DEBUG("xrSwapchain: " << openXRSwapchain);
 	}
-	for (uint32_t s = 0; s < surface_count; s++)
+	for (auto openXRSwapchainTexture : mOpenXRSwapchainTextures)
 	{
-		APE_LOG_DEBUG("xrSwapchain images: " << mOpenXRSwapchainContainer.xrSwapchainTextures[s].texture);
+		APE_LOG_DEBUG("xrSwapchain image: " << openXRSwapchainTexture.texture);
 	}
 	APE_LOG_DEBUG("openxr_init OK");
 	APE_LOG_DEBUG("try to set up ApertusVR rendertargets(render2textures) and cameras");
 	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenXRRenderTextureLeft", ape::Entity::TEXTURE_MANUAL, false, "").lock()))
 	{
-		manualTexture->setParameters(swapchain_info.width, swapchain_info.height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
+		manualTexture->setParameters(mpCoreConfig->getWindowConfig().width, mpCoreConfig->getWindowConfig().height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
 		mManualTextureLeftEye = manualTexture;
 	}
 	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenXRRenderTextureRight", ape::Entity::TEXTURE_MANUAL, false, "").lock()))
 	{
-		manualTexture->setParameters(swapchain_info.width, swapchain_info.height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
+		manualTexture->setParameters(mpCoreConfig->getWindowConfig().width, mpCoreConfig->getWindowConfig().height, ape::Texture::PixelFormat::R8G8B8A8, ape::Texture::Usage::RENDERTARGET, true, true, false);
 		mManualTextureRightEye = manualTexture;
 	}
 	mCameraLeft = mpApeUserInputMacro->createCamera("OpenXRHmdLeftCamera");
