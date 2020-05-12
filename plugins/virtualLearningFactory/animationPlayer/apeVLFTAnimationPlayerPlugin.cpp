@@ -110,6 +110,9 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mAnimatedNodeNames = std::vector<std::string>();
 	mAttachedUsers = std::vector<ape::NodeWeakPtr>();
 	mAttach2NewAnimationNode = std::vector<ape::NodeWeakPtr>();
+	mIsStudentsMovementLogging = false;
+	mStudents = std::vector<ape::NodeWeakPtr>();
+	mStudentsMovementLoggingFile = std::ofstream();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -377,6 +380,40 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			{
 				gdiscreen();
 			}
+			else if (browser->getClickedElementName() == "logUsers")
+			{
+				mIsStudentsMovementLogging = true;	
+				std::stringstream fileName;
+				std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+				fileName << "../../studentsMovementLog/" << uuid.count() << ".txt";
+				mStudentsMovementLoggingFile.open(fileName.str());
+				auto nodes = mpSceneManager->getNodes();
+				for (auto node : nodes)
+				{
+					if (auto nodeSP = node.second.lock())
+					{
+						std::string nodeName = nodeSP->getName();
+						std::size_t pos = nodeName.find("_HeadNode");
+						if (pos != std::string::npos)
+						{
+							if (auto userNode = nodeSP->getParentNode().lock())
+							{
+								if (userNode->getName() != mpUserInputMacro->getUserNode().lock()->getName())
+								{
+									mStudents.push_back(userNode);
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (browser->getClickedElementName() == "logUsersStop")
+			{
+				mIsStudentsMovementLogging = false;
+				mStudents.clear();
+				mStudents.resize(0);
+				mStudentsMovementLoggingFile.close();
+			}
 			else if (browser->getClickedElementName() == "screencast")
 			{
 				auto screenCastThread = std::thread(&VLFTAnimationPlayerPlugin::screenCast, this);
@@ -449,6 +486,21 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 		{
 			//APE_LOG_DEBUG("NODE_SHOWBOUNDINGBOX");
 			mClickedNode = clickedNode;
+		}
+	}
+	else if (event.type == ape::Event::Type::NODE_POSITION || event.type == ape::Event::Type::NODE_ORIENTATION)
+	{
+		for (auto studentWP : mStudents)
+		{
+			if (auto student = studentWP.lock())
+			{
+				if (event.subjectName == student->getName())
+				{
+					std::stringstream data;
+					data << student->getName() << student->getDerivedPosition().toString() << student->getDerivedOrientation().toString();
+					mStudentsMovementLoggingFile << data.str();
+				}
+			}
 		}
 	}
 }

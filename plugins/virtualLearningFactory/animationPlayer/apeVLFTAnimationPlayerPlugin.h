@@ -103,6 +103,12 @@ namespace ape
 
 		bool mIsPlayRunning;
 
+		bool mIsStudentsMovementLogging;
+
+		std::vector<ape::NodeWeakPtr> mStudents;
+
+		std::ofstream mStudentsMovementLoggingFile;
+
 		PROCESS_INFORMATION mScreenCastProcessInfo;
 
 		DWORD mScreenCastProcessExitCode;
