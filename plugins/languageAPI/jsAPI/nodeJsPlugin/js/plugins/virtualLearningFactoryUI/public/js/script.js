@@ -371,6 +371,8 @@ function hideTeacherButtons() {
 	console.log('hideTeacherButtons');
 	$('#attachUsers').hide();
 	$('#otherusers').hide();
+	$('#showUsers').hide();
+	$('#logUsers').hide();
 }
 
 function hideMultiUserButtons() {
@@ -379,6 +381,11 @@ function hideMultiUserButtons() {
 	$('#otherusers').hide();
 	$('#messenger').hide();
 	$('#chat').hide();
+}
+
+function toggleLogUsersStop() {
+	$('#logUsers').toggle();
+	$('#logUsersStop').toggle();
 }
 
 function toggleScreencastStop() {
@@ -402,6 +409,7 @@ $(document).ready(function () {
 	$('#screencastStop').toggle();
 	$('#freeUsers').toggle();
 	$('#freeMe').toggle();
+	$('#logUsersStop').toggle();
 	hidePauseAndSkipButtons();
     var sock = new WebSocket("ws://localhost:40080/ws");
     sock.onopen = ()=>{

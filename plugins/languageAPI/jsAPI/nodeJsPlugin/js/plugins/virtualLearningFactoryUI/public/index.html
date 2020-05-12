@@ -49,6 +49,9 @@
 		<div id="rightButtons" class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
 			<button id="reload" type="button" class="btn btn-outline-dark btn-lg" onClick="javascript: location.reload(true);"><span class="oi oi-reload"></span></button>
 			<button id="messenger" type="button" class="btn btn-outline-dark btn-lg" onClick="showChat();"><span class="oi oi-chat"></span></button>
+			<button id="showUsers" type="button" class="btn btn-outline-dark btn-lg" onClick="showUsers();"><span class="oi oi-people"></span></button>
+			<button id="logUsers" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleLogUsersStop();"><span class="oi oi-file"></span></button>
+			<button id="logUsersStop" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleLogUsersStop();"><span class="oi oi-media-stop"></span></button>
 			<button id="attachUsers" type="button" class="btn btn-outline-dark btn-lg" onClick="toogleFreeUsers();"><span class="oi oi-lock-locked"></span></button>
 			<button id="freeUsers" type="button" class="btn btn-outline-dark btn-lg" onClick="toogleFreeUsers();"><span class="oi oi-lock-unlocked"></span></button>
 			<button id="freeMe" type="button" class="btn btn-outline-dark btn-lg" onClick="toogleFreeMe();"><span class="oi oi-lock-unlocked"></span></button>
@@ -56,14 +59,14 @@
 			<button id="screenshot" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-camera-slr"></span></button>
 			<button id="screencast" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleScreencastStop();"><span class="oi oi-video"></span></button>
 			<button id="screencastStop" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleScreencastStop();"><span class="oi oi-media-stop"></span></button>
-			</div>
+		</div>
 			<div class="d-inline-block" style="width:100%">
 				<div id="users" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 				</div>
 				<div id="map" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 					<canvas id="mapCanvas" width="250" height="250" style="border:1px solid #d3d3d3;"> Your browser does not support the canvas element. </canvas>
 				</div>
-				<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:350px;color:rgba(255, 255, 255);opacity:0.7"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
+				<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:300px;color:rgba(255, 255, 255);opacity:0.7"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
 			</div>
 		</div>
 </body>
