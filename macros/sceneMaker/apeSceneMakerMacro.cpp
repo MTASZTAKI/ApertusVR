@@ -17,37 +17,37 @@ ape::SceneMakerMacro::~SceneMakerMacro()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::SceneMakerMacro::makeLit()
+void ape::SceneMakerMacro::makeLit(ape::Color color)
 {
 	APE_LOG_FUNC_ENTER();
 	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(ape::Color(0.35f, 0.35f, 0.35f));
-		light->setSpecularColor(ape::Color(0.35f, 0.35f, 0.35f));
+		light->setDiffuseColor(color);
+		light->setSpecularColor(color);
 	}
 
 	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light2", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(0, -1, -1));
-		light->setDiffuseColor(ape::Color(0.35f, 0.35f, 0.35f));
-		light->setSpecularColor(ape::Color(0.35f, 0.35f, 0.35f));
+		light->setDiffuseColor(color);
+		light->setSpecularColor(color);
 	}
 	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light3", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(0, -1, 1));
-		light->setDiffuseColor(ape::Color(0.35f, 0.35f, 0.35f));
-		light->setSpecularColor(ape::Color(0.35f, 0.35f, 0.35f));
+		light->setDiffuseColor(color);
+		light->setSpecularColor(color);
 	}
 	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light4", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(-1, -1, 0));
-		light->setDiffuseColor(ape::Color(0.35f, 0.35f, 0.35f));
-		light->setSpecularColor(ape::Color(0.35f, 0.35f, 0.35f));
+		light->setDiffuseColor(color);
+		light->setSpecularColor(color);
 	}
 	APE_LOG_FUNC_LEAVE();
 }

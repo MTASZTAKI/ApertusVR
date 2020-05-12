@@ -28,20 +28,20 @@ void ape::apeSampleScenePlugin::eventCallBack(const ape::Event& event)
 void ape::apeSampleScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	mpSceneMakerMacro->makeLit();
-	/*if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT).lock()))
+	mpSceneMakerMacro->makeLit(ape::Color(0.425f, 0.425f, 0.45f));
+	/*if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(1, -1, 0));
-		light->setDiffuseColor(ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
+		light->setDiffuseColor(ape::Color(0.8f, 0.8f, 0.8f));
+		light->setSpecularColor(ape::Color(0.8f, 0.8f, 0.8f));
 	}
-	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light2", ape::Entity::LIGHT).lock()))
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light2", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		light->setLightType(ape::Light::Type::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(0, -1, 1));
-		light->setDiffuseColor(ape::Color(0.6f, 0.6f, 0.6f));
-		light->setSpecularColor(ape::Color(0.6f, 0.6f, 0.6f));
+		light->setDiffuseColor(ape::Color(0.8f, 0.8f, 0.8f));
+		light->setSpecularColor(ape::Color(0.8f, 0.8f, 0.8f));
 	}*/
 	mpSceneMakerMacro->makeBackground();
 	mpSceneMakerMacro->makeGround();

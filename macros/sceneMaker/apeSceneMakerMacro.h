@@ -68,7 +68,7 @@ namespace ape
 
 		~SceneMakerMacro();
 
-		void makeLit();
+		void makeLit(ape::Color color);
 
 		void makeGround();
 
