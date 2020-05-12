@@ -267,7 +267,7 @@ function showUsers() {
 			newDiv.id = element.name;
 			newDiv.innerHTML = element.name;
 			newDiv.addEventListener('click', function () {
-				attachOtherUserNode2Me(element.name);
+				//attachOtherUserNode2Me(element.name);
 			});
 			usersDiv.appendChild(newDiv);
 		}
