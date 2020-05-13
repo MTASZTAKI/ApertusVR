@@ -6,7 +6,11 @@ var otherUserNodeNames = [];
 var otherUserNodePositions = [];
 var clickedNodeName;
 var clickedNodePosition;
+var clickedNodeOrientation;
+var clickedNodeDescr;
+var roomName;
 var animationJSON;
+var sceneJSON;
 var animationSpeedFactor = 1;
 var isPaused = false;
 var updateMapInterval;
@@ -40,14 +44,43 @@ function updateMeAttached() {
 	});
 }
 
+function getRoomName() {
+	console.log('getRoomName()');
+	doGetRequest(apiEndPoint + '/roomName', function (res) {
+		roomName = res.data.items[0].roomName;
+		console.log('getRoomName(): res: ', roomName);
+		parseAnimationJSON();
+		parseSceneJSON();
+	});
+}
+
 function getOverlayBrowserLastMessage() {
 	console.log('getOverlayBrowserLastMessage()');
 	doGetRequest(apiEndPoint + '/overLayBrowserGetLastMessage', function (res) {
 		lastMessage = res.data.items[0].lastMessage;
 		console.log('getOverlayBrowserLastMessage(): res: ', lastMessage);
 		updateAnimationTime(lastMessage);
+		updateClickedNodeState(lastMessage);
 	});
 }
+
+function updateClickedNodeState(time) {
+	var ms = Math.floor((time / 100) % 10);
+	var sec = Math.floor((time / 1000) % 60);
+	if (ms == 0 && sec > 0) {
+		animationJSON.nodes.forEach(function (node) {
+			if (node.name == clickedNodeName) {
+				element.actions.forEach(function (action) {
+					if (action.event.type == "state" && action.trigger.type == "timestamp") {
+						if (action.trigger.data == sec) {
+							document.getElementById('selectedNodeState').innerHTML = 'State: ' + action.event.descr;
+						}
+					}
+				});
+			}
+		});
+	}
+};
 
 function updateAnimationTime(time) {
 	var ms = Math.floor((time / 100) % 10);
@@ -80,6 +113,24 @@ function getUserNodeNameAndID() {
 		userID = res.data.items[1].ownerID;
 		console.log('userNodeName(): res: ', userNodeName);
 		console.log('userID(): res: ', userID);
+	});
+}
+
+function getClickedNodeDesc() {
+	console.log('getClickedNodeDesc(): ' + clickedNodeName);
+	sceneJSON.assets.forEach(function (element) {
+		if (element.id == clickedNodeName) {
+			clickedNodeDescr = element.descr;
+		}
+	});
+}
+
+function getClickedNodeOrientation() {
+	console.log('getClickedNodeOrientation(): ' + clickedNodeName);
+	var nodeName = { name: clickedNodeName };
+	doPostRequest(apiEndPoint + "/nodeDerivedOrientation", nodeName, function (res) {
+		clickedNodeOrientation= res.data.items[0].orientation;
+		console.log('getClickedNodeDerivedOrientation(): res: ', clickedNodeOrientation);
 	});
 }
 
@@ -349,9 +400,23 @@ function showBookmarks() {
 }
 
 function parseAnimationJSON() {
-	console.log('parseAnimationJSON');
-	$.get("http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/local/apeVLFTAnimationPlayerPlugin.json", function (json) {
+	var pos = roomName.search("vlft");
+	var roomSTR = roomName.substring(pos + 4, roomName.length);
+	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/local" + roomSTR + "/apeVLFTAnimationPlayerPlugin.json";
+	console.log('parseAnimationJSON' + url);
+	$.get(url, function (json) {
 		animationJSON = json;
+		console.log("JSON Data: " + JSON.stringify(json));
+	});
+}
+
+function parseSceneJSON() {
+	var pos = roomName.search("vlft");
+	var roomSTR = roomName.substring(pos + 4, roomName.length);
+	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/local" + roomSTR + "/apeVLFTSceneLoaderPlugin.json";
+	console.log('parseSceneJSON' + url);
+	$.get(url, function (json) {
+		sceneJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
 	});
 }
@@ -359,7 +424,11 @@ function parseAnimationJSON() {
 function updateProperties() {
 	//console.log('update Properties of the clicked node: ' + clickedNodeName);
 	getClickedNodePosition();
-	document.getElementById('properties').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
+	document.getElementById('selectedNodePosition').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
+	getClickedNodeOrientation();
+	document.getElementById('selectedNodeOrientation').innerHTML = 'Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
+	getClickedNodeDesc();
+	document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
 }
 
 function hideStudentButtons() {
@@ -398,7 +467,7 @@ function toggleInfoSection() {
 }
 
 $(document).ready(function () {
-	parseAnimationJSON();
+	getRoomName();
 	getUserNodeNameAndID();
 	getOtherUserNodeNames();
 	getUserNodePosition();
@@ -412,7 +481,7 @@ $(document).ready(function () {
 	$('#logUsersStop').toggle();
 	hidePauseAndSkipButtons();
     var sock = new WebSocket("ws://localhost:40080/ws");
-    sock.onopen = ()=>{
+	sock.onopen = () => {
 		console.log('open');
 		getUserNodeNameAndID();
 		var isStudent = userNodeName.indexOf("VLFT_Student");

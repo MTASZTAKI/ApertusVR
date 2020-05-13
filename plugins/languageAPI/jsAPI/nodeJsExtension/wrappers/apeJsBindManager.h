@@ -651,6 +651,13 @@ public:
 		return mpUserInputMacro->getOverlayBrowserLastMessage();
 	}
 
+	std::string getRoomName()
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return mpCoreConfig->getNetworkConfig().lobbyConfig.roomName;
+	}
+
 private:
 	ape::ISceneManager* mpSceneManager;
 	ape::ICoreConfig* mpCoreConfig;
@@ -715,6 +722,8 @@ NBIND_CLASS(JsBindManager)
 	method(fireOverlayBrowserHoverIn);
 	method(fireOverlayBrowserHoverOut);
 	method(getOverlayBrowserLastMessage);
+
+	method(getRoomName);
 }
 
 #endif

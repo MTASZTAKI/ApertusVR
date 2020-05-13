@@ -376,6 +376,37 @@ app.post('/nodeDerivedPosition', function (req, res) {
 	});
 });
 
+app.post('/nodeDerivedOrientation', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Gets the orientation of the specified node.');
+
+	// handle http param validation errors
+	req.checkBody('name', 'BodyParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.body.name;
+	ape.nbind.JsBindManager().getNode(name, function (error, obj) {
+		if (error) {
+			respObj.addErrorItem({
+				name: 'invalidCast',
+				msg: obj,
+				code: 666
+			});
+			res.status(400).send(respObj.toJSonString());
+			return;
+		}
+
+		respObj.addDataItem({
+			orientation: JSON.parse(obj.getDerivedOrientation().toJsonString())
+		});
+		res.send(respObj.toJSonString());
+	});
+});
+
+
 app.get('/nodes/:name/position', function(req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Gets the position of the specified node.');
@@ -683,6 +714,15 @@ app.get('/overLayBrowserGetLastMessage', function (req, res) {
 
 	var lastMessage = ape.nbind.JsBindManager().getOverlayBrowserLastMessage();
 	respObj.addDataItem({ lastMessage: lastMessage });
+	res.send(respObj.toJSonString());
+});
+
+app.get('/roomName', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Get the name of the room.');
+
+	var roomName = ape.nbind.JsBindManager().getRoomName();
+	respObj.addDataItem({ roomName: roomName });
 	res.send(respObj.toJSonString());
 });
 
