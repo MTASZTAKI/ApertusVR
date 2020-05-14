@@ -209,15 +209,26 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			{
 				node->setVisible(false);
 			}
-			if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION)
+			if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION || mParsedAnimations[i].type == quicktype::EventType::ANIMATION_ADDITIVE)
 			{
 				auto previousPosition = node->getDerivedPosition();
 				if (!attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
 				{
 					previousPosition = node->getDerivedPosition();
 				}
-				node->setPosition(mParsedAnimations[i].position);
-				node->setOrientation(mParsedAnimations[i].orientation);
+				if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION)
+				{
+					node->setPosition(mParsedAnimations[i].position);
+					node->setOrientation(mParsedAnimations[i].orientation);
+				}
+				else if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION_ADDITIVE)
+				{
+					auto previousPosition = node->getPosition();
+					auto previousOrientation = node->getOrientation();
+					node->setPosition(previousPosition + mParsedAnimations[i].position);
+					mParsedAnimations[i].orientation.normalise();
+					node->setOrientation(mParsedAnimations[i].orientation * previousOrientation);
+				}
 				std::string spaghettiSectionName;
 				drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
 				spaghettiLineNames.push_back(spaghettiSectionName);
@@ -554,7 +565,7 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000);
 					mParsedAnimations.push_back(animation);
 				}
-				if (action.get_event().get_type() == quicktype::EventType::ANIMATION)
+				if (action.get_event().get_type() == quicktype::EventType::ANIMATION || action.get_event().get_type() == quicktype::EventType::ANIMATION_ADDITIVE)
 				{
 					std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + *action.get_event().get_data();
 					std::ifstream file(fileNamePath);

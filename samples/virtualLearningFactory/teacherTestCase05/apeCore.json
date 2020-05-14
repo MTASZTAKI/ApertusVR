@@ -1,0 +1,66 @@
+{
+  "plugins": [
+    "apeNodeJsPlugin",
+    "apeWebSocketServerPlugin",
+    "apeOgreRenderPlugin",
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "apeAssimpAssetLoaderPlugin",
+    "apeCefBrowserPlugin",
+    "apeVLFTUIManagerPlugin",
+    "apeVLFTAnimationPlayerPlugin"
+  ],
+  "network": {
+    "user": "VLFT_Teacher",
+    "participant": "guest",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "195.111.2.95",
+        "port": "61666"
+      },
+      "lobby": {
+        "ip": "195.111.2.95",
+        "port": "8888",
+        "room": "vlftTestCase05"
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "internet",
+    "resourceZipUrl": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory.zip",
+    "resourceMd5Url": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory.md5",
+    "resourceDownloadLocation": "/samples",
+    "resourceLocations": [
+      "/plugins/render/ogreRender/resources/fonts",
+      "/plugins/render/ogreRender/resources/materials",
+      "/plugins/render/ogreRender/resources/pbs",
+      "/plugins/render/ogreRender/resources/rtss",
+      "/plugins/render/ogreRender/resources/rtss/Cg",
+      "/plugins/render/ogreRender/resources/rtss/GLSL",
+      "/plugins/render/ogreRender/resources/rtss/GLSL150",
+      "/plugins/render/ogreRender/resources/rtss/GLSLES",
+      "/plugins/render/ogreRender/resources/rtss/HLSL",
+      "/plugins/render/ogreRender/resources/rtss/materials",
+      "/plugins/render/ogreRender/resources/hydrax",
+      "/plugins/render/ogreRender/resources/skyx",
+      "/macros/sceneMaker/resources",
+      "/samples/virtualLearningFactory/models/Box",
+      "/samples/virtualLearningFactory/models/Camera",
+      "/samples/virtualLearningFactory/models/Conveyor",
+      "/samples/virtualLearningFactory/models/Hinge",
+      "/samples/virtualLearningFactory/models/Pallet",
+      "/samples/virtualLearningFactory/models/PickAndPlace",
+      "/samples/virtualLearningFactory/models/PinInsertion",
+      "/samples/virtualLearningFactory/models/Riveting",
+      "/samples/virtualLearningFactory/models/RoboticArm",
+      "/samples/virtualLearningFactory/models/RotatingTable",
+      "/samples/virtualLearningFactory/models/Tightener",
+      "/samples/virtualLearningFactory/models/UniversalRobot",
+      "/samples/virtualLearningFactory/models/VibratingBowl"
+    ]
+  }
+}
+
+
