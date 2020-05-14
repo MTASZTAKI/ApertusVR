@@ -191,7 +191,11 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			break;
 		unsigned long long timeToSleep = mParsedAnimations[i].time - previousTimeToSleep;
 		if (i > mChoosedBookmarkedAnimationID)
+		{
+			auto sendAnimationTimeDuringSleepThread = std::thread(&VLFTAnimationPlayerPlugin::sendAnimationTimeDuringSleep, this, mParsedAnimations[i - 1].time, mParsedAnimations[i].time);
+			sendAnimationTimeDuringSleepThread.detach();
 			std::this_thread::sleep_for(std::chrono::milliseconds((int)round(timeToSleep * mTimeToSleepFactor)));
+		}
 		mpUserInputMacro->sendOverlayBrowserMessage(std::to_string(mParsedAnimations[i].time));
 		previousTimeToSleep = mParsedAnimations[i].time;
 		if (auto node = mpSceneManager->getNode(mParsedAnimations[i].nodeName).lock())
@@ -263,6 +267,18 @@ void ape::VLFTAnimationPlayerPlugin::screenCast()
 	command << "/c ffmpeg -f gdigrab -framerate 30 -i desktop ../../screencasts/" << uuid.count() << ".mkv";
 	STARTUPINFO info = { sizeof(info) };
 	CreateProcess("C:\\windows\\system32\\cmd.exe", LPTSTR((LPCTSTR)command.str().c_str()), NULL, NULL, TRUE, 0, NULL, NULL, &info, &mScreenCastProcessInfo);
+}
+
+void ape::VLFTAnimationPlayerPlugin::sendAnimationTimeDuringSleep(unsigned long long startTime, unsigned long long stopTime)
+{
+	unsigned long long time = startTime;
+	int sleepTime = 100;
+	while (time < stopTime)
+	{
+		time = time + sleepTime;
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
+		mpUserInputMacro->sendOverlayBrowserMessage(std::to_string(time));
+	}
 }
 
 void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)

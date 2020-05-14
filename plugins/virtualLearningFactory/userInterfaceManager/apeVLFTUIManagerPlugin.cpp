@@ -151,18 +151,10 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 					{
 						previouslyClickedNode->showBoundingBox(false);
 					}
-					while (auto parentNode = clickedNode->getParentNode().lock())
+					/*while (auto parentNode = clickedNode->getParentNode().lock())
 					{
-						if (auto rootNode = parentNode->getParentNode().lock())
-						{
-							;
-						}
-						else
-						{
-							break; //WOW always retrive rootNode - 1
-						}
 						clickedNode = parentNode;
-					}
+					}*/
 					clickedNode->showBoundingBox(true);
 					mClickedNode = clickedNode;
 					//APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName() << " Position: " << clickedNode->getPosition().toString() << " DerivedPosition: " << clickedNode->getDerivedPosition().toString());

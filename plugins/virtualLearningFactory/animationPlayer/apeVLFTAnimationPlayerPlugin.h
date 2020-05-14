@@ -132,6 +132,8 @@ namespace ape
 
 		void screenCast();
 
+		void sendAnimationTimeDuringSleep(unsigned long long startTime, unsigned long long stopTime);
+
 		void eventCallBack(const ape::Event& event);
 		
 		void Init() override;

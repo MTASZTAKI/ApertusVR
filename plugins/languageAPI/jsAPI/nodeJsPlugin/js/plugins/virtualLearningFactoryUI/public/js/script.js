@@ -8,6 +8,7 @@ var clickedNodeName;
 var clickedNodePosition;
 var clickedNodeOrientation;
 var clickedNodeDescr;
+var clickedNodeState;
 var roomName;
 var animationJSON;
 var sceneJSON;
@@ -60,27 +61,23 @@ function getOverlayBrowserLastMessage() {
 		lastMessage = res.data.items[0].lastMessage;
 		console.log('getOverlayBrowserLastMessage(): res: ', lastMessage);
 		updateAnimationTime(lastMessage);
-		updateClickedNodeState(lastMessage);
 	});
 }
 
-function updateClickedNodeState(time) {
-	var ms = Math.floor((time / 100) % 10);
-	var sec = Math.floor((time / 1000) % 60);
-	if (ms == 0 && sec > 0) {
-		animationJSON.nodes.forEach(function (node) {
-			if (node.name == clickedNodeName) {
-				element.actions.forEach(function (action) {
-					if (action.event.type == "state" && action.trigger.type == "timestamp") {
-						if (action.trigger.data == sec) {
-							document.getElementById('selectedNodeState').innerHTML = 'State: ' + action.event.descr;
-						}
+function getClickedNodeState(sec) {
+	console.log('getClickedNodeState(): ' + sec);
+	animationJSON.nodes.forEach(function (node) {
+		if (node.name == clickedNodeName) {
+			node.actions.forEach(function (action) {
+				if (action.event.type == "state" && action.trigger.type == "timestamp") {
+					if (action.trigger.data == sec) {
+						clickedNodeState = action.event.descr;
 					}
-				});
-			}
-		});
-	}
-};
+				}
+			});
+		}
+	});
+}
 
 function updateAnimationTime(time) {
 	var ms = Math.floor((time / 100) % 10);
@@ -116,11 +113,29 @@ function getUserNodeNameAndID() {
 	});
 }
 
+function findDescr(parentName) {
+	sceneJSON.assets.forEach(function (asset) {
+		if (asset.id == parentName) {
+			if (asset.descr.length) {
+				clickedNodeDescr = asset.descr;
+			}
+			else {
+				findDescr(asset.parentObject);
+			}
+		}
+	});
+}
+
 function getClickedNodeDesc() {
 	console.log('getClickedNodeDesc(): ' + clickedNodeName);
-	sceneJSON.assets.forEach(function (element) {
-		if (element.id == clickedNodeName) {
-			clickedNodeDescr = element.descr;
+	sceneJSON.assets.forEach(function (asset) {
+		if (asset.id == clickedNodeName) {
+			if (asset.descr.length) {
+				clickedNodeDescr = asset.descr;
+			}
+			else {
+				findDescr(asset.parentObject);
+			}
 		}
 	});
 }
@@ -429,6 +444,13 @@ function updateProperties() {
 	document.getElementById('selectedNodeOrientation').innerHTML = 'Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
 	getClickedNodeDesc();
 	document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
+	doGetRequest(apiEndPoint + '/overLayBrowserGetLastMessage', function (res) {
+		lastMessage = res.data.items[0].lastMessage;
+		console.log('getOverlayBrowserLastMessage(): res: ', lastMessage);
+		var sec = Math.floor((lastMessage / 1000) % 60);
+		getClickedNodeState(sec);
+		document.getElementById('selectedNodeState').innerHTML = 'State: ' + clickedNodeState;
+	});
 }
 
 function hideStudentButtons() {
@@ -532,7 +554,7 @@ $(document).ready(function () {
 		if (this.id != "")
 			$(this).css("background-color", convertHex('#FFFFFF', 0.7));
     });
-    $("div").hover(
+    $("button").hover(
     function () {
     	if (this.id != "")
     		console.log('hover in: ' + this.id);
