@@ -209,6 +209,42 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			{
 				node->setVisible(false);
 			}
+			if (mParsedAnimations[i].type == quicktype::EventType::STATE)
+			{
+				if (mParsedAnimations[i].modelName.size())
+				{
+					auto entites = mpSceneManager->getEntities();
+					for (auto entityNameWPMap : entites)
+					{
+						if (auto entity = entityNameWPMap.second.lock())
+						{
+							if (entity->getType() == ape::Entity::Type::GEOMETRY_CLONE)
+							{
+								if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(entity))
+								{
+									if (auto geometryCloneParentNode = geometryClone->getParentNode().lock())
+									{
+										if (geometryCloneParentNode->getName() == node->getName())
+										{
+											geometryClone->setParentNode(ape::NodeWeakPtr());
+											if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mParsedAnimations[i].modelName,
+												ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+											{
+												if (auto sourceGeomtery = std::dynamic_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(geometryClone->getSourceGeometryGroupName()).lock()))
+												{
+													fileGeometry->setUnitScale(sourceGeomtery->getUnitScale());
+												}
+												fileGeometry->setParentNode(node);
+												fileGeometry->setFileName(mParsedAnimations[i].modelName);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 			if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION || mParsedAnimations[i].type == quicktype::EventType::ANIMATION_ADDITIVE)
 			{
 				auto previousPosition = node->getDerivedPosition();
@@ -563,6 +599,17 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 					animation.nodeName = node.get_name();
 					animation.parentNodeName = "";
 					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000);
+					mParsedAnimations.push_back(animation);
+				}
+				if (action.get_event().get_type() == quicktype::EventType::STATE)
+				{
+					Animation animation;
+					animation.type = action.get_event().get_type();
+					animation.nodeName = node.get_name();
+					animation.parentNodeName = "";
+					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000);
+					if (action.get_event().get_data())
+						animation.modelName = *action.get_event().get_data();
 					mParsedAnimations.push_back(animation);
 				}
 				if (action.get_event().get_type() == quicktype::EventType::ANIMATION || action.get_event().get_type() == quicktype::EventType::ANIMATION_ADDITIVE)

@@ -34,6 +34,7 @@ SOFTWARE.*/
 #include "apeIEventManager.h"
 #include "apeISceneManager.h"
 #include "apeICoreConfig.h"
+#include "apeICloneGeometry.h"
 #include "apeIFileGeometry.h"
 #include "apeIPlaneGeometry.h"
 #include "apeIFileMaterial.h"
@@ -65,6 +66,7 @@ namespace ape
 			unsigned long long time;
 			ape::Vector3 position;
 			ape::Quaternion orientation;
+			std::string modelName;
 		};
 	private:
 		ape::ISceneManager* mpSceneManager;
