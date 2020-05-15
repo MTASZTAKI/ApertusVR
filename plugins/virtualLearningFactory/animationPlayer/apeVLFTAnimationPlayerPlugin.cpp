@@ -268,12 +268,14 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 				else if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION_ADDITIVE)
 				{
 					//auto previousPosition = node->getPosition();
-					//auto previousOrientation = node->getOrientation();
 					//node->setPosition(previousPosition + mParsedAnimations[i].position);
-					//mParsedAnimations[i].orientation.normalise();
-					//node->setOrientation(mParsedAnimations[i].orientation * previousOrientation);
-					APE_LOG_DEBUG("orika: " << mParsedAnimations[i].orientation.toString());
-					node->setOrientation(mParsedAnimations[i].orientation);
+					auto previousOrientation = node->getOrientation();
+					auto previousDerivedOrientation = node->getDerivedOrientation();
+					mParsedAnimations[i].orientation.normalise();
+					//auto ori = previousOrientation * previousDerivedOrientation.Inverse() * mParsedAnimations[i].orientation * previousDerivedOrientation;
+					//auto ori = previousOrientation * mParsedAnimations[i].orientation;
+					auto ori = mParsedAnimations[i].orientation * previousOrientation;
+					node->setOrientation(ori);
 				}
 				std::string spaghettiSectionName;
 				drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
