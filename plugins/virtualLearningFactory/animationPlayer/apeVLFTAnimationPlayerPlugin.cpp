@@ -164,6 +164,8 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	mIsPlayRunning = true;
 	std::vector<std::string> spaghettiNodeNames;
 	std::vector<std::string> spaghettiLineNames;
+	std::vector<std::string> stateNodeNames;
+	std::vector<std::string> stateGeometryNames;
 	for (auto animatedNodeName : mAnimatedNodeNames)
 	{
 		if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
@@ -227,15 +229,21 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 										if (geometryCloneParentNode->getName() == node->getName())
 										{
 											//geometryClone->setParentNode(ape::NodeWeakPtr());
-											if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mParsedAnimations[i].modelName,
-												ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+											std::chrono::nanoseconds uuid = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch());
+											if (auto fileGeometryNode = mpSceneManager->createNode(std::to_string(uuid.count()), true, mpCoreConfig->getNetworkGUID()).lock())
 											{
-												if (auto sourceGeomtery = std::dynamic_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(geometryClone->getSourceGeometryGroupName()).lock()))
+												fileGeometryNode->setParentNode(node);
+												if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(fileGeometryNode->getName(),
+													ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 												{
-													fileGeometry->setUnitScale(sourceGeomtery->getUnitScale());
+													if (auto sourceGeomtery = std::dynamic_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(geometryClone->getSourceGeometryGroupName()).lock()))
+													{
+														fileGeometry->setUnitScale(sourceGeomtery->getUnitScale());
+													}
+													fileGeometry->setParentNode(fileGeometryNode);
+													fileGeometry->setFileName(mParsedAnimations[i].modelName);
+													stateGeometryNames.push_back(fileGeometry->getName());
 												}
-												fileGeometry->setParentNode(node);
-												fileGeometry->setFileName(mParsedAnimations[i].modelName);
 											}
 										}
 									}
@@ -280,6 +288,14 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	for (auto spaghettiNodeName : spaghettiNodeNames)
 	{
 		mpSceneManager->deleteNode(spaghettiNodeName);
+	}
+	for (auto stateGeometryName : stateGeometryNames)
+	{
+		mpSceneManager->deleteEntity(stateGeometryName);
+	}
+	for (auto stateNodeName : stateNodeNames)
+	{
+		mpSceneManager->deleteNode(stateNodeName);
 	}
 	for (auto animatedNodeName : mAnimatedNodeNames)
 	{

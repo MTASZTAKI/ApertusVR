@@ -234,9 +234,6 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 					}
 				}
 					break;
-				case ape::Event::Type::GEOMETRY_FILE_DELETE:
-					;
-					break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
 				{
 					if (fileName.find_first_of(".") != std::string::npos)
@@ -355,6 +352,26 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						}
 					}
 					break;
+				}
+			}
+			else if (event.type == ape::Event::Type::GEOMETRY_FILE_DELETE)
+			{
+				//APE_LOG_DEBUG("GEOMETRY_FILE_DELETE: " << event.subjectName);
+				if (mpOgreSceneManager->hasEntity(event.subjectName))
+				{
+					if (auto ogreEntity = mpOgreSceneManager->getEntity(event.subjectName))
+					{
+						//APE_LOG_DEBUG("GEOMETRY_FILE_DELETE BEGIN on entity: " << event.subjectName);
+						ogreEntity->detachFromParent();
+						mpOgreSceneManager->destroyEntity(event.subjectName);
+						//APE_LOG_DEBUG("GEOMETRY_FILE_DELETE END on entity: " << event.subjectName);
+					}
+				}
+				else if (mpOgreSceneManager->hasManualObject(event.subjectName))
+				{
+					//APE_LOG_DEBUG("GEOMETRY_FILE_DELETE BEGIN on manual: " << event.subjectName);
+					mpOgreSceneManager->destroyManualObject(event.subjectName);
+					//APE_LOG_DEBUG("GEOMETRY_FILE_DELETE END on manual: " << event.subjectName);
 				}
 			}
 		}
