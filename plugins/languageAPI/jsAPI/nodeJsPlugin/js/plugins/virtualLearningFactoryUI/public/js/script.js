@@ -114,30 +114,37 @@ function getUserNodeNameAndID() {
 }
 
 function findDescr(parentName) {
-	sceneJSON.assets.forEach(function (asset) {
+	for (let asset of sceneJSON.assets) {
 		if (asset.id == parentName) {
-			if (asset.descr.length) {
+			if (asset.descr) {
 				clickedNodeDescr = asset.descr;
+				break;
 			}
 			else {
-				findDescr(asset.parentObject);
+				if (asset.parentObject) {
+					findDescr(asset.parentObject);
+				}
 			}
 		}
-	});
+	};
 }
 
 function getClickedNodeDesc() {
 	console.log('getClickedNodeDesc(): ' + clickedNodeName);
-	sceneJSON.assets.forEach(function (asset) {
+	for (let asset of sceneJSON.assets) {
 		if (asset.id == clickedNodeName) {
-			if (asset.descr.length) {
+			clickedNodeDescr = clickedNodeName;
+			if (asset.descr) {
 				clickedNodeDescr = asset.descr;
+				break;
 			}
 			else {
-				findDescr(asset.parentObject);
+				if (asset.parentObject) {
+					findDescr(asset.parentObject);
+				}
 			}
 		}
-	});
+	};
 }
 
 function getClickedNodeOrientation() {
@@ -442,8 +449,6 @@ function updateProperties() {
 	document.getElementById('selectedNodePosition').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
 	getClickedNodeOrientation();
 	document.getElementById('selectedNodeOrientation').innerHTML = 'Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
-	getClickedNodeDesc();
-	document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
 	doGetRequest(apiEndPoint + '/overLayBrowserGetLastMessage', function (res) {
 		lastMessage = res.data.items[0].lastMessage;
 		console.log('getOverlayBrowserLastMessage(): res: ', lastMessage);
@@ -505,6 +510,7 @@ $(document).ready(function () {
     var sock = new WebSocket("ws://localhost:40080/ws");
 	sock.onopen = () => {
 		console.log('open');
+		updatePropertiesInterval = setInterval(updateProperties, 40);
 		getUserNodeNameAndID();
 		var isStudent = userNodeName.indexOf("VLFT_Student");
 		if (isStudent != -1) {
@@ -538,7 +544,8 @@ $(document).ready(function () {
 			clickedNodeName = eventObj.subjectName;
 			console.log(' show bounding box - select: ', clickedNodeName);
 			document.getElementById('selectedNodeNameTitle').innerHTML = clickedNodeName;
-			updatePropertiesInterval = setInterval(updateProperties, 40);
+			getClickedNodeDesc();
+			document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
         }
     }
     $("button").click(function () {
