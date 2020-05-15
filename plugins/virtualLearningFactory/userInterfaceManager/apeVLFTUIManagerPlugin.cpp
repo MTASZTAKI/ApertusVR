@@ -145,19 +145,26 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 			}
 			if (mClickedNodeNames.size())
 			{
-				if (auto clickedNode = mpSceneManager->getNode(mClickedNodeNames[0]).lock())
+				for (auto clickedNodeName : mClickedNodeNames)
 				{
-					if (auto previouslyClickedNode = mClickedNode.lock())
+					if (auto clickedNode = mpSceneManager->getNode(clickedNodeName).lock())
 					{
-						previouslyClickedNode->showBoundingBox(false);
+						if (clickedNode->isVisible())
+						{
+							if (auto previouslyClickedNode = mClickedNode.lock())
+							{
+								previouslyClickedNode->showBoundingBox(false);
+							}
+							/*while (auto parentNode = clickedNode->getParentNode().lock())
+							{
+								clickedNode = parentNode;
+							}*/
+							clickedNode->showBoundingBox(true);
+							mClickedNode = clickedNode;
+							break;
+							//APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName() << " Position: " << clickedNode->getPosition().toString() << " DerivedPosition: " << clickedNode->getDerivedPosition().toString());
+						}
 					}
-					/*while (auto parentNode = clickedNode->getParentNode().lock())
-					{
-						clickedNode = parentNode;
-					}*/
-					clickedNode->showBoundingBox(true);
-					mClickedNode = clickedNode;
-					//APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName() << " Position: " << clickedNode->getPosition().toString() << " DerivedPosition: " << clickedNode->getDerivedPosition().toString());
 				}
 			}
 		}
