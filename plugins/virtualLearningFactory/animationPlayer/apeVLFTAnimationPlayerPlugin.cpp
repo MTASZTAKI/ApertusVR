@@ -226,7 +226,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 									{
 										if (geometryCloneParentNode->getName() == node->getName())
 										{
-											geometryClone->setParentNode(ape::NodeWeakPtr());
+											//geometryClone->setParentNode(ape::NodeWeakPtr());
 											if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mParsedAnimations[i].modelName,
 												ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 											{

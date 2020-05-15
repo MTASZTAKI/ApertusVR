@@ -124,13 +124,20 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				if (auto entity = intersection.lock())
 				{
 					std::string entityName = entity->getName();
+					//APE_LOG_DEBUG("entityName: " << entityName);
 					ape::Entity::Type entityType = entity->getType();
 					if (entityType >= ape::Entity::Type::GEOMETRY_FILE && entityType <= ape::Entity::Type::GEOMETRY_CLONE)
 					{
 						auto geometry = std::static_pointer_cast<ape::Geometry>(entity);
+						//APE_LOG_DEBUG("geometry: " << entityName);
 						if (auto clickedNode = geometry->getParentNode().lock())
 						{
+							//APE_LOG_DEBUG("clickedNode: " << clickedNode->getName());
 							mClickedNodeNames.push_back(clickedNode->getName());
+						}
+						else
+						{
+							;// APE_LOG_DEBUG("noParent: " << entityName);
 						}
 					}
 				}
