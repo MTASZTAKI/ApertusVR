@@ -267,15 +267,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 				}
 				else if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION_ADDITIVE)
 				{
-					//auto previousPosition = node->getPosition();
-					//node->setPosition(previousPosition + mParsedAnimations[i].position);
-					auto previousOrientation = node->getOrientation();
-					auto previousDerivedOrientation = node->getDerivedOrientation();
-					mParsedAnimations[i].orientation.normalise();
-					//auto ori = previousOrientation * previousDerivedOrientation.Inverse() * mParsedAnimations[i].orientation * previousDerivedOrientation;
-					//auto ori = previousOrientation * mParsedAnimations[i].orientation;
-					auto ori = mParsedAnimations[i].orientation * previousOrientation;
-					node->setOrientation(ori);
+					node->rotate(mParsedAnimations[i].rotationAngle.toRadian(), mParsedAnimations[i].rotationAxis, ape::Node::TransformationSpace::PARENT);
 				}
 				std::string spaghettiSectionName;
 				drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
@@ -632,7 +624,7 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 						animation.modelName = *action.get_event().get_data();
 					mParsedAnimations.push_back(animation);
 				}
-				if (action.get_event().get_type() == quicktype::EventType::ANIMATION || action.get_event().get_type() == quicktype::EventType::ANIMATION_ADDITIVE)
+				if (action.get_event().get_type() == quicktype::EventType::ANIMATION)
 				{
 					std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + *action.get_event().get_data();
 					std::ifstream file(fileNamePath);
@@ -680,6 +672,58 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 						auto posZ = orientationData.find_first_of("]");
 						float z = atof(orientationData.substr(0, posZ).c_str());
 						currentAnimation.orientation = ape::Quaternion(w, x, y, z);
+						mParsedAnimations.push_back(currentAnimation);
+					}
+				}
+				if (action.get_event().get_type() == quicktype::EventType::ANIMATION_ADDITIVE)
+				{
+					std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + *action.get_event().get_data();
+					std::ifstream file(fileNamePath);
+					std::string dataCount;
+					std::getline(file, dataCount);
+					std::string fps;
+					std::getline(file, fps);
+					std::vector<Animation> currentAnimations;
+					for (int i = 0; i < atoi(dataCount.c_str()); i++)
+					{
+						std::string postionData;
+						std::getline(file, postionData);
+						auto posX = postionData.find_first_of(",");
+						float x = atof(postionData.substr(1, posX).c_str());
+						postionData = postionData.substr(posX + 1, postionData.length());
+						auto posY = postionData.find_first_of(",");
+						float y = atof(postionData.substr(0, posY).c_str());
+						postionData = postionData.substr(posY + 1, postionData.length());
+						auto posZ = postionData.find_first_of("]");
+						float z = atof(postionData.substr(0, posZ).c_str());
+						Animation animation;
+						animation.type = action.get_event().get_type();
+						animation.nodeName = node.get_name();
+						if (action.get_event().get_placement_rel_to())
+							animation.parentNodeName = *action.get_event().get_placement_rel_to();
+						else
+							animation.parentNodeName = "";
+						animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
+						animation.position = ape::Vector3(x, y, z);
+						currentAnimations.push_back(animation);
+					}
+					for (auto currentAnimation : currentAnimations)
+					{
+						std::string rotationData;
+						std::getline(file, rotationData);
+						auto posW = rotationData.find_first_of(",");
+						float angle = atof(rotationData.substr(1, posW).c_str());
+						rotationData = rotationData.substr(posW + 1, rotationData.length());
+						auto posX = rotationData.find_first_of(",");
+						float x = atof(rotationData.substr(0, posX).c_str());
+						rotationData = rotationData.substr(posX + 1, rotationData.length());
+						auto posY = rotationData.find_first_of(",");
+						float y = atof(rotationData.substr(0, posY).c_str());
+						rotationData = rotationData.substr(posY + 1, rotationData.length());
+						auto posZ = rotationData.find_first_of("]");
+						float z = atof(rotationData.substr(0, posZ).c_str());
+						currentAnimation.rotationAngle = angle;
+						currentAnimation.rotationAxis = ape::Vector3(x, y, z);
 						mParsedAnimations.push_back(currentAnimation);
 					}
 				}
