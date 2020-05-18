@@ -268,6 +268,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 				else if (mParsedAnimations[i].type == quicktype::EventType::ANIMATION_ADDITIVE)
 				{
 					node->rotate(mParsedAnimations[i].rotationAngle.toRadian(), mParsedAnimations[i].rotationAxis, ape::Node::TransformationSpace::PARENT);
+					node->translate(mParsedAnimations[i].translate, ape::Node::TransformationSpace::PARENT);
 				}
 				std::string spaghettiSectionName;
 				drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
@@ -686,16 +687,16 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 					std::vector<Animation> currentAnimations;
 					for (int i = 0; i < atoi(dataCount.c_str()); i++)
 					{
-						std::string postionData;
-						std::getline(file, postionData);
-						auto posX = postionData.find_first_of(",");
-						float x = atof(postionData.substr(1, posX).c_str());
-						postionData = postionData.substr(posX + 1, postionData.length());
-						auto posY = postionData.find_first_of(",");
-						float y = atof(postionData.substr(0, posY).c_str());
-						postionData = postionData.substr(posY + 1, postionData.length());
-						auto posZ = postionData.find_first_of("]");
-						float z = atof(postionData.substr(0, posZ).c_str());
+						std::string translateData;
+						std::getline(file, translateData);
+						auto posX = translateData.find_first_of(",");
+						float x = atof(translateData.substr(1, posX).c_str());
+						translateData = translateData.substr(posX + 1, translateData.length());
+						auto posY = translateData.find_first_of(",");
+						float y = atof(translateData.substr(0, posY).c_str());
+						translateData = translateData.substr(posY + 1, translateData.length());
+						auto posZ = translateData.find_first_of("]");
+						float z = atof(translateData.substr(0, posZ).c_str());
 						Animation animation;
 						animation.type = action.get_event().get_type();
 						animation.nodeName = node.get_name();
@@ -704,7 +705,7 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 						else
 							animation.parentNodeName = "";
 						animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
-						animation.position = ape::Vector3(x, y, z);
+						animation.translate = ape::Vector3(x, y, z);
 						currentAnimations.push_back(animation);
 					}
 					for (auto currentAnimation : currentAnimations)

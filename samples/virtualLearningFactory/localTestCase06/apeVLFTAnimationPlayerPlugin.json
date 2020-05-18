@@ -80,9 +80,8 @@
             "data": "10"
           },
           "event": {
-            "type": "animation",
-            "data": "animations/palletNextStation.txt",
-            "placementRelTo": "http://www.ontoeng.com/VLFT_Test04#WS01.PPs_PalletPosition"
+            "type": "animationAdditive",
+            "data": "animations/palletNextStation.txt"
           }
         },
         {
@@ -91,9 +90,8 @@
             "data": "20"
           },
           "event": {
-            "type": "animation",
-            "data": "animations/palletNextStation.txt",
-            "placementRelTo": "http://www.ontoeng.com/VLFT_Test04#WS02.PPs_PalletPosition"
+            "type": "animationAdditive",
+            "data": "animations/palletNextStation.txt"
           }
         },
         {
@@ -102,9 +100,8 @@
             "data": "30"
           },
           "event": {
-            "type": "animation",
-            "data": "animations/palletNextStation.txt",
-            "placementRelTo": "http://www.ontoeng.com/VLFT_Test04#WS03.PPs_PalletPosition"
+            "type": "animationAdditive",
+            "data": "animations/palletNextStation.txt"
           }
         },
         {

@@ -67,6 +67,7 @@ namespace ape
 			ape::Vector3 position;
 			ape::Quaternion orientation;
 			std::string modelName;
+			ape::Vector3 translate;
 			ape::Degree rotationAngle;
 			ape::Vector3 rotationAxis;
 		};
