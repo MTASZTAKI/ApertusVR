@@ -573,7 +573,7 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 				if (event.subjectName == student->getName())
 				{
 					std::stringstream data;
-					data << student->getName() << student->getDerivedPosition().toString() << student->getDerivedOrientation().toString();
+					data << student->getName() << " pos: " << student->getDerivedPosition().toString() << " ori: "  << student->getDerivedOrientation().toString() << std::endl;
 					mStudentsMovementLoggingFile << data.str();
 				}
 			}
