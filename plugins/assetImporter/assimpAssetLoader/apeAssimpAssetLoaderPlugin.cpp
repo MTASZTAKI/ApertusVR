@@ -77,61 +77,64 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 	{
 		if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
-			std::string fileExtension = fileGeometry->getFileName().substr(fileGeometry->getFileName().find_last_of("."));
-			if (fileExtension != ".mesh")
+			if (fileGeometry->getFileName().size())
 			{
-				//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
-				//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
-				AssetConfig assetConfig;
-				assetConfig.mergeAndExportMeshes = false;
-				assetConfig.regenerateNormals = false;
-				assetConfig.generateManualTexture = false;
-				if (auto rootNode = fileGeometry->getParentNode().lock())
+				std::string fileExtension = fileGeometry->getFileName().substr(fileGeometry->getFileName().find_last_of("."));
+				if (fileExtension != ".mesh")
 				{
-					assetConfig.rootNodeName = rootNode->getName();
-					//APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
-					assetConfig.scale = ape::Vector3(1, 1, 1);
-					assetConfig.position = ape::Vector3(0, 0, 0);
-					assetConfig.orientation = ape::Quaternion(1, 0, 0, 0);
-					assetConfig.unitScale = fileGeometry->getUnitScale();
-					assetConfig.visible = rootNode->isVisible();
-				}
-				std::stringstream assimpAssetFileNamePath;
-				std::string resourceLocationStr = fileGeometry->getFileName();
-				std::size_t found = resourceLocationStr.find(":");
-				if (found != std::string::npos)
-				{
-					assimpAssetFileNamePath << resourceLocationStr;
-				}
-				else
-				{
-					found = resourceLocationStr.find("./");
+					//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: subjectName: " << event.subjectName);
+					//APE_LOG_DEBUG("GEOMETRY_FILE_FILENAME: fileName: " << fileGeometry->getFileName());
+					AssetConfig assetConfig;
+					assetConfig.mergeAndExportMeshes = false;
+					assetConfig.regenerateNormals = false;
+					assetConfig.generateManualTexture = false;
+					if (auto rootNode = fileGeometry->getParentNode().lock())
+					{
+						assetConfig.rootNodeName = rootNode->getName();
+						//APE_LOG_DEBUG("rootNodeName " << assetConfig.rootNodeName);
+						assetConfig.scale = ape::Vector3(1, 1, 1);
+						assetConfig.position = ape::Vector3(0, 0, 0);
+						assetConfig.orientation = ape::Quaternion(1, 0, 0, 0);
+						assetConfig.unitScale = fileGeometry->getUnitScale();
+						assetConfig.visible = rootNode->isVisible();
+					}
+					std::stringstream assimpAssetFileNamePath;
+					std::string resourceLocationStr = fileGeometry->getFileName();
+					std::size_t found = resourceLocationStr.find(":");
 					if (found != std::string::npos)
 					{
 						assimpAssetFileNamePath << resourceLocationStr;
 					}
 					else
 					{
-						std::stringstream resourceLocationPath;
-						resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
-						assimpAssetFileNamePath << resourceLocationPath.str();
+						found = resourceLocationStr.find("./");
+						if (found != std::string::npos)
+						{
+							assimpAssetFileNamePath << resourceLocationStr;
+						}
+						else
+						{
+							std::stringstream resourceLocationPath;
+							resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr;
+							assimpAssetFileNamePath << resourceLocationPath.str();
+						}
 					}
+					assetConfig.file = assimpAssetFileNamePath.str();
+					mAssimpAssetConfigs.push_back(assetConfig);
+
+					PhysicsConfig physicsConfig;
+					physicsConfig.mass = 1.0;
+					physicsConfig.restitution = 0.6;
+					physicsConfig.friction = 0.5;
+					physicsConfig.rollingFriction = 0.1;
+					physicsConfig.spinningFriction = 0.1;
+					physicsConfig.linearDamping = 0.01;
+					physicsConfig.angularDamping = 0.05;
+					physicsConfig.bouyancyEnable = true;
+					mPhysicsConfigs.push_back(physicsConfig);
+
+					readFile(assetConfig.file);
 				}
-				assetConfig.file = assimpAssetFileNamePath.str();
-				mAssimpAssetConfigs.push_back(assetConfig);
-
-				PhysicsConfig physicsConfig;
-				physicsConfig.mass = 1.0;
-				physicsConfig.restitution = 0.6;
-				physicsConfig.friction = 0.5;
-				physicsConfig.rollingFriction = 0.1;
-				physicsConfig.spinningFriction = 0.1;
-				physicsConfig.linearDamping = 0.01;
-				physicsConfig.angularDamping = 0.05;
-				physicsConfig.bouyancyEnable = true;
-				mPhysicsConfigs.push_back(physicsConfig);
-
-				readFile(assetConfig.file);
 			}
 		}
 	}
