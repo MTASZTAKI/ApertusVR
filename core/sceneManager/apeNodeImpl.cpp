@@ -38,6 +38,12 @@ ape::NodeImpl::NodeImpl(std::string name, bool replicate, std::string ownerID, b
 	mIsInheritOrientation = true;
 	mIsReplicated = replicate;
 	mCreatorID = ownerID;
+	mInitOrientation = mOrientation;
+	mInitScale = mScale;
+	mInitPosition = mPosition;
+	mInitVisibility = mVisibility;
+	mInitParentNode = mParentNode;
+	mInitParentNodeName = mParentNodeName;
 }
 
 ape::NodeImpl::~NodeImpl()
@@ -253,7 +259,22 @@ bool ape::NodeImpl::isInheritOrientation()
 
 void ape::NodeImpl::setInitalState()
 {
-	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INHERITORIENTATION));
+	mInitScale = mScale;
+	mInitPosition = mPosition;
+	mInitOrientation = mOrientation;
+	mInitVisibility = mVisibility;
+	mInitParentNode = mParentNode;
+	mInitParentNodeName = mParentNodeName;
+	//mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INITIALSTATE));
+}
+
+void ape::NodeImpl::revertToInitalState()
+{
+	setScale(mInitScale);
+	setPosition(mInitPosition);
+	setOrientation(mInitOrientation);
+	setVisible(mInitVisibility);
+	setParentNode(mInitParentNode);
 }
 
 bool ape::NodeImpl::isReplicated()
@@ -345,6 +366,11 @@ RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsFixedYaw);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsInheritOrientation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mOwnerID.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mInitScale);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mInitPosition);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mInitOrientation);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mInitParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mInitVisibility);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -354,6 +380,7 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	RakNet::RakString parentName;
+	RakNet::RakString initParentName;
 	RakNet::RakString ownerID;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mScale))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_SCALE));
@@ -386,5 +413,17 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 	{
 		mOwnerID = ownerID.C_String();
 	}
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mInitScale);	
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mInitPosition);
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mInitOrientation);
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, initParentName))
+	{
+		mInitParentNodeName = initParentName.C_String();
+		if (auto initParentNode = mpSceneManager->getNode(mInitParentNodeName).lock())
+		{
+			mInitParentNode = initParentNode;
+		}
+	}
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mInitVisibility);
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

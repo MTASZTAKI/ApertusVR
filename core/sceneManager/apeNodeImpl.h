@@ -94,6 +94,8 @@ namespace ape
 
 		void setInitalState() override;
 
+		void revertToInitalState() override;
+
 		bool isReplicated() override;
 
 		void setOwner(std::string ownerID) override;
@@ -122,9 +124,13 @@ namespace ape
 
 		ape::NodeWeakPtr mParentNode;
 
+		ape::NodeWeakPtr mInitParentNode;
+
 		std::vector<ape::NodeWeakPtr> mChildNodes;
 
 		std::string mParentNodeName;
+
+		std::string mInitParentNodeName;
 
 		ape::Vector3 mPosition;
 
@@ -132,9 +138,17 @@ namespace ape
 
 		ape::Vector3 mScale;
 
+		ape::Vector3 mInitPosition;
+
+		ape::Quaternion mInitOrientation;
+
+		ape::Vector3 mInitScale;
+
 		bool mChildrenVisibility;
 
 		bool mVisibility;
+
+		bool mInitVisibility;
 
 		bool mIsFixedYaw;
 

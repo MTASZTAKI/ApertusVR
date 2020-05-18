@@ -81,6 +81,18 @@ std::string ape::VLFTSceneLoaderPlugin::findGeometryNameByModelName(std::string 
 	}
 }
 
+void ape::VLFTSceneLoaderPlugin::setInitialState()
+{
+	auto nodes = mpSceneManager->getNodes();
+	for (auto nodeWP : nodes)
+	{
+		if (auto node = nodeWP.second.lock())
+		{
+			node->setInitalState();
+		}
+	}
+}
+
 void ape::VLFTSceneLoaderPlugin::cloneGeometry(ape::FileGeometrySharedPtr fileGeometry, std::string id, ape::NodeSharedPtr parentNode)
 {
 	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(id, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
@@ -220,6 +232,7 @@ void ape::VLFTSceneLoaderPlugin::Run()
 	parseModelsAndNodes();
 	parsePlacementRelTo();
 	parseVisibleNodes();
+	setInitialState();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));

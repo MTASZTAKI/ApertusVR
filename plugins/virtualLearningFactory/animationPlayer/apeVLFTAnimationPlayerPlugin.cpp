@@ -109,7 +109,6 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mIsPlayRunning = false;
 	mAnimatedNodeNames = std::vector<std::string>();
 	mAttachedUsers = std::vector<ape::NodeWeakPtr>();
-	mAttach2NewAnimationNode = std::vector<ape::NodeWeakPtr>();
 	mIsStudentsMovementLogging = false;
 	mStudents = std::vector<ape::NodeWeakPtr>();
 	mStudentsMovementLoggingFile = std::ofstream();
@@ -152,7 +151,6 @@ bool ape::VLFTAnimationPlayerPlugin::attach2NewAnimationNode(const std::string& 
 		if (newParentNode != currentParentNode)
 		{
 			node->setParentNode(newParentNode);
-			mAttach2NewAnimationNode.push_back(node);
 			return true;
 		}
 	}
@@ -244,6 +242,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 													fileGeometry->setFileName(mParsedAnimations[i].modelName);
 													stateGeometryNames.push_back(fileGeometry->getName());
 												}
+												stateNodeNames.push_back(fileGeometryNode->getName());
 											}
 										}
 									}
@@ -298,19 +297,11 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	{
 		if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
 		{
-			for (auto attach2NewAnimationNode : mAttach2NewAnimationNode)
-			{
-				if (node == attach2NewAnimationNode.lock())
-				{
-					node->detachFromParentNode();
-					node->setPosition(ape::Vector3(0, 0, 0));
-					node->setOrientation(ape::Quaternion(1, 0, 0, 0));
-				}
-			}
+			APE_LOG_DEBUG("revertToInitalState: " << animatedNodeName);
+			node->revertToInitalState();
 			node->setOwner(node->getCreator());
 		}
 	}
-	mAttach2NewAnimationNode = std::vector<ape::NodeWeakPtr>();
 	mIsPlayRunning = false;
 }
 

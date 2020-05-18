@@ -88,6 +88,8 @@ namespace ape
 
 		std::string findGeometryNameByModelName(std::string modelName);
 
+		void setInitialState();
+
 	public:
 		VLFTSceneLoaderPlugin();
 

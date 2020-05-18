@@ -367,7 +367,7 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 						//APE_LOG_DEBUG("GEOMETRY_FILE_DELETE END on entity: " << event.subjectName);
 					}
 				}
-				else if (mpOgreSceneManager->hasManualObject(event.subjectName))
+				if (mpOgreSceneManager->hasManualObject(event.subjectName))
 				{
 					//APE_LOG_DEBUG("GEOMETRY_FILE_DELETE BEGIN on manual: " << event.subjectName);
 					mpOgreSceneManager->destroyManualObject(event.subjectName);
