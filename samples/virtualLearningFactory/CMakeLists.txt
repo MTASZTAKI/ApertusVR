@@ -38,6 +38,7 @@ add_subdirectory (localTestCase03)
 add_subdirectory (localTestCase04)
 add_subdirectory (localTestCase05)
 add_subdirectory (localTestCase06)
+add_subdirectory (localTestCase07)
 add_subdirectory (localHtcVive)
 add_subdirectory (launcher)
 

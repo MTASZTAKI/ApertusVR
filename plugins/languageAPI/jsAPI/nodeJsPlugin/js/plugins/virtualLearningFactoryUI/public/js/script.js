@@ -9,6 +9,7 @@ var clickedNodePosition;
 var clickedNodeOrientation;
 var clickedNodeDescr;
 var clickedNodeState;
+var log;
 var roomName;
 var animationJSON;
 var sceneJSON;
@@ -76,6 +77,27 @@ function getClickedNodeState(sec) {
 				}
 			});
 		}
+	});
+}
+
+function getLog() {
+	console.log('getLog(): ');
+	var logsDiv = document.getElementById('Log');
+	animationJSON.nodes.forEach(function (node) {
+		node.actions.forEach(function (action) {
+			if (action.event.type == "link") {
+				var logDiv = document.getElementById(action.event.data);
+				if (typeof (logDiv) != 'undefined' && logDiv != null) {
+					logDiv.innerHTML = action.event.descr + " was saved to " + action.event.data;
+				}
+				else {
+					var newDiv = document.createElement('div');
+					newDiv.id = action.event.data;
+					newDiv.innerHTML = action.event.descr + " was saved to " + action.event.data;
+					logsDiv.appendChild(newDiv);
+				}
+			}
+		});
 	});
 }
 
@@ -300,6 +322,7 @@ function showPauseAndSkipButtons() {
 	console.log('showPauseAndSkipButtons');
 	$('#leftButtonsPauseSkip').show();
 	$('#play').hide();
+	$('#logs').hide();
 	updateOverlayBrowserLastMessageInterval = setInterval(getOverlayBrowserLastMessage, 50);
 }
 
@@ -307,6 +330,7 @@ function hidePauseAndSkipButtons() {
 	console.log('hidePauseAndSkipButtons');
 	$('#leftButtonsPauseSkip').hide();
 	$('#play').show();
+	$('#logs').show();
 	clearInterval(updateOverlayBrowserLastMessageInterval);
 }
 
@@ -393,6 +417,10 @@ function toogleBookmarks() {
 		hidePauseAndSkipButtons();
 		$('#bookmarks').hide();
 	}
+}
+
+function toggleLog() {
+	$('#Log').toggle();
 }
 
 function showBookmarks() {
@@ -502,6 +530,7 @@ $(document).ready(function () {
 	$('#map').toggle();
 	$('#users').toggle();
 	$('#bookmarks').toggle();
+	$('#Log').toggle();
 	$('#screencastStop').toggle();
 	$('#freeUsers').toggle();
 	$('#freeMe').toggle();
@@ -512,6 +541,7 @@ $(document).ready(function () {
 		console.log('open');
 		updatePropertiesInterval = setInterval(updateProperties, 40);
 		getUserNodeNameAndID();
+		getLog();
 		var isStudent = userNodeName.indexOf("VLFT_Student");
 		if (isStudent != -1) {
 			hideTeacherButtons();

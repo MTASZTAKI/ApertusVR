@@ -70,6 +70,9 @@ namespace ape
 			ape::Vector3 translate;
 			ape::Degree rotationAngle;
 			ape::Vector3 rotationAxis;
+			std::string url;
+			std::string descr;
+			std::string fileName;
 		};
 	private:
 		ape::ISceneManager* mpSceneManager;

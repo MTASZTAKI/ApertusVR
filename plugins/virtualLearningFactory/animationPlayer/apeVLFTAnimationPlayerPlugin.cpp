@@ -209,6 +209,10 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			{
 				node->setVisible(false);
 			}
+			if (mParsedAnimations[i].type == quicktype::EventType::LINK)
+			{
+				//;
+			}
 			if (mParsedAnimations[i].type == quicktype::EventType::STATE)
 			{
 				if (mParsedAnimations[i].modelName.size())
@@ -614,6 +618,21 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000);
 					if (action.get_event().get_data())
 						animation.modelName = *action.get_event().get_data();
+					mParsedAnimations.push_back(animation);
+				}
+				if (action.get_event().get_type() == quicktype::EventType::LINK)
+				{
+					Animation animation;
+					animation.type = action.get_event().get_type();
+					animation.nodeName = node.get_name();
+					animation.parentNodeName = "";
+					animation.time = (atoi(action.get_trigger().get_data().c_str()) * 1000);
+					if (action.get_event().get_data())
+						animation.fileName = *action.get_event().get_data();
+					if (action.get_event().get_url())
+						animation.url = *action.get_event().get_data();
+					if (action.get_event().get_descr())
+						animation.descr = *action.get_event().get_data();
 					mParsedAnimations.push_back(animation);
 				}
 				if (action.get_event().get_type() == quicktype::EventType::ANIMATION)

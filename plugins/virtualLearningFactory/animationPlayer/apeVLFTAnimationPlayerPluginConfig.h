@@ -77,9 +77,7 @@ namespace quicktype {
 		void set_time(const std::string & value) { this->time = value; }
 	};
 
-	enum class Descr : int { EMPTY_PALLET, IDLE_CONVEYOR, MOVING_FORWARD, PART_LOADED };
-
-	enum class EventType : int { ANIMATION, ANIMATION_ADDITIVE, HIDE, SHOW, STATE };
+	enum class EventType : int { ANIMATION, ANIMATION_ADDITIVE, HIDE, LINK, SHOW, STATE };
 
 	class Event {
 	public:
@@ -89,8 +87,9 @@ namespace quicktype {
 	private:
 		quicktype::EventType type;
 		std::shared_ptr<std::string> placement_rel_to;
-		std::shared_ptr<quicktype::Descr> descr;
+		std::shared_ptr<std::string> descr;
 		std::shared_ptr<std::string> data;
+		std::shared_ptr<std::string> url;
 
 	public:
 		const quicktype::EventType & get_type() const { return type; }
@@ -100,11 +99,14 @@ namespace quicktype {
 		std::shared_ptr<std::string> get_placement_rel_to() const { return placement_rel_to; }
 		void set_placement_rel_to(std::shared_ptr<std::string> value) { this->placement_rel_to = value; }
 
-		std::shared_ptr<quicktype::Descr> get_descr() const { return descr; }
-		void set_descr(std::shared_ptr<quicktype::Descr> value) { this->descr = value; }
+		std::shared_ptr<std::string> get_descr() const { return descr; }
+		void set_descr(std::shared_ptr<std::string> value) { this->descr = value; }
 
 		std::shared_ptr<std::string> get_data() const { return data; }
 		void set_data(std::shared_ptr<std::string> value) { this->data = value; }
+
+		std::shared_ptr<std::string> get_url() const { return url; }
+		void set_url(std::shared_ptr<std::string> value) { this->url = value; }
 	};
 
 	enum class TriggerType : int { TIMESTAMP };
@@ -206,9 +208,6 @@ namespace nlohmann {
 		void from_json(const json & j, quicktype::Animations & x);
 		void to_json(json & j, const quicktype::Animations & x);
 
-		void from_json(const json & j, quicktype::Descr & x);
-		void to_json(json & j, const quicktype::Descr & x);
-
 		void from_json(const json & j, quicktype::EventType & x);
 		void to_json(json & j, const quicktype::EventType & x);
 
@@ -229,8 +228,9 @@ namespace nlohmann {
 		inline void from_json(const json & j, quicktype::Event& x) {
 			x.set_type(j.at("type").get<quicktype::EventType>());
 			x.set_placement_rel_to(quicktype::get_optional<std::string>(j, "placementRelTo"));
-			x.set_descr(quicktype::get_optional<quicktype::Descr>(j, "descr"));
+			x.set_descr(quicktype::get_optional<std::string>(j, "descr"));
 			x.set_data(quicktype::get_optional<std::string>(j, "data"));
+			x.set_url(quicktype::get_optional<std::string>(j, "URL"));
 		}
 
 		inline void to_json(json & j, const quicktype::Event & x) {
@@ -239,6 +239,7 @@ namespace nlohmann {
 			j["placementRelTo"] = x.get_placement_rel_to();
 			j["descr"] = x.get_descr();
 			j["data"] = x.get_data();
+			j["URL"] = x.get_url();
 		}
 
 		inline void from_json(const json & j, quicktype::Trigger& x) {
@@ -285,28 +286,11 @@ namespace nlohmann {
 			j["bookmarks"] = x.get_bookmarks();
 		}
 
-		inline void from_json(const json & j, quicktype::Descr & x) {
-			if (j == "empty pallet") x = quicktype::Descr::EMPTY_PALLET;
-			else if (j == "idle conveyor") x = quicktype::Descr::IDLE_CONVEYOR;
-			else if (j == "moving forward") x = quicktype::Descr::MOVING_FORWARD;
-			else if (j == "part loaded") x = quicktype::Descr::PART_LOADED;
-			else throw "Input JSON does not conform to schema";
-		}
-
-		inline void to_json(json & j, const quicktype::Descr & x) {
-			switch (x) {
-			case quicktype::Descr::EMPTY_PALLET: j = "empty pallet"; break;
-			case quicktype::Descr::IDLE_CONVEYOR: j = "idle conveyor"; break;
-			case quicktype::Descr::MOVING_FORWARD: j = "moving forward"; break;
-			case quicktype::Descr::PART_LOADED: j = "part loaded"; break;
-			default: throw "This should not happen";
-			}
-		}
-
 		inline void from_json(const json & j, quicktype::EventType & x) {
 			if (j == "animation") x = quicktype::EventType::ANIMATION;
 			else if (j == "animationAdditive") x = quicktype::EventType::ANIMATION_ADDITIVE;
 			else if (j == "hide") x = quicktype::EventType::HIDE;
+			else if (j == "link") x = quicktype::EventType::LINK;
 			else if (j == "show") x = quicktype::EventType::SHOW;
 			else if (j == "state") x = quicktype::EventType::STATE;
 			else throw "Input JSON does not conform to schema";
@@ -317,6 +301,7 @@ namespace nlohmann {
 			case quicktype::EventType::ANIMATION: j = "animation"; break;
 			case quicktype::EventType::ANIMATION_ADDITIVE: j = "animationAdditive"; break;
 			case quicktype::EventType::HIDE: j = "hide"; break;
+			case quicktype::EventType::LINK: j = "link"; break;
 			case quicktype::EventType::SHOW: j = "show"; break;
 			case quicktype::EventType::STATE: j = "state"; break;
 			default: throw "This should not happen";
