@@ -6,7 +6,9 @@
     "apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
     "apeCefBrowserPlugin",
-    "apeVLFTUIManagerPlugin"
+    "apeVLFTUIManagerPlugin",
+    "apeAssimpAssetLoaderPlugin",
+    "apeVLFTAnimationPlayerPlugin"
   ],
   "network": {
     "user": "VLFT_Lobby",
