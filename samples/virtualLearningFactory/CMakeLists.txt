@@ -20,26 +20,6 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (serverTestCase02)
-add_subdirectory (serverTestCase03)
-add_subdirectory (serverTestCase04)
-add_subdirectory (serverTestCase05)
-add_subdirectory (studentTestCase02)
-add_subdirectory (studentTestCase03)
-add_subdirectory (studentTestCase04)
-add_subdirectory (studentTestCase05)
-add_subdirectory (studentHtcVive)
-add_subdirectory (teacherTestCase02)
-add_subdirectory (teacherTestCase03)
-add_subdirectory (teacherTestCase04)
-add_subdirectory (teacherTestCase05)
-add_subdirectory (localTestCase02)
-add_subdirectory (localTestCase03)
-add_subdirectory (localTestCase04)
-add_subdirectory (localTestCase05)
-add_subdirectory (localTestCase06)
-add_subdirectory (localTestCase07)
-add_subdirectory (localHtcVive)
 add_subdirectory (launcher)
 
 

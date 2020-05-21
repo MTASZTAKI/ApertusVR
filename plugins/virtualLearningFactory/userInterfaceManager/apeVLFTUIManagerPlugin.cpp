@@ -7,6 +7,7 @@ ape::VLFTUIManagerPlugin::VLFTUIManagerPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
+	mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
@@ -182,6 +183,22 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 		{
 			//APE_LOG_DEBUG("BROWSER_ELEMENT_CLICK");
 			mIsBrowserClicked = true;
+			if (browser->getClickedElementName().find("connect") != std::string::npos)
+			{
+				std::string userType;
+				std::string userName;
+				std::string roomName;
+				auto userTypePos = browser->getClickedElementName().find(";userType:");
+				auto roomNamePos = browser->getClickedElementName().find(";roomName:");
+				auto userNamePos = browser->getClickedElementName().find(";userName:");
+				userType = browser->getClickedElementName().substr(userTypePos + 10, roomNamePos - (userTypePos + 10));
+				roomName = browser->getClickedElementName().substr(roomNamePos + 10, userNamePos - (roomNamePos + 10));
+				userName = browser->getClickedElementName().substr(userNamePos + 10, browser->getClickedElementName().length());
+				APE_LOG_DEBUG("userType: " << userType);
+				APE_LOG_DEBUG("roomName: " << roomName);
+				APE_LOG_DEBUG("userName: " << userName);
+				mpSceneNetwork->connectToRoom(roomName);
+			}
 		}
 	}
 	else if (event.type == ape::Event::Type::BROWSER_HOVER_IN)

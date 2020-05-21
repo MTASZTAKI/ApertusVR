@@ -6,11 +6,11 @@
 # 
 
 newmtl Paint_Matte_White
-Ka 0 0 0
-Kd 0.738461 0.738461 0.738461
+Ka 0.4 0.4 0.4
+Kd 0.5 0.5 0.5
 Ks 0.5 0.5 0.5
-illum 2
-Ns 8
+illum 3
+Ns 512
 map_Kd 
 map_bump 
 bump 

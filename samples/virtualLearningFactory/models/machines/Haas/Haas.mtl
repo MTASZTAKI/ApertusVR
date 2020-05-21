@@ -1,0 +1,455 @@
+# 
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 5 5.0.2.1477 Release
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+# 
+
+newmtl Standardmaterial
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas0.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater1
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas1.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater2
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas2.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater3
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas3.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater4
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas4.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater5
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas5.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater6
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas6.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater7
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas7.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater8
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas8.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater9
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas9.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater10
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas10.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater11
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas11.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater12
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas12.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater13
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas13.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater14
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas14.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater15
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas15.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater16
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas16.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater17
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas17.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater18
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas18.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater19
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas19.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater20
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas20.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater21
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas21.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater22
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas22.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater23
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas23.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater24
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas24.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater25
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas25.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl _8___Default
+Ka 0.309804 0.309804 0.309804
+Kd 0.309804 0.309804 0.309804
+Ks 0 0 0
+illum 2
+Ns 4
+d 0.5
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater26
+Ka 0.305882 0.305882 0.305882
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd Haas26.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 

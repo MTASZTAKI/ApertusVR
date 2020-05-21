@@ -59,6 +59,8 @@ namespace ape
 
 	public:
 		virtual ape::SceneNetwork::ParticipantType getParticipantType() = 0;
+
+		virtual void connectToRoom(std::string roomName) = 0;
 	};
 }
 

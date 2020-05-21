@@ -146,6 +146,8 @@ namespace ape
 
 		ape::SceneNetwork::ParticipantType getParticipantType() override;
 
+	    void connectToRoom(std::string roomName) override;
+
 		bool isReplicaHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();

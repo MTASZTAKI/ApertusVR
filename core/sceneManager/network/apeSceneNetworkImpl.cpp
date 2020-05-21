@@ -31,6 +31,7 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 	, mpNatPunchthroughClient(nullptr)
 	, mpLobbyManager(nullptr)
 {
+	msSingleton = this;
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
@@ -148,7 +149,8 @@ void ape::SceneNetworkImpl::init()
 	APE_LOG_DEBUG("mLobbyServerIP: " << mLobbyServerIP);
 	mLobbyServerPort = lobbyServerConfig.port;
 	APE_LOG_DEBUG("mLobbyServerPort: " << mLobbyServerPort);
-	mLobbyServerSessionName = lobbyServerConfig.roomName;
+	if (!mLobbyServerSessionName.length())
+		mLobbyServerSessionName = lobbyServerConfig.roomName;
 	APE_LOG_DEBUG("mLobbyServerSessionName: " << mLobbyServerSessionName);
 	mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
 	mpRakReplicaPeer = RakNet::RakPeerInterface::GetInstance();
@@ -307,6 +309,27 @@ std::weak_ptr<RakNet::ReplicaManager3> ape::SceneNetworkImpl::getReplicaManager(
 ape::SceneNetwork::ParticipantType ape::SceneNetworkImpl::getParticipantType()
 {
 	return mParticipantType;
+}
+
+void ape::SceneNetworkImpl::connectToRoom(std::string roomName)
+{
+	mParticipantType = ape::SceneNetwork::GUEST;
+	mLobbyServerSessionName = roomName;
+	mIsReplicaHost = false;
+	init();
+	std::string uuid;
+	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
+	{
+		APE_LOG_DEBUG("use lobbyManager to get scene session guid");
+		if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
+		{
+			APE_LOG_DEBUG("use lobbyManager to update the resources...");
+			mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
+		}
+		bool getSessionRes = mpLobbyManager->getSessionHostGuid(roomName, uuid);
+		APE_LOG_DEBUG("lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
+	}
+	connect2ReplicaHost(uuid);
 }
 
 

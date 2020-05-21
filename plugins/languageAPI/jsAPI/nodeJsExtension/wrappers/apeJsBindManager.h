@@ -627,7 +627,7 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return mpUserInputMacro->setOverLayBrowserClickedElement(clickedElementName);
+		mpUserInputMacro->setOverLayBrowserClickedElement(clickedElementName);
 	}
 
 	void fireOverlayBrowserHoverIn()

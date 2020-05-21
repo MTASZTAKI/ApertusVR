@@ -63,6 +63,7 @@ int WINAPI WinMain (HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpsz
 		::TranslateMessage(&msg);
 		::DispatchMessageW(&msg);
 	}
+	ape::System::Stop();
 	UnregisterHook();
 	::CoUninitialize();
 	return 0;

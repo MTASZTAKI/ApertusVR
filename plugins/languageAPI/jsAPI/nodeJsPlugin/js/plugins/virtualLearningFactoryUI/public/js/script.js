@@ -423,6 +423,23 @@ function toggleLog() {
 	$('#Log').toggle();
 }
 
+function sendConnectParams() {
+	var selectedRoom;
+	var selectedUserType;
+	var selectedUserName;
+	if (document.getElementById('radioLocal').checked)
+		selectedUserType = "_Local";
+	if (document.getElementById('radioTeacher').checked)
+		selectedUserType = "_Teacher";
+	if (document.getElementById('radioStudent').checked)
+		selectedUserType = "_Student";
+	var selectRoom = document.getElementById("selectRoom");
+	selectedRoom = selectRoom.options[selectRoom.selectedIndex].innerHTML;
+	selectedUserName = document.getElementById("usr").value;
+	setClickedElement('connect' + ';userType:' + selectedUserType + ';roomName:' + selectedRoom + ';userName:' + selectedUserName);
+}
+
+
 function showBookmarks() {
 	console.log('toogle bookmarks');
 	$('#bookmarks').show();
@@ -539,23 +556,43 @@ $(document).ready(function () {
     var sock = new WebSocket("ws://localhost:40080/ws");
 	sock.onopen = () => {
 		console.log('open');
-		updatePropertiesInterval = setInterval(updateProperties, 40);
 		getUserNodeNameAndID();
 		getLog();
 		var isStudent = userNodeName.indexOf("VLFT_Student");
 		if (isStudent != -1) {
+			$('#lobbyMenu').children().hide();
+			$('#uploaderMenu').children().hide();
 			hideTeacherButtons();
 			updateMeAttachedInterval = setInterval(updateMeAttached, 40);
 		}
 		var isLocal = userNodeName.indexOf("VLFT_Local");
 		if (isLocal != -1) {
+			$('#lobbyMenu').children().hide();
+			$('#uploaderMenu').children().hide();
 			hideMultiUserButtons();
 			hideStudentButtons();
 			hideTeacherButtons();
 		}
 		var isTeacher = userNodeName.indexOf("VLFT_Teacher");
 		if (isTeacher != -1) {
+			$('#lobbyMenu').children().hide();
+			$('#uploaderMenu').children().hide();
 			hideStudentButtons();
+		}
+		var isLobby = userNodeName.indexOf("VLFT_Lobby");
+		if (isLobby != -1) {
+			$('#lobbyMenu').show();
+			$('#uploaderMenu').children().hide();
+			$('#leftMenu').children().hide();
+			$('#rightMenu').children().hide();
+		}
+		var isUploader = userNodeName.indexOf("VLFT_Uploader");
+		if (isUploader != -1) {
+			$('#uploaderMenu').show();
+			$('#lobbyMenu').children().hide();
+			$('#leftMenu').children().hide();
+			$('#rightMenu').children().hide();
+			$('#chat').hide();
 		}
     }
     sock.onerror = (e)=>{
@@ -569,7 +606,8 @@ $(document).ready(function () {
         var eventObj = JSON.parse(e.data);
         console.log('eventObj: ', eventObj);
 		
-		if (eventObj.type == 11) { 
+		if (eventObj.type == 11) {
+			updatePropertiesInterval = setInterval(updateProperties, 40);
 			$("#nodeName").val(eventObj.subjectName);
 			clickedNodeName = eventObj.subjectName;
 			console.log(' show bounding box - select: ', clickedNodeName);

@@ -13,7 +13,52 @@
 	<title></title>
 </head>
 <body>
-	<div class="d-inline-block float-left">
+	<div id="lobbyMenu" class="d-inline-block float-left">
+		<div class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+			<div class="form-group" style="background-color:rgba(255, 255, 255, 0.7)">
+				<label for="usr">UserName:</label>
+				<input type="text" class="form-control" id="usr">
+			</div>
+			<div class="custom-control custom-radio" style="background-color:rgba(255, 255, 255, 0.7)">
+				<input type="radio" class="custom-control-input" id="radioLocal" name="groupOfDefaultRadios">
+				<label class="custom-control-label" for="radioLocal">Local</label>
+			</div>
+			<div class="custom-control custom-radio" style="background-color:rgba(255, 255, 255, 0.7)">
+				<input type="radio" class="custom-control-input" id="radioTeacher" name="groupOfDefaultRadios">
+				<label class="custom-control-label" for="radioTeacher">Teacher</label>
+			</div>
+			<div class="custom-control custom-radio" style="background-color:rgba(255, 255, 255, 0.7)">
+				<input type="radio" class="custom-control-input" id="radioStudent" name="groupOfDefaultRadios">
+				<label class="custom-control-label" for="radioStudent">Student</label>
+			</div>
+			<select id="selectRoom" class="custom-select" multiple style="background-color:rgba(255, 255, 255, 0.7)">
+				<option selected>Available Rooms</option>
+				<option value="1">vlftTestCase05</option>
+				<option value="2">TestCase07</option>
+			</select>
+			<button id="connect" type="button" class="btn btn-outline-dark btn-lg" onClick="sendConnectParams();">Connect</button>
+		</div>
+	</div>
+	<div id="uploaderMenu" class="d-inline-block float-left">
+		<div class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
+			<select class="custom-select" multiple>
+				<option selected>Rooms available to stop</option>
+				<option value="1">TestCase02</option>
+				<option value="2">TestCase07</option>
+			</select>
+			<select class="custom-select" multiple>
+				<option selected>Rooms available to start</option>
+				<option value="1">TestCase08</option>
+				<option value="2">TestCase09</option>
+			</select>
+			<select class="custom-select" multiple>
+				<option selected>Rooms available to upload</option>
+				<option value="1">TestCase10</option>
+				<option value="2">TestCase11</option>
+			</select>
+		</div>
+	</div>
+	<div id="leftMenu" class="d-inline-block float-left">
 		<div id="leftButtonsPlay" class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
 			<button id="play" type="button" class="btn btn-outline-dark btn-lg" onClick="showPauseAndSkipButtons();"><span class="oi oi-media-play"></span></button>
 			<div id="leftButtonsPauseSkip" class="btn-group-vertical">
@@ -26,14 +71,17 @@
 				<button id="stop" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-stop"></span></button>
 			</div>
 			<button id="bookmark" type="button" class="btn btn-outline-dark btn-lg" onClick="toogleBookmarks();"><span class="oi oi-bookmark"></span></button>
+			<button id="logs" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleLog();"><span class="oi oi-file"></span></button>
 			<button id="info" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleInfoSection();"><span class="oi oi-info"></span></button>
 		</div>
 		<div id="bookmarks" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 		</div>
+		<div id="Log" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+		</div>
 		<div id="infoSection" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 			<div id="selectedNodeNameTitle" class="card-header"></div>
 			<div class="card-body text-dark">
-				<h5 id="selectedNodeState" class="card-title">State: N/A</h5>
+				<p id="selectedNodeState" class="card-title">State: N/A</p>
 				<p id="selectedNodePosition" class="card-text">Position: N/A </p>
 				<p id="selectedNodeOrientation" class="card-text">Orientation: N/A </p>
 				<p id="selectedNodeDescription" class="card-text">Description: N/A </p>
@@ -46,9 +94,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="d-inline-block float-right">
+	<div id="rightMenu" class="d-inline-block float-right">
 		<div id="rightButtons" class="btn-group-vertical float-right" style="background-color:rgba(255, 255, 255, 0.7)">
-			<button id="reload" type="button" class="btn btn-outline-dark btn-lg" onClick="javascript: location.reload(true);"><span class="oi oi-reload"></span></button>
 			<button id="messenger" type="button" class="btn btn-outline-dark btn-lg" onClick="showChat();"><span class="oi oi-chat"></span></button>
 			<button id="showUsers" type="button" class="btn btn-outline-dark btn-lg" onClick="showUsers();"><span class="oi oi-people"></span></button>
 			<button id="logUsers" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleLogUsersStop();"><span class="oi oi-file"></span></button>
@@ -61,14 +108,14 @@
 			<button id="screencast" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleScreencastStop();"><span class="oi oi-video"></span></button>
 			<button id="screencastStop" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleScreencastStop();"><span class="oi oi-media-stop"></span></button>
 		</div>
-			<div class="d-inline-block" style="width:100%">
-				<div id="users" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
-				</div>
-				<div id="map" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
-					<canvas id="mapCanvas" width="250" height="250" style="border:1px solid #d3d3d3;"> Your browser does not support the canvas element. </canvas>
-				</div>
-				<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:300px;color:rgba(255, 255, 255);opacity:0.7"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
+		<div class="d-inline-block" style="width:100%">
+			<div id="users" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 			</div>
+			<div id="map" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+				<canvas id="mapCanvas" width="250" height="250" style="border:1px solid #d3d3d3;"> Your browser does not support the canvas element. </canvas>
+			</div>
+			<iframe id="chat" src="https://minnit.chat/vlft?embed&nickname=" style="width:100%;height:300px;color:rgba(255, 255, 255);opacity:0.7"></iframe><br><a href="https://minnit.chat/vlft" target="_blank"></a>
 		</div>
+	</div>
 </body>
 </html>

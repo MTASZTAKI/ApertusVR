@@ -32,6 +32,7 @@ SOFTWARE.*/
 #include "apeIEventManager.h"
 #include "apeILogManager.h"
 #include "apeISceneManager.h"
+#include "apeISceneNetwork.h"
 #include "apeICoreConfig.h"
 #include "apeUserInputMacro.h"
 #include "apeSceneMakerMacro.h"
@@ -61,6 +62,8 @@ namespace ape
 
 	private:
 		ape::ISceneManager* mpSceneManager;
+
+		ape::ISceneNetwork* mpSceneNetwork;
 
 		ape::ICoreConfig* mpCoreConfig;
 

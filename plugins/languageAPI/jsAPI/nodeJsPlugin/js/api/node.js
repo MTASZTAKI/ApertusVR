@@ -696,15 +696,14 @@ app.post('/overLayBrowserSetClickedElement', function (req, res) {
 	respObj.setDescription('Sets the clicked element of the overlay browser.');
 
 	// handle http param validation errors
-	req.checkBody('name', 'UrlParam is not presented').notEmpty()
+	req.checkBody('name', 'UrlParam is not presented').notEmpty();
 	if (!respObj.validateHttpParams(req, res)) {
 		res.status(400).send(respObj.toJSonString());
 		return;
 	}
 
-	var clickedElementName = req.body.name;
-	ape.nbind.JsBindManager().setOverlayBrowserClickedElement(clickedElementName);
-	respObj.addDataItem({ clickedElementName: clickedElementName });
+	ape.nbind.JsBindManager().setOverlayBrowserClickedElement(req.body.name);
+	respObj.addDataItem({ clickedElementName: req.body.name });
 	res.send(respObj.toJSonString());
 });
 

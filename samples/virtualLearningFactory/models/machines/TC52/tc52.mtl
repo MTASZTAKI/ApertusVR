@@ -1,0 +1,230 @@
+# 
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 5 5.0.2.1477 Release
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+# 
+
+newmtl Standardmaterial
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater1
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52BASE.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater2
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52BIAN.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater3
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52CORP.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater4
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52MANI.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater5
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52PAN.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater6
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52PORT.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater7
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52SPAL.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standard_1
+Ka 0.584314 0.584314 0.584314
+Kd 0.584314 0.584314 0.584314
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater8
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52VETR.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater9
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52_AER.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater10
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52SCAR.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater11
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC5SMOTO.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Standardmater12
+Ka 0.584314 0.584314 0.584314
+Kd 1 1 1
+Ks 0 0 0
+illum 2
+Ns 4
+map_Kd TC52_G_M.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
