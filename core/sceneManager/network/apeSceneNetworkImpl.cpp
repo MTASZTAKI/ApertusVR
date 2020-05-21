@@ -311,7 +311,7 @@ ape::SceneNetwork::ParticipantType ape::SceneNetworkImpl::getParticipantType()
 	return mParticipantType;
 }
 
-void ape::SceneNetworkImpl::connectToRoom(std::string roomName)
+void ape::SceneNetworkImpl::connectToRoom(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations)
 {
 	mParticipantType = ape::SceneNetwork::GUEST;
 	mLobbyServerSessionName = roomName;
@@ -320,12 +320,20 @@ void ape::SceneNetworkImpl::connectToRoom(std::string roomName)
 	std::string uuid;
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 	{
-		APE_LOG_DEBUG("use lobbyManager to get scene session guid");
 		if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
 		{
 			APE_LOG_DEBUG("use lobbyManager to update the resources...");
 			mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
 		}
+		if (configURLs.size() && configLocations.size())
+		{
+			APE_LOG_DEBUG("use lobbyManager to update the configs...");
+			for (int i = 0; i < configURLs.size(); i++)
+			{
+				mpLobbyManager->downloadConfig(configURLs[i], configLocations[i]);
+			}
+		}
+		APE_LOG_DEBUG("use lobbyManager to get scene session guid");
 		bool getSessionRes = mpLobbyManager->getSessionHostGuid(roomName, uuid);
 		APE_LOG_DEBUG("lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
 	}

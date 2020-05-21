@@ -660,6 +660,7 @@ public:
 		return mpSceneNetwork->getCurrentRoomName();
 	}
 
+
 private:
 	ape::ISceneManager* mpSceneManager;
 	ape::ISceneNetwork* mpSceneNetwork;

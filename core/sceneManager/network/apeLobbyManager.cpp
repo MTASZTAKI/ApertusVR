@@ -203,3 +203,8 @@ bool ape::LobbyManager::downloadResources(const std::string& url, const std::str
 {
 	return mHttpManager.downloadResources(url, location, md5);
 }
+
+bool ape::LobbyManager::downloadConfig(const std::string & url, const std::string & location)
+{
+	return mHttpManager.downloadConfig(url, location);
+}

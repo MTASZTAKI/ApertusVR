@@ -725,6 +725,15 @@ app.get('/roomName', function (req, res) {
 	res.send(respObj.toJSonString());
 });
 
+app.get('/getFolderPath', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Get the config folder path');
+
+	var folderPath = ape.nbind.JsBindManager().getFolderPath();
+	respObj.addDataItem({ configFolderPath: folderPath });
+	res.send(respObj.toJSonString());
+});
+
 app.get('/nodes/:name/euler', function(req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Gets the Euler (yaw, pitch, roll) of the specified node.');

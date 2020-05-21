@@ -201,12 +201,18 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				if (userType == "_Local")
 				{
 					mpPluginManager->loadPlugin("apeSampleScenePlugin");
-					mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
-					mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
+					//mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
+					//mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
 				}
 				else if (userType == "_Teacher" || userType == "_Student")
 				{
-					mpSceneNetwork->connectToRoom(roomName);
+					std::string url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
+					std::string location = mpCoreConfig->getConfigFolderPath() + "/apeVLFTAnimationPlayerPlugin.json";
+					std::vector<std::string> urls;
+					std::vector<std::string> locations;
+					urls.push_back(url);
+					locations.push_back(location);
+					mpSceneNetwork->connectToRoom(roomName, urls, locations);
 					mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
 				}
 			}

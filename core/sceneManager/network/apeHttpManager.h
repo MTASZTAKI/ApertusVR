@@ -49,6 +49,8 @@ namespace ape
 
 		bool downloadResources(const std::string& url, const std::string& location, const std::string& md5 = "");
 
+		bool downloadConfig(const std::string& url, const std::string& location);
+
 		std::string download(const std::string& url);
 		
 		std::string post(const std::string& url, const std::string& data);

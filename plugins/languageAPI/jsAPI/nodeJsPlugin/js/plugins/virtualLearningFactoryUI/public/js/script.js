@@ -11,6 +11,7 @@ var clickedNodeDescr;
 var clickedNodeState;
 var log;
 var roomName;
+var configFolderPath;
 var animationJSON;
 var sceneJSON;
 var animationSpeedFactor = 1;
@@ -43,6 +44,14 @@ function updateMeAttached() {
 		else {
 			$('#freeMe').hide();
 		}
+	});
+}
+
+function getConfigFolderPath() {
+	console.log('getConfigFolderPath()');
+	doGetRequest(apiEndPoint + '/getFolderPath', function (res) {
+		configFolderPath = res.data.items[0].configFolderPath;
+		console.log('getConfigFolderPath(): res: ', configFolderPath);
 	});
 }
 
@@ -438,6 +447,7 @@ function sendConnectParams() {
 	selectedUserName = document.getElementById("usr").value;
 	setClickedElement('connect' + ';userType:' + selectedUserType + ';roomName:' + selectedRoom + ';userName:' + selectedUserName);
 	showDesiredMenu(selectedUserType);
+	getConfigFolderPath();
 	getRoomName();
 }
 
@@ -477,6 +487,12 @@ function parseAnimationJSON() {
 		animationJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
 	});
+	/*var fileToSave = new Blob([JSON.stringify(animationJSON)], {
+		type: 'application/json',
+		name: 'apeVLFTAnimationPlayerPlugin.json'
+	});
+	console.log('saveAs: ' + configFolderPath + 'apeVLFTAnimationPlayerPlugin.json');
+	saveAs(fileToSave, configFolderPath + 'apeVLFTAnimationPlayerPlugin.json');*/
 }
 
 function parseSceneJSON() {
@@ -488,6 +504,12 @@ function parseSceneJSON() {
 		sceneJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
 	});
+	/*var fileToSave = new Blob([JSON.stringify(sceneJSON)], {
+		type: 'application/json',
+		name: 'apeVLFTSceneLoaderPlugin.json'
+	});
+	console.log('saveAs: ' + configFolderPath + 'apeVLFTSceneLoaderPlugin.json');
+	saveAs(fileToSave, configFolderPath + 'apeVLFTSceneLoaderPlugin.json');*/
 }
 
 function updateProperties() {

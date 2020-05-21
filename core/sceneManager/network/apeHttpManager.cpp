@@ -47,6 +47,8 @@ bool gDownloadRemoteZipFinished = false;
 
 bool gUnzipFinished = false;
 
+bool gDownloadRemoteConfigFileFinished = false;
+
 size_t loadRemoteMD5(void *ptr, size_t size, size_t nmemb, void *stream)
 {
     std::string data((const char*) ptr, (size_t) size * nmemb);
@@ -64,6 +66,12 @@ size_t downloadRemoteMD5(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 size_t downloadRemoteZip(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 	size_t written = fwrite(ptr, size, nmemb, stream);
 	gDownloadRemoteZipFinished = true;
+	return written;
+}
+
+size_t downloadRemoteConfigFile(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+	size_t written = fwrite(ptr, size, nmemb, stream);
+	gDownloadRemoteConfigFileFinished = true;
 	return written;
 }
 
@@ -275,6 +283,37 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 				std::this_thread::sleep_for(std::chrono::milliseconds(20));
 			}
 		}
+	}
+#endif
+	return false;
+}
+
+bool ape::HttpManager::downloadConfig(const std::string& url, const std::string& location)
+{
+#ifdef HTTPMANAGER_USE_CURL
+	if (mpCurl)
+	{
+		APE_LOG_DEBUG("try to download from: " << url << " to: " << location);
+		FILE* downloadedConfigFile = fopen(location.c_str(), "wb");
+		curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, downloadRemoteConfigFile);
+		curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, downloadedConfigFile);
+		CURLcode configFileRes = curl_easy_perform(mpCurl);
+		if (configFileRes != CURLE_OK)
+		{
+			APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(configFileRes));
+		}
+		else
+		{
+			APE_LOG_DEBUG("curl_easy_perform() succes: " << curl_easy_strerror(configFileRes));
+		}
+		while (!gDownloadRemoteConfigFileFinished)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		}
+		fclose(downloadedConfigFile);
+		gDownloadRemoteConfigFileFinished = false;
+		return true;
 	}
 #endif
 	return false;
