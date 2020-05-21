@@ -437,6 +437,8 @@ function sendConnectParams() {
 	selectedRoom = selectRoom.options[selectRoom.selectedIndex].innerHTML;
 	selectedUserName = document.getElementById("usr").value;
 	setClickedElement('connect' + ';userType:' + selectedUserType + ';roomName:' + selectedRoom + ';userName:' + selectedUserName);
+	showDesiredMenu(selectedUserType);
+	getRoomName();
 }
 
 
@@ -538,6 +540,49 @@ function toggleInfoSection() {
 	$('#infoSection').toggle();
 }
 
+function showDesiredMenu(userName) {
+	var isStudent = userName.indexOf("_Student");
+	if (isStudent != -1) {
+		$('#lobbyMenu').children().hide();
+		$('#uploaderMenu').children().hide();
+		$('#leftMenu').children().show();
+		$('#rightMenu').children().show();
+		hideTeacherButtons();
+		updateMeAttachedInterval = setInterval(updateMeAttached, 40);
+	}
+	var isLocal = userName.indexOf("_Local");
+	if (isLocal != -1) {
+		$('#lobbyMenu').children().hide();
+		$('#uploaderMenu').children().hide();
+		$('#leftMenu').children().show();
+		$('#rightMenu').children().show();
+		hideMultiUserButtons();
+		hideStudentButtons();
+		hideTeacherButtons();
+	}
+	var isTeacher = userName.indexOf("_Teacher");
+	if (isTeacher != -1) {
+		$('#lobbyMenu').children().hide();
+		$('#uploaderMenu').children().hide();
+		hideStudentButtons();
+	}
+	var isLobby = userName.indexOf("_Lobby");
+	if (isLobby != -1) {
+		$('#lobbyMenu').show();
+		$('#uploaderMenu').children().hide();
+		$('#leftMenu').children().hide();
+		$('#rightMenu').children().hide();
+	}
+	var isUploader = userName.indexOf("_Uploader");
+	if (isUploader != -1) {
+		$('#uploaderMenu').show();
+		$('#lobbyMenu').children().hide();
+		$('#leftMenu').children().hide();
+		$('#rightMenu').children().hide();
+		$('#chat').hide();
+	}
+}
+
 $(document).ready(function () {
 	getRoomName();
 	getUserNodeNameAndID();
@@ -558,42 +603,7 @@ $(document).ready(function () {
 		console.log('open');
 		getUserNodeNameAndID();
 		getLog();
-		var isStudent = userNodeName.indexOf("VLFT_Student");
-		if (isStudent != -1) {
-			$('#lobbyMenu').children().hide();
-			$('#uploaderMenu').children().hide();
-			hideTeacherButtons();
-			updateMeAttachedInterval = setInterval(updateMeAttached, 40);
-		}
-		var isLocal = userNodeName.indexOf("VLFT_Local");
-		if (isLocal != -1) {
-			$('#lobbyMenu').children().hide();
-			$('#uploaderMenu').children().hide();
-			hideMultiUserButtons();
-			hideStudentButtons();
-			hideTeacherButtons();
-		}
-		var isTeacher = userNodeName.indexOf("VLFT_Teacher");
-		if (isTeacher != -1) {
-			$('#lobbyMenu').children().hide();
-			$('#uploaderMenu').children().hide();
-			hideStudentButtons();
-		}
-		var isLobby = userNodeName.indexOf("VLFT_Lobby");
-		if (isLobby != -1) {
-			$('#lobbyMenu').show();
-			$('#uploaderMenu').children().hide();
-			$('#leftMenu').children().hide();
-			$('#rightMenu').children().hide();
-		}
-		var isUploader = userNodeName.indexOf("VLFT_Uploader");
-		if (isUploader != -1) {
-			$('#uploaderMenu').show();
-			$('#lobbyMenu').children().hide();
-			$('#leftMenu').children().hide();
-			$('#rightMenu').children().hide();
-			$('#chat').hide();
-		}
+		showDesiredMenu(userNodeName);
     }
     sock.onerror = (e)=>{
         console.log('error',e)

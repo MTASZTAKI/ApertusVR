@@ -33,8 +33,11 @@ SOFTWARE.*/
 	#define APE_PLUGINMANAGER_DLL_EXPORT
 #endif
 
+#include <functional>
+#include <map>
+#include <vector>
 #include "apeSingleton.h"
-#include "apeIPlugin.h"
+#include "apeSystem.h"
 
 namespace ape
 {
@@ -42,6 +45,9 @@ namespace ape
 	{
 	protected:
 		virtual ~IPluginManager() {};
+
+	public:
+		virtual void loadPlugin(std::string name) = 0;
 	};
 }
 

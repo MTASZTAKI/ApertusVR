@@ -28,6 +28,7 @@ SOFTWARE.*/
 #include <string>
 #include "apeIEventManager.h"
 #include "apeISceneManager.h"
+#include "apeISceneNetwork.h"
 #include "apeICoreConfig.h"
 #include "apeUserInputMacro.h"
 #include "apeBoxGeometryJsBind.h"
@@ -72,6 +73,7 @@ public:
 		APE_LOG_FUNC_ENTER();
 		//std::cout << "JsBindManager: " << std::endl;
 		mpSceneManager = ape::ISceneManager::getSingletonPtr();
+		mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
 		mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 		mpEventManager = ape::IEventManager::getSingletonPtr();
 		mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
@@ -655,11 +657,12 @@ public:
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return mpCoreConfig->getNetworkConfig().lobbyConfig.roomName;
+		return mpSceneNetwork->getCurrentRoomName();
 	}
 
 private:
 	ape::ISceneManager* mpSceneManager;
+	ape::ISceneNetwork* mpSceneNetwork;
 	ape::ICoreConfig* mpCoreConfig;
 	ape::IEventManager* mpEventManager;
 	ape::UserInputMacro* mpUserInputMacro;

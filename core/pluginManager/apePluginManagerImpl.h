@@ -49,7 +49,7 @@ SOFTWARE.*/
 
 namespace ape
 { 
-	class APE_PLUGINMANAGER_DLL_EXPORT PluginManagerImpl : public IPluginManager
+	class APE_PLUGINMANAGER_DLL_EXPORT PluginManagerImpl : public ape::IPluginManager
 	{	
 	private:
 		std::vector<std::thread> mThreadVector;
@@ -70,6 +70,8 @@ namespace ape
 		PluginManagerImpl();
 
 		~PluginManagerImpl();
+
+	    void loadPlugin(std::string name) override;
 
 		void CreatePlugins();
 

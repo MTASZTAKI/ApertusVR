@@ -8,6 +8,7 @@ ape::VLFTUIManagerPlugin::VLFTUIManagerPlugin()
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
+	mpPluginManager = ape::IPluginManager::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::BROWSER, std::bind(&VLFTUIManagerPlugin::eventCallBack, this, std::placeholders::_1));
@@ -197,7 +198,17 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				APE_LOG_DEBUG("userType: " << userType);
 				APE_LOG_DEBUG("roomName: " << roomName);
 				APE_LOG_DEBUG("userName: " << userName);
-				mpSceneNetwork->connectToRoom(roomName);
+				if (userType == "_Local")
+				{
+					mpPluginManager->loadPlugin("apeSampleScenePlugin");
+					mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
+					mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
+				}
+				else if (userType == "_Teacher" || userType == "_Student")
+				{
+					mpSceneNetwork->connectToRoom(roomName);
+					mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
+				}
 			}
 		}
 	}

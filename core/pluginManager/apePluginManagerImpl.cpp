@@ -38,6 +38,25 @@ ape::PluginManagerImpl::~PluginManagerImpl()
 	
 }
 
+void ape::PluginManagerImpl::loadPlugin(std::string name)
+{
+	if (mpInternalPluginManager->Load(name))
+	{
+		ape::IPlugin* plugin = ape::PluginFactory::CreatePlugin(name);
+		mPluginVector.push_back(plugin);
+		mPluginCount++;
+		APE_LOG_DEBUG("Plugin loaded: " << name);
+		std::thread pluginThread = std::thread(&PluginManagerImpl::InitAndRunPlugin, this, plugin);
+		//TODO detach or join based on the ape::System::Start isBlocked param
+		//mThreadVector.push_back(pluginThread);
+		pluginThread.detach();
+	}
+	else
+	{
+		APE_LOG_ERROR("Can not load plugin: " << name);
+	}
+}
+
 void ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 {
 	mPluginVector.push_back(ape::PluginFactory::CreatePlugin(pluginname));

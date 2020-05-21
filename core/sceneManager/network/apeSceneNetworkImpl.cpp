@@ -332,6 +332,11 @@ void ape::SceneNetworkImpl::connectToRoom(std::string roomName)
 	connect2ReplicaHost(uuid);
 }
 
+std::string ape::SceneNetworkImpl::getCurrentRoomName()
+{
+	return mLobbyServerSessionName;
+}
+
 
 void ape::SceneNetworkImpl::runReplicaPeerListen()
 {

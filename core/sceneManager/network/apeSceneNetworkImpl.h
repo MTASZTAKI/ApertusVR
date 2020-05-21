@@ -148,6 +148,8 @@ namespace ape
 
 	    void connectToRoom(std::string roomName) override;
 
+		std::string getCurrentRoomName() override;
+
 		bool isReplicaHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();
