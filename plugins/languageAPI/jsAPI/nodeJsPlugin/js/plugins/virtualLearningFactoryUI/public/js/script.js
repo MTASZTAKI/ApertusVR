@@ -559,7 +559,11 @@ function isRoomRunning(roomName) {
 	doGetRequest(apiEndPoint + '/roomRunning/' + roomName, function (res) {
 		isRunning = res.data.items[0].isRunning;
 		console.log('isRoomRunning(): res: ', isRunning);
-		return isRunning;
+		if (!isRunning) {
+			var selectRoom = document.getElementById('selectRoom');
+			var option = document.getElementById(roomName);
+			selectRoom.removeChild(option);
+		}
 	});
 }
 
@@ -599,10 +603,7 @@ function refreshAvailableRooms() {
 		}
 		if (document.getElementById('radioTeacher').checked || document.getElementById('radioStudent').checked) {
 			uploadedRooms.forEach(function (uploadeRoom) {
-				if (!isRoomRunning(uploadeRoom)) {
-					var option = document.getElementById(uploadeRoom);
-					selectRoom.removeChild(option);
-				}
+				isRoomRunning(uploadeRoom);
 			});
 		}
 	});

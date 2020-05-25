@@ -140,11 +140,11 @@ bool ape::LobbyManager::removeSession(const std::string& sessionName)
 	std::string response;
 	LobbyResponse resp;
 	std::string url = mApiEndPointUrl + "/" + sessionName;
-	APE_LOG_DEBUG("Sending HTTP POST request to: " << mApiEndPointUrl);
+	APE_LOG_DEBUG("Sending HTTP POST request to: " << url);
 
 	try
 	{
-		response = mHttpManager.del(mApiEndPointUrl, "");
+		response = mHttpManager.del(url, "");
 		APE_LOG_DEBUG("response: " << response);
 
 		if (parseResponse(response, resp))

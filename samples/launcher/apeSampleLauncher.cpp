@@ -21,14 +21,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
 #include <iostream>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "apeSystem.h"
+
+void my_handler(int s) {
+	printf("Caught signal %d\n", s);
+	ape::System::Stop();
+	exit(1);
+}
 
 int main(int argc, char** argv)
 {
 	if (argc > 1)
 	{
+		signal(SIGINT, my_handler);
 		ape::System::Start(argv[1], true);
-		ape::System::Stop();
 	}
 	else
 	{
