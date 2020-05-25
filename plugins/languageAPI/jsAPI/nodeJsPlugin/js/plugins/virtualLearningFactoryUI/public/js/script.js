@@ -55,16 +55,6 @@ function getConfigFolderPath() {
 	});
 }
 
-function getRoomName() {
-	console.log('getRoomName()');
-	doGetRequest(apiEndPoint + '/roomName', function (res) {
-		roomName = res.data.items[0].roomName;
-		console.log('getRoomName(): res: ', roomName);
-		parseAnimationJSON();
-		parseSceneJSON();
-	});
-}
-
 function getOverlayBrowserLastMessage() {
 	console.log('getOverlayBrowserLastMessage()');
 	doGetRequest(apiEndPoint + '/overLayBrowserGetLastMessage', function (res) {
@@ -444,11 +434,13 @@ function sendConnectParams() {
 		selectedUserType = "_Student";
 	var selectRoom = document.getElementById("selectRoom");
 	selectedRoom = selectRoom.options[selectRoom.selectedIndex].innerHTML;
+	roomName = selectedRoom;
 	selectedUserName = document.getElementById("usr").value;
 	setClickedElement('connect' + ';userType:' + selectedUserType + ';roomName:' + selectedRoom + ';userName:' + selectedUserName);
 	showDesiredMenu(selectedUserType);
 	getConfigFolderPath();
-	getRoomName();
+	parseAnimationJSON();
+	parseSceneJSON();
 }
 
 
@@ -479,9 +471,9 @@ function showBookmarks() {
 }
 
 function parseAnimationJSON() {
-	var pos = roomName.search("vlft");
-	var roomSTR = roomName.substring(pos + 4, roomName.length);
-	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/local" + roomSTR + "/apeVLFTAnimationPlayerPlugin.json";
+	//var pos = roomName.search("vlft");
+	//var roomSTR = roomName.substring(pos + 4, roomName.length);
+	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
 	console.log('parseAnimationJSON' + url);
 	$.get(url, function (json) {
 		animationJSON = json;
@@ -496,9 +488,9 @@ function parseAnimationJSON() {
 }
 
 function parseSceneJSON() {
-	var pos = roomName.search("vlft");
-	var roomSTR = roomName.substring(pos + 4, roomName.length);
-	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/local" + roomSTR + "/apeVLFTSceneLoaderPlugin.json";
+	//var pos = roomName.search("vlft");
+	//var roomSTR = roomName.substring(pos + 4, roomName.length);
+	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
 	console.log('parseSceneJSON' + url);
 	$.get(url, function (json) {
 		sceneJSON = json;
@@ -562,8 +554,48 @@ function toggleInfoSection() {
 	$('#infoSection').toggle();
 }
 
+function strIndexes(source, find) {
+	if (!source) {
+		return [];
+	}
+	// if find is empty string return all indexes.
+	if (!find) {
+		// or shorter arrow function:
+		// return source.split('').map((_,i) => i);
+		return source.split('').map(function (_, i) { return i; });
+	}
+	var result = [];
+	for (i = 0; i < source.length; ++i) {
+		// If you want to search case insensitive use 
+		// if (source.substring(i, i + find.length).toLowerCase() == find) {
+		if (source.substring(i, i + find.length) == find) {
+			result.push(i);
+		}
+	}
+	return result;
+}
+
 function refreshAvailableRooms() {
-	
+	var selectedUserType;
+	if (document.getElementById('radioLocal').checked)
+		selectedUserType = "_Local";
+	if (document.getElementById('radioTeacher').checked)
+		selectedUserType = "_Teacher";
+	if (document.getElementById('radioStudent').checked)
+		selectedUserType = "_Student";
+	var isLocal = selectedUserType.indexOf("_Local");
+	if (isLocal != -1) {
+		var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";
+		console.log('refreshAvailableRooms: ' + url);
+		$.get(url, function (data) {
+			//var dataSTR = JSON.stringify(data);
+			console.log("data: " + data);
+			console.log("indices: " + strIndexes(data, "folder.gif"));
+		});
+	}
+	else {
+		;
+	}
 }
 
 function showDesiredMenu(userName) {
@@ -610,7 +642,6 @@ function showDesiredMenu(userName) {
 }
 
 $(document).ready(function () {
-	getRoomName();
 	getUserNodeNameAndID();
 	getOtherUserNodeNames();
 	getUserNodePosition();

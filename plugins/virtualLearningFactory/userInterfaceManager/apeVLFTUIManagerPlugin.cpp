@@ -200,9 +200,9 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				APE_LOG_DEBUG("userName: " << userName);
 				if (userType == "_Local")
 				{
-					std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
+					std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
 					std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
-					std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
+					std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
 					std::string locationAnimationConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTAnimationPlayerPlugin.json";
 					std::vector<std::string> urls;
 					std::vector<std::string> locations;
@@ -217,7 +217,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				}
 				else if (userType == "_Teacher" || userType == "_Student")
 				{
-					std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
+					std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
 					std::string locationAnimationConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTAnimationPlayerPlugin.json";
 					std::vector<std::string> urls;
 					std::vector<std::string> locations;
