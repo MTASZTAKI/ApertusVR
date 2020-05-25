@@ -200,18 +200,29 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				APE_LOG_DEBUG("userName: " << userName);
 				if (userType == "_Local")
 				{
+					std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
+					std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
+					std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
+					std::string locationAnimationConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTAnimationPlayerPlugin.json";
+					std::vector<std::string> urls;
+					std::vector<std::string> locations;
+					urls.push_back(urlAnimationConfig);
+					locations.push_back(locationAnimationConfig);
+					urls.push_back(urlSceneConfig);
+					locations.push_back(locationSceneConfig);
+					mpSceneNetwork->downloadConfigs(urls, locations);
 					mpPluginManager->loadPlugin("apeSampleScenePlugin");
-					//mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
-					//mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
+					mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
+					mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
 				}
 				else if (userType == "_Teacher" || userType == "_Student")
 				{
-					std::string url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
-					std::string location = mpCoreConfig->getConfigFolderPath() + "/apeVLFTAnimationPlayerPlugin.json";
+					std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
+					std::string locationAnimationConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTAnimationPlayerPlugin.json";
 					std::vector<std::string> urls;
 					std::vector<std::string> locations;
-					urls.push_back(url);
-					locations.push_back(location);
+					urls.push_back(urlAnimationConfig);
+					locations.push_back(locationAnimationConfig);
 					mpSceneNetwork->connectToRoom(roomName, urls, locations);
 					mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
 				}

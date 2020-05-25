@@ -148,6 +148,8 @@ namespace ape
 
 	    void connectToRoom(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
 
+		void downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
+
 		std::string getCurrentRoomName() override;
 
 		bool isReplicaHost();

@@ -562,6 +562,10 @@ function toggleInfoSection() {
 	$('#infoSection').toggle();
 }
 
+function refreshAvailableRooms() {
+	
+}
+
 function showDesiredMenu(userName) {
 	var isStudent = userName.indexOf("_Student");
 	if (isStudent != -1) {
@@ -620,6 +624,7 @@ $(document).ready(function () {
 	$('#freeMe').toggle();
 	$('#logUsersStop').toggle();
 	hidePauseAndSkipButtons();
+	showDesiredMenu("_Lobby");
     var sock = new WebSocket("ws://localhost:40080/ws");
 	sock.onopen = () => {
 		console.log('open');

@@ -340,6 +340,19 @@ void ape::SceneNetworkImpl::connectToRoom(std::string roomName, std::vector<std:
 	connect2ReplicaHost(uuid);
 }
 
+void ape::SceneNetworkImpl::downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations)
+{
+	mpLobbyManager = new LobbyManager("", "", "");
+	if (configURLs.size() && configLocations.size())
+	{
+		APE_LOG_DEBUG("use lobbyManager to update the configs...");
+		for (int i = 0; i < configURLs.size(); i++)
+		{
+			mpLobbyManager->downloadConfig(configURLs[i], configLocations[i]);
+		}
+	}
+}
+
 std::string ape::SceneNetworkImpl::getCurrentRoomName()
 {
 	return mLobbyServerSessionName;

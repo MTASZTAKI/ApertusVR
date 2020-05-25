@@ -16,10 +16,11 @@
 <body>
 	<div id="lobbyMenu" class="d-inline-block float-left">
 		<div class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+			<label for="usr" style="text-align:center">Enter User Name</label>
 			<div class="form-group" style="background-color:rgba(255, 255, 255, 0.7)">
-				<label for="usr">UserName:</label>
 				<input type="text" class="form-control" id="usr">
 			</div>
+			<label for="usrType" style="text-align:center">Choose User Type</label>
 			<div class="custom-control custom-radio" style="background-color:rgba(255, 255, 255, 0.7)">
 				<input type="radio" class="custom-control-input" id="radioLocal" name="groupOfDefaultRadios">
 				<label class="custom-control-label" for="radioLocal">Local</label>
@@ -32,11 +33,8 @@
 				<input type="radio" class="custom-control-input" id="radioStudent" name="groupOfDefaultRadios">
 				<label class="custom-control-label" for="radioStudent">Student</label>
 			</div>
-			<select id="selectRoom" class="custom-select" multiple style="background-color:rgba(255, 255, 255, 0.7)">
-				<option selected>Available Rooms</option>
-				<option value="1">vlftTestCase05</option>
-				<option value="2">TestCase07</option>
-			</select>
+			<button id="refreshAvailableRooms" type="button" class="btn btn-outline-dark btn-lg" onClick="refreshAvailableRooms();">Refresh Available Rooms</button>
+			<select id="selectRoom" class="custom-select" multiple style="background-color:rgba(255, 255, 255, 0.7)"></select>
 			<button id="connect" type="button" class="btn btn-outline-dark btn-lg" onClick="sendConnectParams();">Connect</button>
 		</div>
 	</div>
