@@ -554,27 +554,6 @@ function toggleInfoSection() {
 	$('#infoSection').toggle();
 }
 
-function strIndexes(source, find) {
-	if (!source) {
-		return [];
-	}
-	// if find is empty string return all indexes.
-	if (!find) {
-		// or shorter arrow function:
-		// return source.split('').map((_,i) => i);
-		return source.split('').map(function (_, i) { return i; });
-	}
-	var result = [];
-	for (i = 0; i < source.length; ++i) {
-		// If you want to search case insensitive use 
-		// if (source.substring(i, i + find.length).toLowerCase() == find) {
-		if (source.substring(i, i + find.length) == find) {
-			result.push(i);
-		}
-	}
-	return result;
-}
-
 function refreshAvailableRooms() {
 	var selectedUserType;
 	if (document.getElementById('radioLocal').checked)
@@ -587,10 +566,34 @@ function refreshAvailableRooms() {
 	if (isLocal != -1) {
 		var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";
 		console.log('refreshAvailableRooms: ' + url);
+		var selectRoom = document.getElementById('selectRoom');
 		$.get(url, function (data) {
-			//var dataSTR = JSON.stringify(data);
 			console.log("data: " + data);
-			console.log("indices: " + strIndexes(data, "folder.gif"));
+			var posFolders = data.indexOf("[DIR]");
+			var foldersSTR = data.substring(posFolders, data.length);
+			var posFolderStart = 0;
+			while (posFolderEnd != -1) {
+				posFolderStart = foldersSTR.indexOf('/">');
+				if (posFolderStart == -1) {
+					break;
+				}
+				var posFolderEnd = foldersSTR.indexOf('/</a>');
+				var folderSTR = foldersSTR.substring(posFolderStart + 3, posFolderEnd);
+				foldersSTR = foldersSTR.substring(posFolderEnd + 5, foldersSTR.length);
+				var option = document.getElementById(folderSTR);
+				if (typeof (option) != 'undefined' && option != null) {
+					option.innerHTML = folderSTR;
+				}
+				else {
+					var newOption = document.createElement('option');
+					newOption.id = folderSTR;
+					newOption.innerHTML = folderSTR;
+					selectRoom.appendChild(newOption);
+				}
+				//console.log("posFolderStart: " + posFolderStart + " posFolderEnd: " + posFolderEnd);
+				//console.log("folderSTR: " + folderSTR);
+				//console.log("foldersSTR: " + foldersSTR);
+			}
 		});
 	}
 	else {
