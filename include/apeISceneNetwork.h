@@ -60,6 +60,8 @@ namespace ape
 	public:
 		virtual ape::SceneNetwork::ParticipantType getParticipantType() = 0;
 
+		virtual bool isRoomRunning(std::string roomName) = 0;
+
 		virtual void connectToRoom(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations) = 0;
 
 		virtual void downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations) = 0;

@@ -716,6 +716,22 @@ app.get('/overLayBrowserGetLastMessage', function (req, res) {
 	res.send(respObj.toJSonString());
 });
 
+app.get('/roomRunning/:name', function (req, res) {
+	var respObj = new resp(req);
+	respObj.setDescription('Is room running?');
+	// handle http param validation errors
+	req.checkParams('name', 'UrlParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+
+	var name = req.params.name;
+	var isRunning = ape.nbind.JsBindManager().isRoomRunning(name);
+	respObj.addDataItem({ isRunning: isRunning });
+	res.send(respObj.toJSonString());
+});
+
 app.get('/roomName', function (req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Get the name of the room.');

@@ -44,6 +44,16 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 	mParticipantType = mpCoreConfig->getNetworkConfig().participant;
 	mReplicaHostGuid = RakNet::RakNetGUID();
 
+	ape::NetworkConfig::LobbyConfig lobbyServerConfig = mpCoreConfig->getNetworkConfig().lobbyConfig;
+	mLobbyServerIP = lobbyServerConfig.ip;
+	APE_LOG_DEBUG("mLobbyServerIP: " << mLobbyServerIP);
+	mLobbyServerPort = lobbyServerConfig.port;
+	APE_LOG_DEBUG("mLobbyServerPort: " << mLobbyServerPort);
+	if (!mLobbyServerSessionName.length())
+		mLobbyServerSessionName = lobbyServerConfig.roomName;
+	APE_LOG_DEBUG("mLobbyServerSessionName: " << mLobbyServerSessionName);
+	mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
+
 	if (mParticipantType == ape::SceneNetwork::HOST)
 	{
 		mIsReplicaHost = true;
@@ -143,16 +153,7 @@ void ape::SceneNetworkImpl::init()
 	ape::NetworkConfig::NatPunchThroughConfig natPunchThroughServerConfig = mpCoreConfig->getNetworkConfig().natPunchThroughConfig;
 	mNATServerIP = natPunchThroughServerConfig.ip;
 	mNATServerPort = natPunchThroughServerConfig.port;
-	ape::NetworkConfig::LobbyConfig lobbyServerConfig = mpCoreConfig->getNetworkConfig().lobbyConfig;
 	ape::NetworkConfig::LanConfig localNetworkConfig = mpCoreConfig->getNetworkConfig().lanConfig;
-	mLobbyServerIP = lobbyServerConfig.ip;
-	APE_LOG_DEBUG("mLobbyServerIP: " << mLobbyServerIP);
-	mLobbyServerPort = lobbyServerConfig.port;
-	APE_LOG_DEBUG("mLobbyServerPort: " << mLobbyServerPort);
-	if (!mLobbyServerSessionName.length())
-		mLobbyServerSessionName = lobbyServerConfig.roomName;
-	APE_LOG_DEBUG("mLobbyServerSessionName: " << mLobbyServerSessionName);
-	mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
 	mpRakReplicaPeer = RakNet::RakPeerInterface::GetInstance();
 	mpNetworkIDManager = RakNet::NetworkIDManager::GetInstance();
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
@@ -311,6 +312,12 @@ ape::SceneNetwork::ParticipantType ape::SceneNetworkImpl::getParticipantType()
 	return mParticipantType;
 }
 
+bool ape::SceneNetworkImpl::isRoomRunning(std::string roomName)
+{
+	std::string guid;
+	return mpLobbyManager->getSessionHostGuid(roomName, guid);
+}
+
 void ape::SceneNetworkImpl::connectToRoom(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations)
 {
 	mParticipantType = ape::SceneNetwork::GUEST;
@@ -342,7 +349,6 @@ void ape::SceneNetworkImpl::connectToRoom(std::string roomName, std::vector<std:
 
 void ape::SceneNetworkImpl::downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations)
 {
-	mpLobbyManager = new LobbyManager("", "", "");
 	if (configURLs.size() && configLocations.size())
 	{
 		APE_LOG_DEBUG("use lobbyManager to update the configs...");

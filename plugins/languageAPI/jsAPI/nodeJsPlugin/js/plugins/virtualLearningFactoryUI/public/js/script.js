@@ -554,51 +554,58 @@ function toggleInfoSection() {
 	$('#infoSection').toggle();
 }
 
+function isRoomRunning(roomName) {
+	console.log("isRoomRunning: " + roomName);
+	doGetRequest(apiEndPoint + '/roomRunning/' + roomName, function (res) {
+		isRunning = res.data.items[0].isRunning;
+		console.log('isRoomRunning(): res: ', isRunning);
+		return isRunning;
+	});
+}
+
 function refreshAvailableRooms() {
-	var selectedUserType;
-	if (document.getElementById('radioLocal').checked)
-		selectedUserType = "_Local";
-	if (document.getElementById('radioTeacher').checked)
-		selectedUserType = "_Teacher";
-	if (document.getElementById('radioStudent').checked)
-		selectedUserType = "_Student";
-	var isLocal = selectedUserType.indexOf("_Local");
-	if (isLocal != -1) {
-		var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";
-		console.log('refreshAvailableRooms: ' + url);
-		var selectRoom = document.getElementById('selectRoom');
-		$.get(url, function (data) {
-			console.log("data: " + data);
-			var posFolders = data.indexOf("[DIR]");
-			var foldersSTR = data.substring(posFolders, data.length);
-			var posFolderStart = 0;
-			while (posFolderEnd != -1) {
-				posFolderStart = foldersSTR.indexOf('/">');
-				if (posFolderStart == -1) {
-					break;
-				}
-				var posFolderEnd = foldersSTR.indexOf('/</a>');
-				var folderSTR = foldersSTR.substring(posFolderStart + 3, posFolderEnd);
-				foldersSTR = foldersSTR.substring(posFolderEnd + 5, foldersSTR.length);
-				var option = document.getElementById(folderSTR);
-				if (typeof (option) != 'undefined' && option != null) {
-					option.innerHTML = folderSTR;
-				}
-				else {
-					var newOption = document.createElement('option');
-					newOption.id = folderSTR;
-					newOption.innerHTML = folderSTR;
-					selectRoom.appendChild(newOption);
-				}
-				//console.log("posFolderStart: " + posFolderStart + " posFolderEnd: " + posFolderEnd);
-				//console.log("folderSTR: " + folderSTR);
-				//console.log("foldersSTR: " + foldersSTR);
+	var uploadedRooms = [];
+	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";
+	console.log('refreshAvailableRooms: ' + url);
+	var selectRoom = document.getElementById('selectRoom');
+	$.get(url, function (data) {
+		//console.log("data: " + data);
+		var posFolders = data.indexOf("[DIR]");
+		var foldersSTR = data.substring(posFolders, data.length);
+		var posFolderStart = 0;
+		while (posFolderEnd != -1) {
+			posFolderStart = foldersSTR.indexOf('/">');
+			if (posFolderStart == -1) {
+				break;
 			}
-		});
-	}
-	else {
-		;
-	}
+			var posFolderEnd = foldersSTR.indexOf('/</a>');
+			var folderSTR = foldersSTR.substring(posFolderStart + 3, posFolderEnd);
+			foldersSTR = foldersSTR.substring(posFolderEnd + 5, foldersSTR.length);
+			var option = document.getElementById(folderSTR);
+			if (typeof (option) != 'undefined' && option != null) {
+				option.innerHTML = folderSTR;
+				uploadedRooms.push(folderSTR);
+			}
+			else {
+				var newOption = document.createElement('option');
+				newOption.id = folderSTR;
+				newOption.innerHTML = folderSTR;
+				selectRoom.appendChild(newOption);
+				uploadedRooms.push(folderSTR);
+			}
+			//console.log("posFolderStart: " + posFolderStart + " posFolderEnd: " + posFolderEnd);
+			console.log("folderSTR: " + folderSTR);
+			//console.log("foldersSTR: " + foldersSTR);
+		}
+		if (document.getElementById('radioTeacher').checked || document.getElementById('radioStudent').checked) {
+			uploadedRooms.forEach(function (uploadeRoom) {
+				if (!isRoomRunning(uploadeRoom)) {
+					var option = document.getElementById(uploadeRoom);
+					selectRoom.removeChild(option);
+				}
+			});
+		}
+	});
 }
 
 function showDesiredMenu(userName) {

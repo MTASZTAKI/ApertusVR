@@ -660,6 +660,13 @@ public:
 		return mpSceneNetwork->getCurrentRoomName();
 	}
 
+	bool isRoomRunning(std::string roomName)
+	{
+		APE_LOG_FUNC_ENTER();
+		APE_LOG_FUNC_LEAVE();
+		return mpSceneNetwork->isRoomRunning(roomName);
+	}
+
 
 private:
 	ape::ISceneManager* mpSceneManager;
@@ -728,6 +735,7 @@ NBIND_CLASS(JsBindManager)
 	method(getOverlayBrowserLastMessage);
 
 	method(getRoomName);
+	method(isRoomRunning);
 }
 
 #endif

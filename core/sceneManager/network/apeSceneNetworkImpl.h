@@ -146,6 +146,8 @@ namespace ape
 
 		ape::SceneNetwork::ParticipantType getParticipantType() override;
 
+		bool isRoomRunning(std::string roomName) override;
+
 	    void connectToRoom(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
 
 		void downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
