@@ -218,8 +218,8 @@ void ape::VLFTSceneLoaderPlugin::Init()
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeVLFTSceneLoaderPlugin.json";
-	FILE* apeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
-	mScene = nlohmann::json::parse(apeVLFTSceneLoaderPluginConfigFile);
+	mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -232,6 +232,7 @@ void ape::VLFTSceneLoaderPlugin::Run()
 	parsePlacementRelTo();
 	parseVisibleNodes();
 	setInitialState();
+	fclose(mApeVLFTSceneLoaderPluginConfigFile);
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));

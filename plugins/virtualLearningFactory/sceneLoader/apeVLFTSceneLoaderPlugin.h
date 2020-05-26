@@ -70,6 +70,8 @@ namespace ape
 
 		quicktype::Scene mScene;
 
+		FILE* mApeVLFTSceneLoaderPluginConfigFile;
+
 		void parseRepresentations();
 
 		void parseModelsAndNodes();
