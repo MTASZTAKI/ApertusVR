@@ -1,7 +1,7 @@
 {
   "nodes": [
     {
-      "name": "http://www.ontoeng.com/VLFT_test#Pallet.1",
+      "name": "http://www.ontoeng.com/VLFT_Test03#Pallet.1",
       "actions": [
         {
           "trigger": {
@@ -9,14 +9,67 @@
             "data": "0"
           },
           "event": {
+            "type": "show",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS01.PPs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "3"
+          },
+          "event": {
             "type": "animation",
-            "data": "animations/pallet_1.txt"
+            "data": "animations/palletNextStation.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS01.PPs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "6"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/palletNextStation.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS02.PPs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "9"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/palletNextStation.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS03.PPs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "12"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/palletFullRotation.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS04.Cs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "15"
+          },
+          "event": {
+            "type": "hide"
           }
         }
       ]
     },
     {
-      "name": "http://www.ontoeng.com/VLFT_test#Pallet.2",
+      "name": "http://www.ontoeng.com/VLFT_Test03#Pallet.2",
       "actions": [
         {
           "trigger": {
@@ -24,23 +77,61 @@
             "data": "5"
           },
           "event": {
-            "type": "animation",
-            "data": "animations/pallet_2.txt"
+            "type": "show",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS01.PPs_PalletPosition"
           }
-        }
-      ]
-    },
-    {
-      "name": "http://www.ontoeng.com/VLFT_test#Pallet.3",
-      "actions": [
+        },
         {
           "trigger": {
             "type": "timestamp",
-            "data": "10"
+            "data": "8"
           },
           "event": {
             "type": "animation",
-            "data": "animations/pallet_3.txt"
+            "data": "animations/palletNextStation.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS01.PPs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "11"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/palletNextStation.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS02.PPs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "14"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/palletNextStation.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS03.PPs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "17"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/palletFullRotation.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test03#WS04.Cs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "20"
+          },
+          "event": {
+            "type": "hide"
           }
         }
       ]

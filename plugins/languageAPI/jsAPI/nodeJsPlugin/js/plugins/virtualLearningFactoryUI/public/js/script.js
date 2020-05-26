@@ -642,9 +642,9 @@ function showDesiredMenu(userName) {
 		$('#leftMenu').children().hide();
 		$('#rightMenu').children().hide();
 	}
-	var isUploader = userName.indexOf("_Uploader");
-	if (isUploader != -1) {
-		$('#uploaderMenu').show();
+	var isAdmin = userName.indexOf("_Admin");
+	if (isAdmin != -1) {
+		$('#adminMenu').children().show();
 		$('#lobbyMenu').children().hide();
 		$('#leftMenu').children().hide();
 		$('#rightMenu').children().hide();
@@ -671,7 +671,7 @@ $(document).ready(function () {
 	sock.onopen = () => {
 		console.log('open');
 		getUserNodeNameAndID();
-		getLog();
+		//getLog();
 		showDesiredMenu(userNodeName);
     }
     sock.onerror = (e)=>{

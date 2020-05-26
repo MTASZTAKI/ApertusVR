@@ -10,7 +10,7 @@
     "apeAssimpAssetLoaderPlugin"
   ],
   "network": {
-    "user": "VLFT_Lobby",
+    "user": "VLFT_Admin",
     "participant": "",
     "internet": {
       "natPunchThrough": {
