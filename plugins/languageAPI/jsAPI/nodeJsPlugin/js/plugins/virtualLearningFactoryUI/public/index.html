@@ -10,7 +10,6 @@
 	<link rel="stylesheet" href="./open-iconic-master/font/css/open-iconic-bootstrap.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/5ed507ef8aa53d8ecfea96d96bc7214cd2476fd2/FileSaver.min.js"></script>
-	<script src="https://cdn.rawgit.com/blowsie/Pure-JavaScript-HTML5-Parser/master/htmlparser.js"></script>
 	<script src="js/script.js"></script>
 	<title></title>
 </head>
@@ -39,7 +38,7 @@
 			<button id="connect" type="button" class="btn btn-outline-dark btn-lg" onClick="sendConnectParams();">Connect</button>
 		</div>
 	</div>
-	<div id="adminMenu" class="d-inline-block float-left">
+	<div id="adminMenuLeft" class="d-inline-block float-left">
 		<div class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
 			<button id="listRunningRooms" type="button" class="btn btn-outline-dark btn-lg" onClick="listRunningRooms();">List Running Rooms</button>
 			<select id="runningRooms" class="custom-select" multiple style="background-color:rgba(255, 255, 255, 0.7)"></select>
@@ -49,9 +48,20 @@
 			<button id="listRoomsToStart" type="button" class="btn btn-outline-dark btn-lg" onClick="listRoomsToStart();">List Rooms to Start</button>
 			<select id="roomsToStart" class="custom-select" multiple style="background-color:rgba(255, 255, 255, 0.7)"></select>
 			<button id="startRoom" type="button" class="btn btn-outline-dark btn-lg" onClick="startRoom();">Start Room</button>
-			<label for="uploadRoomFolder" style="text-align:center">Copy the path of the room for uploading</label>
+		</div>
+	</div>
+	<div id="adminMenuRight" class="d-inline-block float-right">
+		<div class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
+			<label for="uploadRoomFolder" style="text-align:center">Enter the name of the room for uploading</label>
 			<input type="text" class="form-control" id="uploadRoomFolder">
-			<button id="uploadRoom" type="button" class="btn btn-outline-dark btn-lg" onClick="uploadRoom();">Upload Room</button>
+			<label for="roomFilesUploader" style="text-align:center">Choose the files of the room for uploading</label>
+			<form id='file-catcher'>
+				<input id='file-input' type='file' multiple />
+				<button type='submit'>
+					Upload Room
+				</button>
+			</form>
+			<div id='file-list-display'></div>
 		</div>
 	</div>
 	<div id="leftMenu" class="d-inline-block float-left">

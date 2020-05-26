@@ -554,15 +554,61 @@ function toggleInfoSection() {
 	$('#infoSection').toggle();
 }
 
-function isRoomRunning(roomName) {
+function prepareUploadRoom() {
+	var fileCatcher = document.getElementById('file-catcher');
+	var fileInput = document.getElementById('file-input');
+	var fileListDisplay = document.getElementById('file-list-display');
+	var fileList = [];
+	var renderFileList, sendFile;
+	fileCatcher.addEventListener('submit', function (evnt) {
+		evnt.preventDefault();
+		fileList.forEach(function (file) {
+			sendFile(file);
+		});
+	});
+	fileInput.addEventListener('change', function (evnt) {
+		fileList = [];
+		for (var i = 0; i < fileInput.files.length; i++) {
+			fileList.push(fileInput.files[i]);
+		}
+		renderFileList();
+	});
+	renderFileList = function () {
+		fileListDisplay.innerHTML = '';
+		fileList.forEach(function (file, index) {
+			var fileDisplayEl = document.createElement('p');
+			fileDisplayEl.innerHTML = (index + 1) + ': ' + file.name;
+			fileListDisplay.appendChild(fileDisplayEl);
+		});
+	};
+	sendFile = function (file) {
+		var selectedRoomName = document.getElementById("uploadRoomFolder").value;
+		var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";//+ selectedRoomName;
+		console.log("sendFile::UploadRoom: " + url);
+		var formData = new FormData();
+		var request = new XMLHttpRequest();
+		formData.set('file', file);
+		request.open("POST", url);
+		request.send(formData);
+	};
+}
+
+function isRoomRunning(roomName, roomIDPostFix, selectName) {
 	console.log("isRoomRunning: " + roomName);
 	doGetRequest(apiEndPoint + '/roomRunning/' + roomName, function (res) {
 		isRunning = res.data.items[0].isRunning;
 		console.log('isRoomRunning(): res: ', isRunning);
-		if (!isRunning) {
-			var selectRoom = document.getElementById('selectRoom');
-			var option = document.getElementById(roomName);
-			selectRoom.removeChild(option);
+		var select = document.getElementById(selectName);
+		var option = document.getElementById(roomName + roomIDPostFix);
+		if (selectName == "roomsToStart") {
+			if (isRunning) {
+				select.removeChild(option);
+			}
+		}
+		else {
+			if (!isRunning) {
+				select.removeChild(option);
+			}
 		}
 	});
 }
@@ -602,7 +648,7 @@ function listRoomsToStart() {
 			//console.log("foldersSTR: " + foldersSTR);
 		};
 		uploadedRooms.forEach(function (uploadeRoom) {
-			isRoomRunning(uploadeRoom);
+			isRoomRunning(uploadeRoom, "_4Start", 'roomsToStart');
 		});
 	});
 }
@@ -676,7 +722,7 @@ function listRunningRooms() {
 			//console.log("foldersSTR: " + foldersSTR);
 		};
 		uploadedRooms.forEach(function (uploadeRoom) {
-			isRoomRunning(uploadeRoom);
+			isRoomRunning(uploadeRoom, "_running", 'runningRooms');
 		});
 	});
 }
@@ -717,7 +763,7 @@ function refreshAvailableRooms() {
 		}
 		if (document.getElementById('radioTeacher').checked || document.getElementById('radioStudent').checked) {
 			uploadedRooms.forEach(function (uploadeRoom) {
-				isRoomRunning(uploadeRoom);
+				isRoomRunning(uploadeRoom, "", 'selectRoom');
 			});
 		}
 	});
@@ -727,7 +773,8 @@ function showDesiredMenu(userName) {
 	var isStudent = userName.indexOf("_Student");
 	if (isStudent != -1) {
 		$('#lobbyMenu').children().hide();
-		$('#uploaderMenu').children().hide();
+		$('#adminMenuLeft').children().hide();
+		$('#adminMenuRight').children().hide();
 		$('#leftMenu').children().show();
 		$('#rightMenu').children().show();
 		hideTeacherButtons();
@@ -736,7 +783,8 @@ function showDesiredMenu(userName) {
 	var isLocal = userName.indexOf("_Local");
 	if (isLocal != -1) {
 		$('#lobbyMenu').children().hide();
-		$('#uploaderMenu').children().hide();
+		$('#adminMenuLeft').children().hide();
+		$('#adminMenuRight').children().hide();
 		$('#leftMenu').children().show();
 		$('#rightMenu').children().show();
 		hideMultiUserButtons();
@@ -746,19 +794,22 @@ function showDesiredMenu(userName) {
 	var isTeacher = userName.indexOf("_Teacher");
 	if (isTeacher != -1) {
 		$('#lobbyMenu').children().hide();
-		$('#uploaderMenu').children().hide();
+		$('#adminMenuLeft').children().hide();
+		$('#adminMenuRight').children().hide();
 		hideStudentButtons();
 	}
 	var isLobby = userName.indexOf("_Lobby");
 	if (isLobby != -1) {
 		$('#lobbyMenu').show();
-		$('#uploaderMenu').children().hide();
+		$('#adminMenuLeft').children().hide();
+		$('#adminMenuRight').children().hide();
 		$('#leftMenu').children().hide();
 		$('#rightMenu').children().hide();
 	}
 	var isAdmin = userName.indexOf("_Admin");
 	if (isAdmin != -1) {
-		$('#adminMenu').children().show();
+		$('#adminMenuLeft').children().show();
+		$('#adminMenuRight').children().show();
 		$('#lobbyMenu').children().hide();
 		$('#leftMenu').children().hide();
 		$('#rightMenu').children().hide();
@@ -787,6 +838,10 @@ $(document).ready(function () {
 		getUserNodeNameAndID();
 		//getLog();
 		showDesiredMenu(userNodeName);
+		var isAdmin = userNodeName.indexOf("_Admin");
+		if (isAdmin != -1) {
+			prepareUploadRoom();
+		}
     }
     sock.onerror = (e)=>{
         console.log('error',e)
