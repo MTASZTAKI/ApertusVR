@@ -567,6 +567,120 @@ function isRoomRunning(roomName) {
 	});
 }
 
+function listRoomsToStart() {
+	var uploadedRooms = [];
+	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";
+	console.log('listRoomsToStart: ' + url);
+	var roomsToStart = document.getElementById('roomsToStart');
+	$.get(url, function (data) {
+		//console.log("data: " + data);
+		var posFolders = data.indexOf("[DIR]");
+		var foldersSTR = data.substring(posFolders, data.length);
+		var posFolderStart = 0;
+		while (posFolderEnd != -1) {
+			posFolderStart = foldersSTR.indexOf('/">');
+			if (posFolderStart == -1) {
+				break;
+			}
+			var posFolderEnd = foldersSTR.indexOf('/</a>');
+			var folderSTR = foldersSTR.substring(posFolderStart + 3, posFolderEnd);
+			foldersSTR = foldersSTR.substring(posFolderEnd + 5, foldersSTR.length);
+			var option = document.getElementById(folderSTR + "_4Start");
+			if (typeof (option) != 'undefined' && option != null) {
+				option.innerHTML = folderSTR;
+				uploadedRooms.push(folderSTR);
+			}
+			else {
+				var newOption = document.createElement('option');
+				newOption.id = folderSTR + "_4Start";
+				newOption.innerHTML = folderSTR;
+				roomsToStart.appendChild(newOption);
+				uploadedRooms.push(folderSTR);
+			}
+			//console.log("posFolderStart: " + posFolderStart + " posFolderEnd: " + posFolderEnd);
+			console.log("folderSTR: " + folderSTR);
+			//console.log("foldersSTR: " + foldersSTR);
+		};
+		uploadedRooms.forEach(function (uploadeRoom) {
+			isRoomRunning(uploadeRoom);
+		});
+	});
+}
+
+function listUploadedRooms() {
+	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";
+	console.log('listUploadedRooms: ' + url);
+	var uploadedRoomsSelect = document.getElementById('uploadedRooms');
+	$.get(url, function (data) {
+		//console.log("data: " + data);
+		var posFolders = data.indexOf("[DIR]");
+		var foldersSTR = data.substring(posFolders, data.length);
+		var posFolderStart = 0;
+		while (posFolderEnd != -1) {
+			posFolderStart = foldersSTR.indexOf('/">');
+			if (posFolderStart == -1) {
+				break;
+			}
+			var posFolderEnd = foldersSTR.indexOf('/</a>');
+			var folderSTR = foldersSTR.substring(posFolderStart + 3, posFolderEnd);
+			foldersSTR = foldersSTR.substring(posFolderEnd + 5, foldersSTR.length);
+			var option = document.getElementById(folderSTR + "_uploaded");
+			if (typeof (option) != 'undefined' && option != null) {
+				option.innerHTML = folderSTR;
+			}
+			else {
+				var newOption = document.createElement('option');
+				newOption.id = folderSTR + "_uploaded";
+				newOption.innerHTML = folderSTR;
+				uploadedRoomsSelect.appendChild(newOption);
+			}
+			//console.log("posFolderStart: " + posFolderStart + " posFolderEnd: " + posFolderEnd);
+			console.log("folderSTR: " + folderSTR);
+			//console.log("foldersSTR: " + foldersSTR);
+		};
+	});
+}
+
+function listRunningRooms() {
+	var uploadedRooms = [];
+	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";
+	console.log('listRunningRooms: ' + url);
+	var runningRooms = document.getElementById('runningRooms');
+	$.get(url, function (data) {
+		//console.log("data: " + data);
+		var posFolders = data.indexOf("[DIR]");
+		var foldersSTR = data.substring(posFolders, data.length);
+		var posFolderStart = 0;
+		while (posFolderEnd != -1) {
+			posFolderStart = foldersSTR.indexOf('/">');
+			if (posFolderStart == -1) {
+				break;
+			}
+			var posFolderEnd = foldersSTR.indexOf('/</a>');
+			var folderSTR = foldersSTR.substring(posFolderStart + 3, posFolderEnd);
+			foldersSTR = foldersSTR.substring(posFolderEnd + 5, foldersSTR.length);
+			var option = document.getElementById(folderSTR + "_running");
+			if (typeof (option) != 'undefined' && option != null) {
+				option.innerHTML = folderSTR;
+				uploadedRooms.push(folderSTR);
+			}
+			else {
+				var newOption = document.createElement('option');
+				newOption.id = folderSTR + "_running";
+				newOption.innerHTML = folderSTR;
+				runningRooms.appendChild(newOption);
+				uploadedRooms.push(folderSTR);
+			}
+			//console.log("posFolderStart: " + posFolderStart + " posFolderEnd: " + posFolderEnd);
+			console.log("folderSTR: " + folderSTR);
+			//console.log("foldersSTR: " + foldersSTR);
+		};
+		uploadedRooms.forEach(function (uploadeRoom) {
+			isRoomRunning(uploadeRoom);
+		});
+	});
+}
+
 function refreshAvailableRooms() {
 	var uploadedRooms = [];
 	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/";
