@@ -158,7 +158,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				{
 					if (auto clickedNode = mpSceneManager->getNode(clickedNodeName).lock())
 					{
-						if (clickedNode->isVisible())
+						if (clickedNode->isVisible() && clickedNodeName.find("building") == std::string::npos)
 						{
 							if (auto previouslyClickedNode = mClickedNode.lock())
 							{
