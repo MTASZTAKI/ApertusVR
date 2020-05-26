@@ -796,6 +796,8 @@ function showDesiredMenu(userName) {
 		$('#lobbyMenu').children().hide();
 		$('#adminMenuLeft').children().hide();
 		$('#adminMenuRight').children().hide();
+		$('#leftMenu').children().show();
+		$('#rightMenu').children().show();
 		hideStudentButtons();
 	}
 	var isLobby = userName.indexOf("_Lobby");
