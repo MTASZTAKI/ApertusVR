@@ -148,11 +148,11 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 			}
 			if (auto userNode = mpUserInputMacro->getUserNode().lock())
 			{
-				for (auto ingoredNode : userNode->getChildNodes())
-				{
-					if (auto node = ingoredNode.lock())
-						eraseClickedNodeName(node);
-				}
+				eraseClickedNodeName(userNode);
+			}
+			if (auto vlftUserNode = mVlftUserNode.lock())
+			{
+				eraseClickedNodeName(vlftUserNode);
 			}
 			if (mClickedNodeNames.size())
 			{
@@ -234,7 +234,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 							if (auto vlftUserNode = mpSceneManager->createNode(userName + "_" + mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID()).lock())
 							{
 								//TODO parse apeViewPointManagerPlugin.json 
-								vlftUserNode->setPosition(ape::Vector3(0, 150, 150));
+								vlftUserNode->setPosition(ape::Vector3(0, 100, 100));
 								if (auto vlftUserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(userName + "_" + mpCoreConfig->getNetworkGUID() + "_Material", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 								{
 									std::random_device rd;
@@ -334,7 +334,10 @@ void ape::VLFTUIManagerPlugin::eraseClickedNodeName(ape::NodeSharedPtr node)
 			for (auto it = mClickedNodeNames.begin(); it != mClickedNodeNames.end(); )
 			{
 				if (*it == ignoredNodeSP->getName())
+				{
 					it = mClickedNodeNames.erase(it);
+					//APE_LOG_DEBUG("erase from click: " << ignoredNodeSP->getName());
+				}
 				else
 					++it;
 			}
