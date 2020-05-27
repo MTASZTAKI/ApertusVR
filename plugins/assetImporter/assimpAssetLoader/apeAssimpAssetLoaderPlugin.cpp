@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "apeAssimpAssetLoaderPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
@@ -107,10 +108,23 @@ void ape::AssimpAssetLoaderPlugin::eventCallBack(const ape::Event & event)
 					}
 					else
 					{
-						found = resourceLocationStr.find("./");
+						std::string separator = "../";
+						found = resourceLocationStr.find(separator);
 						if (found != std::string::npos)
 						{
-							assimpAssetFileNamePath << resourceLocationStr;
+							struct stat info;
+							if (stat(resourceLocationStr.c_str(), &info) == -1)
+							{
+								auto found_it = std::find_end(resourceLocationStr.begin(), resourceLocationStr.end(), separator.begin(), separator.end());
+								size_t foundPos = found_it - resourceLocationStr.begin();
+								std::stringstream resourceLocationPath;
+								resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr.substr(foundPos + 2);
+								assimpAssetFileNamePath << resourceLocationPath.str();
+							}
+							else
+							{
+								assimpAssetFileNamePath << resourceLocationStr;
+							}
 						}
 						else
 						{

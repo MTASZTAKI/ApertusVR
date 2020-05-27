@@ -24,6 +24,7 @@ SOFTWARE.*/
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <algorithm>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "rapidjson/document.h"
@@ -136,10 +137,31 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						}
 						else
 						{
-							found = resourceLocationStr.find("./");
+							std::string separator = "../";
+							found = resourceLocationStr.find(separator);
 							if (found != std::string::npos)
 							{
-								mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
+								struct stat info;
+								if (stat(resourceLocationStr.c_str(), &info) != 0)
+								{
+									auto found_it = std::find_end(resourceLocationStr.begin(), resourceLocationStr.end(), separator.begin(), separator.end());
+									size_t foundPos = found_it - resourceLocationStr.begin();
+									std::stringstream resourceLocationPath;
+									resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr.substr(foundPos + 2);
+									mNetworkConfig.resourceLocations.push_back(resourceLocationPath.str());
+								}
+								else if (info.st_mode & S_IFDIR)
+								{
+									mNetworkConfig.resourceLocations.push_back(resourceLocationStr);
+								}
+								else
+								{
+									auto found_it = std::find_end(resourceLocationStr.begin(), resourceLocationStr.end(), separator.begin(), separator.end());
+									size_t foundPos = found_it - resourceLocationStr.begin();
+									std::stringstream resourceLocationPath;
+									resourceLocationPath << APE_SOURCE_DIR << resourceLocationStr.substr(foundPos + 2);
+									mNetworkConfig.resourceLocations.push_back(resourceLocationPath.str());
+								}
 							}
 							else
 							{
