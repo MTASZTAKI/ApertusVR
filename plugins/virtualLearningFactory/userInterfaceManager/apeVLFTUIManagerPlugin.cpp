@@ -23,6 +23,8 @@ ape::VLFTUIManagerPlugin::VLFTUIManagerPlugin()
 	mClickedNode = ape::NodeWeakPtr();
 	mIsBrowserClicked = false;
 	mIsBrowserHovered = false;
+	mVlftUserNode = ape::NodeWeakPtr();
+	mpUserInputMacro = nullptr;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -231,17 +233,39 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 						{
 							if (auto vlftUserNode = mpSceneManager->createNode(userName + "_" + mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID()).lock())
 							{
-								vlftUserNode->setParentNode(userNode);
-								if (auto vlftUserNameTextNode = mpSceneManager->createNode(userName + "_" + mpCoreConfig->getNetworkGUID() + "_TextNode", true, mpCoreConfig->getNetworkGUID()).lock())
+								if (auto vlftUserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(userName + "_" + mpCoreConfig->getNetworkGUID() + "_Material", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 								{
-									vlftUserNameTextNode->setParentNode(vlftUserNode);
-									vlftUserNameTextNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
-									if (auto vlftUserNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(userName + "_" + mpCoreConfig->getNetworkGUID() + "_TextGeometry", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
+									std::random_device rd;
+									std::mt19937 gen(rd());
+									std::uniform_real_distribution<double> distDouble(0.0, 1.0);
+									std::vector<double> randomColors;
+									for (int i = 0; i < 3; i++)
+										randomColors.push_back(distDouble(gen));
+									vlftUserMaterial->setDiffuseColor(ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+									vlftUserMaterial->setSpecularColor(ape::Color(randomColors[0], randomColors[1], randomColors[2]));
+									if (auto vlftUserConeNode = mpSceneManager->createNode(userName + "_" + mpCoreConfig->getNetworkGUID() + "_ConeNode", true, mpCoreConfig->getNetworkGUID()).lock())
 									{
-										vlftUserNameText->setCaption(userName);
-										vlftUserNameText->setParentNode(vlftUserNameTextNode);
+										vlftUserConeNode->setParentNode(vlftUserNode);
+										vlftUserConeNode->rotate(ape::Degree(90.0f).toRadian(), ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::WORLD);
+										if (auto vlftUserCone = std::static_pointer_cast<ape::IConeGeometry>(mpSceneManager->createEntity(userName + "_" + mpCoreConfig->getNetworkGUID() + "_ConeGeometry", ape::Entity::GEOMETRY_CONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+										{
+											vlftUserCone->setParameters(10.0f, 30.0f, 1.0f, ape::Vector2(1, 1));
+											vlftUserCone->setParentNode(vlftUserConeNode);
+											vlftUserCone->setMaterial(vlftUserMaterial);
+										}
+									}
+									if (auto vlftUserNameTextNode = mpSceneManager->createNode(userName + "_" + mpCoreConfig->getNetworkGUID() + "_TextNode", true, mpCoreConfig->getNetworkGUID()).lock())
+									{
+										vlftUserNameTextNode->setParentNode(vlftUserNode);
+										vlftUserNameTextNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
+										if (auto vlftUserNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(userName + "_" + mpCoreConfig->getNetworkGUID() + "_TextGeometry", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
+										{
+											vlftUserNameText->setCaption(userName);
+											vlftUserNameText->setParentNode(vlftUserNameTextNode);
+										}
 									}
 								}
+								mVlftUserNode = vlftUserNode;
 							}
 						}
 					}
@@ -263,6 +287,38 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 		{
 			//APE_LOG_DEBUG("BROWSER_HOVER_OUT");
 			mIsBrowserHovered = false;
+		}
+	}
+	else if (event.type == ape::Event::Type::NODE_POSITION)
+	{
+		if (mpUserInputMacro)
+		{
+			if (auto userNode = mpUserInputMacro->getUserNode().lock())
+			{
+				if (userNode->getName() == event.subjectName)
+				{
+					if (auto vlftUserNode = mVlftUserNode.lock())
+					{
+						vlftUserNode->setPosition(userNode->getPosition());
+					}
+				}
+			}
+		}
+	}
+	else if (event.type == ape::Event::Type::NODE_ORIENTATION)
+	{
+		if (mpUserInputMacro)
+		{
+			if (auto userNode = mpUserInputMacro->getUserNode().lock())
+			{
+				if (userNode->getName() == event.subjectName)
+				{
+					if (auto vlftUserNode = mVlftUserNode.lock())
+					{
+						vlftUserNode->setOrientation(userNode->getOrientation());
+					}
+				}
+			}
 		}
 	}
 }
@@ -288,12 +344,12 @@ void ape::VLFTUIManagerPlugin::eraseClickedNodeName(ape::NodeSharedPtr node)
 void ape::VLFTUIManagerPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	parseNodeJsPluginConfig();
 	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 	mpUserInputMacro->registerCallbackForKeyPressedStringValue(std::bind(&VLFTUIManagerPlugin::keyPressedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMousePressedStringValue(std::bind(&VLFTUIManagerPlugin::mousePressedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMouseReleasedStringValue(std::bind(&VLFTUIManagerPlugin::mouseReleasedStringEventCallback, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForMouseMovedValue(std::bind(&VLFTUIManagerPlugin::mouseMovedCallback, this, std::placeholders::_1, std::placeholders::_2));
+	parseNodeJsPluginConfig();
 	APE_LOG_FUNC_LEAVE();
 }
 

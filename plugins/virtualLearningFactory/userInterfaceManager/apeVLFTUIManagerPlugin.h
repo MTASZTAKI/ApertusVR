@@ -86,6 +86,8 @@ namespace ape
 
 		ape::NodeWeakPtr mClickedNode;
 
+		ape::NodeWeakPtr mVlftUserNode;
+
 		bool mIsBrowserClicked;
 
 		bool mIsBrowserHovered;
