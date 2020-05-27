@@ -301,6 +301,24 @@ function setClickedElement(clickedElementName) {
 	});
 }
 
+function startRoom() {
+	var roomName = "vlftTestCase07";
+	console.log('startRoom: ' + roomName);
+	var commandMSG = { command: 'startRoom/:' + roomName};
+	doPostRequest('http://193.224.59.230:8888', commandMSG, function (res) {
+		console.log('startRoom(): res: ', res);
+	});
+}
+
+function stopRoom() {
+	var roomName = "vlftTestCase07";
+	console.log('stopRoom: ' + roomName);
+	var commandMSG = { command: 'stopRoom/:' + roomName };
+	doPostRequest('http://193.224.59.230:8888', commandMSG, function (res) {
+		console.log('stopRoom(): res: ', res);
+	});
+}
+
 function doGetRequest(apiEndPointUrl, callback) {
 	console.log('doGetRequest()');
     $.get(apiEndPointUrl, function(res) {

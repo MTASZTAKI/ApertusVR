@@ -225,6 +225,26 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 					locations.push_back(locationAnimationConfig);
 					mpSceneNetwork->connectToRoom(roomName, urls, locations);
 					mpPluginManager->loadPlugin("apeVLFTAnimationPlayerPlugin");
+					if (userName.size())
+					{
+						if (auto userNode = mpUserInputMacro->getUserNode().lock())
+						{
+							if (auto vlftUserNode = mpSceneManager->createNode(userName + "_" + mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID()).lock())
+							{
+								vlftUserNode->setParentNode(userNode);
+								if (auto vlftUserNameTextNode = mpSceneManager->createNode(userName + "_" + mpCoreConfig->getNetworkGUID() + "_TextNode", true, mpCoreConfig->getNetworkGUID()).lock())
+								{
+									vlftUserNameTextNode->setParentNode(vlftUserNode);
+									vlftUserNameTextNode->setPosition(ape::Vector3(0.0f, 10.0f, 0.0f));
+									if (auto vlftUserNameText = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(userName + "_" + mpCoreConfig->getNetworkGUID() + "_TextGeometry", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock()))
+									{
+										vlftUserNameText->setCaption(userName);
+										vlftUserNameText->setParentNode(vlftUserNameTextNode);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
