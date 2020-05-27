@@ -778,6 +778,8 @@ function showDesiredMenu(userName) {
 		$('#leftMenu').children().show();
 		$('#rightMenu').children().show();
 		hideTeacherButtons();
+		$('#bookmarks').hide();
+		$('#Log').hide();
 		updateMeAttachedInterval = setInterval(updateMeAttached, 40);
 	}
 	var isLocal = userName.indexOf("_Local");
@@ -790,6 +792,8 @@ function showDesiredMenu(userName) {
 		hideMultiUserButtons();
 		hideStudentButtons();
 		hideTeacherButtons();
+		$('#bookmarks').hide();
+		$('#Log').hide();
 	}
 	var isTeacher = userName.indexOf("_Teacher");
 	if (isTeacher != -1) {
@@ -799,6 +803,8 @@ function showDesiredMenu(userName) {
 		$('#leftMenu').children().show();
 		$('#rightMenu').children().show();
 		hideStudentButtons();
+		$('#bookmarks').hide();
+		$('#Log').hide();
 	}
 	var isLobby = userName.indexOf("_Lobby");
 	if (isLobby != -1) {
