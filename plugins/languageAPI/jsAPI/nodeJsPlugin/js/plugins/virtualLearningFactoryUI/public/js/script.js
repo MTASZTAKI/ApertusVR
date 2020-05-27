@@ -302,18 +302,20 @@ function setClickedElement(clickedElementName) {
 }
 
 function startRoom() {
-	var roomName = "vlftTestCase07";
-	console.log('startRoom: ' + roomName);
-	var commandMSG = { command: 'startRoom/:' + roomName};
+	var selectRoomToStart = document.getElementById("roomsToStart");
+	selectedRoomToStart = selectRoomToStart.options[selectRoomToStart.selectedIndex].innerHTML;
+	console.log('startRoom: ' + selectedRoomToStart);
+	var commandMSG = { command: 'startRoom/:' + selectedRoomToStart};
 	doPostRequest('http://193.224.59.230:8888', commandMSG, function (res) {
 		console.log('startRoom(): res: ', res);
 	});
 }
 
 function stopRoom() {
-	var roomName = "vlftTestCase07";
-	console.log('stopRoom: ' + roomName);
-	var commandMSG = { command: 'stopRoom/:' + roomName };
+	var selectRoomToStop = document.getElementById("runningRooms");
+	selectRoomToStop = selectRoomToStop.options[selectRoomToStart.selectedIndex].innerHTML;
+	console.log('stopRoom: ' + selectRoomToStop);
+	var commandMSG = { command: 'stopRoom/:' + selectRoomToStop };
 	doPostRequest('http://193.224.59.230:8888', commandMSG, function (res) {
 		console.log('stopRoom(): res: ', res);
 	});
