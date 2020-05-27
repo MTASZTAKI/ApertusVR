@@ -140,6 +140,9 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 								{
 									auto ogreNewParentNode = mpOgreSceneManager->getSceneNode(parentNode->getName());
 									ogreNewParentNode->addChild(ogreNode);
+
+									//TODO intresting how to manage visibility in multi-user mode
+									ogreNewParentNode->setVisible(parentNode->getChildrenVisibility(), true);
 								}
 							}
 						}
@@ -1185,10 +1188,11 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 								if (auto ogreParentNode = mpOgreSceneManager->getSceneNode(parentNodeName))
 								{
 									ogreParentNode->attachObject(ogreEntity);
-									if (auto parentNode = geometryClone->getParentNode().lock())
+									//TODO intresting how to manage visibility in multi-user mode
+									/*if (auto parentNode = geometryClone->getParentNode().lock())
 									{
 										ogreParentNode->setVisible(parentNode->isVisible(), false);
-									}
+									}*/
 								}
 							}
 						}
