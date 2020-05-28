@@ -1189,10 +1189,10 @@ void ape::OgreRenderPlugin::processEventDoubleQueue()
 								{
 									ogreParentNode->attachObject(ogreEntity);
 									//TODO intresting how to manage visibility in multi-user mode
-									/*if (auto parentNode = geometryClone->getParentNode().lock())
+									if (auto parentNode = geometryClone->getParentNode().lock())
 									{
-										ogreParentNode->setVisible(parentNode->isVisible(), false);
-									}*/
+										ogreParentNode->setVisible(parentNode->getChildrenVisibility(), true);
+									}
 								}
 							}
 						}
