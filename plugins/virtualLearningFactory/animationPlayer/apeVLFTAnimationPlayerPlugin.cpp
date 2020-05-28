@@ -463,16 +463,17 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 				{
 					if (auto nodeSP = node.second.lock())
 					{
-						std::string nodeName = nodeSP->getName();
-						std::size_t pos = nodeName.find("_HeadNode");
-						if (pos != std::string::npos)
+						if (auto parentNode = nodeSP->getParentNode().lock())
 						{
-							if (auto userNode = nodeSP->getParentNode().lock())
+							;
+						}
+						else
+						{
+							std::string nodeName = nodeSP->getName();
+							std::size_t pos = nodeName.find("_vlftStudent");
+							if (pos != std::string::npos)
 							{
-								if (userNode->getName() != mpUserInputMacro->getUserNode().lock()->getName())
-								{
-									mStudents.push_back(userNode);
-								}
+								mStudents.push_back(nodeSP);
 							}
 						}
 					}
@@ -503,20 +504,21 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 				{
 					if (auto nodeSP = node.second.lock())
 					{
-						std::string nodeName = nodeSP->getName();
-						std::size_t pos = nodeName.find("_HeadNode");
-						if (pos != std::string::npos)
+						if (auto parentNode = nodeSP->getParentNode().lock())
 						{
-							if (auto userNode = nodeSP->getParentNode().lock())
+							;
+						}
+						else
+						{
+							std::string nodeName = nodeSP->getName();
+							std::size_t pos = nodeName.find("_vlftStudent");
+							if (pos != std::string::npos)
 							{
-								if (userNode->getName() != mpUserInputMacro->getUserNode().lock()->getName())
-								{
-									userNode->setOwner(mpCoreConfig->getNetworkGUID());
-									userNode->setParentNode(mpUserInputMacro->getUserNode());
-									userNode->setPosition(ape::Vector3(0, 0, 0));
-									userNode->setOrientation(ape::Quaternion(1, 0, 0, 0));
-									mAttachedUsers.push_back(userNode);
-								}
+								nodeSP->setOwner(mpCoreConfig->getNetworkGUID());
+								nodeSP->setParentNode(mpUserInputMacro->getUserNode());
+								nodeSP->setPosition(ape::Vector3(0, 0, 0));
+								nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
+								mAttachedUsers.push_back(nodeSP);
 							}
 						}
 					}
