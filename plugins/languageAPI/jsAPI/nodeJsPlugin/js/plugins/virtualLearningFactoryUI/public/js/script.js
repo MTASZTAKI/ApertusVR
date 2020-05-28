@@ -4,7 +4,7 @@ var userID;
 var userNodePostion;
 var otherUserNodeNames = [];
 var otherUserNodePositions = [];
-var clickedNodeName;
+var clickedNodeName = "";
 var clickedNodePosition;
 var clickedNodeOrientation;
 var clickedNodeDescr;
@@ -23,6 +23,8 @@ var currentAnimationTime;
 var updateOverlayBrowserLastMessageInterval;
 var updateMeAttachedInterval;
 var lastMessage;
+var parsedStates = new Map();
+var currentStates = new Map();
 
 function convertHex(hex, opacity) {
 	hex = hex.replace('#', '');
@@ -65,19 +67,21 @@ function getOverlayBrowserLastMessage() {
 	});
 }
 
-function getClickedNodeState(sec) {
-	console.log('getClickedNodeState(): ' + clickedNodeName + ' @ ' + sec);
-	animationJSON.nodes.forEach(function (node) {
-		if (node.name == clickedNodeName) {
-			node.actions.forEach(function (action) {
-				if (action.event.type == "state" && action.trigger.type == "timestamp") {
-					if (action.trigger.data == sec) {
-						clickedNodeState = action.event.descr;
-					}
-				}
-			});
+function setClickedNodeState(sec) {
+	console.log('setClickedNodeState(): ' + clickedNodeName + ' @ ' + sec);
+	for (let [key, value] of parsedStates) {
+		if (key == sec) {
+			var pos = value.indexOf("@");
+			var nodeName = value.substring(0, pos);
+			currentStates.set(nodeName, value.substring(pos + 1, value.length));
+			document.getElementById('stateStreamText').innerHTML = 'State Stream: ' + value;
+			break;
 		}
-	});
+	}
+	if (currentStates.get(clickedNodeName).length) {
+		clickedNodeState = currentStates.get(clickedNodeName);
+		document.getElementById('selectedNodeState').innerHTML = 'State: ' + clickedNodeState;
+	}
 }
 
 function getLog() {
@@ -342,6 +346,7 @@ function doPostRequest(apiEndPointUrl, data, callback) {
 function showPauseAndSkipButtons() {
 	console.log('showPauseAndSkipButtons');
 	$('#leftButtonsPauseSkip').show();
+	$('#stateStream').show();
 	$('#play').hide();
 	$('#logs').hide();
 	updateOverlayBrowserLastMessageInterval = setInterval(getOverlayBrowserLastMessage, 50);
@@ -350,6 +355,7 @@ function showPauseAndSkipButtons() {
 function hidePauseAndSkipButtons() {
 	console.log('hidePauseAndSkipButtons');
 	$('#leftButtonsPauseSkip').hide();
+	$('#stateStream').hide();
 	$('#play').show();
 	$('#logs').show();
 	clearInterval(updateOverlayBrowserLastMessageInterval);
@@ -449,8 +455,7 @@ function sendConnectParams() {
 	var selectedRoom;
 	selectedRoom = selectRoom.options[selectRoom.selectedIndex].innerHTML;
 	roomName = selectedRoom;
-	parseAnimationJSON();
-	parseSceneJSON();
+	parseConfigJSONs();
 	var selectedUserType;
 	var selectedUserName;
 	if (document.getElementById('radioLocal').checked)
@@ -498,39 +503,68 @@ function showBookmarks() {
 	});
 }
 
+function findState(nodeName, stateName) {
+	console.log('findStateBegin: ' + nodeName);
+	for (let asset of sceneJSON.assets) {
+		if (asset.id == nodeName) {
+			if (asset.parentObject) {
+				var foundState = false;
+				animationJSON.nodes.forEach(function (node) {
+					if (asset.parentObject == node.name) {
+						node.actions.forEach(function (action) {
+							if (action.event.type == "state" && action.trigger.type == "timestamp") {
+								parsedStates.set(action.trigger.data, stateName + "@" + action.event.descr);
+								foundState = true;
+							}
+						});
+					}
+				});
+				if (!foundState) {
+					findState(asset.parentObject, stateName);
+				}
+				else {
+					return;
+				}
+			}
+			else {
+				return;
+			}
+		}
+	};
+}
+
 function parseAnimationJSON() {
-	//var pos = roomName.search("vlft");
-	//var roomSTR = roomName.substring(pos + 4, roomName.length);
 	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
 	console.log('parseAnimationJSON: ' + url);
 	$.get(url, function (json) {
 		animationJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
 		getLog();
+		animationJSON.nodes.forEach(function (node) {
+			var foundState = false;
+			node.actions.forEach(function (action) {
+				if (action.event.type == "state" && action.trigger.type == "timestamp") {
+					parsedStates.set(action.trigger.data, node.name + "@" + action.event.descr);
+					foundState = true;
+				}
+			});
+			if (!foundState) {
+				findState(node.name, node.name);
+			}
+		});
+		console.log("parsedStates");
+		console.log(parsedStates);
 	});
-	/*var fileToSave = new Blob([JSON.stringify(animationJSON)], {
-		type: 'application/json',
-		name: 'apeVLFTAnimationPlayerPlugin.json'
-	});
-	console.log('saveAs: ' + configFolderPath + 'apeVLFTAnimationPlayerPlugin.json');
-	saveAs(fileToSave, configFolderPath + 'apeVLFTAnimationPlayerPlugin.json');*/
 }
 
-function parseSceneJSON() {
-	//var pos = roomName.search("vlft");
-	//var roomSTR = roomName.substring(pos + 4, roomName.length);
+function parseConfigJSONs() {
 	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
 	console.log('parseSceneJSON: ' + url);
 	$.get(url, function (json) {
 		sceneJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
+		parseAnimationJSON();
 	});
-	/*var fileToSave = new Blob([JSON.stringify(sceneJSON)], {
-		type: 'application/json',
-		name: 'apeVLFTSceneLoaderPlugin.json'
-	});
-	console.log('saveAs: ' + configFolderPath + 'apeVLFTSceneLoaderPlugin.json');
-	saveAs(fileToSave, configFolderPath + 'apeVLFTSceneLoaderPlugin.json');*/
 }
 
 function updateProperties() {
@@ -541,8 +575,7 @@ function updateProperties() {
 		getClickedNodeOrientation();
 		document.getElementById('selectedNodeOrientation').innerHTML = 'Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
 		var sec = Math.floor((lastMessage / 1000) % 60);
-		getClickedNodeState(sec);
-		document.getElementById('selectedNodeState').innerHTML = 'State: ' + clickedNodeState;
+		setClickedNodeState(sec);
 	}
 }
 
@@ -807,6 +840,7 @@ function showDesiredMenu(userName) {
 		hideTeacherButtons();
 		$('#bookmarks').hide();
 		$('#Log').hide();
+		$('#stateStream').hide();
 		updateMeAttachedInterval = setInterval(updateMeAttached, 40);
 	}
 	var isLocal = userName.indexOf("_Local");
@@ -821,6 +855,7 @@ function showDesiredMenu(userName) {
 		hideTeacherButtons();
 		$('#bookmarks').hide();
 		$('#Log').hide();
+		$('#stateStream').hide();
 	}
 	var isTeacher = userName.indexOf("_Teacher");
 	if (isTeacher != -1) {
@@ -832,6 +867,7 @@ function showDesiredMenu(userName) {
 		hideStudentButtons();
 		$('#bookmarks').hide();
 		$('#Log').hide();
+		$('#stateStream').hide();
 	}
 	var isLobby = userName.indexOf("_Lobby");
 	if (isLobby != -1) {
@@ -865,6 +901,7 @@ $(document).ready(function () {
 	$('#freeUsers').toggle();
 	$('#freeMe').toggle();
 	$('#logUsersStop').toggle();
+	$('#stateStream').toggle();
 	hidePauseAndSkipButtons();
 	showDesiredMenu("_Lobby");
     var sock = new WebSocket("ws://localhost:40080/ws");
@@ -895,6 +932,8 @@ $(document).ready(function () {
 			document.getElementById('selectedNodeNameTitle').innerHTML = clickedNodeName;
 			getClickedNodeDesc();
 			document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
+			clickedNodeState = "";
+			document.getElementById('selectedNodeState').innerHTML = 'State: ' + clickedNodeState;
         }
     }
     $("button").click(function () {
