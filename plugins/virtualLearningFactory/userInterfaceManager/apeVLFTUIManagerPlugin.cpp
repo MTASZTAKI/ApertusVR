@@ -192,12 +192,12 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 				std::string userType;
 				std::string userName;
 				std::string roomName;
-				auto userTypePos = browser->getClickedElementName().find(";userType:");
-				auto roomNamePos = browser->getClickedElementName().find(";roomName:");
-				auto userNamePos = browser->getClickedElementName().find(";userName:");
-				userType = browser->getClickedElementName().substr(userTypePos + 10, roomNamePos - (userTypePos + 10));
-				roomName = browser->getClickedElementName().substr(roomNamePos + 10, userNamePos - (roomNamePos + 10));
-				userName = browser->getClickedElementName().substr(userNamePos + 10, browser->getClickedElementName().length());
+				auto userTypePos = browser->getClickedElementName().find("userType:");
+				auto roomNamePos = browser->getClickedElementName().find("roomName:");
+				auto userNamePos = browser->getClickedElementName().find("userName:");
+				userType = browser->getClickedElementName().substr(userTypePos + 9, roomNamePos - (userTypePos + 9));
+				roomName = browser->getClickedElementName().substr(roomNamePos + 9, userNamePos - (roomNamePos + 9));
+				userName = browser->getClickedElementName().substr(userNamePos + 9, browser->getClickedElementName().length());
 				APE_LOG_DEBUG("userType: " << userType);
 				APE_LOG_DEBUG("roomName: " << roomName);
 				APE_LOG_DEBUG("userName: " << userName);

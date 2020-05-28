@@ -444,7 +444,12 @@ function toggleLog() {
 }
 
 function sendConnectParams() {
+	var selectRoom = document.getElementById("selectRoom");
 	var selectedRoom;
+	selectedRoom = selectRoom.options[selectRoom.selectedIndex].innerHTML;
+	roomName = selectedRoom;
+	parseAnimationJSON();
+	parseSceneJSON();
 	var selectedUserType;
 	var selectedUserName;
 	if (document.getElementById('radioLocal').checked)
@@ -453,20 +458,15 @@ function sendConnectParams() {
 		selectedUserType = "_Teacher";
 	if (document.getElementById('radioStudent').checked)
 		selectedUserType = "_Student";
-	var selectRoom = document.getElementById("selectRoom");
-	selectedRoom = selectRoom.options[selectRoom.selectedIndex].innerHTML;
-	roomName = selectedRoom;
 	if (selectedUserType == "_Student") {
 		selectedUserName = document.getElementById("usr").value + '_vlftStudent';
 	}
 	else {
 		selectedUserName = document.getElementById("usr").value;
 	}
-	setClickedElement('connect' + ';userType:' + selectedUserType + ';roomName:' + selectedRoom + ';userName:' + selectedUserName);
+	setClickedElement('connect' + 'userType:' + selectedUserType + 'roomName:' + roomName + 'userName:' + selectedUserName);
 	showDesiredMenu(selectedUserType);
 	getConfigFolderPath();
-	parseAnimationJSON();
-	parseSceneJSON();
 }
 
 
@@ -500,10 +500,11 @@ function parseAnimationJSON() {
 	//var pos = roomName.search("vlft");
 	//var roomSTR = roomName.substring(pos + 4, roomName.length);
 	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
-	console.log('parseAnimationJSON' + url);
+	console.log('parseAnimationJSON: ' + url);
 	$.get(url, function (json) {
 		animationJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
+		getLog();
 	});
 	/*var fileToSave = new Blob([JSON.stringify(animationJSON)], {
 		type: 'application/json',
@@ -517,7 +518,7 @@ function parseSceneJSON() {
 	//var pos = roomName.search("vlft");
 	//var roomSTR = roomName.substring(pos + 4, roomName.length);
 	var url = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
-	console.log('parseSceneJSON' + url);
+	console.log('parseSceneJSON: ' + url);
 	$.get(url, function (json) {
 		sceneJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
@@ -870,7 +871,6 @@ $(document).ready(function () {
 	sock.onopen = () => {
 		console.log('open');
 		getUserNodeNameAndID();
-		//getLog();
 		showDesiredMenu(userNodeName);
 		var isAdmin = userNodeName.indexOf("_Admin");
 		if (isAdmin != -1) {
