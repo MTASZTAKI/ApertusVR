@@ -571,9 +571,9 @@ function updateProperties() {
 	//console.log('update Properties of the clicked node: ' + clickedNodeName);
 	if (clickedNodeName.length) {
 		getClickedNodePosition();
-		document.getElementById('selectedNodePosition').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
 		getClickedNodeOrientation();
-		document.getElementById('selectedNodeOrientation').innerHTML = 'Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
+		document.getElementById('selectedNodePose').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')' +
+			' Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
 		var sec = Math.floor((lastMessage / 1000) % 60);
 		setClickedNodeState(sec);
 	}
