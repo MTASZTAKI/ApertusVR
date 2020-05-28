@@ -458,12 +458,15 @@ function sendConnectParams() {
 	parseConfigJSONs();
 	var selectedUserType;
 	var selectedUserName;
-	if (document.getElementById('radioLocal').checked)
+	if (document.getElementById('radioLocal').checked) {
 		selectedUserType = "_Local";
-	if (document.getElementById('radioTeacher').checked)
+	}
+	if (document.getElementById('radioTeacher').checked) {
 		selectedUserType = "_Teacher";
-	if (document.getElementById('radioStudent').checked)
+	}
+	if (document.getElementById('radioStudent').checked) {
 		selectedUserType = "_Student";
+	}
 	if (selectedUserType == "_Student") {
 		selectedUserName = document.getElementById("usr").value + '_vlftStudent';
 	}
