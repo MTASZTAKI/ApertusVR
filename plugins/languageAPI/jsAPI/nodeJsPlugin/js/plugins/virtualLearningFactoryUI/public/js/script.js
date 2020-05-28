@@ -411,7 +411,7 @@ function updateMap() {
 		var relativePosition = { x: (userNodePostion.x - pos.x) * scale, y: (userNodePostion.y - pos.y) * scale, z: (userNodePostion.z - pos.z) * scale };
 		//console.log('relativePosition: ', relativePosition)
 		ctx.beginPath();
-		ctx.arc((canvas.width / 2) - relativePosition.x, (canvas.height / 2) - relativePosition.y, 5, 0, 2 * Math.PI);
+		ctx.arc((canvas.width / 2) - relativePosition.x, (canvas.height / 2) - relativePosition.z, 5, 0, 2 * Math.PI);
 		ctx.stroke();
 		index++;
 	});
