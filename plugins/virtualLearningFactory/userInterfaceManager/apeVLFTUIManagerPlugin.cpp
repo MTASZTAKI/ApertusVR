@@ -234,7 +234,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 							if (auto vlftUserNode = mpSceneManager->createNode(userName + "_" + mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID()).lock())
 							{
 								//TODO parse apeViewPointManagerPlugin.json 
-								vlftUserNode->setPosition(ape::Vector3(0, 100, 100));
+								vlftUserNode->setPosition(ape::Vector3(0, 150, 150));
 								if (auto vlftUserMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(userName + "_" + mpCoreConfig->getNetworkGUID() + "_Material", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 								{
 									std::random_device rd;
@@ -267,6 +267,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 										}
 									}
 								}
+								mpUserInputMacro->changeUserNode(vlftUserNode);
 								mVlftUserNode = vlftUserNode;
 							}
 						}
@@ -289,38 +290,6 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 		{
 			//APE_LOG_DEBUG("BROWSER_HOVER_OUT");
 			mIsBrowserHovered = false;
-		}
-	}
-	else if (event.type == ape::Event::Type::NODE_POSITION)
-	{
-		if (mpUserInputMacro)
-		{
-			if (auto userNode = mpUserInputMacro->getUserNode().lock())
-			{
-				if (userNode->getName() == event.subjectName)
-				{
-					if (auto vlftUserNode = mVlftUserNode.lock())
-					{
-						vlftUserNode->setPosition(userNode->getPosition());
-					}
-				}
-			}
-		}
-	}
-	else if (event.type == ape::Event::Type::NODE_ORIENTATION)
-	{
-		if (mpUserInputMacro)
-		{
-			if (auto userNode = mpUserInputMacro->getUserNode().lock())
-			{
-				if (userNode->getName() == event.subjectName)
-				{
-					if (auto vlftUserNode = mVlftUserNode.lock())
-					{
-						vlftUserNode->setOrientation(userNode->getOrientation());
-					}
-				}
-			}
 		}
 	}
 }

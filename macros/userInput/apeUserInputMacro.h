@@ -294,6 +294,8 @@ namespace ape
 		void setOverlayBrowserKeyValue(std::string keyValue);
 
 		void rayQuery(ape::Vector3 position);
+
+		void changeUserNode(ape::NodeWeakPtr newUserNode);
     };
 }
 

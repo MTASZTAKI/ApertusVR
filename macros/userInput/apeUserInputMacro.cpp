@@ -574,3 +574,16 @@ void ape::UserInputMacro::rayQuery(ape::Vector3 position)
 	}
 }
 
+void ape::UserInputMacro::changeUserNode(ape::NodeWeakPtr newUserNode)
+{
+	if (auto newUserNodeSP = newUserNode.lock())
+	{
+		if (auto headNode = mHeadNode.lock())
+		{
+			headNode->setParentNode(newUserNodeSP);
+			mUserNodeName = newUserNodeSP->getName();
+			mUserNode = newUserNodeSP;
+		}
+	}
+}
+
