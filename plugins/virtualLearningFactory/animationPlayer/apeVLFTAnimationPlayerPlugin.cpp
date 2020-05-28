@@ -232,7 +232,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 										{
 											//geometryClone->setParentNode(ape::NodeWeakPtr());
 											std::chrono::nanoseconds uuid = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch());
-											if (auto fileGeometryNode = mpSceneManager->createNode(std::to_string(uuid.count()), true, mpCoreConfig->getNetworkGUID()).lock())
+											if (auto fileGeometryNode = mpSceneManager->createNode(std::to_string(uuid.count()) + "_STATE", true, mpCoreConfig->getNetworkGUID()).lock())
 											{
 												fileGeometryNode->setParentNode(node);
 												if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(fileGeometryNode->getName(),
