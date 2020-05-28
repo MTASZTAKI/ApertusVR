@@ -39,16 +39,16 @@ ape::UserInputMacro::UserInputMacro()
 		}
 		mUserNode = userNode;
 	}
-	if (auto rayNode = mpSceneManager->createNode("rayNode" + mUserNodeName, false, "").lock())
+	if (auto rayOverlayNode = mpSceneManager->createNode("rayNode" + mUserNodeName, false, "").lock())
 	{
 		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->createEntity("rayQuery" + mUserNodeName, ape::Entity::GEOMETRY_RAY, false, "").lock()))
 		{
 			rayGeometry->setIntersectingEnabled(true);
-			rayGeometry->setParentNode(rayNode);
+			rayGeometry->setParentNode(rayOverlayNode);
 			mRayGeometry = rayGeometry;
 		}
-		rayNode->setParentNode(mUserNode);
-		mRayOverlayNode = rayNode;
+		rayOverlayNode->setParentNode(mUserNode);
+		mRayOverlayNode = rayOverlayNode;
 	}
 	mOverlayText = ape::TextGeometryWeakPtr();
 	mOverlayTextNode = ape::NodeWeakPtr();
@@ -582,6 +582,10 @@ void ape::UserInputMacro::changeUserNode(ape::NodeWeakPtr newUserNode)
 		{
 			headNode->setParentNode(newUserNodeSP);
 			mUserNodeName = newUserNodeSP->getName();
+			if (auto rayOverlayNode = mRayOverlayNode.lock())
+			{
+				rayOverlayNode->setParentNode(newUserNodeSP);
+			}
 			mUserNode = newUserNodeSP;
 		}
 	}

@@ -115,6 +115,7 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 {
 	if (event.type == ape::Event::Type::GEOMETRY_RAY_INTERSECTION)
 	{
+		//APE_LOG_DEBUG("GEOMETRY_RAY_INTERSECTION");
 		if (auto rayGeometry = std::static_pointer_cast<ape::IRayGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 		{
 			auto intersections = rayGeometry->getIntersections();
@@ -172,8 +173,8 @@ void ape::VLFTUIManagerPlugin::eventCallBack(const ape::Event& event)
 							}*/
 							clickedNode->showBoundingBox(true);
 							mClickedNode = clickedNode;
-							break;
 							//APE_LOG_DEBUG("ClickedNode: " << clickedNode->getName() << " Position: " << clickedNode->getPosition().toString() << " DerivedPosition: " << clickedNode->getDerivedPosition().toString());
+							break;
 						}
 					}
 				}
