@@ -467,6 +467,9 @@ function sendConnectParams() {
 	if (selectedUserType == "_Student") {
 		selectedUserName = document.getElementById("usr").value + '_vlftStudent';
 	}
+	if (selectedUserType == "_Teacher") {
+		selectedUserName = document.getElementById("usr").value + '_vlftTeacher';
+	}
 	else {
 		selectedUserName = document.getElementById("usr").value;
 	}
