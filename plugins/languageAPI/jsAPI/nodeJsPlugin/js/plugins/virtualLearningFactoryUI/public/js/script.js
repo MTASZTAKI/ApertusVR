@@ -473,7 +473,7 @@ function sendConnectParams() {
 	if (selectedUserType == "_Teacher") {
 		selectedUserName = document.getElementById("usr").value + '_vlftTeacher';
 	}
-	else {
+	if (selectedUserType == "_Local") {
 		selectedUserName = document.getElementById("usr").value;
 	}
 	setClickedElement('connect' + 'userType:' + selectedUserType + 'roomName:' + roomName + 'userName:' + selectedUserName);
