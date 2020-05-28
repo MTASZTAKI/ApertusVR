@@ -22,6 +22,7 @@ var updateAnimationTimeInterval;
 var currentAnimationTime;
 var updateOverlayBrowserLastMessageInterval;
 var updateMeAttachedInterval;
+var lastMessage;
 
 function convertHex(hex, opacity) {
 	hex = hex.replace('#', '');
@@ -65,7 +66,7 @@ function getOverlayBrowserLastMessage() {
 }
 
 function getClickedNodeState(sec) {
-	console.log('getClickedNodeState(): ' + sec);
+	console.log('getClickedNodeState(): ' + clickedNodeName + ' @ ' + sec);
 	animationJSON.nodes.forEach(function (node) {
 		if (node.name == clickedNodeName) {
 			node.actions.forEach(function (action) {
@@ -467,6 +468,7 @@ function sendConnectParams() {
 	setClickedElement('connect' + 'userType:' + selectedUserType + 'roomName:' + roomName + 'userName:' + selectedUserName);
 	showDesiredMenu(selectedUserType);
 	getConfigFolderPath();
+	updatePropertiesInterval = setInterval(updateProperties, 40);
 }
 
 
@@ -533,17 +535,15 @@ function parseSceneJSON() {
 
 function updateProperties() {
 	//console.log('update Properties of the clicked node: ' + clickedNodeName);
-	getClickedNodePosition();
-	document.getElementById('selectedNodePosition').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
-	getClickedNodeOrientation();
-	document.getElementById('selectedNodeOrientation').innerHTML = 'Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
-	doGetRequest(apiEndPoint + '/overLayBrowserGetLastMessage', function (res) {
-		lastMessage = res.data.items[0].lastMessage;
-		console.log('getOverlayBrowserLastMessage(): res: ', lastMessage);
+	if (clickedNodeName.length) {
+		getClickedNodePosition();
+		document.getElementById('selectedNodePosition').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')';
+		getClickedNodeOrientation();
+		document.getElementById('selectedNodeOrientation').innerHTML = 'Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
 		var sec = Math.floor((lastMessage / 1000) % 60);
 		getClickedNodeState(sec);
 		document.getElementById('selectedNodeState').innerHTML = 'State: ' + clickedNodeState;
-	});
+	}
 }
 
 function hideStudentButtons() {
@@ -889,7 +889,6 @@ $(document).ready(function () {
         console.log('eventObj: ', eventObj);
 		
 		if (eventObj.type == 11) {
-			updatePropertiesInterval = setInterval(updateProperties, 40);
 			$("#nodeName").val(eventObj.subjectName);
 			clickedNodeName = eventObj.subjectName;
 			console.log(' show bounding box - select: ', clickedNodeName);
