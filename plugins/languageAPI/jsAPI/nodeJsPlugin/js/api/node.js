@@ -54,11 +54,18 @@ app.get('/userNodeName', function(req, res) {
 	});
 });
 
-app.get('/otherUserNodeNames', function(req, res) {
+app.get('/otherUserNodeNames/:findStringInUserName', function(req, res) {
 	var respObj = new resp(req);
 	respObj.setDescription('Get the name of other user node in the scene.');
 
-	ape.nbind.JsBindManager().getOtherUserNodeNames( function (error, arr) {
+	// handle http param validation errors
+	req.checkParams('findStringInUserName', 'UrlParam is not presented').notEmpty();
+	if (!respObj.validateHttpParams(req, res)) {
+		res.status(400).send(respObj.toJSonString());
+		return;
+	}
+	var findStringInUserName = req.params.findStringInUserName;
+	ape.nbind.JsBindManager().getOtherUserNodeNames(findStringInUserName, function (error, arr) {
 		if (error) {
 			respObj.addErrorItem({
 				name: 'invalidCast',
@@ -198,7 +205,7 @@ app.get('/nodes/:name', function(req, res) {
 	respObj.setDescription('Gets all properties of the specified node.');
 
 	// handle http param validation errors
-	req.checkParams('name', 'UrlParam is not presented').notEmpty()
+	req.checkParams('name', 'UrlParam is not presented').notEmpty();
 	if (!respObj.validateHttpParams(req, res)) {
 		res.status(400).send(respObj.toJSonString());
 		return;

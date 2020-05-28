@@ -196,8 +196,9 @@ function getUserNodePosition() {
 
 function getOtherUserNodeNames() {
 	console.log('getOtherUserNodeNames()');
-	doGetRequest(apiEndPoint + 'otherUserNodeNames/', function (res) {
+	doGetRequest(apiEndPoint + 'otherUserNodeNames/' + '_vlftStudent', function (res) {
 		otherUserNodeNames = res.data.items;
+		console.log('getOtherUserNodeNames(): res: ', otherUserNodeNames);
 	});
 }
 
@@ -455,7 +456,12 @@ function sendConnectParams() {
 	var selectRoom = document.getElementById("selectRoom");
 	selectedRoom = selectRoom.options[selectRoom.selectedIndex].innerHTML;
 	roomName = selectedRoom;
-	selectedUserName = document.getElementById("usr").value;
+	if (selectedUserType == "_Student") {
+		selectedUserName = document.getElementById("usr").value + '_vlftStudent';
+	}
+	else {
+		selectedUserName = document.getElementById("usr").value;
+	}
 	setClickedElement('connect' + ';userType:' + selectedUserType + ';roomName:' + selectedRoom + ';userName:' + selectedUserName);
 	showDesiredMenu(selectedUserType);
 	getConfigFolderPath();

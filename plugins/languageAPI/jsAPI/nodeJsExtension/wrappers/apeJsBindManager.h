@@ -178,26 +178,27 @@ public:
 		return success;
 	}
 
-	void getOtherUserNodeNames(nbind::cbFunction &done)
+	void getOtherUserNodeNames(std::string findStringInUserName, nbind::cbFunction &done)
 	{
 		APE_LOG_FUNC_ENTER();
+		APE_LOG_DEBUG("getOtherUserNodeNames: " << findStringInUserName);
 		auto nodes = mpSceneManager->getNodes();
 		std::vector<std::string> otherUserNodeNames;
 		for (auto node : nodes)
 		{
 			if (auto nodeSP = node.second.lock())
 			{
-				std::string nodeName = nodeSP->getName();
-				std::size_t pos = nodeName.find("_HeadNode");
-				if (pos != std::string::npos)
+				if (auto parentNode = nodeSP->getParentNode().lock())
 				{
-					if (auto userNode = nodeSP->getParentNode().lock())
+					;
+				}
+				else
+				{
+					std::string nodeName = nodeSP->getName();
+					std::size_t pos = nodeName.find(findStringInUserName);
+					if (pos != std::string::npos)
 					{
-						if (userNode->getName() != ape::UserInputMacro::getSingletonPtr()->getUserNode().lock()->getName())
-						{
-							//APE_LOG_DEBUG("getOtherUserNodeNames: " << userNode->getName());
-							otherUserNodeNames.push_back(userNode->getName());
-						}
+						otherUserNodeNames.push_back(nodeName);
 					}
 				}
 			}
