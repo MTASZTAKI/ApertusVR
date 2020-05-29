@@ -309,7 +309,7 @@ function setClickedElement(clickedElementName) {
 
 function startRoom() {
 	var selectRoomToStart = document.getElementById("roomsToStart");
-	selectedRoomToStart = selectRoomToStart.options[selectRoomToStart.selectedIndex].innerHTML;
+	var selectedRoomToStart = selectRoomToStart.options[selectRoomToStart.selectedIndex].innerHTML;
 	console.log('startRoom: ' + selectedRoomToStart);
 	var commandMSG = { command: 'startRoom/:' + selectedRoomToStart};
 	doPostRequest('http://193.224.59.230:8888', commandMSG, function (res) {
@@ -319,9 +319,9 @@ function startRoom() {
 
 function stopRoom() {
 	var selectRoomToStop = document.getElementById("runningRooms");
-	selectRoomToStop = selectRoomToStop.options[selectRoomToStart.selectedIndex].innerHTML;
-	console.log('stopRoom: ' + selectRoomToStop);
-	var commandMSG = { command: 'stopRoom/:' + selectRoomToStop };
+	var selectedRoomToStop = selectRoomToStop.options[selectRoomToStop.selectedIndex].innerHTML;
+	console.log('stopRoom: ' + selectedRoomToStop);
+	var commandMSG = { command: 'stopRoom/:' + selectedRoomToStop };
 	doPostRequest('http://193.224.59.230:8888', commandMSG, function (res) {
 		console.log('stopRoom(): res: ', res);
 	});
