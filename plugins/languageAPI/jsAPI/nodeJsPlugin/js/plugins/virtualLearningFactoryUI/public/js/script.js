@@ -1,4 +1,4 @@
-var apiEndPoint = 'http://localhost:3000/api/v1/';
+var apiEndPoint = 'http://localhost:4000/api/v1/';
 var userNodeName = '';
 var userID;
 var userNodePostion;
