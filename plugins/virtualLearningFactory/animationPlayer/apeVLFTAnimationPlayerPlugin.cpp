@@ -147,8 +147,15 @@ bool ape::VLFTAnimationPlayerPlugin::attach2NewAnimationNode(const std::string& 
 {
 	if (auto newParentNode = mpSceneManager->getNode(parentNodeName).lock())
 	{
-		auto currentParentNode = node->getParentNode().lock();
-		if (newParentNode != currentParentNode)
+		if (auto currentParentNode = node->getParentNode().lock())
+		{
+			if (newParentNode != currentParentNode)
+			{
+				node->setParentNode(newParentNode);
+				return true;
+			}
+		}
+		else
 		{
 			node->setParentNode(newParentNode);
 			return true;
@@ -203,11 +210,11 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			if (mParsedAnimations[i].type == quicktype::EventType::SHOW)
 			{
 				attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node);
-				node->setVisible(true);
+				node->setChildrenVisibility(true);
 			}
 			if (mParsedAnimations[i].type == quicktype::EventType::HIDE)
 			{
-				node->setVisible(false);
+				node->setChildrenVisibility(false);
 			}
 			if (mParsedAnimations[i].type == quicktype::EventType::LINK)
 			{
@@ -749,6 +756,10 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 	}
 	std::sort(mParsedBookmarkTimes.begin(), mParsedBookmarkTimes.end());
 	std::sort(mParsedAnimations.begin(), mParsedAnimations.end(), compareAnimationTime);
+	/*for (auto parsedAnimations : mParsedAnimations)
+	{
+		APE_LOG_DEBUG("animation: " << parsedAnimations.time);
+	}*/
 	APE_LOG_FUNC_LEAVE();
 }
 
