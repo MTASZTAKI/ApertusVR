@@ -54,6 +54,12 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 	APE_LOG_DEBUG("mLobbyServerSessionName: " << mLobbyServerSessionName);
 	mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
 
+	if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
+	{
+		APE_LOG_DEBUG("use lobbyManager to update the resources...");
+		mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
+	}
+
 	if (mParticipantType == ape::SceneNetwork::HOST)
 	{
 		mIsReplicaHost = true;
@@ -74,11 +80,6 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 		{
 			APE_LOG_DEBUG("use lobbyManager to get scene session guid");
 			std::string name = mpCoreConfig->getNetworkConfig().lobbyConfig.roomName;
-			if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
-			{
-				APE_LOG_DEBUG("use lobbyManager to update the resources...");
-				mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
-			}
 			bool getSessionRes = mpLobbyManager->getSessionHostGuid(name, uuid);
 			APE_LOG_DEBUG("lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
 			//if (getSessionRes && !uuid.empty())
@@ -327,11 +328,6 @@ void ape::SceneNetworkImpl::connectToRoom(std::string roomName, std::vector<std:
 	std::string uuid;
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 	{
-		if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
-		{
-			APE_LOG_DEBUG("use lobbyManager to update the resources...");
-			mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
-		}
 		if (configURLs.size() && configLocations.size())
 		{
 			APE_LOG_DEBUG("use lobbyManager to update the configs...");
