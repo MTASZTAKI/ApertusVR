@@ -53,10 +53,58 @@ map_kS
 map_kA 
 map_Ns 
 
+newmtl UR3_v1_color_255_255_0
+Ka 0 0 0
+Kd 1 1 0
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
 newmtl UR3_v1_color_229_234_237
 Ka 0 0 0
 Kd 0.898039 0.917647 0.929412
 Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl UR3_v1_color_192_192_192
+Ka 0 0 0
+Kd 0.752941 0.752941 0.752941
+Ks 0.5 0.5 0.5
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Explorer_Default
+Ka 0.117647 0.117647 0.117647
+Kd 0.752941 0.752941 0.752941
+Ks 0.752941 0.752941 0.752941
 illum 2
 Ns 8
 map_Kd 
