@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include "apeISceneManager.h"
 #include "apeICloneGeometry.h"
 #include "apeINode.h"
-#include "ApeEventManagerImpl.h"
+#include "apeEventManagerImpl.h"
 #include "apeReplica.h"
 
 namespace ape
