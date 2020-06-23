@@ -59,7 +59,7 @@ if (WIN32)
 	file(COPY ${CURL_LIB_PATH_DEBUG} DESTINATION ${APE_OUTPUT_DIR_DEBUG})
 	file(COPY ${CURL_LIB_PATH_RELEASE} DESTINATION ${APE_OUTPUT_DIR_RELEASE})
 
-elseif (APPLE OR LINUX)
+elseif (APPLE OR (LINUX AND NOT ANDROID))
 	find_package(CURL REQUIRED)
 	include_directories(${CURL_INCLUDE_DIRS})
 	message(STATUS "curl dirs: ${CURL_INCLUDE_DIRS}")
@@ -71,4 +71,35 @@ elseif (APPLE OR LINUX)
 		set_property(TARGET MY_CURL PROPERTY IMPORTED_LOCATION_DEBUG ${CURL_LIBRARIES})
 		set_property(TARGET MY_CURL PROPERTY IMPORTED_LOCATION_RELEASE ${CURL_LIBRARIES})
 	endif ()
-endif ()
+elseif(ANDROID)
+	set(CURL_READY FALSE)
+	if(EXISTS ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/lib/libssl.a AND 
+		EXISTS ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/lib/libcrypto.a)
+		set(OPENSSL_INSTALLED TRUE)
+		message(STATUS "OpenSSL is installed.")
+				
+		set(OPENSSL_INCLUDE_DIRS ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/include)
+
+		add_library(libssl STATIC IMPORTED)
+		set_target_properties(libssl PROPERTIES IMPORTED_LOCATION ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/lib/libssl.a)
+		add_library(libcrypto STATIC IMPORTED)
+		set_target_properties(libcrypto PROPERTIES IMPORTED_LOCATION ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/lib/libcrypto.a)
+	else()
+		set(OPENSSL_INSTALLED FALSE)
+		message(FATAL_ERROR "OpenSSL is not installed.")
+		# TODO: install openssl from cmake...
+	endif()
+
+	if(OPENSSL_INSTALLED AND EXISTS ${PREBUILT_ANDROID_LIBS_DIR}/curl/${ANDROID_ABI}/lib/libcurl.a)
+		message(STATUS "Curl is installed.")
+		
+		set(CURL_INCLUDE_DIRS ${PREBUILT_ANDROID_LIBS_DIR}/curl/${ANDROID_ABI}/include)
+
+		add_library(MY_CURL STATIC IMPORTED)
+		set_target_properties(MY_CURL PROPERTIES IMPORTED_LOCATION ${PREBUILT_ANDROID_LIBS_DIR}/curl/${ANDROID_ABI}/lib/libcurl.a)
+		set(CURL_READY TRUE)
+	else()
+		message(FATAL_ERROR "Curl is not installed.")
+		# TODO: install curl from cmake...
+	endif()
+endif()

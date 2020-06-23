@@ -1,0 +1,29 @@
+{
+  "plugins": [
+    "apeJNIPlugin"
+  ],
+  "network": {
+    "user": "multiPlayerGuest",
+    "participant": "guest",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "195.111.2.95",
+        "port": "61666"
+      },
+      "lobby": {
+        "ip": "195.111.2.95",
+        "port": "8888",
+        "room": "vlftTestCase02"
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "internet",
+    "resourceLocations": [
+    ]
+  }
+}
+
+

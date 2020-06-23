@@ -36,7 +36,9 @@ include_directories(
 add_library (apeCoreConfig SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeCoreConfig)
+if(ANDROID)
+	target_link_libraries (apeCoreConfig android_fopen)
+endif()
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET apeCoreConfig PROPERTY COMPILE_DEFINITIONS BUILDING_APE_CORECONFIG_DLL APE_SOURCE_DIR="${APE_SOURCE_DIR}")

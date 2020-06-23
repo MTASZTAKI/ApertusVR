@@ -1,0 +1,27 @@
+{
+  "renderSystem": "OGL",
+  "lodLevels": {
+    "autoGenerateAndSave": false,
+    "bias": 0.5
+  },
+  "shading": "perPixel",
+  "renderWindows": [
+    {
+      "name": "htcViveHost",
+      "monitorIndex": 0,
+      "hidden": true,
+      "resolution": {
+        "width": 1512,
+        "height": 1680,
+        "fullScreen": false
+      },
+      "miscParams": {
+        "vSync": false,
+        "vSyncInterval": 0,
+        "colorDepth": 32,
+        "FSAA": 8,
+        "FSAAHint": "Quality"
+      }
+    }
+  ]
+}

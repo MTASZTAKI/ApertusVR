@@ -1,0 +1,5 @@
+# ninja log v5
+5	458	6073514132237910	test/CMakeFiles/test.out.dir/test.c.o	b4347cef11f40775
+1	1277	6073514140362354	CMakeFiles/zip.dir/src/zip.c.o	ee7f3241d5cd48dc
+1278	1512	6073514142862181	libzip.a	4ac06c0fd483f2f7
+1513	1642	6073514144268333	test/test.out	269d575c4ea620cc

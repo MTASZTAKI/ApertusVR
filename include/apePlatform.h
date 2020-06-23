@@ -24,7 +24,7 @@ SOFTWARE.*/
 #define APE_PLATFORM_H
 
 #ifdef _WIN32
-	#define APE_PLATFORM_WIN
+#define APE_PLATFORM_WIN
 	#ifdef _WIN64
 		#define APE_PLATFORM_WIN64
 		#define APE_PLATFORM_STRING "Windows 64"
@@ -33,7 +33,7 @@ SOFTWARE.*/
 		#define APE_PLATFORM_STRING "Windows 32"
 	#endif
 #elif __APPLE__
-	#include "TargetConditionals.h"
+#include "TargetConditionals.h"
 	#define APE_PLATFORM_APPLE
 	#if TARGET_IPHONE_SIMULATOR
 		#define APE_PLATFORM_APPLE_IOS_SIMULATOR
@@ -47,9 +47,13 @@ SOFTWARE.*/
 	#else
 		#define APE_PLATFORM_APPLE_UNKNOWN
 		#define APE_PLATFORM_STRING "Apple - Unknown"
-	#endif
+    #endif
+#elif __ANDROID__
+#define APE_PLATFORM_LINUX
+#define APE_PLATFORM_ANDROID
+#define APE_PLATFORM_STRING "Android"
 #elif __linux__
-	#define APE_PLATFORM_LINUX
+#define APE_PLATFORM_LINUX
 	#define APE_PLATFORM_STRING "Linux"
 #elif __unix__
 	#define APE_PLATFORM_UNIX

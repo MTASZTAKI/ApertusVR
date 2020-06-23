@@ -37,8 +37,27 @@ include_directories(
 
 add_library (apeSystem SHARED ${SOURCES} )
 
-target_link_libraries (apeSystem apePluginManager apeEventManager apeLogManager apeSceneManager apeCoreConfig)
+if(NOT ANDROID)
+	set(APE_SYSTEM_DEPENDENCIES
+			apePluginManager
+			apeEventManager
+			apeLogManager
+			apeSceneManager
+			apeCoreConfig
+			)
+else()
+	set(APE_SYSTEM_DEPENDENCIES
+			apePluginManager
+			apeEventManager
+			apeLogManager
+			apeSceneManager
+			apeCoreConfig
+			apeJNIPlugin
+			apeAndroidSampleScenePlugin
+			)
+endif()
 
+target_link_libraries (apeSystem ${APE_SYSTEM_DEPENDENCIES})
 
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET apeSystem PROPERTY COMPILE_DEFINITIONS BUILDING_APE_SYSTEM_DLL)

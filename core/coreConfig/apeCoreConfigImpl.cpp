@@ -32,6 +32,9 @@ SOFTWARE.*/
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/prettywriter.h"
 #include "apeCoreConfigImpl.h"
+#ifdef ANDROID
+#include "../../androidx/fopen/android_fopen.h"
+#endif
 
 ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 {
@@ -40,6 +43,7 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 	mConfigFolderPath = configFolderPath;
 	mNetworkGUID = std::string();
 
+#ifndef ANDROID
 	if (stat(mConfigFolderPath.c_str(), &info) != 0)
 	{
 		std::cout << "CoreConfigImpl: cannot access to " << mConfigFolderPath << std::endl;
@@ -52,10 +56,17 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 	{
 		std::cout << "CoreConfigImpl: no directory at " << mConfigFolderPath << std::endl;
 	}
+#endif
 
 	std::stringstream fileFullPath; 
 	fileFullPath << mConfigFolderPath << "/apeCore.json";
+
+#ifndef __ANDROID__
 	FILE* apeCoreConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+#else
+	FILE* apeCoreConfigFile = android_fopen(fileFullPath.str().c_str(),"r");
+#endif
+
 	char readBuffer[65536];
 	if (apeCoreConfigFile)
 	{

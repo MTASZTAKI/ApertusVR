@@ -1,0 +1,45 @@
+{
+  "plugins": [
+    "apeOgreRenderPlugin",
+    "apeHtcVivePlugin",
+    "apeViewPointManagerPlugin",
+    "apeHelloWorldScenePlugin"
+  ],
+  "network": {
+    "user": "multiPlayerHostHtcVive",
+    "participant": "host",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "195.111.2.95",
+        "port": "61666"
+      },
+      "lobby": {
+        "ip": "195.111.2.95",
+        "port": "8888",
+        "room": "multiPlayer"
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "internet",
+    "resourceLocations": [
+      "/plugins/render/ogreRender/resources/fonts",
+      "/plugins/render/ogreRender/resources/materials",
+      "/plugins/render/ogreRender/resources/pbs",
+      "/plugins/render/ogreRender/resources/rtss",
+      "/plugins/render/ogreRender/resources/rtss/Cg",
+      "/plugins/render/ogreRender/resources/rtss/GLSL",
+      "/plugins/render/ogreRender/resources/rtss/GLSL150",
+      "/plugins/render/ogreRender/resources/rtss/GLSLES",
+      "/plugins/render/ogreRender/resources/rtss/HLSL",
+      "/plugins/render/ogreRender/resources/rtss/materials",
+      "/plugins/render/ogreRender/resources/hydrax",
+      "/plugins/render/ogreRender/resources/skyx",
+      "/plugins/scene/helloWorldScene/resources"
+    ]
+  }
+}
+
+

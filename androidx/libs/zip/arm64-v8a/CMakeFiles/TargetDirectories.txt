@@ -1,0 +1,17 @@
+C:/zip/build/arm64-v8a/CMakeFiles/zip.dir
+C:/zip/build/arm64-v8a/CMakeFiles/install/strip.dir
+C:/zip/build/arm64-v8a/CMakeFiles/uninstall.dir
+C:/zip/build/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/zip/build/arm64-v8a/CMakeFiles/test.dir
+C:/zip/build/arm64-v8a/CMakeFiles/install.dir
+C:/zip/build/arm64-v8a/CMakeFiles/install/local.dir
+C:/zip/build/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/zip/build/arm64-v8a/CMakeFiles/list_install_components.dir
+C:/zip/build/arm64-v8a/test/CMakeFiles/test.out.dir
+C:/zip/build/arm64-v8a/test/CMakeFiles/rebuild_cache.dir
+C:/zip/build/arm64-v8a/test/CMakeFiles/test.dir
+C:/zip/build/arm64-v8a/test/CMakeFiles/install/local.dir
+C:/zip/build/arm64-v8a/test/CMakeFiles/install.dir
+C:/zip/build/arm64-v8a/test/CMakeFiles/edit_cache.dir
+C:/zip/build/arm64-v8a/test/CMakeFiles/list_install_components.dir
+C:/zip/build/arm64-v8a/test/CMakeFiles/install/strip.dir

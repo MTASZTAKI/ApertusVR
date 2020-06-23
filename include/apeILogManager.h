@@ -58,7 +58,9 @@ SOFTWARE.*/
 //#define APE_LOG_ENABLE_TRACE
 #define APE_LOG_ENABLE_WARNING
 #define APE_LOG_ENABLE_ERROR
+#ifndef __ANDROID__
 #define APE_LOG_ENABLE_COLORIZE
+#endif
 
 #define COLOR_ORANGE "\033[0;33m"
 #define COLOR_LIGHT_RED "\033[0;91m"
