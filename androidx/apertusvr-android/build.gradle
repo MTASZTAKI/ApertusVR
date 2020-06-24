@@ -20,8 +20,13 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        flatDir {
+            dirs 'libs'
+        }
     }
+
+
+    buildDir = "c:/ApertusVR/build/android/${rootProject.name}/${project.name}"
 }
 
 task clean(type: Delete) {
