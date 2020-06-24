@@ -36,16 +36,13 @@ import org.apertusvr.*;
 import com.google.android.filament.*;
 import com.google.android.filament.android.UiHelper;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 public class apeFilamentRenderPlugin implements apePlugin {
@@ -122,7 +119,6 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
     @Override
     public void onStart() {
-
     }
 
     @Override
@@ -167,9 +163,15 @@ public class apeFilamentRenderPlugin implements apePlugin {
     }
 
     private void setupMaterials() {
-        mColoredMaterial = loadMaterial("materials/defaultColoredMat.filamat");
-        mTexturedMaterial = loadMaterial("materials/defaultTexturedMat.filamat");
-        mMtlLoader = new apeFilaMtlLoader(mColoredMaterial,mTexturedMaterial, this);
+        mColoredMaterial = loadMaterialAsset("materials/defaultColoredMat.filamat");
+        mTexturedMaterial = loadMaterialAsset("materials/defaultTexturedMat.filamat");
+        mMtlLoader = new apeFilaMtlLoader(mColoredMaterial, mTexturedMaterial, this);
+
+        MaterialInstance defaultMat = mColoredMaterial.createInstance();
+        defaultMat.setParameter("albedo",0.5f,0.5f,0.5f);
+        defaultMat.setParameter("metallic",0.0f);
+        defaultMat.setParameter("roughness",0.5f);
+        mMaterialInstances.put("DefaultMaterial", defaultMat);
     }
 
     /* -- event processing -- */
@@ -255,6 +257,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
             mLightEventDoubleQueue.pop();
         }
 
+        /* build the modified lights */
         for (Map.Entry<String,apeFilaLight> entry : mLights.entrySet()) {
             apeFilaLight filaLight = entry.getValue();
             if (!filaLight.built) {
@@ -266,43 +269,67 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
     private void processEventDoubleQueue() {
         mEventDoubleQueue.swap();
+
         while(!mEventDoubleQueue.emptyPop()) {
             apeEvent event = mEventDoubleQueue.front();
 
             if(event.group == apeEvent.Group.GEOMETRY_FILE) {
                 apeFileGeometry fileGeometry = new apeFileGeometry(event.subjectName);
+
                 if (event.type == apeEvent.Type.GEOMETRY_FILE_CREATE) {
-                    mMeshes.put(event.subjectName, null);
+                    mMeshes.put(event.subjectName, new apeFilaMesh());
                 }
                 else if(event.type == apeEvent.Type.GEOMETRY_FILE_DELETE) {
-
+                    apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
+                    if(filaMesh != null) {
+                        mScene.removeEntity(filaMesh.renderable);
+                        apeFilaMeshLoader.destroyMesh(mEngine, filaMesh);
+                        mMeshes.remove(event.subjectName);
+                    }
                 }
                 else if (event.type == apeEvent.Type.GEOMETRY_FILE_FILENAME) {
                     apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
+
                     if(filaMesh != null) {
-                        String fileName = fileGeometry.getFileName();
+                        String filePath = fileGeometry.getFileName();
+                        if(filePath.charAt(0) != '/') filePath = "/" + filePath;
+
                         try {
-                            String fileNameRaw = fileName.split(".")[0];
+                            int lastDot = filePath.lastIndexOf('.');
+                            String filePathRaw = filePath.substring(0,lastDot);
+                            String fileExt = filePath.substring(lastDot+1);
 
-                            String mtlPath = mResourcePath + fileNameRaw + ".mtl";
-                            FileInputStream fis = new FileInputStream(mtlPath);
+                            if (fileExt.equals("obj")) {
 
+                                /* load the mtl file */
+                                String mtlPath = mResourcePath + filePathRaw + ".mtl";
+                                int lastSlash = filePath.lastIndexOf('/');
+                                String folderPath = mResourcePath + filePath.substring(0,lastSlash);
+                                FileInputStream fis = new FileInputStream(mtlPath);
+                                mMtlLoader.loadMtl(
+                                        event.subjectName,
+                                        fis,
+                                        folderPath,
+                                        mMaterialInstances);
 
-                            String filameshPath = mResourcePath + fileNameRaw + ".filamesh";
-                            apeFilaMeshLoader.loadMesh(
-                                    new FileInputStream(filameshPath),
-                                    event.subjectName,
-                                    mMaterialInstances,
-                                    mEngine,
-                                    filaMesh
-                            );
+                                /* load the filamesh file */
+                                String filameshPath = mResourcePath + filePathRaw + ".filamesh";
+                                apeFilaMeshLoader.loadMesh(
+                                        new FileInputStream(filameshPath),
+                                        event.subjectName,
+                                        mMaterialInstances,
+                                        mEngine,
+                                        filaMesh
+                                );
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }
                 else if (event.type == apeEvent.Type.GEOMETRY_FILE_PARENTNODE) {
-
+                    apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
+                    if (filaMesh != null) filaMesh.parentNode = fileGeometry.getParentNode();
                 }
 
             }
@@ -310,8 +337,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
             }
 
-
-            mEventDoubleQueue.front();
+            mEventDoubleQueue.pop();
         }
     }
 
@@ -377,7 +403,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
     /* -- readers, loaders --*/
 
-    private Material loadMaterial(String assetName) {
+    private Material loadMaterialAsset(String assetName) {
         try {
             ByteBuffer buffer = readUncompressedAsset(assetName);
             Material.Builder builder = new Material.Builder();

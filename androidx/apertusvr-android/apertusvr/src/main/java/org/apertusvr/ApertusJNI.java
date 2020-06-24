@@ -141,6 +141,17 @@ public final class ApertusJNI {
     static native float getFileGeometryUnitScale(String nativeFileGeometry);
     static native void setFileGeometryUnitScale(String nativeFileGeometry, float unitScale);
 
+    /* --- PlaneGeometry --- */
+    static native void setPlaneGeometryParameters(String nativePlaneGeometry, float numSegX, float numSegY, float sizeX, float sizeY, float tileX, float tileY);
+    static native @Size(2) float[] getPlaneGeometryNumSeg(String nativePlaneGeometry);
+    static native @Size(2) float[] getPlaneGeometrySize(String nativePlaneGeometry);
+    static native @Size(2) float[] getPlaneGeometryTile(String nativePlaneGeometry);
+    static native void setPlaneGeometryParentNode(String nativePlaneGeometry, String parentNodeName);
+    static native void setPlaneGeometryMaterial(String nativePlaneGeometry, String nativeMaterial);
+    static native String getPlaneGeometryMaterial(String nativePlaneGeometry);
+    static native void setPlaneGeometryOwner(String nativePlaneGeometry, String nativeOwner);
+    static native String getPlaneGeometryOwner(String nativePlaneGeometry);
+
     /* --- Material --- */
     static native int getMaterialCullingMode(String nativeMaterial);
     static native int getMaterialManualCullingMode(String nativeMaterial);

@@ -143,12 +143,10 @@ final class apeFilaMtlLoader {
             }
 
             TextureSampler sampler = new TextureSampler();
-
             pbrMat.setParameter("albedo", baseColor, sampler);
 
         } else {
             pbrMat = mColoredMaterial.createInstance();
-
             pbrMat.setParameter("albedo",mtlRecord.Kd[0],mtlRecord.Kd[1],mtlRecord.Kd[2]);
         }
 

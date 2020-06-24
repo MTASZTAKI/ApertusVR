@@ -30,14 +30,14 @@ class apeFilaMeshLoader {
     static final private long HEADER_FLAG_SNORM16_UV  = 0x2L;
     static final private long HEADER_FLAG_COMPRESSED  = 0x4L;
 
-    public static void destroyMesh(Engine engine, apeFilaMesh mesh) {
+    static void destroyMesh(Engine engine, apeFilaMesh mesh) {
         engine.destroyEntity(mesh.renderable);
         engine.destroyIndexBuffer(mesh.indexBuffer);
         engine.destroyVertexBuffer(mesh.vertexBuffer);
         EntityManager.get().destroy(mesh.renderable);
     }
 
-    public static void loadMesh(InputStream input, String name, Map<String, MaterialInstance> materials, Engine engine, apeFilaMesh target) {
+    static void loadMesh(InputStream input, String name, Map<String, MaterialInstance> materials, Engine engine, apeFilaMesh target) {
 
         // InputStream input;
         Header header;
