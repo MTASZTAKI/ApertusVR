@@ -71,6 +71,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
     private Material mTexturedMaterial;
     private TreeMap<String, MaterialInstance> mMaterialInstances;
 
+
     private TreeMap<String, apeFilaMesh> mMeshes;
     private TreeMap<String, apeFilaLight> mLights;
 
@@ -86,7 +87,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
     private static final apeColor CLEAR_COLOR = new apeColor(0.35f,0.35f,0.35f,1.0f);
     private static final apeDegree FOV = new apeDegree(45.0f);
 
-
+    private apeFilaMtlLoader mMtlLoader;
 
     public apeFilamentRenderPlugin(Context context, Lifecycle lifecycle, SurfaceView surfaceView, AssetManager assets, String resourcePath) {
         mContext = context;
@@ -110,6 +111,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
         setupSurfaceView();
         setupFilament();
         setupView();
+        setupMaterials();
 
         /* event connection */
         apeEventManager.connectEvent(apeEvent.Group.NODE, mEventCallback);
@@ -163,6 +165,14 @@ public class apeFilamentRenderPlugin implements apePlugin {
         options.enabled = true;
         mView.setDynamicResolutionOptions(options);
     }
+
+    private void setupMaterials() {
+        mColoredMaterial = loadMaterial("materials/defaultColoredMat.filamat");
+        mTexturedMaterial = loadMaterial("materials/defaultTexturedMat.filamat");
+        mMtlLoader = new apeFilaMtlLoader(mColoredMaterial,mTexturedMaterial, this);
+    }
+
+    /* -- event processing -- */
 
     private void processLightEventDoubleQueue() {
         mLightEventDoubleQueue.swap();
@@ -305,7 +315,21 @@ public class apeFilamentRenderPlugin implements apePlugin {
         }
     }
 
-    /* -- Callback functors -- */
+    /* -- getters for utils -- */
+
+    Engine getEngine() {
+        return mEngine;
+    }
+
+    Context getContext() {
+        return mContext;
+    }
+
+    AssetManager getAssets() {
+        return mAssets;
+    }
+
+    /* -- callback functors -- */
 
     class EventCallback implements apeEventCallback {
 
@@ -349,6 +373,22 @@ public class apeFilamentRenderPlugin implements apePlugin {
             mCamera.setProjection(FOV.degree, aspect,0.1,20.0, Camera.Fov.VERTICAL);
             mView.setViewport(new Viewport(0,0,width,height));
         }
+    }
+
+    /* -- readers, loaders --*/
+
+    private Material loadMaterial(String assetName) {
+        try {
+            ByteBuffer buffer = readUncompressedAsset(assetName);
+            Material.Builder builder = new Material.Builder();
+            builder.payload(buffer, buffer.remaining());
+            return builder.build(mEngine);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private ByteBuffer readUncompressedAsset(String assetName) throws IOException {
