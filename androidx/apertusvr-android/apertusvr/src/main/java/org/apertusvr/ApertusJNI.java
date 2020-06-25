@@ -146,6 +146,7 @@ public final class ApertusJNI {
     static native @Size(2) float[] getPlaneGeometryNumSeg(String nativePlaneGeometry);
     static native @Size(2) float[] getPlaneGeometrySize(String nativePlaneGeometry);
     static native @Size(2) float[] getPlaneGeometryTile(String nativePlaneGeometry);
+    static native @Size(6) float[] getPlaneGeometryParameters(String nativePlaneGeometry);
     static native void setPlaneGeometryParentNode(String nativePlaneGeometry, String parentNodeName);
     static native void setPlaneGeometryMaterial(String nativePlaneGeometry, String nativeMaterial);
     static native String getPlaneGeometryMaterial(String nativePlaneGeometry);

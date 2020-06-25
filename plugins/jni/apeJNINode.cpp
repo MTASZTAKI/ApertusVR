@@ -51,7 +51,7 @@ Java_org_apertusvr_ApertusJNI_getNodePosition(JNIEnv *env, jclass clazz, jstring
 
     env->ReleaseStringUTFChars(native_node,name);
 
-    float positionArray[] = {position.x,position.y,position.y};
+    float positionArray[] = {position.x,position.y,position.z};
     jfloatArray jPositionArray = env->NewFloatArray(3);
     env->SetFloatArrayRegion(jPositionArray,0,3,positionArray);
 
@@ -71,7 +71,7 @@ Java_org_apertusvr_ApertusJNI_getNodeDerivedPosition(JNIEnv *env, jclass clazz, 
 
     env->ReleaseStringUTFChars(native_node,name);
 
-    float positionArray[] = {position.x,position.y,position.y};
+    float positionArray[] = {position.x,position.y,position.z};
     jfloatArray jPositionArray = env->NewFloatArray(3);
     env->SetFloatArrayRegion(jPositionArray,0,3,positionArray);
 
@@ -150,7 +150,7 @@ Java_org_apertusvr_ApertusJNI_getNodeDerivedScale(JNIEnv *env, jclass clazz, jst
 
     env->ReleaseStringUTFChars(native_node,name);
 
-    float outArrayBuf[] = {derivedScale.x,derivedScale.y,derivedScale.y};
+    float outArrayBuf[] = {derivedScale.x,derivedScale.y,derivedScale.z};
     jfloatArray jOutArray = env->NewFloatArray(3);
     env->SetFloatArrayRegion(jOutArray,0,3,outArrayBuf);
 

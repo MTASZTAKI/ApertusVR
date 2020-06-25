@@ -28,6 +28,8 @@ Java_org_apertusvr_ApertusJNI_getFileGeometryFileName(JNIEnv *env, jclass clazz,
     if(auto fileGeometryShared = std::static_pointer_cast<ape::IFileGeometry>(jniPlugin->getSceneManager()->getEntity(std::string(name)).lock()))
         fileName = fileGeometryShared->getFileName().c_str();
 
+    env->ReleaseStringUTFChars(native_file_geometry,name);
+
     return env->NewStringUTF(fileName);
 }
 
@@ -55,14 +57,14 @@ Java_org_apertusvr_ApertusJNI_setFileGeometryMaterial(JNIEnv *env, jclass clazz,
 {
     ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
     const char* name = env->GetStringUTFChars(native_file_geometry, NULL);
-    const char* material_name = env->GetStringUTFChars(native_material, NULL);
+    const char* materialName = env->GetStringUTFChars(native_material, NULL);
 
-    ape::MaterialWeakPtr materialWeak = std::static_pointer_cast<ape::Material>(jniPlugin->getSceneManager()->getEntity(std::string(material_name)).lock());
+    ape::MaterialWeakPtr materialWeak = std::static_pointer_cast<ape::Material>(jniPlugin->getSceneManager()->getEntity(std::string(materialName)).lock());
     if(auto fileGeometryShared = std::static_pointer_cast<ape::IFileGeometry>(jniPlugin->getSceneManager()->getEntity(std::string(name)).lock()))
         fileGeometryShared->setMaterial(materialWeak);
 
     env->ReleaseStringUTFChars(native_file_geometry, name);
-    env->ReleaseStringUTFChars(native_material, material_name);
+    env->ReleaseStringUTFChars(native_material, materialName);
 }
 
 extern "C"
