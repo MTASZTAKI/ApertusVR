@@ -172,6 +172,29 @@ public final class ApertusJNI {
     static native void setFileMaterialOwner(String nativeFileMaterial, String ownerID);
     static native String getFileMaterialOwner(String nativeFileMaterial);
 
+    /* --- ManualMaterial --- */
+    static native void setManualMaterialDiffuseColor(String nativeManualMaterial, float r, float g, float b, float a);
+    static native void setManualMaterialSpecularColor(String nativeManualMaterial, float r, float g, float b, float a);
+    static native @Size(4) float[] getManualMaterialDiffuseColor(String nativeManualMaterial);
+    static native @Size(4) float[] getManualMaterialSpecularColor(String nativeManualMaterial);
+    static native void setManualMaterialAmbientColor(String nativeManualMaterial, float r, float g, float b, float a);
+    static native void setManualMaterialEmissiveColor(String nativeManualMaterial, float r, float g, float b, float a);
+    static native @Size(4) float[] getManualMaterialAmbientColor(String nativeManualMaterial);
+    static native @Size(4) float[] getManualMaterialEmissiveColor(String nativeManualMaterial);
+    static native void setManualMaterialTexture(String nativeManualMaterial, String nativeTexture);
+    static native String getManualMaterialTexture(String nativeManualMaterial);
+    static native void setManualMaterialCullingMode(String nativeManualMaterial, int cullingMode);
+    static native void setManualMaterialSceneBlending(String nativeManualMaterial, int sceneBlendingType);
+    static native void setManualMaterialDepthWriteEnabled(String nativeManualMaterial, boolean enable);
+    static native void setManualMaterialDepthCheckEnabled(String nativeManualMaterial, boolean enable);
+    static native void setManualMaterialLightingEnabled(String nativeManualMaterial, boolean enable);
+    static native void setManualMaterialManualCullingMode(String nativeManualMaterial, int manualcullingMode);
+    static native void setManualMaterialDepthBias(String nativeManualMaterial, float constantBias, float slopeScaleBias);
+    static native void showManualMaterialOnOverlay(String nativeManualMaterial, boolean enable, int zOrder);
+    static native int getManualMaterialZOrder(String nativeManualMaterial);
+    static native void setManualMaterialOwner(String nativeManualMaterial, String ownerID);
+    static native String getManualMaterialOwner(String nativeManualMaterial);
+
     /* --- FileTexture --- */
     static native void setFileTextureFileName(String nativeFileTexture, String fileName);
     static native String getFileTextureFileName(String nativeFileTexture);

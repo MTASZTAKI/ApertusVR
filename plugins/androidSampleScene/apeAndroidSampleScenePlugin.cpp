@@ -25,6 +25,7 @@ SOFTWARE.*/
 #include "apeILight.h"
 #include "apeIPlaneGeometry.h"
 #include "apeIFileGeometry.h"
+#include "apeIManualMaterial.h"
 
 
 ape::AndroidSampleScenePlugin::AndroidSampleScenePlugin()
@@ -102,6 +103,15 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 		{
 			plane->setParameters(ape::Vector2(),ape::Vector2(100,100),ape::Vector2());
 			plane->setParentNode(planeNode);
+
+			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(
+					mpSceneManager->createEntity("plane01Material",ape::Entity::MATERIAL_MANUAL,
+							false,"androidSampleScene").lock()))
+			{
+				material->setAmbientColor(ape::Color(0.2f,0.2f,0.2f));
+				material->setDiffuseColor(ape::Color(0.4f,0.4f,0.4f));
+				material->setSpecularColor(ape::Color(0.5f,0.5f,0.5f));
+			}
 		}
 	}
 

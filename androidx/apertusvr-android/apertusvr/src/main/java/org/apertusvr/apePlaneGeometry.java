@@ -42,7 +42,7 @@ public class apePlaneGeometry extends apeGeometry {
     }
 
 
-    protected apePlaneGeometry(String name) {
+    public apePlaneGeometry(String name) {
         super(name, Type.GEOMETRY_PLANE);
     }
 
@@ -50,42 +50,42 @@ public class apePlaneGeometry extends apeGeometry {
         ApertusJNI.setPlaneGeometryParameters(mName, numSeg.x, numSeg.y, size.x, size.y, tile.x, tile.y);
     }
 
-    apeVector2 getNumSeg() {
+    public apeVector2 getNumSeg() {
         return new apeVector2(ApertusJNI.getPlaneGeometryNumSeg(mName));
     }
 
-    apeVector2 getSize() {
+    public apeVector2 getSize() {
         return new apeVector2(ApertusJNI.getPlaneGeometrySize(mName));
     }
 
-    apeVector2 getTile() {
+    public apeVector2 getTile() {
         return new apeVector2(ApertusJNI.getPlaneGeometryTile(mName));
     }
 
-    GeometryPlaneParameters getParameters() {
+    public GeometryPlaneParameters getParameters() {
         return new GeometryPlaneParameters(ApertusJNI.getPlaneGeometryParameters(mName));
     }
 
-    void setParentNode(apeNode parentNode) {
+    public void setParentNode(apeNode parentNode) {
         ApertusJNI.setPlaneGeometryParentNode(mName, parentNode.getName());
     }
 
-    void setMaterial(apeMaterial material) {
+    public void setMaterial(apeMaterial material) {
         ApertusJNI.setPlaneGeometryMaterial(mName, material.getName());
     }
 
-    apeMaterial getMaterial() {
+    public apeMaterial getMaterial() {
         String materialName = ApertusJNI.getPlaneGeometryMaterial(mName);
         apeEntity.Type materialType = apeEntity.Type.values()[ApertusJNI.getEntityType(mName)];
 
         return new apeMaterial(materialName,materialType);
     }
 
-    void setOwner(String ownerID) {
+    public void setOwner(String ownerID) {
         ApertusJNI.setPlaneGeometryOwner(mName, ownerID);
     }
 
-    String getOwner() {
+    public String getOwner() {
         return ApertusJNI.getPlaneGeometryOwner(mName);
     }
 }

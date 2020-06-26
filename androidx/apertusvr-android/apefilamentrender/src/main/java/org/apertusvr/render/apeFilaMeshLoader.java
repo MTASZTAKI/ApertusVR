@@ -19,6 +19,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,7 +38,10 @@ class apeFilaMeshLoader {
         EntityManager.get().destroy(mesh.renderable);
     }
 
-    static void loadMesh(InputStream input, String name, Map<String, MaterialInstance> materials, Engine engine, apeFilaMesh target) {
+    static void loadMesh(InputStream input, String name,
+                         Map<String, MaterialInstance> materials,
+                         Engine engine, apeFilaMesh target,
+                         String defaultMatName) {
 
         // InputStream input;
         Header header;
@@ -56,14 +60,14 @@ class apeFilaMeshLoader {
             VertexBuffer vertexBuffer = createVertexBuffer(engine, header, vertexBufferData);
 
             @Entity int renderableEntity = createRenderable(
-                    name, engine, header, indexBuffer, vertexBuffer, parts, definedMaterials, materials);
+                    name, engine, header, indexBuffer,
+                    vertexBuffer, parts, definedMaterials,
+                    materials, defaultMatName);
 
             target.renderable = renderableEntity;
             target.indexBuffer = indexBuffer;
             target.vertexBuffer = vertexBuffer;
             target.aabb = header.aabb;
-            //return new apeFilaMesh(renderableEntity, indexBuffer, vertexBuffer, header.aabb);
-
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -71,6 +75,13 @@ class apeFilaMeshLoader {
 
         Log.e("Filament","Something bad happened at mesh loading");
         //return null;
+    }
+
+    static void loadMesh(InputStream input, String name,
+                         MaterialInstance material,
+                         Engine engine, apeFilaMesh target,
+                         String matName) {
+        loadMesh(input, name, Collections.singletonMap(matName,material),engine,target,matName);
     }
 
     private static Header readHeader(InputStream input) throws IOException {
@@ -239,7 +250,8 @@ class apeFilaMeshLoader {
             VertexBuffer vertexBuffer,
             List<Part> parts,
             List<String> definedMaterials,
-            Map<String,MaterialInstance> materials) {
+            Map<String,MaterialInstance> materials,
+            String defaultMatName) {
 
         RenderableManager.Builder builder = new RenderableManager.Builder((int)header.parts);
         builder.boundingBox(header.aabb);
@@ -261,7 +273,7 @@ class apeFilaMeshLoader {
                 builder.material(i, material);
             }
             else {
-                builder.material(i, Objects.requireNonNull(materials.get("DefaultMaterial")));
+                builder.material(i, Objects.requireNonNull(materials.get(defaultMatName)));
             }
         }
 

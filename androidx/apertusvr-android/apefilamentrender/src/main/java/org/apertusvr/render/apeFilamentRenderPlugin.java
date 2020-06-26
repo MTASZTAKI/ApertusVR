@@ -83,6 +83,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
     private static final float MAT_EPS = 1e-8f;
     private static final apeColor CLEAR_COLOR = new apeColor(0.35f,0.35f,0.35f,1.0f);
     private static final apeDegree FOV = new apeDegree(45.0f);
+    private static final String DEFAULT_MAT_NAME = "DefaultMaterial";
 
     private apeFilaMtlLoader mMtlLoader;
 
@@ -115,6 +116,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
         apeEventManager.connectEvent(apeEvent.Group.LIGHT, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_FILE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_PLANE, mEventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.MATERIAL_MANUAL, mEventCallback);
     }
 
     @Override
@@ -171,7 +173,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
         defaultMat.setParameter("albedo",0.5f,0.5f,0.5f);
         defaultMat.setParameter("metallic",0.0f);
         defaultMat.setParameter("roughness",0.5f);
-        mMaterialInstances.put("DefaultMaterial", defaultMat);
+        mMaterialInstances.put(DEFAULT_MAT_NAME, defaultMat);
     }
 
     /* -- event processing -- */
@@ -276,64 +278,83 @@ public class apeFilamentRenderPlugin implements apePlugin {
             if(event.group == apeEvent.Group.GEOMETRY_FILE) {
                 apeFileGeometry fileGeometry = new apeFileGeometry(event.subjectName);
 
-                if (event.type == apeEvent.Type.GEOMETRY_FILE_CREATE) {
-                    mMeshes.put(event.subjectName, new apeFilaMesh());
-                }
-                else if(event.type == apeEvent.Type.GEOMETRY_FILE_DELETE) {
-                    apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
-                    if(filaMesh != null) {
-                        mScene.removeEntity(filaMesh.renderable);
-                        apeFilaMeshLoader.destroyMesh(mEngine, filaMesh);
-                        mMeshes.remove(event.subjectName);
-                    }
-                }
-                else if (event.type == apeEvent.Type.GEOMETRY_FILE_FILENAME) {
-                    apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
-
-                    if(filaMesh != null) {
-                        String filePath = fileGeometry.getFileName();
-                        if(filePath.charAt(0) != '/') filePath = "/" + filePath;
-
-                        try {
-                            int lastDot = filePath.lastIndexOf('.');
-                            String filePathRaw = filePath.substring(0,lastDot);
-                            String fileExt = filePath.substring(lastDot+1);
-
-                            if (fileExt.equals("obj")) {
-
-                                /* load the mtl file */
-                                String mtlPath = mResourcePath + filePathRaw + ".mtl";
-                                int lastSlash = filePath.lastIndexOf('/');
-                                String folderPath = mResourcePath + filePath.substring(0,lastSlash);
-                                FileInputStream fis = new FileInputStream(mtlPath);
-                                mMtlLoader.loadMtl(
-                                        event.subjectName,
-                                        fis,
-                                        folderPath,
-                                        mMaterialInstances);
-
-                                /* load the filamesh file */
-                                String filameshPath = mResourcePath + filePathRaw + ".filamesh";
-                                apeFilaMeshLoader.loadMesh(
-                                        new FileInputStream(filameshPath),
-                                        event.subjectName,
-                                        mMaterialInstances,
-                                        mEngine,
-                                        filaMesh
-                                );
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                if(fileGeometry.isValid()) {
+                    if (event.type == apeEvent.Type.GEOMETRY_FILE_CREATE) {
+                        mMeshes.put(event.subjectName, new apeFilaMesh());
+                    } else if (event.type == apeEvent.Type.GEOMETRY_FILE_DELETE) {
+                        apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
+                        if (filaMesh != null) {
+                            mScene.removeEntity(filaMesh.renderable);
+                            apeFilaMeshLoader.destroyMesh(mEngine, filaMesh);
+                            mMeshes.remove(event.subjectName);
                         }
+                    } else if (event.type == apeEvent.Type.GEOMETRY_FILE_FILENAME) {
+                        apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
+
+                        if (filaMesh != null) {
+                            String filePath = fileGeometry.getFileName();
+                            if (filePath.charAt(0) != '/') filePath = "/" + filePath;
+
+                            try {
+                                int lastDot = filePath.lastIndexOf('.');
+                                String filePathRaw = filePath.substring(0, lastDot);
+                                String fileExt = filePath.substring(lastDot + 1);
+
+                                if (fileExt.equals("obj")) {
+
+                                    /* load the mtl file */
+                                    String mtlPath = mResourcePath + filePathRaw + ".mtl";
+                                    int lastSlash = filePath.lastIndexOf('/');
+                                    String folderPath = mResourcePath + filePath.substring(0, lastSlash);
+                                    FileInputStream fis = new FileInputStream(mtlPath);
+                                    mMtlLoader.loadMtl(
+                                            event.subjectName,
+                                            fis,
+                                            folderPath,
+                                            mMaterialInstances);
+
+                                    /* load the filamesh file */
+                                    String filameshPath = mResourcePath + filePathRaw + ".filamesh";
+                                    apeFilaMeshLoader.loadMesh(
+                                            new FileInputStream(filameshPath),
+                                            event.subjectName,
+                                            mMaterialInstances,
+                                            mEngine,
+                                            filaMesh,
+                                            DEFAULT_MAT_NAME
+                                    );
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else if (event.type == apeEvent.Type.GEOMETRY_FILE_PARENTNODE) {
+                        apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
+                        if (filaMesh != null) filaMesh.parentNode = fileGeometry.getParentNode();
                     }
                 }
-                else if (event.type == apeEvent.Type.GEOMETRY_FILE_PARENTNODE) {
-                    apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
-                    if (filaMesh != null) filaMesh.parentNode = fileGeometry.getParentNode();
-                }
-
             }
             else if (event.group == apeEvent.Group.GEOMETRY_PLANE) {
+                apePlaneGeometry planeGeometry = new apePlaneGeometry(event.subjectName);
+
+                if(planeGeometry.isValid()) {
+                    if (event.type == apeEvent.Type.GEOMETRY_PLANE_CREATE) {
+                        mMeshes.put(event.subjectName, new apeFilaPlaneMesh());
+                    } else if (event.type == apeEvent.Type.GEOMETRY_PLANE_DELETE) {
+
+                    } else if (event.type == apeEvent.Type.GEOMETRY_PLANE_PARAMETERS) {
+                        apeFilaPlaneMesh filaPlane = (apeFilaPlaneMesh) mMeshes.get(event.subjectName);
+
+                        if (filaPlane != null)
+                            filaPlane.size = planeGeometry.getSize();
+                    } else if (event.type == apeEvent.Type.GEOMETRY_PLANE_MATERIAL) {
+
+                    } else if (event.type == apeEvent.Type.GEOMETRY_PLANE_PARENTNODE) {
+
+                    }
+                }
+            }
+            else if(event.group == apeEvent.Group.MATERIAL_MANUAL) {
 
             }
 

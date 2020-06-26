@@ -28,10 +28,11 @@ set(SOURCES
         apeJNICamera.cpp
         apeJNIGeometry.cpp
         apeJNIFileGeometry.cpp
+        apeJNIPlaneGeometry.cpp
         apeJNIMaterial.cpp
         apeJNIFileMaterial.cpp
+        apeJNIManualMaterial.cpp
         apeJNIFileTexture.cpp
-        apeJNIPlaneGeometry.cpp
         )
 
 set(HEADERS
