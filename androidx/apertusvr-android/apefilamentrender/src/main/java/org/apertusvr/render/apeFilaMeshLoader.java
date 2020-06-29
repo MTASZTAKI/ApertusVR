@@ -1,5 +1,6 @@
 package org.apertusvr.render;
 
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.google.android.filament.Box;

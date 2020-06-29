@@ -66,6 +66,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
     private Material mColoredMaterial;
     private Material mTexturedMaterial;
+    private Material mManualMaterial;
     private TreeMap<String, MaterialInstance> mMaterialInstances;
 
 
@@ -81,13 +82,14 @@ public class apeFilamentRenderPlugin implements apePlugin {
     private apeDoubleQueue<apeEvent> mLightEventDoubleQueue;
 
     private static final float MAT_EPS = 1e-8f;
-    private static final apeColor CLEAR_COLOR = new apeColor(0.35f,0.35f,0.35f,1.0f);
+    private static final apeColor CLEAR_COLOR = new apeColor(0.35f, 0.35f, 0.35f, 1.0f);
     private static final apeDegree FOV = new apeDegree(45.0f);
     private static final String DEFAULT_MAT_NAME = "DefaultMaterial";
 
     private apeFilaMtlLoader mMtlLoader;
 
-    public apeFilamentRenderPlugin(Context context, Lifecycle lifecycle, SurfaceView surfaceView, AssetManager assets, String resourcePath) {
+    public apeFilamentRenderPlugin(Context context, Lifecycle lifecycle, SurfaceView surfaceView,
+                                   AssetManager assets, String resourcePath) {
         mContext = context;
         mLifecycle = lifecycle;
         mSurfaceView = surfaceView;
@@ -135,7 +137,13 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
     @Override
     public void onDestroy() {
+        /* destroy meshes */
 
+        /* destroy lights */
+
+        /* destroy material instances */
+
+        /* destroy materials */
     }
 
     /* -- setup functions -- */
@@ -154,8 +162,8 @@ public class apeFilamentRenderPlugin implements apePlugin {
         mCamera = mEngine.createCamera();
     }
 
-    private void setupView () {
-        mView.setClearColor(CLEAR_COLOR.r,CLEAR_COLOR.g,CLEAR_COLOR.b,CLEAR_COLOR.a);
+    private void setupView() {
+        mView.setClearColor(CLEAR_COLOR.r, CLEAR_COLOR.g, CLEAR_COLOR.b, CLEAR_COLOR.a);
         mView.setAmbientOcclusion(View.AmbientOcclusion.SSAO);
         mView.setCamera(mCamera);
         mView.setScene(mScene);
@@ -167,12 +175,13 @@ public class apeFilamentRenderPlugin implements apePlugin {
     private void setupMaterials() {
         mColoredMaterial = loadMaterialAsset("materials/defaultColoredMat.filamat");
         mTexturedMaterial = loadMaterialAsset("materials/defaultTexturedMat.filamat");
+        mManualMaterial = loadMaterialAsset("materials/manualMat.filamat");
         mMtlLoader = new apeFilaMtlLoader(mColoredMaterial, mTexturedMaterial, this);
 
         MaterialInstance defaultMat = mColoredMaterial.createInstance();
-        defaultMat.setParameter("albedo",0.5f,0.5f,0.5f);
-        defaultMat.setParameter("metallic",0.0f);
-        defaultMat.setParameter("roughness",0.5f);
+        defaultMat.setParameter("albedo", 0.5f, 0.5f, 0.5f);
+        defaultMat.setParameter("metallic", 0.0f);
+        defaultMat.setParameter("roughness", 0.5f);
         mMaterialInstances.put(DEFAULT_MAT_NAME, defaultMat);
     }
 
@@ -180,11 +189,12 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
     private void processLightEventDoubleQueue() {
         mLightEventDoubleQueue.swap();
-        while(!mLightEventDoubleQueue.emptyPop()) {
+        while (!mLightEventDoubleQueue.emptyPop()) {
             apeEvent event = mLightEventDoubleQueue.front();
 
-            apeLight light = (apeLight) apeSceneManager.getEntity(event.subjectName);
-            if (light != null) {
+            apeLight light = new apeLight(event.subjectName);
+
+            if (light.isValid()) {
                 if (event.type == apeEvent.Type.LIGHT_CREATE) {
                     apeFilaLight filaLight = new apeFilaLight();
                     filaLight.light = EntityManager.get().create();
@@ -204,7 +214,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
                     apeLight.LightType apeLightType = light.getLightType();
                     LightManager.Type filaLightType = apeFilaLight.ape2filaType(apeLightType);
                     apeFilaLight filaLight = mLights.get(event.subjectName);
-                    if(filaLightType != null && filaLight != null) {
+                    if (filaLightType != null && filaLight != null) {
                         filaLight.lightBuilder = new LightManager.Builder(filaLightType);
                     }
                 }
@@ -213,33 +223,33 @@ public class apeFilamentRenderPlugin implements apePlugin {
                 }
                 else if (event.type == apeEvent.Type.LIGHT_DIRECTION) {
                     apeFilaLight filaLight = mLights.get(event.subjectName);
-                    if(filaLight != null && filaLight.lightBuilder != null) {
+                    if (filaLight != null && filaLight.lightBuilder != null) {
                         apeVector3 direction = light.getLightDirection();
-                        filaLight.lightBuilder.direction(direction.x,direction.y,direction.z);
+                        filaLight.lightBuilder.direction(direction.x, direction.y, direction.z);
                         filaLight.built = false;
                     }
                 }
                 else if (event.type == apeEvent.Type.LIGHT_DIFFUSE) {
                     apeFilaLight filaLight = mLights.get(event.subjectName);
-                    if(filaLight != null && filaLight.lightBuilder != null) {
+                    if (filaLight != null && filaLight.lightBuilder != null) {
                         apeColor color = light.getDiffuseColor();
-                        filaLight.lightBuilder.color(color.r,color.g,color.b);
+                        filaLight.lightBuilder.color(color.r, color.g, color.b);
                         filaLight.built = false;
                     }
                 }
                 else if (event.type == apeEvent.Type.LIGHT_SPECULAR) {
                     apeFilaLight filaLight = mLights.get(event.subjectName);
                     apeColor specular = light.getSpecularColor();
-                    if(filaLight != null && filaLight.lightBuilder != null) {
+                    if (filaLight != null && filaLight.lightBuilder != null) {
                         float x = specular.r * specular.g * specular.b;
-                        float intensity = (float) Math.pow(10,6*Math.log10(1 + 9*x));
+                        float intensity = (float) Math.pow(10, 6 * Math.log10(1 + 9 * x));
                         filaLight.lightBuilder.intensity(intensity);
                         filaLight.built = false;
                     }
                 }
                 else if (event.type == apeEvent.Type.LIGHT_SPOTRANGE) {
                     apeFilaLight filaLight = mLights.get(event.subjectName);
-                    if(filaLight != null && filaLight.lightBuilder != null) {
+                    if (filaLight != null && filaLight.lightBuilder != null) {
                         apeLight.LightSpotRange spotRange = light.getLightSpotRange();
                         filaLight.lightBuilder
                                 .falloff(spotRange.falloff)
@@ -251,7 +261,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
                 }
                 else if (event.type == apeEvent.Type.LIGHT_PARENTNODE) {
                     apeFilaLight filaLight = mLights.get(event.subjectName);
-                    if(filaLight != null) {
+                    if (filaLight != null) {
                         filaLight.parentNode = light.getParentNode();
                     }
                 }
@@ -260,7 +270,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
         }
 
         /* build the modified lights */
-        for (Map.Entry<String,apeFilaLight> entry : mLights.entrySet()) {
+        for (Map.Entry<String, apeFilaLight> entry : mLights.entrySet()) {
             apeFilaLight filaLight = entry.getValue();
             if (!filaLight.built) {
                 filaLight.lightBuilder.build(mEngine, filaLight.light);
@@ -272,23 +282,25 @@ public class apeFilamentRenderPlugin implements apePlugin {
     private void processEventDoubleQueue() {
         mEventDoubleQueue.swap();
 
-        while(!mEventDoubleQueue.emptyPop()) {
+        while (!mEventDoubleQueue.emptyPop()) {
             apeEvent event = mEventDoubleQueue.front();
 
-            if(event.group == apeEvent.Group.GEOMETRY_FILE) {
+            if (event.group == apeEvent.Group.GEOMETRY_FILE) {
                 apeFileGeometry fileGeometry = new apeFileGeometry(event.subjectName);
 
-                if(fileGeometry.isValid()) {
+                if (fileGeometry.isValid()) {
                     if (event.type == apeEvent.Type.GEOMETRY_FILE_CREATE) {
                         mMeshes.put(event.subjectName, new apeFilaMesh());
-                    } else if (event.type == apeEvent.Type.GEOMETRY_FILE_DELETE) {
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_FILE_DELETE) {
                         apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
                         if (filaMesh != null) {
                             mScene.removeEntity(filaMesh.renderable);
                             apeFilaMeshLoader.destroyMesh(mEngine, filaMesh);
                             mMeshes.remove(event.subjectName);
                         }
-                    } else if (event.type == apeEvent.Type.GEOMETRY_FILE_FILENAME) {
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_FILE_FILENAME) {
                         apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
 
                         if (filaMesh != null) {
@@ -328,36 +340,119 @@ public class apeFilamentRenderPlugin implements apePlugin {
                                 e.printStackTrace();
                             }
                         }
-                    } else if (event.type == apeEvent.Type.GEOMETRY_FILE_PARENTNODE) {
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_FILE_PARENTNODE) {
                         apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
-                        if (filaMesh != null) filaMesh.parentNode = fileGeometry.getParentNode();
+                        if (filaMesh != null) {
+                            filaMesh.parentNode = fileGeometry.getParentNode();
+                        }
                     }
                 }
             }
             else if (event.group == apeEvent.Group.GEOMETRY_PLANE) {
                 apePlaneGeometry planeGeometry = new apePlaneGeometry(event.subjectName);
 
-                if(planeGeometry.isValid()) {
+                if (planeGeometry.isValid()) {
                     if (event.type == apeEvent.Type.GEOMETRY_PLANE_CREATE) {
                         mMeshes.put(event.subjectName, new apeFilaPlaneMesh());
-                    } else if (event.type == apeEvent.Type.GEOMETRY_PLANE_DELETE) {
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_PLANE_DELETE) {
 
-                    } else if (event.type == apeEvent.Type.GEOMETRY_PLANE_PARAMETERS) {
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_PLANE_PARAMETERS) {
                         apeFilaPlaneMesh filaPlane = (apeFilaPlaneMesh) mMeshes.get(event.subjectName);
-
-                        if (filaPlane != null)
+                        if (filaPlane != null) {
                             filaPlane.size = planeGeometry.getSize();
-                    } else if (event.type == apeEvent.Type.GEOMETRY_PLANE_MATERIAL) {
-
-                    } else if (event.type == apeEvent.Type.GEOMETRY_PLANE_PARENTNODE) {
-
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_PLANE_MATERIAL) {
+                        // TODO: handle the case when there's a material already attached to the plane
+                        apeFilaPlaneMesh filaPlane = (apeFilaPlaneMesh) mMeshes.get(event.subjectName);
+                        if (filaPlane != null) {
+                            apeMaterial material = planeGeometry.getMaterial();
+                            if (material.isValid()) {
+                                MaterialInstance matInst = mMaterialInstances.get(material.getName());
+                                if (matInst != null) {
+                                    try {
+                                        InputStream input = mAssets.open("primitives/plane.filamesh");
+                                        apeFilaMeshLoader.loadMesh(input, event.subjectName,
+                                                matInst, mEngine, filaPlane, material.getName());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_PLANE_PARENTNODE) {
+                        apeFilaPlaneMesh filaPlane = (apeFilaPlaneMesh) mMeshes.get(event.subjectName);
+                        if (filaPlane != null) {
+                            filaPlane.parentNode = planeGeometry.getParentNode();
+                        }
                     }
                 }
             }
-            else if(event.group == apeEvent.Group.MATERIAL_MANUAL) {
+            else if (event.group == apeEvent.Group.MATERIAL_MANUAL) {
+                apeManualMaterial manualMaterial = new apeManualMaterial(event.subjectName);
 
+                if (manualMaterial.isValid()) {
+                    if (event.type == apeEvent.Type.MATERIAL_MANUAL_CREATE) {
+                        MaterialInstance matInst = mManualMaterial.createInstance();
+                        matInst.setParameter("useTexture",false);
+                        mMaterialInstances.put(event.subjectName, matInst);
+                    }
+                    else if (event.type == apeEvent.Type.MATERIAL_MANUAL_DELETE) {
+                        MaterialInstance matInst = mMaterialInstances.get(event.subjectName);
+                        if (matInst != null) {
+                            mEngine.destroyMaterialInstance(matInst);
+                            mMaterialInstances.remove(event.subjectName);
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.MATERIAL_MANUAL_DIFFUSE) {
+                        MaterialInstance matInst = mMaterialInstances.get(event.subjectName);
+                        if (matInst != null) {
+                            apeColor diffuse = manualMaterial.getDiffuseColor();
+                            matInst.setParameter(
+                                    "albedoCol", diffuse.r, diffuse.g, diffuse.b, diffuse.a);
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.MATERIAL_MANUAL_SPECULAR) {
+                        MaterialInstance matInst = mMaterialInstances.get(event.subjectName);
+                        if (matInst != null) {
+                            apeColor specular = manualMaterial.getSpecularColor();
+                            matInst.setParameter("roughness",
+                                    apePhong2Pbr.specularExponent2roughness(
+                                            500.0f * specular.a));
+                            matInst.setParameter("metallic",
+                                    apePhong2Pbr.specular2metallic(specular));
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.MATERIAL_MANUAL_TEXTURE) {
+                        MaterialInstance matInst = mMaterialInstances.get(event.subjectName);
+                        if (matInst != null) {
+                            apeTexture texture = manualMaterial.getTexture();
+                            if (texture.isValid() && texture.getType() == apeEntity.Type.TEXTURE_FILE) {
+                                apeFileTexture fileTexture = (apeFileTexture) texture;
+                                String fileName = fileTexture.getFileName();
+                                if(!fileName.equals(ApertusJNI.NA_STR)) {
+                                    Texture albedoTex = apeFilaTextureLoader.loadTextureFile(
+                                                                mEngine, mContext, fileName,
+                                                                apeFilaTextureLoader.TextureType.COLOR);
+                                    TextureSampler sampler = new TextureSampler();
+                                    matInst.setParameter("albedoTex", albedoTex, sampler);
+                                    matInst.setParameter("useTexture",true);
+                                }
+                                else {
+                                    matInst.setParameter("useTexture",false);
+                                }
+                            }
+                            else {
+                                matInst.setParameter("useTexture",false);
+                            }
+                        }
+                    }
+                }
             }
-
             mEventDoubleQueue.pop();
         }
     }
@@ -382,9 +477,10 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
         @Override
         public void onEvent(apeEvent event) {
-            if(event.group == apeEvent.Group.LIGHT) {
+            if (event.group == apeEvent.Group.LIGHT) {
                 mLightEventDoubleQueue.push(event);
-            } else {
+            }
+            else {
                 mEventDoubleQueue.push(event);
             }
         }
@@ -401,13 +497,13 @@ public class apeFilamentRenderPlugin implements apePlugin {
     class SurfaceCallback implements UiHelper.RendererCallback {
         @Override
         public void onNativeWindowChanged(Surface surface) {
-            if(mSwapChain != null) mEngine.destroySwapChain(mSwapChain);
+            if (mSwapChain != null) mEngine.destroySwapChain(mSwapChain);
             mSwapChain = mEngine.createSwapChain(surface);
         }
 
         @Override
         public void onDetachedFromSurface() {
-            if(mSwapChain != null) {
+            if (mSwapChain != null) {
                 mEngine.destroySwapChain(mSwapChain);
                 mEngine.flushAndWait();
                 mSwapChain = null;
@@ -416,9 +512,9 @@ public class apeFilamentRenderPlugin implements apePlugin {
 
         @Override
         public void onResized(int width, int height) {
-            double aspect = (double)width/height;
-            mCamera.setProjection(FOV.degree, aspect,0.1,20.0, Camera.Fov.VERTICAL);
-            mView.setViewport(new Viewport(0,0,width,height));
+            double aspect = (double) width / height;
+            mCamera.setProjection(FOV.degree, aspect, 0.1, 20.0, Camera.Fov.VERTICAL);
+            mView.setViewport(new Viewport(0, 0, width, height));
         }
     }
 
@@ -441,7 +537,7 @@ public class apeFilamentRenderPlugin implements apePlugin {
     private ByteBuffer readUncompressedAsset(String assetName) throws IOException {
         AssetFileDescriptor fd = mAssets.openFd(assetName);
         InputStream input = fd.createInputStream();
-        ByteBuffer dst = ByteBuffer.allocate((int)fd.getLength());
+        ByteBuffer dst = ByteBuffer.allocate((int) fd.getLength());
 
         ReadableByteChannel src = Channels.newChannel(input);
         src.read(dst);

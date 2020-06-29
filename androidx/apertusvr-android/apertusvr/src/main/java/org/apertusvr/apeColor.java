@@ -34,6 +34,13 @@ public final class apeColor {
         this.a = a;
     }
 
+    public apeColor(float r, float g, float b) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        a = 1.0f;
+    }
+
     public apeColor(@Size(4) float[] rgba) {
         r = rgba[0];
         g = rgba[1];

@@ -55,8 +55,6 @@ public class apeEntity {
         mType = type;
     }
 
-    // --- getters, setters --- //
-
     public String getName() {
         return mName;
     }
@@ -69,10 +67,7 @@ public class apeEntity {
         return ApertusJNI.isEntityValidWithType(mName,mType.ordinal());
     }
 
-    // --- members --- //
-
     protected String mName;
 
     protected Type mType;
-
 }

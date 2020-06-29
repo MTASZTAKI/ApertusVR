@@ -29,6 +29,8 @@ public final class ApertusJNI {
         System.loadLibrary("apeJNIStarter");
     }
 
+    public static final String NA_STR = "N/A";
+
     public native String stringFromJNIPlugin(String jhello);
     public native void startApertusVR(AssetManager assetManager);
     public native void stopApertusVR();
