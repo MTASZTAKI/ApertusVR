@@ -71,6 +71,19 @@ ape::Vector3 ape::NodeImpl::getScale() const
 	return mScale;
 }
 
+ape::Matrix4 ape::NodeImpl::getModelMatrix() const
+{
+	return Matrix4(mScale,mOrientation,mPosition);
+}
+
+ape::Matrix4 ape::NodeImpl::getDerivedModelMatrix() const
+{
+	if (auto parentNode = mParentNode.lock())
+		return parentNode->getDerivedModelMatrix() * Matrix4(mScale,mOrientation,mPosition);
+	else
+		return Matrix4(mScale, mOrientation, mPosition);
+}
+
 ape::Vector3 ape::NodeImpl::getDerivedPosition() const
 {
 	if (auto parentNode = mParentNode.lock())

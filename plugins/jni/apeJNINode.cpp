@@ -158,6 +158,57 @@ Java_org_apertusvr_ApertusJNI_getNodeDerivedScale(JNIEnv *env, jclass clazz, jst
 }
 
 extern "C"
+JNIEXPORT jfloatArray JNICALL
+Java_org_apertusvr_ApertusJNI_getNodeModelMatrix(JNIEnv *env, jclass clazz, jstring native_node) {
+    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
+    const char* name = env->GetStringUTFChars(native_node,NULL);
+
+    ape::Matrix4 modelMx;
+    if(auto nodeShared = jniPlugin->getSceneManager()->getNode(std::string(name)).lock())
+        modelMx = nodeShared->getModelMatrix();
+
+    env->ReleaseStringUTFChars(native_node, name);
+
+    float outArrayBuf[] =
+            {
+                modelMx.m[0][0], modelMx.m[0][1], modelMx.m[0][2], modelMx.m[0][3],
+                modelMx.m[1][0], modelMx.m[1][1], modelMx.m[1][2], modelMx.m[1][3],
+                modelMx.m[2][0], modelMx.m[2][1], modelMx.m[2][2], modelMx.m[2][3],
+                modelMx.m[3][0], modelMx.m[3][1], modelMx.m[3][2], modelMx.m[3][3],
+            };
+
+    jfloatArray jOutArray = env->NewFloatArray(16);
+    env->SetFloatArrayRegion(jOutArray,0,16,outArrayBuf);
+    return jOutArray;
+}
+
+extern "C"
+JNIEXPORT jfloatArray JNICALL
+Java_org_apertusvr_ApertusJNI_getNodeDerivedModelMatrix(JNIEnv *env, jclass clazz, jstring native_node) {
+    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
+    const char* name = env->GetStringUTFChars(native_node,NULL);
+
+    ape::Matrix4 derivedModelMx;
+    if(auto nodeShared = jniPlugin->getSceneManager()->getNode(std::string(name)).lock())
+        derivedModelMx = nodeShared->getDerivedModelMatrix();
+
+    env->ReleaseStringUTFChars(native_node, name);
+
+    float outArrayBuf[] =
+            {
+                derivedModelMx.m[0][0], derivedModelMx.m[0][1], derivedModelMx.m[0][2], derivedModelMx.m[0][3],
+                derivedModelMx.m[1][0], derivedModelMx.m[1][1], derivedModelMx.m[1][2], derivedModelMx.m[1][3],
+                derivedModelMx.m[2][0], derivedModelMx.m[2][1], derivedModelMx.m[2][2], derivedModelMx.m[2][3],
+                derivedModelMx.m[3][0], derivedModelMx.m[3][1], derivedModelMx.m[3][2], derivedModelMx.m[3][3],
+            };
+
+    jfloatArray jOutArray = env->NewFloatArray(16);
+    env->SetFloatArrayRegion(jOutArray,0,16,outArrayBuf);
+    return jOutArray;
+}
+
+
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_org_apertusvr_ApertusJNI_getNodeChildrenVisibility(JNIEnv *env, jclass clazz,
                                                         jstring native_node) {

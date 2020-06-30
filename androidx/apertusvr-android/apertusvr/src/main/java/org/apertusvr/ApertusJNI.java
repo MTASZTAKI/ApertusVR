@@ -29,11 +29,15 @@ public final class ApertusJNI {
         System.loadLibrary("apeJNIStarter");
     }
 
-    public static final String NA_STR = "N/A";
+    public static final String NA_STR = "";
 
     public native String stringFromJNIPlugin(String jhello);
+
+    /* apeSystem functions */
+
     public native void startApertusVR(AssetManager assetManager);
     public native void stopApertusVR();
+
 
     /* --------------------------------------------------- */
     /* -------------- JNI wrapper functions -------------- */
@@ -46,12 +50,14 @@ public final class ApertusJNI {
 
     /* --- Node --- */
     static native boolean isNodeValid(String nativeNode);
-    static native float[] getNodePosition(String nativeNode);
-    static native float[] getNodeDerivedPosition(String nativeNode);
-    static native float[] getNodeOrientation(String nativeNode);
-    static native float[] getNodeDerivedOrientation(String nativeNode);
-    static native float[] getNodeScale(String nativeNode);
-    static native float[] getNodeDerivedScale(String nativeNode);
+    static native @Size(3) float[] getNodePosition(String nativeNode);
+    static native @Size(3) float[] getNodeDerivedPosition(String nativeNode);
+    static native @Size(4) float[] getNodeOrientation(String nativeNode);
+    static native @Size(4) float[] getNodeDerivedOrientation(String nativeNode);
+    static native @Size(3) float[] getNodeScale(String nativeNode);
+    static native @Size(3) float[] getNodeDerivedScale(String nativeNode);
+    static native @Size(16) float[] getNodeModelMatrix(String nativeNode);
+    static native @Size(16) float[] getNodeDerivedModelMatrix(String nativeNode);
     static native boolean getNodeChildrenVisibility(String nativeNode);
     static native boolean isNodeVisible(String nativeNode);
     static native boolean isNodeFixedYaw(String nativeNode);

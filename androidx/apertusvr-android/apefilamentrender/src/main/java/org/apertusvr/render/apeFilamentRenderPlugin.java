@@ -45,7 +45,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class apeFilamentRenderPlugin implements apePlugin {
+public final class apeFilamentRenderPlugin implements apePlugin {
     static {
         Filament.init();
     }

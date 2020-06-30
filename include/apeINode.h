@@ -30,6 +30,7 @@ SOFTWARE.*/
 #include "ape.h"
 #include "apeQuaternion.h"
 #include "apeVector3.h"
+#include "apeMatrix4.h"
 
 namespace ape
 {
@@ -63,6 +64,10 @@ namespace ape
 		virtual Vector3 getScale() const = 0;
 
 		virtual Vector3 getDerivedScale() const = 0;
+
+		virtual Matrix4 getModelMatrix() const = 0;
+
+		virtual Matrix4 getDerivedModelMatrix() const = 0;
 
 		virtual bool getChildrenVisibility() = 0;
 

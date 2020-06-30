@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-class apeFilaMeshLoader {
+final class apeFilaMeshLoader {
     static final private long MAX_UINT32 = 4294967295L;
 
     static final private long HEADER_FLAG_INTERLEAVED = 0x1L;

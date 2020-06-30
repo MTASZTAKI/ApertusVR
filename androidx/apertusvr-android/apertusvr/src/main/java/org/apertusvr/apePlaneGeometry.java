@@ -4,7 +4,7 @@ import androidx.annotation.Size;
 
 import org.jetbrains.annotations.NotNull;
 
-public class apePlaneGeometry extends apeGeometry {
+public final class apePlaneGeometry extends apeGeometry {
 
     static class GeometryPlaneParameters {
 
