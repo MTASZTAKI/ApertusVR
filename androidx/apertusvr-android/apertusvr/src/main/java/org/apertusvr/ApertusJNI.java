@@ -47,6 +47,7 @@ public final class ApertusJNI {
     static native int getEntityType(String nativeEntity);
     static native boolean isEntityValid(String nativeEntity);
     static native boolean isEntityValidWithType(String nativeEntity, int typeAsInt);
+    static native String getNameFromPtr(long entityPtr);
 
     /* --- Node --- */
     static native boolean isNodeValid(String nativeNode);

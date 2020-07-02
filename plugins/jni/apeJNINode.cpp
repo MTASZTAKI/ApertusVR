@@ -22,6 +22,7 @@ SOFTWARE.*/
 
 #include "apeJNIPlugin.h"
 #include "apeINode.h"
+#include <queue>
 
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -574,3 +575,51 @@ Java_org_apertusvr_ApertusJNI_getNodeCreator(JNIEnv* env, jclass clazz, jstring 
 
     return env->NewStringUTF(nodeCreator);
 }
+
+//extern "C"
+//JNIEXPORT jlongArray JNICALL
+//Java_org_apertusvr_ApertusJNI_getNodeRelatedGeometries(JNIEnv *env, jclass clazz, jstring native_node)
+//{
+//
+//
+//    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
+//    auto* nodeGeometryMap = jniPlugin->getNodeGeometryMap();
+//    const char* name = env->GetStringUTFChars(native_node,NULL);
+//
+//    std::vector<jlong> relatedGeometries;
+//    std::queue<ape::NodeWeakPtr> nodeQueue;
+//
+//    if(auto nodeShared = jniPlugin->getSceneManager()->getNode(std::string(name)).lock())
+//        nodeQueue.push(nodeShared);
+//
+//    env->ReleaseStringUTFChars(native_node,name);
+//
+//    // TODO: recursive traversal without queue
+//
+//    while(!nodeQueue.empty())
+//    {
+//        ape::NodeWeakPtr frontWeak = nodeQueue.front();
+//        if(auto frontShared = frontWeak.lock())
+//        {
+//            auto childGeomIt = nodeGeometryMap->find(frontShared->getName());
+//            if (childGeomIt != nodeGeometryMap->end())
+//            {
+//                ape::GeometryWeakPtr* pChildGeomWeak = &(childGeomIt->second);
+//                relatedGeometries.push_back((jlong) pChildGeomWeak);
+//            }
+//
+//            if(frontShared->hasChildNode())
+//            {
+//                for(const auto& childNodeWeak : frontShared->getChildNodes())
+//                    nodeQueue.push(childNodeWeak);
+//            }
+//        }
+//
+//        nodeQueue.pop();
+//    }
+//
+//    jlongArray jOutArray = env->NewLongArray(relatedGeometries.size());
+//    env->SetLongArrayRegion(jOutArray,0,relatedGeometries.size(),&relatedGeometries[0]);
+//
+//    return jOutArray;
+//}

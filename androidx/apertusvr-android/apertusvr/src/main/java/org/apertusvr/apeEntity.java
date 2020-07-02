@@ -20,6 +20,8 @@ package org.apertusvr;
 
 import org.apertusvr.ApertusJNI;
 
+import java.util.Objects;
+
 public class apeEntity {
     public enum Type {
         LIGHT,
@@ -55,6 +57,11 @@ public class apeEntity {
         mType = type;
     }
 
+    protected apeEntity(long ptr, Type type) {
+        mName = ApertusJNI.getNameFromPtr(ptr);
+        mType = type;
+    }
+
     public String getName() {
         return mName;
     }
@@ -65,6 +72,19 @@ public class apeEntity {
 
     public boolean isValid() {
         return ApertusJNI.isEntityValidWithType(mName,mType.ordinal());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        apeEntity otherEntity = (apeEntity) obj;
+        return mName.equals(otherEntity.mName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mName, mType);
     }
 
     protected String mName;

@@ -90,6 +90,19 @@ void ape::JNIPlugin::eventCallBack(const ape::Event& event)
         }
     }
 
+//    if(event.type == ape::Event::Type::GEOMETRY_FILE_PARENTNODE ||
+////       event.type == ape::Event::Type::GEOMETRY_PLANE_PARENTNODE)
+////    {
+////        if(auto geomShared = std::static_pointer_cast<ape::Geometry>(mpSceneManager->getEntity(event.subjectName).lock()))
+////        {
+////            if(auto parentShared = geomShared->getParentNode().lock())
+////            {
+////                std::string parentNodeName = parentShared->getName();
+////                mNodeGeometryMap[parentNodeName] = geomShared;
+////            }
+////        }
+////    }
+
 	mEventDoubleQueue.push(event);
 }
 
@@ -538,6 +551,11 @@ void ape::JNIPlugin::initEventNumberMap()
         mEventTypeNameMap.insert(std::make_pair(eventTypes[i],eventTypeNames[i]));
     }
 }
+
+//std::map<std::string, ape::GeometryWeakPtr> *ape::JNIPlugin::getNodeGeometryMap()
+//{
+//    return &mNodeGeometryMap;
+//}
 
 
 // ---- jni ----

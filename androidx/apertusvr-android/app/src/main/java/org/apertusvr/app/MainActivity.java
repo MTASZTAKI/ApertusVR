@@ -5,6 +5,7 @@ import org.apertusvr.apeEvent;
 import org.apertusvr.apeEventCallback;
 import org.apertusvr.apeEventManager;
 import org.apertusvr.apeFileGeometry;
+import org.apertusvr.apeGeometry;
 import org.apertusvr.apeLight;
 import org.apertusvr.apeNode;
 import org.apertusvr.apeSceneManager;
@@ -43,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
         final AssetManager assetManager = getAssets();
         choreographer = Choreographer.getInstance();
 
-        String helloStr = apeJNI.stringFromJNIPlugin("Hello world!");
-
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
                 apeEvent.Group.LIGHT,
                 eventCallback);
 
-//        apeEventManager.connectEvent(
-//                apeEvent.Group.NODE,
-//                eventCallback
-//        );
+        apeEventManager.connectEvent(
+                apeEvent.Group.NODE,
+                eventCallback
+        );
 
         apeEventManager.connectEvent(
                 apeEvent.Group.GEOMETRY_FILE,
@@ -71,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);
-        //tv.setText("Hello ApertusVR"/*stringFromJNI(assetManager)*/);
-        tv.setText(helloStr);
+        String hello = "Hello ApertusVR";
+        tv.setText(hello);
     }
 
     @Override
@@ -116,62 +115,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onEvent(@NotNull apeEvent input) {
-            // Log.d("javalog",input.group.name() + " - " + input.type.name() + " event caught from java with subject name: \"" + input.subjectName + "\"");
 
-            if(input.group == apeEvent.Group.LIGHT) {
+            Log.d("javalog",input.type.toString() + " event, with subject name: " + input.subjectName);
 
-                Log.d("javalog", "Light event caught, with subject name:" + input.subjectName);
-                Log.d("javalog", "The event's type is: " + input.type.name());
-
-                if (input.type == apeEvent.Type.LIGHT_TYPE) {
-
-                    apeLight light = new apeLight(input.subjectName);
-
-                    if(light.isValid()){
-                        Log.d("javalog", light.getName() + " light is valid with type: " + light.getLightType().name());
-                    }
-                }
-//                else if (input.type == apeEvent.Type.LIGHT_PARENTNODE) {
-//                    apeLight light = (apeLight) apeSceneManager.getEntity(input.subjectName);
-//                    assert light != null : "ligth == null";
+//            if(input.type == apeEvent.Type.NODE_POSITION) {
+//                apeNode node = new apeNode(input.subjectName);
 //
-//                    apeNode parentNode = light.getParentNode();
-//                    Log.d("javalog", input.subjectName + "'s parent node is: " + parentNode.getName());
+//                Log.d("javalog","Related node geometries:");
+//                if(node.isValid()) {
+//                    apeGeometry[] relatedGeoms = node.getRelatedGeometries();
+//                    for (apeGeometry geom : relatedGeoms) {
+//                        Log.d("javalog",geom.getName());
+//                    }
 //                }
-            }
-            else if(input.group == apeEvent.Group.GEOMETRY_FILE) {
-                Log.d("javalog", "GeoemtryFile event caught, with subject name: " + input.subjectName);
-                Log.d("javalog", "event type is: " + input.type.name());
-
-                apeFileGeometry fileGeometry = new apeFileGeometry(input.subjectName);
-                assert fileGeometry.isValid();
-
-                // Log.d("javalog", "filename is:" + fileGeometry.getFileName());
-
-                if(input.type == apeEvent.Type.GEOMETRY_FILE_CREATE) {
-                    // Log.d("javalog", "Geometry file" + fileGeometry.getName() + " was created");
-                }
-                else if(input.type == apeEvent.Type.GEOMETRY_FILE_FILENAME) {
-                    Log.d("javalog", "Geometry file: " + fileGeometry.getName() + "'s filename: " + fileGeometry.getFileName());
-                }
-                else if(input.type == apeEvent.Type.GEOMETRY_FILE_EXPORT) {
-                    Log.d("javalog","The geometry's file name is: " + fileGeometry.getFileName());
-                }
-                else if(input.type == apeEvent.Type.GEOMETRY_FILE_PARENTNODE) {
-                    Log.d("javalog", "The geometry's parentnode is: " + fileGeometry.getParentNode().getName());
-                }
-
-            }
-
-
-            if(input.type == apeEvent.Type.NODE_POSITION) {
-                apeNode node = apeSceneManager.getNode(input.subjectName);
-                assert node != null : "node == null";
-
-                apeVector3 position = node.getDerivedPosition();
-                Log.d("javalog",node.getName() + " node position is: " + position);
-            }
-
+//            }
         }
     }
 }

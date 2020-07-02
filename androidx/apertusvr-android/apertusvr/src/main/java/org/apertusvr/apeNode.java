@@ -18,6 +18,8 @@ SOFTWARE.*/
 
 package org.apertusvr;
 
+import java.util.Objects;
+
 public final class apeNode {
 
     enum TransformationSpace {
@@ -163,6 +165,36 @@ public final class apeNode {
 
     public String getCreator() {
         return ApertusJNI.getNodeCreator(mName);
+    }
+
+    public boolean isValid() {
+        return ApertusJNI.isNodeValid(mName);
+    }
+
+//    public apeGeometry[] getRelatedGeometries() {
+//        long[] geometryPtrs = ApertusJNI.getNodeRelatedGeometries(mName);
+//        apeGeometry[] geometries = new apeGeometry[geometryPtrs.length];
+//
+//        for(int i = 0; i < geometryPtrs.length; ++i) {
+//            String geomName = ApertusJNI.getNameFromPtr(geometryPtrs[i]);
+//            apeEntity.Type geomType = apeEntity.Type.values()[ApertusJNI.getEntityType(geomName)];
+//            geometries[i] = new apeGeometry(geomName, geomType);
+//        }
+//
+//        return geometries;
+//    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        apeNode otherNode = (apeNode) obj;
+        return mName.equals(otherNode.mName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mName);
     }
 
     private String mName;

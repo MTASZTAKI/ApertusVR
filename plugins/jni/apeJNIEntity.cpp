@@ -68,3 +68,17 @@ Java_org_apertusvr_ApertusJNI_isEntityValidWithType(JNIEnv *env, jclass clazz, j
 
     return (jboolean) valid;
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_org_apertusvr_ApertusJNI_getNameFromPtr(JNIEnv *env, jclass clazz, jlong entity_ptr)
+{
+    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
+    auto* entityWeak = (ape::EntityWeakPtr*) entity_ptr;
+
+    const char* name = jniPlugin->NA_STR;
+    if(auto entityShared = entityWeak->lock())
+        name = entityShared->getName().c_str();
+
+    return env->NewStringUTF(name);
+}

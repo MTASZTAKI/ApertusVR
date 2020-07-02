@@ -311,6 +311,10 @@ public final class apeMatrix4 {
                 m[12] + " "  + m[13] + " " + m[14] + " " + m[15] + "\n";
     }
 
+    public float[] getArray() {
+        return m.clone();
+    }
+
     public float[] m;
 
     private static final float eps;

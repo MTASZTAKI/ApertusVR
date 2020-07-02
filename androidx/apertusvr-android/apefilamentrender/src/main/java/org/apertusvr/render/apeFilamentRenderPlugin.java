@@ -42,7 +42,13 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public final class apeFilamentRenderPlugin implements apePlugin {
@@ -72,6 +78,7 @@ public final class apeFilamentRenderPlugin implements apePlugin {
 
     private TreeMap<String, apeFilaMesh> mMeshes;
     private TreeMap<String, apeFilaLight> mLights;
+    private TreeMap<String, apeFilaTransform> mTransforms;
 
     private SwapChain mSwapChain = null;
 
@@ -107,6 +114,7 @@ public final class apeFilamentRenderPlugin implements apePlugin {
         mLightEventDoubleQueue = new apeDoubleQueue<>(true);
         mLights = new TreeMap<>();
         mMeshes = new TreeMap<>();
+        mTransforms = new TreeMap<>();
 
         setupSurfaceView();
         setupFilament();
@@ -137,6 +145,9 @@ public final class apeFilamentRenderPlugin implements apePlugin {
 
     @Override
     public void onDestroy() {
+        mChoreographer.removeFrameCallback(mFrameCallback);
+        mUiHelper.detach();
+
         /* destroy meshes */
 
         /* destroy lights */
@@ -279,8 +290,12 @@ public final class apeFilamentRenderPlugin implements apePlugin {
         }
     }
 
+
+
     private void processEventDoubleQueue() {
         mEventDoubleQueue.swap();
+
+        Set<apeNode> changedNodes = new HashSet<>();
 
         while (!mEventDoubleQueue.emptyPop()) {
             apeEvent event = mEventDoubleQueue.front();
@@ -344,7 +359,15 @@ public final class apeFilamentRenderPlugin implements apePlugin {
                     else if (event.type == apeEvent.Type.GEOMETRY_FILE_PARENTNODE) {
                         apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
                         if (filaMesh != null) {
-                            filaMesh.parentNode = fileGeometry.getParentNode();
+                            apeNode parentNode = fileGeometry.getParentNode();
+                            if (parentNode.isValid()) {
+                                apeFilaTransform transform = mTransforms.get(parentNode.getName());
+                                if (transform != null) {
+                                    filaMesh.setParentTransform(
+                                            transform,
+                                            mEngine.getTransformManager());
+                                }
+                            }
                         }
                     }
                 }
@@ -357,7 +380,12 @@ public final class apeFilamentRenderPlugin implements apePlugin {
                         mMeshes.put(event.subjectName, new apeFilaPlaneMesh());
                     }
                     else if (event.type == apeEvent.Type.GEOMETRY_PLANE_DELETE) {
-
+                        apeFilaPlaneMesh filaPlane = (apeFilaPlaneMesh) mMeshes.get(event.subjectName);
+                        if (filaPlane != null) {
+                            mScene.removeEntity(filaPlane.renderable);
+                            apeFilaMeshLoader.destroyMesh(mEngine,filaPlane);
+                            mMeshes.remove(event.subjectName);
+                        }
                     }
                     else if (event.type == apeEvent.Type.GEOMETRY_PLANE_PARAMETERS) {
                         apeFilaPlaneMesh filaPlane = (apeFilaPlaneMesh) mMeshes.get(event.subjectName);
@@ -387,7 +415,13 @@ public final class apeFilamentRenderPlugin implements apePlugin {
                     else if (event.type == apeEvent.Type.GEOMETRY_PLANE_PARENTNODE) {
                         apeFilaPlaneMesh filaPlane = (apeFilaPlaneMesh) mMeshes.get(event.subjectName);
                         if (filaPlane != null) {
-                            filaPlane.parentNode = planeGeometry.getParentNode();
+                            apeNode parentNode = planeGeometry.getParentNode();
+                            if (parentNode.isValid()) {
+                                apeFilaTransform transform = mTransforms.get(parentNode.getName());
+                                if(transform != null) {
+                                    filaPlane.setParentTransform(transform, mEngine.getTransformManager());
+                                }
+                            }
                         }
                     }
                 }
@@ -453,6 +487,59 @@ public final class apeFilamentRenderPlugin implements apePlugin {
                     }
                 }
             }
+            else if (event.group == apeEvent.Group.NODE) {
+                apeNode node = new apeNode(event.subjectName);
+                if (node.isValid()) {
+                    if (event.type == apeEvent.Type.NODE_CREATE) {
+                        apeFilaTransform transform = new apeFilaTransform(mEngine.getTransformManager());
+                        mTransforms.put(node.getName(),transform);
+                        mScene.addEntity(transform.entity);
+                    }
+                    else if (event.type == apeEvent.Type.NODE_DELETE) {
+                        apeFilaTransform transform = mTransforms.get(node.getName());
+                        if (transform != null) {
+                            mScene.removeEntity(transform.entity);
+                            transform.destroy(mEngine);
+                            mTransforms.remove(node.getName());
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.NODE_PARENTNODE) {
+                        apeNode parentNode = node.getParentNode();
+                        if (parentNode.isValid()) {
+                            apeFilaTransform transform = mTransforms.get(node.getName());
+                            apeFilaTransform parentTransform = mTransforms.get(parentNode.getName());
+
+                            if (transform != null && parentTransform != null) {
+                                transform.setParent(parentTransform,mEngine.getTransformManager());
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.NODE_DETACH) {
+                        apeFilaTransform transform = mTransforms.get(node.getName());
+                        if (transform != null) {
+                            transform.detach(mEngine.getTransformManager());
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.NODE_POSITION ||
+                            event.type == apeEvent.Type.NODE_ORIENTATION ||
+                            event.type == apeEvent.Type.NODE_SCALE) {
+                        changedNodes.add(node);
+                    }
+                }
+            }
+
+            /* process changed nodes */
+            for (apeNode node : changedNodes) {
+                if (node.isValid()) {
+                    apeFilaTransform transform = mTransforms.get(node.getName());
+                    if (transform != null) {
+                        transform.setTransform(
+                                node.getModelMatrix(),
+                                mEngine.getTransformManager());
+                    }
+                }
+            }
+
             mEventDoubleQueue.pop();
         }
     }
@@ -490,7 +577,17 @@ public final class apeFilamentRenderPlugin implements apePlugin {
 
         @Override
         public void doFrame(long frameTimeNanos) {
+            mChoreographer.postFrameCallback(this);
+
             processLightEventDoubleQueue();
+            processEventDoubleQueue();
+
+            if (mUiHelper.isReadyToRender()) {
+                if (mRenderer.beginFrame(mSwapChain)) {
+                    mRenderer.render(mView);
+                    mRenderer.endFrame();
+                }
+            }
         }
     }
 

@@ -28,6 +28,10 @@ public final class apeFileGeometry extends apeGeometry {
         super(name, Type.GEOMETRY_FILE);
     }
 
+    public apeFileGeometry(long ptr) {
+        super(ptr, Type.GEOMETRY_FILE);
+    }
+
     public void setFileName (String fileName) {
         ApertusJNI.setFileGeometryFileName(mName, fileName);
     }

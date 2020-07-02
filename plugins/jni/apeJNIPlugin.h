@@ -72,6 +72,10 @@ namespace ape
 
         std::map<ape::Event::Type, int> getEventNumberMap();
 
+//        std::map<std::string,ape::GeometryWeakPtr>* getNodeGeometryMap();
+
+        const char* NA_STR = "";
+
 	private:
 		ape::ISceneManager* mpSceneManager;
 
@@ -90,6 +94,8 @@ namespace ape
 		std::map<ape::Event::Type,int> mEventNumberMap;
 
 		std::map<ape::Event::Type,std::string> mEventTypeNameMap;
+
+//		std::map<std::string,ape::GeometryWeakPtr> mNodeGeometryMap;
 
 		void initEventNumberMap();
 

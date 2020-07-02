@@ -24,6 +24,10 @@ public class apeGeometry extends apeEntity {
         super(name, type);
     }
 
+    protected apeGeometry(long ptr, Type type) {
+        super(ptr,type);
+    }
+
     public apeNode getParentNode() {
         return new apeNode(ApertusJNI.getGeometryParentNode(mName));
     }

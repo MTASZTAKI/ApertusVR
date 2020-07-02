@@ -52,6 +52,10 @@ void ape::AndroidSampleScenePlugin::Init()
 	initRootNode();
 	initLights();
 	initGeometries();
+	if(auto rootNodeShared = mRootNodeWeak.lock())
+	{
+		rootNodeShared->setPosition(ape::Vector3(0.f,1.f,0.f));
+	}
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -64,10 +68,11 @@ void ape::AndroidSampleScenePlugin::Run()
 
 void ape::AndroidSampleScenePlugin::initRootNode()
 {
-	if (auto rootNode = mpSceneManager->createNode("root",false,"androidSampleScene").lock())
+	if (auto rootNodeShared = mpSceneManager->createNode("root", false, "androidSampleScene").lock())
 	{
-		rootNode->setPosition(ape::Vector3(0,-1,0));
-		rootNode->setScale(ape::Vector3(0.01,0.01,0.01));
+		rootNodeShared->setPosition(ape::Vector3(0, -1, 0));
+		rootNodeShared->setScale(ape::Vector3(0.01, 0.01, 0.01));
+		mRootNodeWeak = rootNodeShared;
 	}
 }
 
