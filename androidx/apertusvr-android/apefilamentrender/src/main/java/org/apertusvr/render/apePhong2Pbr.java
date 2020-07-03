@@ -20,5 +20,10 @@ public final class apePhong2Pbr {
         return (float) Math.exp(-Ns / 100f)-0.1f;
     }
 
+    public static float lightSpecular2intensity(apeColor specular) {
+        float x = specular.r * specular.g * specular.b;
+        return (float) Math.pow(10, 6 * Math.log10(1 + 9 * x));
+    }
+
     private static final float MAT_EPS = 1e-6f;
 }

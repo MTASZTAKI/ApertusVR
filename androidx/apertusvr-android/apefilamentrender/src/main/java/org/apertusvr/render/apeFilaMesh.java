@@ -38,7 +38,7 @@ class apeFilaMesh {
     }
 
     public void setParentTransform(apeFilaTransform transform, TransformManager tcm) {
-        tcm.setParent(renderable, transform.transform);
+        tcm.setParent(tcm.getInstance(renderable), transform.transform);
     }
 
     @Entity int renderable;

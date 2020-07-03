@@ -270,7 +270,7 @@ public final class apeEvent {
         } else {
             apeEvent other = (apeEvent) obj;
             return this.subjectName.equals(other.subjectName) &&
-                    this.group == other.group;
+                    this.type == other.type;
         }
     }
 

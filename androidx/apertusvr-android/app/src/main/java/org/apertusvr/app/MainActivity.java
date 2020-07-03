@@ -12,11 +12,14 @@ import org.apertusvr.apeSceneManager;
 import org.apertusvr.apeVector3;
 import org.jetbrains.annotations.NotNull;
 
+import org.apertusvr.render.apeFilamentRenderPlugin;
+
 
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Choreographer;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,44 +37,31 @@ public class MainActivity extends AppCompatActivity {
 
     EventCallback eventCallback = new EventCallback();
 
+    /* rendering */
+    private apeFilamentRenderPlugin renderPlugin;
+    private SurfaceView surfaceView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Button startBtn = findViewById(R.id.start_button);
-
-        final AssetManager assetManager = getAssets();
         choreographer = Choreographer.getInstance();
+        surfaceView = new SurfaceView(this);
+        setContentView(surfaceView);
 
-        startBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                apeJNI.startApertusVR(assetManager);
-                apeStarted = true;
-            }
-        });
+        if (!apeStarted) {
+            apeJNI.startApertusVR(getAssets());
+            apeStarted = true;
+        }
 
-        apeEventManager.connectEvent(
-                apeEvent.Group.LIGHT,
-                eventCallback);
+        String renderResources = getFilesDir() + "/models";
+        renderPlugin = new apeFilamentRenderPlugin(
+                this, getLifecycle(), surfaceView, renderResources, getResources());
+        getLifecycle().addObserver(renderPlugin);
 
-        apeEventManager.connectEvent(
-                apeEvent.Group.NODE,
-                eventCallback
-        );
-
-        apeEventManager.connectEvent(
-                apeEvent.Group.GEOMETRY_FILE,
-                eventCallback
-        );
-
-        Log.d("javalog","HELLO JAVA LOG");
-
-        // Example of a call to a native method
-        TextView tv = findViewById(R.id.sample_text);
-        String hello = "Hello ApertusVR";
-        tv.setText(hello);
+        apeEventManager.connectEvent(apeEvent.Group.LIGHT, eventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.NODE, eventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_FILE,eventCallback);
     }
 
     @Override
@@ -90,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         choreographer.removeFrameCallback(frameCallback);
+        if(apeStarted) {
+            apeJNI.stopApertusVR();
+            apeStarted = false;
+        }
     }
 
 

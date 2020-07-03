@@ -45,7 +45,7 @@ final class apeFilaMtlLoader {
                     currentMtl = new MtlRecord(mtlName);
                 }
                 else {
-                    MaterialInstance pbrMat = mtl2pbr(currentMtl, texturePath, false);
+                    MaterialInstance pbrMat = mtl2pbr(currentMtl, texturePath);
                     materialInstances.put(meshName + currentMtl.mtlName, pbrMat);
                     currentMtl = new MtlRecord(mtlName);
                 }
@@ -91,7 +91,7 @@ final class apeFilaMtlLoader {
         }
 
         assert currentMtl != null;
-        MaterialInstance pbrMat = mtl2pbr(currentMtl, texturePath, false);
+        MaterialInstance pbrMat = mtl2pbr(currentMtl, texturePath);
         materialInstances.put(meshName + currentMtl.mtlName, pbrMat);
     }
 
@@ -138,28 +138,17 @@ final class apeFilaMtlLoader {
 //        float roughness;
 //    }
 
-    private MaterialInstance mtl2pbr(MtlRecord mtlRecord, String texturePath, boolean textureIsAsset) {
+    private MaterialInstance mtl2pbr(MtlRecord mtlRecord, String texturePath) {
         MaterialInstance pbrMat;
 
         if (mtlRecord.map_Kd != null && !mtlRecord.map_Kd.equals("")) {
             pbrMat = mTexturedMaterial.createInstance();
 
-            Texture baseColor = null;
-
-            if (textureIsAsset) {
-                baseColor = apeFilaTextureLoader.loadTextureAsset(
-                        mOwner.getEngine(),
-                        mOwner.getAssets(),
-                        texturePath + "/" + mtlRecord.map_Kd,
-                        apeFilaTextureLoader.TextureType.COLOR);
-            }
-            else {
-                baseColor = apeFilaTextureLoader.loadTextureFile(
-                        mOwner.getEngine(),
-                        mOwner.getContext(),
-                        texturePath + "/" + mtlRecord.map_Kd,
-                        apeFilaTextureLoader.TextureType.COLOR);
-            }
+            Texture baseColor = apeFilaTextureLoader.loadTextureFile(
+                    mOwner.getEngine(),
+                    mOwner.getContext(),
+                    texturePath + "/" + mtlRecord.map_Kd,
+                    apeFilaTextureLoader.TextureType.COLOR);
 
             TextureSampler sampler = new TextureSampler();
             pbrMat.setParameter("albedo", baseColor, sampler);

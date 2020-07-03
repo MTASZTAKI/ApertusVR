@@ -23,7 +23,7 @@ public class apeFilaTransform {
     }
 
     public void setTransform(apeMatrix4 transformMx, TransformManager tcm) {
-        tcm.setTransform(transform,transformMx.getArray());
+        tcm.setTransform(transform,transformMx.m);
     }
 
     public void setParent(apeFilaTransform other, TransformManager tcm) {

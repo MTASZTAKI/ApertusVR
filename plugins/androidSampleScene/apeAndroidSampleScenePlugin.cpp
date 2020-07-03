@@ -70,8 +70,8 @@ void ape::AndroidSampleScenePlugin::initRootNode()
 {
 	if (auto rootNodeShared = mpSceneManager->createNode("root", false, "androidSampleScene").lock())
 	{
-		rootNodeShared->setPosition(ape::Vector3(0, -1, 0));
-		rootNodeShared->setScale(ape::Vector3(0.01, 0.01, 0.01));
+		rootNodeShared->setPosition(ape::Vector3(0, 0, 0));
+		rootNodeShared->setScale(ape::Vector3(0.5, 0.5, 0.5));
 		mRootNodeWeak = rootNodeShared;
 	}
 }
@@ -101,6 +101,7 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 	if(auto planeNode = mpSceneManager->createNode("plane01Node",false,"androidSampleScene").lock())
 	{
 		planeNode->setParentNode(mRootNodeWeak);
+		planeNode->setPosition(ape::Vector3(0,0,0));
 
 		if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(
 				mpSceneManager->createEntity("plane01", ape::Entity::GEOMETRY_PLANE, false,
@@ -116,35 +117,38 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 				material->setAmbientColor(ape::Color(0.2f,0.2f,0.2f));
 				material->setDiffuseColor(ape::Color(0.4f,0.4f,0.4f));
 				material->setSpecularColor(ape::Color(0.5f,0.5f,0.5f));
+
+				plane->setMaterial(material);
 			}
 		}
 	}
 
 	// Vibrating_Bowl_Clip
 	if (auto node = mpSceneManager->createNode("vibratingBowlClipNode",false,"androidSampleScene").lock()) {
-		node->setPosition(ape::Vector3(25, 0, 50));
+		node->setPosition(ape::Vector3(-10, 0, 0));
 		node->setParentNode(mRootNodeWeak);
 
 		if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
 				mpSceneManager->createEntity("Vibrating_Bowl_Clip", ape::Entity::GEOMETRY_FILE,
 											 false, "androidSampleScene").lock()))
 		{
+			fileGeom->setUnitScale(0.01f);
 			fileGeom->setFileName("VibratingBowl/Vibrating_Bowl_Clip.obj");
 			fileGeom->setParentNode(node);
 		}
 	}
 
 	// Haas
-	if (auto node = mpSceneManager->createNode("HaasNode",false,"androidSampleScene").lock())
+	if (auto node = mpSceneManager->createNode("GripperNode",false,"androidSampleScene").lock())
 	{
-		node->setPosition(ape::Vector3(75,0,50));
+		node->setPosition(ape::Vector3(10,0,0));
 		node->setParentNode(mRootNodeWeak);
 
 		if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
-				mpSceneManager->createEntity("Haas", ape::Entity::GEOMETRY_FILE,
+				mpSceneManager->createEntity("UR_Gripper_1", ape::Entity::GEOMETRY_FILE,
 											 false, "androidSampleScene").lock()))
 		{
-			fileGeom->setFileName("machines/Haas/Haas.obj");
+			fileGeom->setFileName("UniversalRobot/UR_Gripper_1.obj");
 			fileGeom->setParentNode(node);
 		}
 	}
