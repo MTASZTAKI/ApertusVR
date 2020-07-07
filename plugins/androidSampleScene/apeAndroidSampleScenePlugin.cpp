@@ -99,16 +99,19 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 {
     // plane
     if (auto planeNode = mpSceneManager->createNode("plane01Node", false,
-                                                    "androidSampleScene").lock()) {
+                                                    "androidSampleScene").lock())
+    {
         planeNode->setParentNode(mRootNodeWeak);
         planeNode->setPosition(ape::Vector3(0, 0, 0));
 
         if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(
                 mpSceneManager->createEntity("plane01", ape::Entity::GEOMETRY_PLANE, false,
-                                             "androidSampleScene").lock())) {
+                                             "androidSampleScene").lock()))
+        {
             if (auto material = std::static_pointer_cast<ape::IManualMaterial>(
                     mpSceneManager->createEntity("plane01Material", ape::Entity::MATERIAL_MANUAL,
-                                                 false, "androidSampleScene").lock())) {
+                                                 false, "androidSampleScene").lock()))
+            {
                 material->setAmbientColor(ape::Color(0.0f, 0.0f, 0.0f));
                 material->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f, 1.f));
                 material->setSpecularColor(ape::Color(0.2f, 0.2f, 0.2f, 0.0f));

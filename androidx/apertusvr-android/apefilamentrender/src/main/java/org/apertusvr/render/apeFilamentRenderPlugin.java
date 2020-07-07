@@ -108,6 +108,8 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     private static final String DEFAULT_MAT_NAME = "DefaultMaterial";
 
 
+    apeCameraController mCameraController;
+
 
     public apeFilamentRenderPlugin(Context context, Lifecycle lifecycle, SurfaceView surfaceView, String resourcePath, Resources resources) {
         Log.d("filalog","CONSTRUCTOR");
@@ -131,6 +133,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         mMeshes = new TreeMap<>();
         mTransforms = new TreeMap<>();
         mTextures = new LinkedList<>();
+        mCameraController = new apeCameraController(new apeVector3(-5,4,-5), 0f, 0f, mSurfaceView);
 
         setupSurfaceView();
         setupFilament();
@@ -224,6 +227,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
         /* set camera */
         mCamera.setExposure(16.0f,1.0f/125.0f,100.0f);
+        //mCamera.lookAt(10,10,0,0,0,0,0,1,0);
     }
 
     private void setupMaterials() {
@@ -664,6 +668,8 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
     class FrameCallback implements Choreographer.FrameCallback {
 
+        float lastFrame = System.nanoTime();
+
         @Override
         public void doFrame(long frameTimeNanos) {
             mChoreographer.postFrameCallback(this);
@@ -671,13 +677,12 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
             processLightEventDoubleQueue();
             processEventDoubleQueue();
 
-            float t = (float)frameTimeNanos/1e9f;
-            mCamera.lookAt(
-                    10f * (float) Math.cos(t/2f), 6f, 10f * (float) Math.sin(t/2f),
-                    0f, 0f, 0f,
-                    0f, 1f, 0f);
+            float frameTime = (float)frameTimeNanos/1e9f;
+            float dTime = frameTime - lastFrame;
 
+            mCameraController.setCameraTransform(mCamera,dTime);
 
+            lastFrame = frameTime;
 
             if (mUiHelper.isReadyToRender()) {
                 if (mRenderer.beginFrame(mSwapChain)) {
