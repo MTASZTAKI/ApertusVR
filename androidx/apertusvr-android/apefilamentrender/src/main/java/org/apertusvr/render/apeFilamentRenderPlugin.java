@@ -221,6 +221,9 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         View.DynamicResolutionOptions options = new View.DynamicResolutionOptions();
         options.enabled = true;
         mView.setDynamicResolutionOptions(options);
+
+        /* set camera */
+        mCamera.setExposure(16.0f,1.0f/125.0f,100.0f);
     }
 
     private void setupMaterials() {
@@ -455,14 +458,20 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                         apeFilaPlaneMesh filaPlane = (apeFilaPlaneMesh) mMeshes.get(event.subjectName);
                         if (filaPlane != null) {
                             apeVector2 size = planeGeometry.getSize();
-                            TransformManager tcm = mEngine.getTransformManager();
-                            tcm.setTransform(tcm.getInstance(filaPlane.renderable),
-                                    new float[] {
-                                            size.x, 0f,     0f,     0f,
-                                            0f,     1f,     0f,     0f,
-                                            0f,     0f,     size.y, 0f,
-                                            0f,     0f,     0f,     1f
-                                    });
+
+                             if (filaPlane.renderable != Entity.NULL) {
+                                TransformManager tcm = mEngine.getTransformManager();
+                                tcm.setTransform(tcm.getInstance(filaPlane.renderable),
+                                        new float[]{
+                                                size.x, 0f, 0f, 0f,
+                                                0f, 1f, 0f, 0f,
+                                                0f, 0f, size.y, 0f,
+                                                0f, 0f, 0f, 1f
+                                        });
+                            }
+                            else {
+                                filaPlane.size = size;
+                            }
                         }
                     }
                     else if (event.type == apeEvent.Type.GEOMETRY_PLANE_MATERIAL) {
@@ -476,7 +485,20 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                                     InputStream input = mAndroidResources.openRawResource(R.raw.plane);
                                     apeFilaMeshLoader.loadMesh(input, event.subjectName,
                                             matInst, mEngine, filaPlane, material.getName());
+
+//                                    apeFilaMeshLoader.loadMesh(input, event.subjectName, mMaterialInstances,
+//                                            mEngine, filaPlane, DEFAULT_MAT_NAME);
+
                                     mScene.addEntity(filaPlane.renderable);
+
+                                    TransformManager tcm = mEngine.getTransformManager();
+                                    tcm.setTransform(tcm.getInstance(filaPlane.renderable),
+                                            new float[]{
+                                                    filaPlane.size.x, 0f, 0f, 0f,
+                                                    0f, 1f, 0f, 0f,
+                                                    0f, 0f, filaPlane.size.y, 0f,
+                                                    0f, 0f, 0f, 1f
+                                            });
                                 }
                             }
                         }
@@ -488,6 +510,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                             if (parentNode.isValid()) {
                                 apeFilaTransform transform = mTransforms.get(parentNode.getName());
                                 if(transform != null) {
+                                    // TODO: what if there isn't a renderable created when the PARENTNODE event came in?
                                     filaPlane.setParentTransform(transform, mEngine.getTransformManager());
                                 }
                             }
@@ -650,9 +673,11 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
             float t = (float)frameTimeNanos/1e9f;
             mCamera.lookAt(
-                    20 * (float) Math.cos(t), 10f, 20 * (float) Math.sin(t),
+                    10f * (float) Math.cos(t/2f), 6f, 10f * (float) Math.sin(t/2f),
                     0f, 0f, 0f,
                     0f, 1f, 0f);
+
+
 
             if (mUiHelper.isReadyToRender()) {
                 if (mRenderer.beginFrame(mSwapChain)) {

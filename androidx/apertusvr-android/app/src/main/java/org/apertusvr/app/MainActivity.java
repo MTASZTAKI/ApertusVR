@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         choreographer = Choreographer.getInstance();
         surfaceView = new SurfaceView(this);
+
+
         setContentView(surfaceView);
 
         if (!apeStarted) {
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         renderPlugin = new apeFilamentRenderPlugin(
                 this, getLifecycle(), surfaceView, renderResources, getResources());
         getLifecycle().addObserver(renderPlugin);
+
+
 
         apeEventManager.connectEvent(apeEvent.Group.LIGHT, eventCallback);
         apeEventManager.connectEvent(apeEvent.Group.NODE, eventCallback);

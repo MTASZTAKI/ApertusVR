@@ -97,63 +97,74 @@ void ape::AndroidSampleScenePlugin::initLights()
 
 void ape::AndroidSampleScenePlugin::initGeometries()
 {
-	// plane
-	if(auto planeNode = mpSceneManager->createNode("plane01Node",false,"androidSampleScene").lock())
-	{
-		planeNode->setParentNode(mRootNodeWeak);
-		planeNode->setPosition(ape::Vector3(0,0,0));
+    // plane
+    if (auto planeNode = mpSceneManager->createNode("plane01Node", false,
+                                                    "androidSampleScene").lock()) {
+        planeNode->setParentNode(mRootNodeWeak);
+        planeNode->setPosition(ape::Vector3(0, 0, 0));
 
-		if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(
-				mpSceneManager->createEntity("plane01", ape::Entity::GEOMETRY_PLANE, false,
-											 "androidSampleScene").lock()))
-		{
-			plane->setParameters(ape::Vector2(),ape::Vector2(100,100),ape::Vector2());
-			plane->setParentNode(planeNode);
+        if (auto plane = std::static_pointer_cast<ape::IPlaneGeometry>(
+                mpSceneManager->createEntity("plane01", ape::Entity::GEOMETRY_PLANE, false,
+                                             "androidSampleScene").lock())) {
+            if (auto material = std::static_pointer_cast<ape::IManualMaterial>(
+                    mpSceneManager->createEntity("plane01Material", ape::Entity::MATERIAL_MANUAL,
+                                                 false, "androidSampleScene").lock())) {
+                material->setAmbientColor(ape::Color(0.0f, 0.0f, 0.0f));
+                material->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f, 1.f));
+                material->setSpecularColor(ape::Color(0.2f, 0.2f, 0.2f, 0.0f));
 
-			if (auto material = std::static_pointer_cast<ape::IManualMaterial>(
-					mpSceneManager->createEntity("plane01Material",ape::Entity::MATERIAL_MANUAL,
-							false,"androidSampleScene").lock()))
-			{
-				material->setAmbientColor(ape::Color(0.2f,0.2f,0.2f));
-				material->setDiffuseColor(ape::Color(0.4f,0.4f,0.4f));
-				material->setSpecularColor(ape::Color(0.5f,0.5f,0.5f));
+                plane->setMaterial(material);
+            }
 
-				plane->setMaterial(material);
-			}
-		}
-	}
+            plane->setParameters(ape::Vector2(), ape::Vector2(10, 10), ape::Vector2());
+            plane->setParentNode(planeNode);
+        }
+    }
 
-	// Vibrating_Bowl_Clip
-	if (auto node = mpSceneManager->createNode("vibratingBowlClipNode",false,"androidSampleScene").lock()) {
-		node->setPosition(ape::Vector3(-10, 0, 0));
-		node->setParentNode(mRootNodeWeak);
+    // Vibrating_Bowl_Clip
+    if (auto node = mpSceneManager->createNode("vibratingBowlClipNode", false,
+                                               "androidSampleScene").lock()) {
+        node->setPosition(ape::Vector3(-6, 0, 0));
+        node->setParentNode(mRootNodeWeak);
 
-		if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
-				mpSceneManager->createEntity("Vibrating_Bowl_Clip", ape::Entity::GEOMETRY_FILE,
-											 false, "androidSampleScene").lock()))
-		{
-			fileGeom->setUnitScale(0.01f);
-			fileGeom->setFileName("VibratingBowl/Vibrating_Bowl_Clip.obj");
-			fileGeom->setParentNode(node);
-		}
-	}
+        if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+                mpSceneManager->createEntity("Vibrating_Bowl_Clip", ape::Entity::GEOMETRY_FILE,
+                                             false, "androidSampleScene").lock())) {
+            fileGeom->setUnitScale(0.005f);
+            fileGeom->setFileName("VibratingBowl/Vibrating_Bowl_Clip.obj");
+            fileGeom->setParentNode(node);
+        }
+    }
 
-	// Haas
-	if (auto node = mpSceneManager->createNode("GripperNode",false,"androidSampleScene").lock())
-	{
-		node->setPosition(ape::Vector3(10,0,0));
-		node->setParentNode(mRootNodeWeak);
+    // Gripper
+    if (auto node = mpSceneManager->createNode("GripperNode", false, "androidSampleScene").lock()) {
+        node->setPosition(ape::Vector3(6, 0, 0));
+        node->setParentNode(mRootNodeWeak);
 
-		if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
-				mpSceneManager->createEntity("UR_Gripper_1", ape::Entity::GEOMETRY_FILE,
-											 false, "androidSampleScene").lock()))
-		{
-			fileGeom->setFileName("UniversalRobot/UR_Gripper_1.obj");
-			fileGeom->setParentNode(node);
-		}
-	}
+        if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+                mpSceneManager->createEntity("UR_Gripper_1", ape::Entity::GEOMETRY_FILE,
+                                             false, "androidSampleScene").lock())) {
+            fileGeom->setUnitScale(0.2f);
+            fileGeom->setFileName("UniversalRobot/UR_Gripper_1.obj");
+            fileGeom->setParentNode(node);
+        }
+    }
+
+    // Conveyor
+    if (auto node = mpSceneManager->createNode("ConveyorNode", false,
+                                               "androidSampleScene").lock()) {
+        node->setPosition(ape::Vector3(0, 0, 0));
+        node->setParentNode(mRootNodeWeak);
+
+        if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+                mpSceneManager->createEntity("Conveyor_Main", ape::Entity::GEOMETRY_FILE,
+                                             false, "androidSampleScene").lock())) {
+            fileGeom->setUnitScale(0.01f);
+            fileGeom->setFileName("Conveyor/Conveyor_Main.obj");
+            fileGeom->setParentNode(node);
+        }
+    }
 }
-
 void ape::AndroidSampleScenePlugin::Step()
 {
 	APE_LOG_FUNC_ENTER();

@@ -76,7 +76,7 @@ public final class apePlaneGeometry extends apeGeometry {
 
     public apeMaterial getMaterial() {
         String materialName = ApertusJNI.getPlaneGeometryMaterial(mName);
-        apeEntity.Type materialType = apeEntity.Type.values()[ApertusJNI.getEntityType(mName)];
+        apeEntity.Type materialType = apeEntity.Type.values()[ApertusJNI.getEntityType(materialName)];
 
         return new apeMaterial(materialName,materialType);
     }
