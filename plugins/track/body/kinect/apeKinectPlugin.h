@@ -171,6 +171,7 @@ namespace ape
 		unsigned int scanframe = 0;
 
 		bool showSkeleton=false;
+		bool showPointCloud = true;
 		bool backgroundRemoval = false;
 		bool maxFPS = false;
 		bool _3dScan = false;

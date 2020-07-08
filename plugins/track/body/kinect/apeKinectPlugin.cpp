@@ -109,6 +109,10 @@ void ape::KinectPlugin::Init()
 				showSkeleton = jsonDocument["showSkeleton"].GetBool();
 				APE_LOG_DEBUG("showSkeleton: " << std::to_string(showSkeleton));
 
+				rapidjson::Value& KSPointCloud = jsonDocument["showPointCloud"];
+				showPointCloud = jsonDocument["showPointCloud"].GetBool();
+				APE_LOG_DEBUG("showPointCloud: " << std::to_string(showPointCloud));
+
 				rapidjson::Value& KBRemoval = jsonDocument["backgroundRemoval"];
 				backgroundRemoval = jsonDocument["backgroundRemoval"].GetBool();
 				APE_LOG_DEBUG("backgroundRemoval: " << std::to_string(backgroundRemoval));
@@ -333,7 +337,7 @@ void ape::KinectPlugin::Run()
 	{
 		Update();
 
-		if (sstate != 2)
+		if (sstate != 2 && showPointCloud)
 		{
 			if (!backgroundRemoval)
 			{
