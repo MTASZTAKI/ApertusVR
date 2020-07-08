@@ -844,6 +844,7 @@ function showDesiredMenu(userName) {
 		$('#leftMenu').children().show();
 		$('#rightMenu').children().show();
 		hideTeacherButtons();
+		hidePauseAndSkipButtons();
 		$('#bookmarks').hide();
 		$('#Log').hide();
 		$('#stateStream').hide();
@@ -859,6 +860,7 @@ function showDesiredMenu(userName) {
 		hideMultiUserButtons();
 		hideStudentButtons();
 		hideTeacherButtons();
+		hidePauseAndSkipButtons();
 		$('#bookmarks').hide();
 		$('#Log').hide();
 		$('#stateStream').hide();
@@ -871,6 +873,7 @@ function showDesiredMenu(userName) {
 		$('#leftMenu').children().show();
 		$('#rightMenu').children().show();
 		hideStudentButtons();
+		hidePauseAndSkipButtons();
 		$('#bookmarks').hide();
 		$('#Log').hide();
 		$('#stateStream').hide();

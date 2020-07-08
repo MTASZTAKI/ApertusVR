@@ -65,20 +65,20 @@
 		</div>
 	</div>
 	<div id="leftMenu" class="d-inline-block float-left">
-		<div id="stateStream" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
-			<p id="stateStreamText" class="card-title">State Stream: N/A</p>
+		<div id="leftButtonsPauseSkip" class="btn-group-horizontal" style="background-color:rgba(255, 255, 255, 0.7)">
+			<div id="stateStream" style="max-width:400px;max-height:200px">
+				<p id="stateStreamText" class="card-title">State Stream: N/A</p>
+			</div>
+			<div id="stopWatch" class="card border-dark mb-3"></div>
+			<button id="pause" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-pause"></span></button>
+			<button id="skip_forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-forward"></span></button>
+			<button id="skip_backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-backward"></span></button>
+			<button id="forward" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-step-forward"></span></button>
+			<button id="backward" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-step-backward"></span></button>
+			<button id="stop" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-stop"></span></button>
 		</div>
 		<div id="leftButtonsPlay" class="btn-group-vertical" style="background-color:rgba(255, 255, 255, 0.7)">
 			<button id="play" type="button" class="btn btn-outline-dark btn-lg" onClick="showPauseAndSkipButtons();"><span class="oi oi-media-play"></span></button>
-			<div id="leftButtonsPauseSkip" class="btn-group-vertical">
-				<div id="stopWatch" class="card border-dark mb-3"></div>
-				<button id="pause" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-pause"></span></button>
-				<button id="skip_forward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-forward"></span></button>
-				<button id="skip_backward" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-media-skip-backward"></span></button>
-				<button id="forward" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-step-forward"></span></button>
-				<button id="backward" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-step-backward"></span></button>
-				<button id="stop" type="button" class="btn btn-outline-dark btn-lg" onClick="hidePauseAndSkipButtons();"><span class="oi oi-media-stop"></span></button>
-			</div>
 			<button id="bookmark" type="button" class="btn btn-outline-dark btn-lg" onClick="toogleBookmarks();"><span class="oi oi-bookmark"></span></button>
 			<button id="logs" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleLog();"><span class="oi oi-file"></span></button>
 			<button id="info" type="button" class="btn btn-outline-dark btn-lg" onClick="toggleInfoSection();"><span class="oi oi-info"></span></button>
@@ -87,7 +87,7 @@
 		</div>
 		<div id="Log" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 		</div>
-		<div id="infoSection" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
+		<div id="infoSection" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7);max-width:400px;max-height:500px">
 			<div id="selectedNodeNameTitle" class="card-header"></div>
 			<div class="card-body text-dark">
 				<p id="selectedNodeState" class="card-title">State: N/A</p>
