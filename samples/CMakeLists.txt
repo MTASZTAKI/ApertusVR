@@ -22,6 +22,7 @@
 
 add_subdirectory (ai)
 add_subdirectory (browser)
+add_subdirectory (collisionDetection)
 add_subdirectory (content)
 add_subdirectory (controller)
 add_subdirectory (game)
@@ -37,4 +38,5 @@ add_subdirectory (tracking)
 add_subdirectory (e-Learning)
 add_subdirectory (userInterface)
 add_subdirectory (virtualLearningFactory)
+
 

@@ -21,13 +21,14 @@
 #SOFTWARE.
 
 set (CONFIGS
-	apeKinectPlugin.json
+	apeNodeJsPlugin.json
+	apeX3DLoaderPlugin.json
 	apeCore.json
 	)
 
 add_custom_target(
-    Kinect ALL
+    RealRobot ALL
     SOURCES ${CONFIGS}
 )
 
-set_property (TARGET Kinect PROPERTY FOLDER "Samples/CollisionDetection")
+set_property (TARGET RealRobot PROPERTY FOLDER "Samples/CollisionDetection")

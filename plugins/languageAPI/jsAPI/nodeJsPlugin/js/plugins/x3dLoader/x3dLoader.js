@@ -524,7 +524,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
 
 				/// RigidBody
-				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body', false);
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body', true);
 				rigidBodyObj.setIndexedFaceSetGeometryJsPtr(indexedFaceSetObj);
 				rigidBodyObj.setToStatic();
 
@@ -574,7 +574,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				log('GOT_INDEXEDFACESET?');
 
 				/// RigidBody
-				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body', false);
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body', true);
 				rigidBodyObj.setCloneGeometryJsPtr(cloneGeometryObj);
 				rigidBodyObj.setToStatic();
 

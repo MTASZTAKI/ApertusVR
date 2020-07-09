@@ -1,0 +1,12 @@
+{
+    "httpServer": {
+        "port":  4000
+    },
+    "pluginManager": {
+      "plugins": [
+        {
+          "file": "x3dLoader/x3dLoader.js"
+        }
+      ]
+    }
+}
