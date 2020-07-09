@@ -46,6 +46,7 @@ SOFTWARE.*/
 #include "apePointCloudImpl.h"
 #include "apeFileTextureImpl.h"
 #include "apeManualTextureImpl.h"
+#include "apeRigidBodyImpl.h"
 
 ape::ReplicaManagerConnection::ReplicaManagerConnection(const RakNet::SystemAddress &_systemAddress, RakNet::RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid)
 {
@@ -174,6 +175,11 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::BROWSER, true, ownerID.C_String()).lock())
 				return ((ape::BrowserImpl*)entity.get());
+		}
+		else if (objectType == "RigidBody")
+		{
+			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::RIGIDBODY, true, ownerID.C_String()).lock())
+				return ((ape::RigidBodyImpl*)entity.get());
 		}
 		else if (objectType == "FileTexture")
 		{

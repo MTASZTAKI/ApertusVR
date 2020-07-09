@@ -53,9 +53,7 @@ namespace ape
     class IRigidBody : public ape::Entity
     {
     protected:
-        IRigidBody(std::string name)
-		: Entity(name, Entity::Type::RIGIDBODY, false, "")
-		{}
+        IRigidBody(std::string name, bool replicate, std::string ownerID) : Entity(name, ape::Entity::RIGIDBODY, replicate, ownerID) {}
 
         virtual ~IRigidBody() {}
 
@@ -119,6 +117,10 @@ namespace ape
         virtual ape::GeometryWeakPtr getGeometry() = 0; 
 
 		virtual std::string getGeometryName() = 0;
+
+		virtual void setOwner(std::string ownerID) = 0;
+
+		virtual std::string getOwner() = 0;
 	};
 }
 

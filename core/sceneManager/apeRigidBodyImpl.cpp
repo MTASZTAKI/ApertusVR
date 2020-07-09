@@ -22,8 +22,7 @@ SOFTWARE.*/
 
 #include "apeRigidBodyImpl.h"
 
-ape::RigidBodyImpl::RigidBodyImpl(std::string name)
-: ape::IRigidBody(name)
+ape::RigidBodyImpl::RigidBodyImpl(std::string name, bool replicate, std::string ownerID, bool isHost) : ape::IRigidBody(name, replicate, ownerID), ape::Replica("RigidBody", name, ownerID, isHost)
 {
 	mpEventManagerImpl = ((ape::EventManagerImpl*)ape::IEventManager::getSingletonPtr());
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
@@ -208,3 +207,83 @@ std::string ape::RigidBodyImpl::getGeometryName()
 {
 	return mGeometryName;
 }
+
+void ape::RigidBodyImpl::setOwner(std::string ownerID)
+{
+	mOwnerID = ownerID;
+}
+
+std::string ape::RigidBodyImpl::getOwner()
+{
+	return mOwnerID;
+}
+
+void ape::RigidBodyImpl::WriteAllocationID(RakNet::Connection_RM3 * destinationConnection, RakNet::BitStream * allocationIdBitstream) const
+{
+	allocationIdBitstream->Write(mObjectType);
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
+}
+
+RakNet::RM3SerializationResult ape::RigidBodyImpl::Serialize(RakNet::SerializeParameters * serializeParameters)
+{
+	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
+	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMass);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLinearFriction);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRollingFriction);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mSpinningFriction);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLinearDamping);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAngularDamping);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRestitution);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRBType);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mBouyancyEnabled);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColliderType);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.EndSerialize(&serializationContext);
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
+}
+
+void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters * deserializeParameters)
+{
+	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
+	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMass))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLinearFriction))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRollingFriction);
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpinningFriction))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_FRICTION));
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLinearDamping);
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mAngularDamping))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_DAMPING));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRestitution))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_RESTITUTION));
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRBType);
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mBouyancyEnabled))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_BOUYANCY));
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mColliderType);
+	RakNet::RakString geometryName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, geometryName))
+	{
+		mGeometryName = geometryName.C_String();
+		if (auto geometry = std::static_pointer_cast<ape::Geometry>(mpSceneManager->getEntity(mGeometryName).lock()))
+		{
+			mGeometry = geometry;
+		}
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_SHAPE));
+	}
+	RakNet::RakString parentName;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
+	{
+		mParentNodeName = parentName.C_String();
+		mParentNode = mpSceneManager->getNode(mParentNodeName);
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_PARENTNODE));
+	}
+	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
+}
+
+

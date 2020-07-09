@@ -381,6 +381,19 @@ ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::En
 			}
 			return entity;
 		}
+		case ape::Entity::RIGIDBODY:
+		{
+			APE_LOG_TRACE("type: RIGIDBODY");
+			auto entity = std::make_shared<ape::RigidBodyImpl>(name, replicate, ownerID, ((ape::SceneNetworkImpl*)mpSceneNetwork)->isReplicaHost());
+			mEntities.insert(std::make_pair(name, entity));
+			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::RIGIDBODY_CREATE));
+			if (replicate)
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Reference(entity.get());
+			}
+			return entity;
+		}
 		case ape::Entity::CAMERA:
 		{
 			APE_LOG_TRACE("type: CAMERA");
@@ -419,14 +432,6 @@ ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::En
 			auto entity = std::make_shared<ape::WaterImpl>(name);
 			mEntities.insert(std::make_pair(name, entity));
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::WATER_CREATE));
-			return entity;
-		}
-		case ape::Entity::RIGIDBODY:
-		{
-			APE_LOG_TRACE("type: RIGIDBODY");
-			auto entity = std::make_shared<ape::RigidBodyImpl>(name);
-			mEntities.insert(std::make_pair(name, entity));
-			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::RIGIDBODY_CREATE));
 			return entity;
 		}
 		case ape::Entity::INVALID:
@@ -632,6 +637,17 @@ void ape::SceneManagerImpl::deleteEntity(std::string name)
 			}
 		}
 			break;
+		case ape::Entity::RIGIDBODY:
+		{
+			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::RIGIDBODY_DELETE));
+			auto entity = std::static_pointer_cast<ape::BrowserImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
+		}
+			break;
 		case ape::Entity::TEXTURE_UNIT:
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::TEXTURE_UNIT_DELETE));
 			break;
@@ -649,9 +665,6 @@ void ape::SceneManagerImpl::deleteEntity(std::string name)
 			break;
 		case ape::Entity::CAMERA:
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::CAMERA_DELETE));
-			break;
-		case ape::Entity::RIGIDBODY:
-			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::RIGIDBODY_DELETE));
 			break;
 		case ape::Entity::INVALID:
 			break;
