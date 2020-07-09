@@ -1,0 +1,29 @@
+{
+  "plugins": [
+    "apeBulletPhysicsPlugin"
+  ],
+  "network": {
+    "user": "physics",
+    "participant": "host",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "195.111.2.95",
+        "port": "61666"
+      },
+      "lobby": {
+        "ip": "195.111.2.95",
+        "port": "8888",
+        "room": "PREHUROCO"
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "internet",
+    "resourceLocations": [
+    ]
+  }
+}
+
+
