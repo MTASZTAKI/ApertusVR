@@ -534,8 +534,10 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				if (utils.isDefined(materialObj)) {
 					log('setParametersWithMaterial is called');
 					indexedFaceSetObj.setParametersWithMaterial(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors, materialObj);
-				} else
+				} else {
+					log('setParameters is called');
 					indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors);
+				}
 				if (lastGroupNodeObjName != groupNodeObjName) {
 					if (groupNodeObj) {
 						indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);

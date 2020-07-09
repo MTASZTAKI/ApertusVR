@@ -278,7 +278,6 @@ public:
 	IndexedFaceSetJsPtr createIndexedFaceSet(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
-		/*printf("\nCREATING INDEXED FACE SET GEOMETRY!\n");*/
 		APE_LOG_FUNC_LEAVE();
 		return IndexedFaceSetJsPtr(mpSceneManager->createEntity(name, ape::Entity::GEOMETRY_INDEXEDFACESET, replicate, mpCoreConfig->getNetworkGUID()));
 	}
@@ -347,11 +346,11 @@ public:
 		return success;
 	}
 
-	RigidBodyJsPtr createRigidBody(std::string name)
+	RigidBodyJsPtr createRigidBody(std::string name, bool replicate)
 	{
 		APE_LOG_FUNC_ENTER();
 		APE_LOG_FUNC_LEAVE();
-		return RigidBodyJsPtr(mpSceneManager->createEntity(name, ape::Entity::RIGIDBODY, false, ""));
+		return RigidBodyJsPtr(mpSceneManager->createEntity(name, ape::Entity::RIGIDBODY, replicate, mpCoreConfig->getNetworkGUID()));
 	}
 
 	bool getRigidBody(std::string name, nbind::cbFunction &done)

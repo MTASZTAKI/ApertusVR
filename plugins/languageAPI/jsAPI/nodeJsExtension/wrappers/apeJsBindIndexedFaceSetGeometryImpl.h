@@ -45,6 +45,7 @@ public:
 
 	IndexedFaceSetJsPtr(ape::EntityWeakPtr ptr)
 	{
+		//APE_LOG_DEBUG("IndexedFaceSetJsPtr");
 		mPtr = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(ptr.lock());
 	}
 
@@ -99,6 +100,7 @@ public:
 
 	void setParentNodeJsPtr(NodeJsPtr parentNode)
 	{
+		//APE_LOG_DEBUG("setParentNodeJsPtr");
 		mPtr.lock()->setParentNode(parentNode.getNodeWeakPtr());
 	}
 
@@ -123,11 +125,13 @@ public:
 
 	void setParametersWithMaterial(std::string groupName, ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::GeometryNormals normals, ape::GeometryColors colors, ManualMaterialJsPtr manualMaterial)
 	{
+		//APE_LOG_DEBUG("setParametersWithMaterial");
 		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, true, colors, ape::GeometryTextureCoordinates(), manualMaterial.getManualMaterialSharedPtr());
 	}
 
 	void setParameters(std::string groupName, ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::GeometryNormals normals, ape::GeometryColors colors)
 	{
+		//APE_LOG_DEBUG("setParameters");
 		mPtr.lock()->setParameters(groupName, coordinates, indices, normals, true, colors, ape::GeometryTextureCoordinates(), ape::MaterialWeakPtr());
 	}
 };
