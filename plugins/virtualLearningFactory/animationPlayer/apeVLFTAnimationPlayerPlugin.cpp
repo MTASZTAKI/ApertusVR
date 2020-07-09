@@ -576,8 +576,9 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 			{
 				if (event.subjectName == student->getName())
 				{
+					std::chrono::milliseconds timeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 					std::stringstream data;
-					data << student->getName() << " pos: " << student->getDerivedPosition().toString() << " ori: "  << student->getDerivedOrientation().toString() << std::endl;
+					data << std::to_string(timeStamp.count()) << " name: " << student->getName() << " pos: " << student->getDerivedPosition().toString() << " ori: "  << student->getDerivedOrientation().toString() << std::endl;
 					mStudentsMovementLoggingFile << data.str();
 				}
 			}
