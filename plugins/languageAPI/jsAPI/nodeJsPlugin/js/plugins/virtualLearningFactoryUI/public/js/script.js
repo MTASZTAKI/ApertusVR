@@ -352,6 +352,13 @@ function showPauseAndSkipButtons() {
 	updateOverlayBrowserLastMessageInterval = setInterval(getOverlayBrowserLastMessage, 50);
 }
 
+function hidePlayButtons() {
+	console.log('hidePlayButtons');
+	$('#play').hide();
+	$('#bookmark').hide();
+	$('#logs').hide();
+}
+
 function hidePauseAndSkipButtons() {
 	console.log('hidePauseAndSkipButtons');
 	$('#leftButtonsPauseSkip').hide();
@@ -845,6 +852,7 @@ function showDesiredMenu(userName) {
 		$('#rightMenu').children().show();
 		hideTeacherButtons();
 		hidePauseAndSkipButtons();
+		hidePlayButtons();
 		$('#bookmarks').hide();
 		$('#Log').hide();
 		$('#stateStream').hide();
