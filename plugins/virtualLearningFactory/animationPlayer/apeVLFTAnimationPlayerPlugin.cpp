@@ -673,7 +673,7 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 							animation.parentNodeName = *action.get_event().get_placement_rel_to();
 						else
 							animation.parentNodeName = "";
-						animation.time = atoi(action.get_trigger().get_data().c_str()) + (1.0f / atoi(fps.c_str()) * i);
+						animation.time = atoi(action.get_trigger().get_data().c_str()) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
 						animation.position = ape::Vector3(x, y, z);
 						currentAnimations.push_back(animation);
 					}
@@ -724,7 +724,7 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 							animation.parentNodeName = *action.get_event().get_placement_rel_to();
 						else
 							animation.parentNodeName = "";
-						animation.time = atoi(action.get_trigger().get_data().c_str()) + (1.0f / atoi(fps.c_str()) * i);
+						animation.time = atoi(action.get_trigger().get_data().c_str()) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
 						animation.translate = ape::Vector3(x, y, z);
 						currentAnimations.push_back(animation);
 					}
