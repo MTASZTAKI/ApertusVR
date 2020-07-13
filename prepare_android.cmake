@@ -37,7 +37,3 @@ elseif(${ANDROID_ABI} STREQUAL "x86_64")
 endif()
 
 include_directories(${ANDROID_SYSROOT}/usr/include/${TARGET_HOST})
-
-# for zip
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/androidx/external/sanitizersCmake/cmake" ${CMAKE_MODULE_PATH})
-

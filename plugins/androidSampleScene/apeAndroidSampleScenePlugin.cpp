@@ -26,7 +26,7 @@ SOFTWARE.*/
 #include "apeIPlaneGeometry.h"
 #include "apeIFileGeometry.h"
 #include "apeIManualMaterial.h"
-
+#include "apeIConeGeometry.h"
 
 ape::AndroidSampleScenePlugin::AndroidSampleScenePlugin()
 {
@@ -83,7 +83,7 @@ void ape::AndroidSampleScenePlugin::initLights()
 		light->setLightType(ape::Light::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(-1,-1,0));
 		light->setDiffuseColor(ape::Color(0.6f,0.6f,0.6f));
-		light->setSpecularColor(ape::Color(1.0f,1.0f,1.0f));
+		light->setSpecularColor(ape::Color(0.7f,0.7f,0.7f,0.8));
 	}
 
 	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light02", ape::Entity::LIGHT, false, "androidSampleScene").lock()))
@@ -91,8 +91,48 @@ void ape::AndroidSampleScenePlugin::initLights()
 		light->setLightType(ape::Light::DIRECTIONAL);
 		light->setLightDirection(ape::Vector3(1,-1,0));
 		light->setDiffuseColor(ape::Color(0.6f,0.6f,0.6f));
-		light->setSpecularColor(ape::Color(1.0f,1.0f,1.0f));
+		light->setSpecularColor(ape::Color(0.7f,0.7f,0.7f,0.8));
 	}
+
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light03", ape::Entity::LIGHT, false, "androidSampleScene").lock()))
+	{
+		light->setLightType(ape::Light::DIRECTIONAL);
+		light->setLightDirection(ape::Vector3(0,-1,0));
+		light->setDiffuseColor(ape::Color(0.6f,0.6f,0.6f));
+		light->setSpecularColor(ape::Color(0.7f,0.7f,0.7f,0.8));
+	}
+
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light04", ape::Entity::LIGHT, false, "androidSampleScene").lock()))
+	{
+		light->setLightType(ape::Light::DIRECTIONAL);
+		light->setLightDirection(ape::Vector3(0,-1,1));
+		light->setDiffuseColor(ape::Color(0.6f,0.6f,0.6f));
+		light->setSpecularColor(ape::Color(0.7f,0.7f,0.7f,0.8));
+	}
+
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light06", ape::Entity::LIGHT, false, "androidSampleScene").lock()))
+	{
+		light->setLightType(ape::Light::DIRECTIONAL);
+		light->setLightDirection(ape::Vector3(0,-1,-1));
+		light->setDiffuseColor(ape::Color(0.6f,0.6f,0.6f));
+		light->setSpecularColor(ape::Color(0.7f,0.7f,0.7f,0.8));
+	}
+
+	if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light05", ape::Entity::LIGHT, false, "androidSampleScene").lock()))
+	{
+		light->setLightType(ape::Light::POINT);
+        light->setLightAttenuation(LightAttenuation(1000,100,50,10));
+		light->setDiffuseColor(ape::Color(1.0f,1.0f,1.0f));
+		light->setSpecularColor(ape::Color(1.0f,1.0f,1.0f,1.0));
+
+		if (auto node = mpSceneManager->createNode("pointLightNode",false,"androidSampleScene").lock())
+		{
+			node->setPosition(ape::Vector3(-10,2,3));
+			light->setParentNode(node);
+		}
+
+	}
+
 }
 
 void ape::AndroidSampleScenePlugin::initGeometries()
@@ -114,26 +154,54 @@ void ape::AndroidSampleScenePlugin::initGeometries()
             {
                 material->setAmbientColor(ape::Color(0.0f, 0.0f, 0.0f));
                 material->setDiffuseColor(ape::Color(0.1f, 0.1f, 0.1f, 1.f));
-                material->setSpecularColor(ape::Color(0.2f, 0.2f, 0.2f, 0.0f));
+                material->setSpecularColor(ape::Color(0.2f, 0.2f, 0.2f, 0.01f));
 
                 plane->setMaterial(material);
             }
 
-            plane->setParameters(ape::Vector2(), ape::Vector2(10, 10), ape::Vector2());
+            plane->setParameters(ape::Vector2(), ape::Vector2(25, 20), ape::Vector2());
             plane->setParentNode(planeNode);
+        }
+    }
+
+    // cone
+    if (auto coneNode = mpSceneManager->createNode("cone01Node",false,"androidSampleScene").lock())
+    {
+        coneNode->setParentNode(mRootNodeWeak);
+        coneNode->setPosition(ape::Vector3(-10,4.0,-10));
+        coneNode->setOrientation(ape::Quaternion(ape::Degree(90),ape::Vector3(1,0,0)));
+
+        if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(
+                mpSceneManager->createEntity("cone01", ape::Entity::Type::GEOMETRY_CONE,
+                                             false, "androidSampleScene").lock()))
+        {
+            if (auto material = std::static_pointer_cast<ape::IManualMaterial>(
+                    mpSceneManager->createEntity("cone01Material", ape::Entity::MATERIAL_MANUAL,
+                                                 false, "androidSampleScene").lock()))
+            {
+                material->setAmbientColor(ape::Color(0.0f, 0.0f, 0.0f));
+                material->setDiffuseColor(ape::Color(0.1f, 0.2f, 0.8f, 1.f));
+                material->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f, 0.05f));
+
+                cone->setMaterial(material);
+            }
+
+            cone->setParameters(3.0f,2.0f,1.0f,ape::Vector2());
+            cone->setParentNode(coneNode);
         }
     }
 
     // Vibrating_Bowl_Clip
     if (auto node = mpSceneManager->createNode("vibratingBowlClipNode", false,
                                                "androidSampleScene").lock()) {
-        node->setPosition(ape::Vector3(-6, 0, 0));
+        node->setPosition(ape::Vector3(10, 0, -7));
+        node->setOrientation(ape::Quaternion(ape::Degree(45),ape::Vector3(0,1,0)));
         node->setParentNode(mRootNodeWeak);
 
         if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
                 mpSceneManager->createEntity("Vibrating_Bowl_Clip", ape::Entity::GEOMETRY_FILE,
                                              false, "androidSampleScene").lock())) {
-            fileGeom->setUnitScale(0.005f);
+            fileGeom->setUnitScale(0.01f);
             fileGeom->setFileName("VibratingBowl/Vibrating_Bowl_Clip.obj");
             fileGeom->setParentNode(node);
         }
@@ -155,18 +223,118 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 
     // Conveyor
     if (auto node = mpSceneManager->createNode("ConveyorNode", false,
-                                               "androidSampleScene").lock()) {
+                                                    "androidSampleScene").lock()) {
         node->setPosition(ape::Vector3(0, 0, 0));
         node->setParentNode(mRootNodeWeak);
 
         if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
                 mpSceneManager->createEntity("Conveyor_Main", ape::Entity::GEOMETRY_FILE,
-                                             false, "androidSampleScene").lock())) {
+                                             false, "androidSampleScene").lock()))
+        {
             fileGeom->setUnitScale(0.01f);
             fileGeom->setFileName("Conveyor/Conveyor_Main.obj");
             fileGeom->setParentNode(node);
         }
     }
+
+    // PickAndPlace
+    if (auto node = mpSceneManager->createNode("PickAndPlaceNode",false,"androidSampleScene").lock())
+	{
+    	node->setPosition(ape::Vector3(-7,0,7));
+    	node->setParentNode(mRootNodeWeak);
+    	node->setOrientation(ape::Quaternion(ape::Degree(45.f),ape::Vector3(0,1,0)));
+
+		if (auto nodeX = mpSceneManager->createNode("PickAndPlaceNodeX",false,"androidSampleScene").lock())
+		{
+			nodeX->setPosition(ape::Vector3(0,0,0));
+			nodeX->setParentNode(node);
+
+			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+					mpSceneManager->createEntity("PickAndPlaceX", ape::Entity::GEOMETRY_FILE,
+												 false, "androidSampleScene").lock()))
+			{
+				fileGeom->setUnitScale(0.02f);
+				fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_X.obj");
+				fileGeom->setParentNode(nodeX);
+			}
+		}
+
+		if (auto nodeY = mpSceneManager->createNode("PickAndPlaceNodeY",false,"androidSampleScene").lock())
+		{
+			nodeY->setPosition(ape::Vector3(0,0,0));
+			nodeY->setParentNode(node);
+
+			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+					mpSceneManager->createEntity("PickAndPlaceY", ape::Entity::GEOMETRY_FILE,
+												 false, "androidSampleScene").lock()))
+			{
+				fileGeom->setUnitScale(0.02f);
+				fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_Y.obj");
+				fileGeom->setParentNode(nodeY);
+			}
+		}
+
+		if (auto nodeZ = mpSceneManager->createNode("PickAndPlaceNodeZ",false,"androidSampleScene").lock())
+		{
+			nodeZ->setPosition(ape::Vector3(0,0,0));
+			nodeZ->setParentNode(node);
+
+			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+					mpSceneManager->createEntity("PickAndPlaceZ", ape::Entity::GEOMETRY_FILE,
+												 false, "androidSampleScene").lock()))
+			{
+				fileGeom->setUnitScale(0.02f);
+				fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_Z.obj");
+				fileGeom->setParentNode(nodeZ);
+			}
+		}
+
+		if (auto nodeStatic = mpSceneManager->createNode("PickAndPlaceNodeStatic",false,"androidSampleScene").lock())
+		{
+			nodeStatic->setPosition(ape::Vector3(5,0,0));
+			nodeStatic->setParentNode(node);
+
+			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+					mpSceneManager->createEntity("PickAndPlaceStatic", ape::Entity::GEOMETRY_FILE,
+												 false, "androidSampleScene").lock()))
+			{
+				fileGeom->setUnitScale(0.02f);
+				fileGeom->setFileName("PickAndPlace/Pick_and_Place_Static.obj");
+				fileGeom->setParentNode(nodeStatic);
+			}
+		}
+	}
+
+    // LateralConveyor
+	if (auto node = mpSceneManager->createNode("LateralConveyorNode",false,"androidSampleScene").lock())
+	{
+		node->setPosition(ape::Vector3(7, 0, 10));
+		node->setParentNode(mRootNodeWeak);
+		node->setOrientation(ape::Quaternion(ape::Degree(15.f), ape::Vector3(0, 1, 0)));
+
+		if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+				mpSceneManager->createEntity("LateralConveyor", ape::Entity::GEOMETRY_FILE,
+											 false, "androidSampleScene").lock()))
+		{
+			fileGeom->setUnitScale(0.02f);
+			fileGeom->setFileName("PickAndPlace/Lateral_Conveyor.obj");
+			fileGeom->setParentNode(node);
+		}
+	}
+
+//	if (auto node = mpSceneManager->createNode("buildingNode",false,"androidSampleScene").lock())
+//    {
+//        node->setPosition(ape::Vector3(10,0,0));
+//        node->setParentNode(mRootNodeWeak);
+//
+//        if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+//                mpSceneManager->createEntity("Building", ape::Entity::GEOMETRY_FILE,
+//                        false, "androidSampleScene").lock()))
+//        {
+//            fileGeom->setUnitScale(0.001f);
+//            fileGeom->setFileName("buildings/buildingP/building.obj");
+//        }
+//    }
 }
 void ape::AndroidSampleScenePlugin::Step()
 {

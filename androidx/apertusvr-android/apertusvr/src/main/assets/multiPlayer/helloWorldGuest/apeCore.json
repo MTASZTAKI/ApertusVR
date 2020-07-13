@@ -3,7 +3,7 @@
     "apeJNIPlugin"
   ],
   "network": {
-    "user": "multiPlayerGuest",
+    "user": "androidGuest",
     "participant": "guest",
     "internet": {
       "natPunchThrough": {
@@ -13,7 +13,7 @@
       "lobby": {
         "ip": "195.111.2.95",
         "port": "8888",
-        "room": "vlftTestCase02"
+        "room": "vlftTestCase07"
       }
     },
     "lan": {

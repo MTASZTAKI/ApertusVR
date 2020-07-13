@@ -1,9 +1,28 @@
+/*MIT License
+
+Copyright (c) 2018 MTA SZTAKI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
+
 package org.apertusvr.render;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -14,8 +33,14 @@ import org.apertusvr.apeVector3;
 
 public class apeCameraController {
 
-    private float rotateSpeed = 0.001f;
-    private float speed = 0.05f;
+    private enum MotionState {
+        MOVE_FORWARD,
+        MOVE_BACKWARD,
+        STOPPED
+    }
+
+    private float mRotateSpeed = 0.001f;
+    private float mSpeed = 0.05f;
     private float mHorizontal;
     private float mVertical;
 
@@ -54,10 +79,10 @@ public class apeCameraController {
         lockAngles = false;
 
         if(mMotionState == MotionState.MOVE_FORWARD) {
-            mPosition = mPosition.add(direction.scale(speed));
+            mPosition = mPosition.add(direction.scale(mSpeed));
         }
         else if (mMotionState == MotionState.MOVE_BACKWARD) {
-            mPosition = mPosition.add(direction.scale(-speed));
+            mPosition = mPosition.add(direction.scale(-mSpeed));
         }
 
         apeVector3 up = right.crossProduct(direction);
@@ -90,8 +115,8 @@ public class apeCameraController {
                 lastY = event.getY(0);
             }
             else if (event.getAction() == MotionEvent.ACTION_MOVE && !lockAngles) {
-                mHorizontal += rotateSpeed * (event.getX(0) - lastX);
-                mVertical += rotateSpeed * (event.getY(0) - lastY);
+                mHorizontal += mRotateSpeed * (event.getX(0) - lastX);
+                mVertical += mRotateSpeed * (event.getY(0) - lastY);
                 mVertical = clamp(mVertical,-M_PI / 2f, M_PI / 2f);
 
                 lastX = event.getX();
@@ -110,11 +135,4 @@ public class apeCameraController {
             return true;
         }
     }
-
-    private enum MotionState {
-        MOVE_FORWARD,
-        MOVE_BACKWARD,
-        STOPPED
-    }
-
 }

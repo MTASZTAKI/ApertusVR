@@ -27,6 +27,7 @@ set(SOURCES
         apeJNILight.cpp
         apeJNICamera.cpp
         apeJNIGeometry.cpp
+        apeJNIConeGeometry.cpp
         apeJNIFileGeometry.cpp
         apeJNIPlaneGeometry.cpp
         apeJNIMaterial.cpp

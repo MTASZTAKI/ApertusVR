@@ -64,7 +64,7 @@ void* print_message_function( void *ptr )
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_org_apertusvr_ApertusJNI_startApertusVR(JNIEnv *env, jobject thiz, jobject assetManager)
+Java_org_apertusvr_ApertusJNI_startApertusVR(JNIEnv *env, jobject thiz, jstring conf_path, jobject assetManager)
 {
     int pfd[2];
     pthread_t thr;
@@ -72,7 +72,12 @@ Java_org_apertusvr_ApertusJNI_startApertusVR(JNIEnv *env, jobject thiz, jobject 
 
     android_fopen_set_asset_manager(AAssetManager_fromJava(env,assetManager));
 
-    ape::System::Start("sampleScene",true);
+    const char* confPath = env->GetStringUTFChars(conf_path,nullptr);
+
+    ape::System::Start(confPath,true);
+
+    env->ReleaseStringUTFChars(conf_path, confPath);
+
     printf("ape system started\n");
 }
 

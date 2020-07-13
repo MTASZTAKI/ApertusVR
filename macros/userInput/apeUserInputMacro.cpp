@@ -143,14 +143,23 @@ void ape::UserInputMacro::interpolateViewPose(ViewPose pose, unsigned int millis
 {
 	if (auto userNode = mUserNode.lock())
 	{
+#ifndef ANDROID
 		auto moveInterpolator = std::make_unique<ape::Interpolator>(false);
+#else
+		std::unique_ptr<ape::Interpolator> moveInterpolator(new ape::Interpolator(false));
+#endif
 		moveInterpolator->addSection(
 			userNode->getPosition(),
 			pose.userPosition,
 			milliseconds / 1000,
 			[&](ape::Vector3 pos) { userNode->setPosition(pos); }
 		);
+
+#ifndef ANDROID
 		auto rotateInterpolator = std::make_unique<ape::Interpolator>(false);
+#else
+		std::unique_ptr<ape::Interpolator> rotateInterpolator(new ape::Interpolator(false));
+#endif
 		rotateInterpolator->addSection(
 			userNode->getOrientation(),
 			pose.userOrientation,

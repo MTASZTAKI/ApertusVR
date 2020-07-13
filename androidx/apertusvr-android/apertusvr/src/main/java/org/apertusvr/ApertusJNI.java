@@ -35,7 +35,7 @@ public final class ApertusJNI {
 
     /* apeSystem functions */
 
-    public native void startApertusVR(AssetManager assetManager);
+    public native void startApertusVR(String confPath, AssetManager assetManager);
     public native void stopApertusVR();
 
 
@@ -161,6 +161,15 @@ public final class ApertusJNI {
     static native String getPlaneGeometryMaterial(String nativePlaneGeometry);
     static native void setPlaneGeometryOwner(String nativePlaneGeometry, String nativeOwner);
     static native String getPlaneGeometryOwner(String nativePlaneGeometry);
+
+    /* --- ConeGeometry --- */
+    static native void setConeGeometryParameters(String nativeCone, float radius, float height, float tile, float numSegX, float numSegY);
+    static native @Size(5) float[] getConeGeometryParameters(String nativeCone);
+    static native void setConeGeometryParentNode(String nativeCone, String parentNode);
+    static native void setConeGeometryMaterial(String nativeCone, String material);
+    static native String getConeGeometryMaterial(String nativeCone);
+    static native void setConeGeometryOwner(String nativeCone, String ownerID);
+    static native String getConeGeometryOwner(String nativeCone);
 
     /* --- Material --- */
     static native int getMaterialCullingMode(String nativeMaterial);

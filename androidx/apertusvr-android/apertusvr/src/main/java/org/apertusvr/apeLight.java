@@ -85,10 +85,10 @@ public final class apeLight extends apeEntity {
             this.quadratic = attenuationAsArray[3];
         }
 
-        float range;
-        float constant;
-        float linear;
-        float quadratic;
+        public float range;
+        public float constant;
+        public float linear;
+        public float quadratic;
     }
 
     public apeLight(String name) {

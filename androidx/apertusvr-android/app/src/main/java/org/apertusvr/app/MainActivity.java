@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
 //    private static final String TAG = "Logging example";
@@ -46,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Objects.requireNonNull(getSupportActionBar()).hide();
+
         setContentView(R.layout.activity_main);
         choreographer = Choreographer.getInstance();
         surfaceView = new SurfaceView(this);
@@ -56,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("javalog",getFilesDir().toString());
         if (!apeStarted) {
-            apeJNI.startApertusVR(getAssets());
+            apeJNI.startApertusVR("sampleScene",getAssets());
             apeStarted = true;
         }
 
@@ -65,15 +70,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRenderPlugin() {
         String renderResources = getFilesDir() + "/models";
+        String resourcePrefix = "../../samples/virtualLearningFactory/models/";
         renderPlugin = new apeFilamentRenderPlugin(
-                this, getLifecycle(), surfaceView, renderResources, getResources());
-        getLifecycle().addObserver(renderPlugin);
+                this, getLifecycle(), surfaceView,
+                resourcePrefix,renderResources, getResources());
+                getLifecycle().addObserver(renderPlugin);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("javalog","SurfaceView size: " + surfaceView.getWidth() + " " + surfaceView.getHeight());
     }
 
     @Override
