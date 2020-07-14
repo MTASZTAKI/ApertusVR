@@ -41,7 +41,7 @@ ape::NodeImpl::NodeImpl(std::string name, bool replicate, std::string ownerID, b
 	mInitOrientation = mOrientation;
 	mInitScale = mScale;
 	mInitPosition = mPosition;
-	mInitVisibility = mVisibility;
+	mInitChildVisibility = mVisibility;
 	mInitParentNode = mParentNode;
 	mInitParentNodeName = mParentNodeName;
 }
@@ -262,9 +262,9 @@ void ape::NodeImpl::setInitalState()
 	mInitScale = mScale;
 	mInitPosition = mPosition;
 	mInitOrientation = mOrientation;
-	mInitVisibility = mVisibility;
 	mInitParentNode = mParentNode;
 	mInitParentNodeName = mParentNodeName;
+	mInitChildVisibility = mChildrenVisibility;
 	//mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::NODE_INITIALSTATE));
 }
 
@@ -273,8 +273,10 @@ void ape::NodeImpl::revertToInitalState()
 	setScale(mInitScale);
 	setPosition(mInitPosition);
 	setOrientation(mInitOrientation);
-	setVisible(mInitVisibility);
-	setParentNode(mInitParentNode);
+    if (mParentNodeName != mInitParentNodeName)
+		setParentNode(mInitParentNode);
+	if (mChildrenVisibility != mInitChildVisibility)
+		setChildrenVisibility(mInitChildVisibility);
 }
 
 bool ape::NodeImpl::isReplicated()
@@ -370,7 +372,7 @@ RakNet::RM3SerializationResult ape::NodeImpl::Serialize(RakNet::SerializeParamet
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mInitPosition);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mInitOrientation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mInitParentNodeName.c_str()));
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mInitVisibility);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mInitChildVisibility);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -424,6 +426,6 @@ void ape::NodeImpl::Deserialize(RakNet::DeserializeParameters *deserializeParame
 			mInitParentNode = initParentNode;
 		}
 	}
-	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mInitVisibility);
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mInitChildVisibility);
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

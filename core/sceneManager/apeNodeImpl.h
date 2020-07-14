@@ -148,7 +148,7 @@ namespace ape
 
 		bool mVisibility;
 
-		bool mInitVisibility;
+		bool mInitChildVisibility;
 
 		bool mIsFixedYaw;
 
