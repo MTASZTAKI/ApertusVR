@@ -65,9 +65,9 @@ namespace ape
 
 		virtual Vector3 getDerivedScale() const = 0;
 
-		virtual Matrix4 getModelMatrix() const = 0;
-
-		virtual Matrix4 getDerivedModelMatrix() const = 0;
+//		virtual Matrix4 getModelMatrix() const = 0;
+//
+//		virtual Matrix4 getDerivedModelMatrix() const = 0;
 
 		virtual bool getChildrenVisibility() = 0;
 

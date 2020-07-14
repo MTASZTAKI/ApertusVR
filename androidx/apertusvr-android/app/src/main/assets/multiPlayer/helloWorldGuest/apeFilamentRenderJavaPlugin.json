@@ -1,0 +1,22 @@
+{
+    "camera" : {
+        "fov" : 45.0,
+        "nearClip" : 0.1,
+        "farClip" : 400.0,
+        "controller" : {
+            "position" : [0, 120, -180],
+            "horizontal" : 0.0,
+            "vertical" : -0.5236,
+            "speed" : 1.0,
+            "rotateSpeed" : 0.001
+        }
+    },
+    "sunLight" : {
+        "enable" : true,
+        "intensity" : 1.1e5
+    },
+    "resources" : {
+        "resourcePath" : "/models",
+        "resourcePrefix" : "../../samples/virtualLearningFactory/models/"
+    }
+}

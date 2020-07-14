@@ -1,0 +1,22 @@
+{
+    "camera" : {
+        "fov" : 45.0,
+        "nearClip" : 0.1,
+        "farClip" : 40.0,
+        "controller" : {
+            "position" : [0, 4, 10],
+            "horizontal" : 3.1415,
+            "vertical" : 0.0,
+            "speed" : 0.1,
+            "rotateSpeed" : 0.001
+        }
+    },
+    "sunLight" : {
+        "enable" : true,
+        "intensity" : 1.1e5
+    },
+    "resources" : {
+        "resourcePath" : "/models",
+        "resourcePrefix" : ""
+    }
+}

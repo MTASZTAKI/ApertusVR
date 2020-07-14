@@ -63,13 +63,13 @@ public final class apeNode {
         return new apeVector3(ApertusJNI.getNodeDerivedScale(mName));
     }
 
-    public apeMatrix4 getModelMatrix() {
-        return new apeMatrix4(ApertusJNI.getNodeModelMatrix(mName));
-    }
-
-    public apeMatrix4 getDerivedModelMatrix() {
-        return new apeMatrix4(ApertusJNI.getNodeDerivedModelMatrix(mName));
-    }
+//    public apeMatrix4 getModelMatrix() {
+//        return new apeMatrix4(ApertusJNI.getNodeModelMatrix(mName));
+//    }
+//
+//    public apeMatrix4 getDerivedModelMatrix() {
+//        return new apeMatrix4(ApertusJNI.getNodeDerivedModelMatrix(mName));
+//    }
 
     public boolean getChildrenVisibility() {
         return ApertusJNI.getNodeChildrenVisibility(mName);

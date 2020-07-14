@@ -68,6 +68,8 @@ namespace ape
 
 		ape::ISceneManager* getSceneManager();
 
+		ape::ICoreConfig* getCoreConfig();
+
         ape::DoubleQueue<Event>* getEventDoubleQueue();
 
         std::map<ape::Event::Type, int> getEventNumberMap();

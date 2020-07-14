@@ -52,9 +52,9 @@ namespace ape
 		
 		Vector3 getDerivedScale() const override;
 
-		Matrix4 getModelMatrix() const override;
-
-		Matrix4 getDerivedModelMatrix() const override;
+//		Matrix4 getModelMatrix() const override;
+//
+//		Matrix4 getDerivedModelMatrix() const override;
 
 		bool getChildrenVisibility() override;
 

@@ -40,7 +40,7 @@ public class apeCameraController {
     }
 
     private float mRotateSpeed = 0.001f;
-    private float mSpeed = 0.05f;
+    private float mSpeed = 0.8f;
     private float mHorizontal;
     private float mVertical;
 
@@ -53,12 +53,15 @@ public class apeCameraController {
     private MotionState mMotionState;
 
     @SuppressLint("ClickableViewAccessibility")
-    public apeCameraController(apeVector3 position, float horizontal, float vertical, SurfaceView surfaceView) {
-        surfaceView.setOnTouchListener(new onTouchListener());
+    public apeCameraController(apeVector3 position, float horizontal, float vertical,
+                               float speed, float rotateSpeed, SurfaceView surfaceView) {
         mPosition = position;
         mHorizontal = horizontal;
         mVertical = vertical;
+        mSpeed = speed;
+        mRotateSpeed = rotateSpeed;
         mMotionState = MotionState.STOPPED;
+        surfaceView.setOnTouchListener(new onTouchListener());
     }
 
     public void setCameraTransform(Camera camera, float dt) {

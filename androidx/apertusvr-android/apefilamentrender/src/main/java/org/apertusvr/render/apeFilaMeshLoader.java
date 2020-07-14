@@ -258,6 +258,7 @@ final class apeFilaMeshLoader {
         builder.boundingBox(header.aabb);
 
 
+
         for (int i = 0; i < (int) header.parts; i++) {
             builder.geometry(i,
                     RenderableManager.PrimitiveType.TRIANGLES,

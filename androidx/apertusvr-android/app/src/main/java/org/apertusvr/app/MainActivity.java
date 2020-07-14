@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 import org.apertusvr.render.apeFilamentRenderPlugin;
 
-
 import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -28,11 +27,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
 import java.util.Objects;
+
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static final String TAG = "Logging example";
+    private static final String LOG_TAG = "javalog.MainActivity";
 
     ApertusJNI apeJNI = new ApertusJNI();
     Choreographer choreographer;
@@ -57,11 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(surfaceView);
 
-        surfaceView.setOnTouchListener(new myOnTouchListener());
-
-        Log.d("javalog",getFilesDir().toString());
         if (!apeStarted) {
-            apeJNI.startApertusVR("sampleScene",getAssets());
+            apeJNI.startApertusVR("multiPlayer/helloWorldGuest",getAssets());
             apeStarted = true;
         }
 
@@ -69,12 +67,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRenderPlugin() {
-        String renderResources = getFilesDir() + "/models";
-        String resourcePrefix = "../../samples/virtualLearningFactory/models/";
         renderPlugin = new apeFilamentRenderPlugin(
                 this, getLifecycle(), surfaceView,
-                resourcePrefix,renderResources, getResources());
-                getLifecycle().addObserver(renderPlugin);
+                getResources(), getAssets());
+        getLifecycle().addObserver(renderPlugin);
     }
 
     @Override
@@ -113,29 +109,6 @@ public class MainActivity extends AppCompatActivity {
             if(apeStarted) {
                 ApertusJNI.processEventDoubleQueue();
             }
-        }
-    }
-
-    class myOnTouchListener implements View.OnTouchListener {
-
-        @SuppressLint("ClickableViewAccessibility")
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            float x = event.getX();
-            float y = event.getY();
-////            Log.d("javalog","SurfaceView size: " + v.getWidth() + " " + v.getHeight());
-////            Log.d("javalog","Touch at: " + x + " " + y);
-//
-//            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                Log.d("javalog", "ACTION_DOWN");
-//            }
-//            else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//                Log.d("javalog", "ACTION_MOVE");
-//            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//                Log.d("javalog", "ACTION_UP");
-//            }
-
-            return true;
         }
     }
 }

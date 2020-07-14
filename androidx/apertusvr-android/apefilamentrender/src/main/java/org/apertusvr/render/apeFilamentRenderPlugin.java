@@ -23,7 +23,6 @@ SOFTWARE.*/
 package org.apertusvr.render;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
@@ -37,6 +36,8 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
 import org.apertusvr.*;
+
+import org.json.*;
 
 import com.google.android.filament.*;
 import com.google.android.filament.android.UiHelper;
@@ -59,6 +60,9 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         Filament.init();
     }
 
+    private final String LOG_TAG = "javalog.filament";
+    private final String THIS_PLUGINNAME = "apeFilamentRenderJavaPlugin";
+
     /* android */
     private Context mContext;
     private Choreographer mChoreographer;
@@ -68,6 +72,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     private Resources mAndroidResources;
     private String mResourcePath;
     private String mResourcePrefix;
+
 
     /* filament */
     private UiHelper mUiHelper;
@@ -105,28 +110,37 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     private static final apeColor CLEAR_COLOR = new apeColor(0.6f, 0.85f, 0.9f, 1.0f);
     private static final apeDegree CAMERA_FOV = new apeDegree(45.0f);
     private static final float CAMERA_NEAR = 0.1f;
-    private static final float CAMERA_FAR = 20.0f;
+    private static final float CAMERA_FAR = 400.0f;
     private static final String DEFAULT_MAT_NAME = "DefaultMaterial";
 
-
+    /* ape */
     apeCameraController mCameraController;
 
+    /* configs */
+    private static class CameraConfigs {
+        public CameraConfigs() {
+        }
+
+        public float fov;
+        public float nearClip;
+        public float farClip;
+    }
+
+    CameraConfigs mCameraConfigs;
 
     public apeFilamentRenderPlugin(Context context, Lifecycle lifecycle, SurfaceView surfaceView,
-                                   String resourcePrefix, String resourcePath, Resources resources) {
+                                   Resources resources, AssetManager assets) {
         mContext = context;
         mLifecycle = lifecycle;
         mSurfaceView = surfaceView;
-        mResourcePrefix = resourcePrefix;
-        mResourcePath = resourcePath;
         mAndroidResources = resources;
+        mAssets = assets;
     }
 
     /* -- Lifecycle event handlers -- */
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void onCreate() {
-        Log.d("filalog","ON_CREATE");
         mMaterialInstances = new TreeMap<>();
         mChoreographer = Choreographer.getInstance();
         mEventDoubleQueue = new apeDoubleQueue<>(true);
@@ -135,18 +149,18 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         mMeshes = new TreeMap<>();
         mTransforms = new TreeMap<>();
         mTextures = new LinkedList<>();
-        mCameraController = new apeCameraController(new apeVector3(0,7,0), 0f, 0f, mSurfaceView);
+
 
         setupSurfaceView();
         setupFilament();
         setupView();
         setupMaterials();
 
-        setupSunLight();
+        initConfigs();
 
         /* event connection */
         apeEventManager.connectEvent(apeEvent.Group.NODE, mEventCallback);
-        apeEventManager.connectEvent(apeEvent.Group.LIGHT, mEventCallback);
+        // apeEventManager.connectEvent(apeEvent.Group.LIGHT, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_FILE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_PLANE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.MATERIAL_MANUAL, mEventCallback);
@@ -169,7 +183,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        Log.d("filalog","ON_DESTROY");
         mChoreographer.removeFrameCallback(mFrameCallback);
         mUiHelper.detach();
 
@@ -232,14 +245,9 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
         /* set camera */
         mCamera.setExposure(16.0f,1.0f/125.0f,100.0f);
-        //mCamera.lookAt(10,10,0,0,0,0,0,1,0);
     }
 
     private void setupMaterials() {
-//        mColoredMaterial = loadMaterialAsset("materials/defaultColoredMat.filamat");
-//        mTexturedMaterial = loadMaterialAsset("materials/defaultTexturedMat.filamat");
-//        mManualMaterial = loadMaterialAsset("materials/manualMat.filamat");
-
         mColoredMaterial = loadMaterialResource(R.raw.default_colored_mat);
         mTexturedMaterial = loadMaterialResource(R.raw.default_textured_mat);
         mManualMaterial = loadMaterialResource(R.raw.manual_mat);
@@ -252,17 +260,64 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         mMaterialInstances.put(DEFAULT_MAT_NAME, defaultMat);
     }
 
-    private void setupSunLight() {
+    private void setupSunLight(float intensity) {
         mSun = new apeFilaLight(mEngine);
         mSun.lightBuilder = new LightManager.Builder(LightManager.Type.SUN)
                 .color(1f,1f,1f)
-                .intensity(11000f)
+                .intensity(intensity)
                 .castLight(true)
                 .castShadows(true);
         mSun.lightBuilder.build(mEngine,mSun.light);
         mLights.put("FILAMENT_SUN_LIGHT",mSun);
 
         mScene.addEntity(mSun.light);
+    }
+
+    private void initConfigs() {
+
+        String configFolderPath = ApertusJNI.getConfigFolderPath();
+        try {
+            ByteBuffer buffer = readUncompressedAsset(
+                    configFolderPath + "/apeFilamentRenderJavaPlugin.json");
+            String configString = new String(buffer.array());
+
+            JSONObject configJson = new JSONObject(configString);
+
+            /* camera config */
+            mCameraConfigs = new CameraConfigs();
+            JSONObject cameraConfigs = configJson.getJSONObject("camera");
+            mCameraConfigs.fov = (float) cameraConfigs.getDouble("fov");
+            mCameraConfigs.nearClip = (float) cameraConfigs.getDouble("nearClip");
+            mCameraConfigs.farClip = (float) cameraConfigs.getDouble("farClip");
+
+            JSONObject controllerConfigs = cameraConfigs.getJSONObject("controller");
+            apeVector3 position = new apeVector3(
+                    (float) controllerConfigs.getJSONArray("position").getDouble(0),
+                    (float) controllerConfigs.getJSONArray("position").getDouble(1),
+                    (float) controllerConfigs.getJSONArray("position").getDouble(2));
+            float horizontal = (float) controllerConfigs.getDouble("horizontal");
+            float vertical = (float) controllerConfigs.getDouble("vertical");
+            float speed = (float) controllerConfigs.getDouble("speed");
+            float rotateSpeed = (float) controllerConfigs.getDouble("rotateSpeed");
+            mCameraController = new apeCameraController(
+                    position,horizontal,vertical,
+                    speed, rotateSpeed,mSurfaceView);
+
+
+            /* sunLight config */
+            JSONObject sunLightConfig = configJson.getJSONObject("sunLight");
+            if (sunLightConfig.getBoolean("enable")) {
+                setupSunLight((float) sunLightConfig.getDouble("intensity"));
+            }
+
+            /* resources */
+            JSONObject resourcesConfig = configJson.getJSONObject("resources");
+            mResourcePath = mContext.getFilesDir() + resourcesConfig.getString("resourcePath");
+            mResourcePrefix = resourcesConfig.getString("resourcePrefix");
+        }
+        catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /* -- event processing -- */
@@ -272,8 +327,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         while (!mLightEventDoubleQueue.emptyPop()) {
 
             apeEvent event = mLightEventDoubleQueue.front();
-
-            Log.d("filalog", event.type.toString() + "event in filament plugin");
 
             apeLight light = new apeLight(event.subjectName);
 
@@ -387,8 +440,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         while (!mEventDoubleQueue.emptyPop()) {
             apeEvent event = mEventDoubleQueue.front();
 
-            Log.d("filalog", event.type.toString() + "event in filament plugin");
-
             if (event.group == apeEvent.Group.GEOMETRY_FILE) {
                 apeFileGeometry fileGeometry = new apeFileGeometry(event.subjectName);
 
@@ -413,8 +464,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                             if (filePath.startsWith(mResourcePrefix)) {
                                 filePath = filePath.substring(mResourcePrefix.length());
                             }
-
-                            Log.d("javalog",filePath);
 
                             if (filePath.charAt(0) != '/') filePath = "/" + filePath;
 
@@ -447,6 +496,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                                             DEFAULT_MAT_NAME
                                     );
 
+                                    /* set the unit scale as the geometry's transform */
                                     TransformManager tcm = mEngine.getTransformManager();
                                     float s = fileGeometry.getUnitScale();
                                     tcm.setTransform(tcm.getInstance(filaMesh.renderable),
@@ -456,7 +506,14 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                                                     0f, 0f, s, 0f,
                                                     0f, 0f, 0f, 1
                                             });
+
                                     mScene.addEntity(filaMesh.renderable);
+
+                                    /* parentNode was set before this event */
+                                    if (filaMesh.parentTransform != null) {
+                                        filaMesh.setParentTransform(filaMesh.parentTransform,tcm);
+                                        filaMesh.parentTransform = null;
+                                    }
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -467,12 +524,16 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                         apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
                         if (filaMesh != null) {
                             apeNode parentNode = fileGeometry.getParentNode();
-                            if (parentNode.isValid()) {
+                            if (parentNode.isValid() && parentNode.isVisible()) {
                                 apeFilaTransform transform = mTransforms.get(parentNode.getName());
                                 if (transform != null) {
-                                    filaMesh.setParentTransform(
-                                            transform,
-                                            mEngine.getTransformManager());
+                                    if (filaMesh.renderable != Entity.NULL) {
+                                        filaMesh.setParentTransform(
+                                                transform,
+                                                mEngine.getTransformManager());
+                                    } else {
+                                        filaMesh.parentTransform = transform;
+                                    }
                                 }
                             }
                         }
@@ -705,6 +766,10 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                 if (node.isValid()) {
                     if (event.type == apeEvent.Type.NODE_CREATE) {
                         apeFilaTransform transform = new apeFilaTransform(mEngine.getTransformManager());
+                        transform.setTransform(
+                                apeMatrix4.IDENTITY,
+                                mEngine.getTransformManager());
+                        Log.d(LOG_TAG,"NODE_CREATE " + event.subjectName);
                         mTransforms.put(node.getName(),transform);
                         mScene.addEntity(transform.entity);
                     }
@@ -733,11 +798,27 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                             transform.detach(mEngine.getTransformManager());
                         }
                     }
-                    else if (event.type == apeEvent.Type.NODE_POSITION ||
+                    else if ((event.type == apeEvent.Type.NODE_POSITION ||
                             event.type == apeEvent.Type.NODE_ORIENTATION ||
-                            event.type == apeEvent.Type.NODE_SCALE) {
+                            event.type == apeEvent.Type.NODE_SCALE) &&
+                            node.isVisible()) {
                         changedNodes.add(node);
                     }
+                    else if (event.type == apeEvent.Type.NODE_VISIBILITY) {
+                        if (!node.isVisible()) {
+                            apeFilaTransform transform = mTransforms.get(node.getName());
+                            if (transform != null) {
+                                /* brute-force */
+                                transform.setTransform(
+                                        apeMatrix4.ZERO,
+                                        mEngine.getTransformManager());
+                            }
+                        }
+                        else {
+                            changedNodes.add(node);
+                        }
+                    }
+
                 }
             }
 
@@ -749,8 +830,15 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
             if (node.isValid()) {
                 apeFilaTransform transform = mTransforms.get(node.getName());
                 if (transform != null) {
+                    apeVector3 position = node.getPosition();
+                    apeQuaternion orientation = node.getOrientation();
+                    apeVector3 scale = node.getScale();
+                    // Log.d(LOG_TAG, position.toString() + " " + node.getName());
+
+                    apeMatrix4 modelMx = new apeMatrix4(scale,orientation,position);
+
                     transform.setTransform(
-                            node.getModelMatrix().transpose(),
+                            modelMx.transpose(),
                             mEngine.getTransformManager());
                 }
             }
@@ -829,7 +917,10 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         @Override
         public void onResized(int width, int height) {
             double aspect = (double) width / height;
-            mCamera.setProjection(CAMERA_FOV.degree, aspect, CAMERA_NEAR, CAMERA_FAR, Camera.Fov.VERTICAL);
+            //mCamera.setProjection(CAMERA_FOV.degree, aspect, CAMERA_NEAR, CAMERA_FAR, Camera.Fov.VERTICAL);
+            mCamera.setProjection(
+                    mCameraConfigs.fov, aspect, mCameraConfigs.nearClip,
+                    mCameraConfigs.farClip, Camera.Fov.VERTICAL);
             mView.setViewport(new Viewport(0, 0, width, height));
         }
     }
@@ -864,13 +955,26 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     }
 
     private ByteBuffer readUncompressedAsset(String assetName) throws IOException {
-        AssetFileDescriptor fd = mAssets.openFd(assetName);
-        InputStream input = fd.createInputStream();
-        ByteBuffer dst = ByteBuffer.allocate((int) fd.getLength());
+//        AssetFileDescriptor fd = mAssets.openFd(assetName);
+//        InputStream input = fd.createInputStream();
+//        ByteBuffer dst = ByteBuffer.allocate((int) fd.getLength());
+//
+//        ReadableByteChannel src = Channels.newChannel(input);
+//        src.read(dst);
+//        src.close();
+//
+//        dst.rewind();
+//        return dst;
+
+        InputStream input = mAssets.open(assetName);
+        final int MAX_BYTES = 1048576;
+        ByteBuffer dst = ByteBuffer.allocate(MAX_BYTES);
 
         ReadableByteChannel src = Channels.newChannel(input);
-        src.read(dst);
+        int rd = src.read(dst);
         src.close();
+
+        dst.limit(rd);
 
         dst.rewind();
         return dst;

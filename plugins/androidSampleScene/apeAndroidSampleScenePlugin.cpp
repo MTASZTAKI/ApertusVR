@@ -276,7 +276,7 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 
 		if (auto nodeZ = mpSceneManager->createNode("PickAndPlaceNodeZ",false,"androidSampleScene").lock())
 		{
-			nodeZ->setPosition(ape::Vector3(0,0,0));
+			nodeZ->setPosition(ape::Vector3(0,0,5));
 			nodeZ->setParentNode(node);
 
 			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
@@ -291,7 +291,7 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 
 		if (auto nodeStatic = mpSceneManager->createNode("PickAndPlaceNodeStatic",false,"androidSampleScene").lock())
 		{
-			nodeStatic->setPosition(ape::Vector3(5,0,0));
+			nodeStatic->setPosition(ape::Vector3(-5,0,-5));
 			nodeStatic->setParentNode(node);
 
 			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(

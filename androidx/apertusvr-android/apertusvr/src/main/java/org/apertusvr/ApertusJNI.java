@@ -57,8 +57,8 @@ public final class ApertusJNI {
     static native @Size(4) float[] getNodeDerivedOrientation(String nativeNode);
     static native @Size(3) float[] getNodeScale(String nativeNode);
     static native @Size(3) float[] getNodeDerivedScale(String nativeNode);
-    static native @Size(16) float[] getNodeModelMatrix(String nativeNode);
-    static native @Size(16) float[] getNodeDerivedModelMatrix(String nativeNode);
+//    static native @Size(16) float[] getNodeModelMatrix(String nativeNode);
+//    static native @Size(16) float[] getNodeDerivedModelMatrix(String nativeNode);
     static native boolean getNodeChildrenVisibility(String nativeNode);
     static native boolean isNodeVisible(String nativeNode);
     static native boolean isNodeFixedYaw(String nativeNode);
@@ -223,4 +223,7 @@ public final class ApertusJNI {
 
     /* --- Event --- */
     public static native void processEventDoubleQueue();
+
+    /* --- Config --- */
+    public static native String getConfigFolderPath();
 }

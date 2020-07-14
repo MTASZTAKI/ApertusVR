@@ -152,6 +152,11 @@ ape::ISceneManager *ape::JNIPlugin::getSceneManager()
     return mpSceneManager;
 }
 
+ape::ICoreConfig *ape::JNIPlugin::getCoreConfig()
+{
+    return mpCoreConfig;
+}
+
 ape::DoubleQueue<ape::Event> *ape::JNIPlugin::getEventDoubleQueue()
 {
     return &mEventDoubleQueue;
@@ -598,4 +603,14 @@ Java_org_apertusvr_ApertusJNI_processEventDoubleQueue(JNIEnv *env, jclass clazz)
         // env->ReleaseStringUTFChars(jSubjectName,sname); //?
         eventDoubleQueue->pop();
     }
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_org_apertusvr_ApertusJNI_getConfigFolderPath(JNIEnv *env, jclass clazz)
+{
+    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
+    const char* configFolderPath = jniPlugin->getCoreConfig()->getConfigFolderPath().c_str();
+
+    return env->NewStringUTF(configFolderPath);
 }

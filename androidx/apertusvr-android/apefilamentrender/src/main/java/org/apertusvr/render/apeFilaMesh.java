@@ -37,6 +37,7 @@ class apeFilaMesh {
         this.indexBuffer = null;
         this.vertexBuffer = null;
         this.aabb = null;
+        this.parentTransform = null;
     }
 
     apeFilaMesh(int renderable, IndexBuffer indexBuffer, VertexBuffer vertexBuffer, Box box) {
@@ -44,6 +45,7 @@ class apeFilaMesh {
         this.indexBuffer = indexBuffer;
         this.vertexBuffer = vertexBuffer;
         this.aabb = box;
+        this.parentTransform = null;
     }
 
     @Override
@@ -67,4 +69,5 @@ class apeFilaMesh {
     IndexBuffer indexBuffer;
     VertexBuffer vertexBuffer;
     Box aabb;
+    apeFilaTransform parentTransform;
 }
