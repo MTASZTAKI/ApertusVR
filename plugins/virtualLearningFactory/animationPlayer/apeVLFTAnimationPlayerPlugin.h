@@ -93,6 +93,8 @@ namespace ape
 
 		std::vector<std::string> mAnimatedNodeNames;
 
+		std::vector<std::string> mSpaghettiNodeNames;
+
 		std::vector<ape::NodeWeakPtr> mAttachedUsers;
 
 		std::vector<unsigned long long> mParsedBookmarkTimes;

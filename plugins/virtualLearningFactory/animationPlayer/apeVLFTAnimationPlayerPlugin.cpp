@@ -112,6 +112,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mIsStudentsMovementLogging = false;
 	mStudents = std::vector<ape::NodeWeakPtr>();
 	mStudentsMovementLoggingFile = std::ofstream();
+	mSpaghettiNodeNames = std::vector<std::string>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -138,6 +139,10 @@ void ape::VLFTAnimationPlayerPlugin::drawSpaghettiSection(const ape::Vector3& st
 			ape::Color color(1, 0, 0);
 			spagetthiLineSection->setParameters(coordinates, indices, color);
 			spagetthiLineSection->setParentNode(spaghettiNode);
+			if (!spaghettiNode->getChildrenVisibility())
+			{
+				spaghettiNode->setChildrenVisibility(false);
+			}
 			spaghettiSectionName = spagetthiLineSection->getName();
 		}
 	}
@@ -167,7 +172,7 @@ bool ape::VLFTAnimationPlayerPlugin::attach2NewAnimationNode(const std::string& 
 void ape::VLFTAnimationPlayerPlugin::playAnimation()
 {
 	mIsPlayRunning = true;
-	std::vector<std::string> spaghettiNodeNames;
+	mSpaghettiNodeNames = std::vector<std::string>();
 	std::vector<std::string> spaghettiLineNames;
 	std::vector<std::string> stateNodeNames;
 	std::vector<std::string> stateGeometryNames;
@@ -178,7 +183,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			node->setOwner(mpCoreConfig->getNetworkGUID());
 			if (auto spaghettiNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiNode", true, mpCoreConfig->getNetworkGUID()).lock())
 			{
-				spaghettiNodeNames.push_back(spaghettiNode->getName());
+				mSpaghettiNodeNames.push_back(spaghettiNode->getName());
 			}
 		}
 	}
@@ -292,7 +297,7 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 	{
 		mpSceneManager->deleteEntity(spaghettiLineName);
 	}
-	for (auto spaghettiNodeName : spaghettiNodeNames)
+	for (auto spaghettiNodeName : mSpaghettiNodeNames)
 	{
 		mpSceneManager->deleteNode(spaghettiNodeName);
 	}
@@ -438,10 +443,23 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 				{
 					if (auto spaghettiNode = mpSceneManager->getNode(clickedNode->getName() + "_spaghettiNode").lock())
 					{
-						if (spaghettiNode->isVisible())
-							spaghettiNode->setVisible(false);
+						if (spaghettiNode->getChildrenVisibility())
+							spaghettiNode->setChildrenVisibility(false);
 						else
-							spaghettiNode->setVisible(true);
+							spaghettiNode->setChildrenVisibility(true);
+					}
+				}
+			}
+			else if (browser->getClickedElementName() == "spaghettiAll")
+			{
+				for (auto spaghettiNodeName : mSpaghettiNodeNames)
+				{
+					if (auto spaghettiNode = mpSceneManager->getNode(spaghettiNodeName).lock())
+					{
+						if (spaghettiNode->getChildrenVisibility())
+							spaghettiNode->setChildrenVisibility(false);
+						else
+							spaghettiNode->setChildrenVisibility(true);
 					}
 				}
 			}
