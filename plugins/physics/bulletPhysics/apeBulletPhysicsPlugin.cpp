@@ -46,6 +46,8 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 
 	m_eventDoubleQueue = ape::DoubleQueue<Event>();
 
+	mApeRigidBodies = std::map<const btCollisionObject*, ape::RigidBodyWeakPtr>();;
+
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -113,8 +115,7 @@ void ape::BulletPhysicsPlugin::processEventDoubleQueue()
 					m_bouyancyEnabled[apeBodyName] = false;
 
 
-					createRigidBody(apeBodyName, trans, mass, sphereShape);
-
+					createRigidBody(apeBodyName, trans, mass, sphereShape, apeBody);
 				}
 				else if (event.type == ape::Event::Type::RIGIDBODY_DELETE)
 				{
@@ -471,6 +472,38 @@ void ape::BulletPhysicsPlugin::Run()
 		m_dynamicsWorld->stepSimulation(m_dtSec, m_maxSubSteps, m_fixedTimeStep);
 		btclock.reset();
 
+		/*begin find collision*/
+		int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+		for (int i = 0; i < numManifolds; i++)
+		{
+			btPersistentManifold* contactManifold = m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+			const btCollisionObject* obA = contactManifold->getBody0();
+			const btCollisionObject* obB = contactManifold->getBody1();
+			int numContacts = contactManifold->getNumContacts();
+			for (int j = 0; j < numContacts; j++)
+			{
+				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+				if (pt.getDistance() < 0.f)
+				{
+					const btVector3& ptA = pt.getPositionWorldOnA();
+					const btVector3& ptB = pt.getPositionWorldOnB();
+					const btVector3& normalOnB = pt.m_normalWorldOnB;
+					/*begin set collision*/
+					if (auto apeRigidBodyA = mApeRigidBodies[obA].lock())
+					{
+						if (auto apeRigidBodyB = mApeRigidBodies[obB].lock())
+						{
+							apeRigidBodyA->setCollision(apeRigidBodyB->getName());
+							apeRigidBodyB->setCollision(apeRigidBodyA->getName());
+							APE_LOG_DEBUG("Collision: " << apeRigidBodyA->getName() << " ; " << apeRigidBodyB->getName());
+						}
+					}
+					/*end set collision*/
+				}
+			}
+		}
+		/*end find collision*/
+
 		for (auto it = m_collisionObjects.rbegin(); it != m_collisionObjects.rend(); it++)
 		{
 			std::string apeBodyName = it->first;
@@ -701,7 +734,7 @@ void ape::BulletPhysicsPlugin::setCollisionShape(std::string apeBodyName, btColl
 }
 
 /// creates a rigidbody in the physics world
-void ape::BulletPhysicsPlugin::createRigidBody(std::string apeBodyName, btTransform trans, btScalar mass, btCollisionShape* shape)
+void ape::BulletPhysicsPlugin::createRigidBody(std::string apeBodyName, btTransform trans, btScalar mass, btCollisionShape* shape, ape::RigidBodyWeakPtr apeBody)
 {
 
 	btVector3 localInertia(0, 0, 0);
@@ -714,6 +747,8 @@ void ape::BulletPhysicsPlugin::createRigidBody(std::string apeBodyName, btTransf
 	btRigidBody* body = new btRigidBody(rbInfo);
 
 	m_collisionObjects[apeBodyName] = body;
+
+	mApeRigidBodies[body] = apeBody;
 
 	m_dynamicsWorld->addRigidBody(body);
 }

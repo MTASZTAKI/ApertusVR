@@ -121,6 +121,10 @@ namespace ape
 		virtual void setOwner(std::string ownerID) = 0;
 
 		virtual std::string getOwner() = 0;
+
+		virtual void setCollision(std::string collisionObject) = 0;
+
+		virtual std::string getCollision() = 0;
 	};
 }
 

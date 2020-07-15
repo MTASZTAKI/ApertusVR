@@ -58,8 +58,8 @@ namespace ape
 			WATER,
 			SKY,
 			POINT_CLOUD,
-			EG_INVALID,
-			PHYSICS
+			PHYSICS,
+			EG_INVALID
 		};
 
 		enum Type : unsigned int
@@ -241,7 +241,6 @@ namespace ape
 			POINT_CLOUD_COLORS,
 			POINT_CLOUD_PARENTNODE,
 			POINT_CLOUD_DELETE,
-			ET_INVALID,
 			RIGIDBODY_CREATE = (PHYSICS << 8) + 1,
 			RIGIDBODY_DELETE,
 			RIGIDBODY_MASS,
@@ -250,7 +249,9 @@ namespace ape
 			RIGIDBODY_BOUYANCY,
 			RIGIDBODY_RESTITUTION,
 			RIGIDBODY_PARENTNODE,
-			RIGIDBODY_SHAPE
+			RIGIDBODY_SHAPE,
+			RIGIDBODY_COLLISION,
+			ET_INVALID
 		};
 
 		std::string subjectName;

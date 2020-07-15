@@ -160,6 +160,8 @@ namespace ape
 
 		std::map<std::string, std::string> m_geometryNameBodyNameMap;
 
+		std::map<const btCollisionObject*, ape::RigidBodyWeakPtr> mApeRigidBodies;
+
 
 		userProps m_userProps;
 
@@ -189,7 +191,7 @@ namespace ape
 
 		void setCollisionShape(std::string apeBodyName, btCollisionShape* colShape, btScalar mass);
 
-		void createRigidBody(std::string apeBodyName, btTransform trans, btScalar mass, btCollisionShape* shape);
+		void createRigidBody(std::string apeBodyName, btTransform trans, btScalar mass, btCollisionShape* shape, ape::RigidBodyWeakPtr apeBody);
 
 		void createCollisionObject(std::string apeBodyName, btTransform trans, btCollisionShape * shape);
 

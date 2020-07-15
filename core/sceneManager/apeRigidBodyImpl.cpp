@@ -38,6 +38,7 @@ ape::RigidBodyImpl::RigidBodyImpl(std::string name, bool replicate, std::string 
 	mGeometryName = std::string();
 	mBouyancyEnabled = false;
 	mColliderType = ape::RigidBodyColliderType::AUTO;
+	mCollision = std::string();
 }
 
 ape::RigidBodyImpl::~RigidBodyImpl()
@@ -216,6 +217,17 @@ void ape::RigidBodyImpl::setOwner(std::string ownerID)
 std::string ape::RigidBodyImpl::getOwner()
 {
 	return mOwnerID;
+}
+
+void ape::RigidBodyImpl::setCollision(std::string collisionObject)
+{
+	mCollision = collisionObject;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_COLLISION));
+}
+
+std::string ape::RigidBodyImpl::getCollision()
+{
+	return mCollision;
 }
 
 void ape::RigidBodyImpl::WriteAllocationID(RakNet::Connection_RM3 * destinationConnection, RakNet::BitStream * allocationIdBitstream) const

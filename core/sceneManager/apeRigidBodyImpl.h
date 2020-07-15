@@ -97,6 +97,10 @@ namespace ape
 
 		std::string getOwner() override;
 
+		void setCollision(std::string collisionObject) override;
+
+		std::string getCollision() override;
+
 		void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const override;
 
 		RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters) override;
@@ -139,6 +143,8 @@ namespace ape
 		ape::GeometryWeakPtr mGeometry;
 
 		std::string mGeometryName;
+
+		std::string mCollision;
 	};
 }
 
