@@ -45,6 +45,7 @@ SOFTWARE.*/
 #include "apeISphereGeometry.h"
 #include "apeITextGeometry.h"
 #include "apeITubeGeometry.h"
+#include "apeIRigidBody.h"
 #include "apeInterpolator.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
