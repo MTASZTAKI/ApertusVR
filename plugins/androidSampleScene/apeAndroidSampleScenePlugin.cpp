@@ -244,48 +244,54 @@ void ape::AndroidSampleScenePlugin::initGeometries()
     	node->setParentNode(mRootNodeWeak);
     	node->setOrientation(ape::Quaternion(ape::Degree(45.f),ape::Vector3(0,1,0)));
 
-		if (auto nodeX = mpSceneManager->createNode("PickAndPlaceNodeX",false,"androidSampleScene").lock())
-		{
-			nodeX->setPosition(ape::Vector3(0,0,0));
-			nodeX->setParentNode(node);
+    	if (auto nodeFloating = mpSceneManager->createNode("PickAndPlayeFloating",false,"androidSampleScene").lock())
+    	{
+    		nodeFloating->setPosition(ape::Vector3(-1,0,0));
+    		nodeFloating->setVisible(false);
 
-			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
-					mpSceneManager->createEntity("PickAndPlaceX", ape::Entity::GEOMETRY_FILE,
-												 false, "androidSampleScene").lock()))
-			{
-				fileGeom->setUnitScale(0.02f);
-				fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_X.obj");
-				fileGeom->setParentNode(nodeX);
+			if (auto nodeX = mpSceneManager->createNode("PickAndPlaceNodeX", false,
+														"androidSampleScene").lock()) {
+				nodeX->setPosition(ape::Vector3(0, 0, 0));
+				nodeX->setParentNode(nodeFloating);
+
+				if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+						mpSceneManager->createEntity("PickAndPlaceX", ape::Entity::GEOMETRY_FILE,
+													 false, "androidSampleScene").lock()))
+				{
+					fileGeom->setUnitScale(0.02f);
+					fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_X.obj");
+					fileGeom->setParentNode(nodeX);
+				}
 			}
-		}
 
-		if (auto nodeY = mpSceneManager->createNode("PickAndPlaceNodeY",false,"androidSampleScene").lock())
-		{
-			nodeY->setPosition(ape::Vector3(0,0,0));
-			nodeY->setParentNode(node);
+			if (auto nodeY = mpSceneManager->createNode("PickAndPlaceNodeY", false,
+														"androidSampleScene").lock()) {
+				nodeY->setPosition(ape::Vector3(0, 0, 0));
+				nodeY->setParentNode(nodeFloating);
 
-			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
-					mpSceneManager->createEntity("PickAndPlaceY", ape::Entity::GEOMETRY_FILE,
-												 false, "androidSampleScene").lock()))
-			{
-				fileGeom->setUnitScale(0.02f);
-				fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_Y.obj");
-				fileGeom->setParentNode(nodeY);
+				if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+						mpSceneManager->createEntity("PickAndPlaceY", ape::Entity::GEOMETRY_FILE,
+													 false, "androidSampleScene").lock()))
+				{
+					fileGeom->setUnitScale(0.02f);
+					fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_Y.obj");
+					fileGeom->setParentNode(nodeY);
+				}
 			}
-		}
 
-		if (auto nodeZ = mpSceneManager->createNode("PickAndPlaceNodeZ",false,"androidSampleScene").lock())
-		{
-			nodeZ->setPosition(ape::Vector3(0,0,5));
-			nodeZ->setParentNode(node);
-
-			if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
-					mpSceneManager->createEntity("PickAndPlaceZ", ape::Entity::GEOMETRY_FILE,
-												 false, "androidSampleScene").lock()))
+			if (auto nodeZ = mpSceneManager->createNode("PickAndPlaceNodeZ", false,
+														"androidSampleScene").lock())
 			{
-				fileGeom->setUnitScale(0.02f);
-				fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_Z.obj");
-				fileGeom->setParentNode(nodeZ);
+				nodeZ->setPosition(ape::Vector3(0, 0, 5));
+				nodeZ->setParentNode(nodeFloating);
+
+				if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+						mpSceneManager->createEntity("PickAndPlaceZ", ape::Entity::GEOMETRY_FILE,
+													 false, "androidSampleScene").lock())) {
+					fileGeom->setUnitScale(0.02f);
+					fileGeom->setFileName("PickAndPlace/Pick_and_Place_Floating_Z.obj");
+					fileGeom->setParentNode(nodeZ);
+				}
 			}
 		}
 

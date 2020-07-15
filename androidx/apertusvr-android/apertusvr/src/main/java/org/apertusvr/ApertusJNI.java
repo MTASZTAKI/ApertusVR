@@ -150,6 +150,16 @@ public final class ApertusJNI {
     static native float getFileGeometryUnitScale(String nativeFileGeometry);
     static native void setFileGeometryUnitScale(String nativeFileGeometry, float unitScale);
 
+    /* --- CloneGeometry --- */
+    static native void setCloneGeometrySourceGeometry(String nativeCloneGeometry, String sourceGeometry);
+    static native void setCloneGeometrySourceGeometryGroupName(String nativeCloneGeometry, String groupGeometryName);
+    static native void setCloneGeometryParentNode(String nativeCloneGeometry, String parentNode);
+    static native String getCloneGeometrySourceGeometry(String nativeCloneGeometry);
+    static native String getCloneGeometrySourceGeometryName(String nativeCloneGeometry);
+    static native String getCloneGeometrySourceGeometryGroupName(String nativeCloneGeometry);
+    static native void setCloneGeometryOwner(String nativeCloneGeometry, String ownerID);
+    static native String getCloneGeometryOwner(String nativeCloneGeometry);
+
     /* --- PlaneGeometry --- */
     static native void setPlaneGeometryParameters(String nativePlaneGeometry, float numSegX, float numSegY, float sizeX, float sizeY, float tileX, float tileY);
     static native @Size(2) float[] getPlaneGeometryNumSeg(String nativePlaneGeometry);

@@ -25,6 +25,13 @@ import org.jetbrains.annotations.NotNull;
 
 public final class apeVector3 {
 
+    static {
+        ZERO = new apeVector3(0f,0f,0f);
+        UP = new apeVector3(0f,1f,0f);
+        RIGHT = new apeVector3(1f,0f,0f);
+        FORWARD = new apeVector3(0f,0f,1f);
+    }
+
     public apeVector3() {
         x = y = z = 0;
     }
@@ -140,4 +147,9 @@ public final class apeVector3 {
     public float x, y, z;
 
     private static final float eps = 1e-08f;
+
+    public static final apeVector3 ZERO;
+    public static final apeVector3 UP;
+    public static final apeVector3 RIGHT;
+    public static final apeVector3 FORWARD;
 }

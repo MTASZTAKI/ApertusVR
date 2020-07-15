@@ -102,13 +102,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     class FrameCallback implements Choreographer.FrameCallback {
-        @Override
-        public void doFrame(long frameTimeNanos) {
-            choreographer.postFrameCallback(this);
+            @Override
+            public void doFrame(long frameTimeNanos) {
+                choreographer.postFrameCallback(this);
 
-            if(apeStarted) {
-                ApertusJNI.processEventDoubleQueue();
+                if(apeStarted) {
+                    ApertusJNI.processEventDoubleQueue();
+                }
             }
-        }
     }
 }

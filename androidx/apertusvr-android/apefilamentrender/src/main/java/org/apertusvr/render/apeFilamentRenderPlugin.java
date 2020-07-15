@@ -73,7 +73,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     private String mResourcePath;
     private String mResourcePrefix;
 
-
     /* filament */
     private UiHelper mUiHelper;
     private Engine mEngine;
@@ -108,9 +107,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     /* const values */
     private static final float MAT_EPS = 1e-8f;
     private static final apeColor CLEAR_COLOR = new apeColor(0.6f, 0.85f, 0.9f, 1.0f);
-    private static final apeDegree CAMERA_FOV = new apeDegree(45.0f);
-    private static final float CAMERA_NEAR = 0.1f;
-    private static final float CAMERA_FAR = 400.0f;
     private static final String DEFAULT_MAT_NAME = "DefaultMaterial";
 
     /* ape */
@@ -162,6 +158,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         apeEventManager.connectEvent(apeEvent.Group.NODE, mEventCallback);
         // apeEventManager.connectEvent(apeEvent.Group.LIGHT, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_FILE, mEventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_CLONE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_PLANE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.MATERIAL_MANUAL, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_CONE, mEventCallback);
@@ -769,7 +766,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                         transform.setTransform(
                                 apeMatrix4.IDENTITY,
                                 mEngine.getTransformManager());
-                        Log.d(LOG_TAG,"NODE_CREATE " + event.subjectName);
+//                        Log.d(LOG_TAG,"NODE_CREATE " + event.subjectName);
                         mTransforms.put(node.getName(),transform);
                         mScene.addEntity(transform.entity);
                     }
@@ -787,6 +784,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                             apeFilaTransform transform = mTransforms.get(node.getName());
                             apeFilaTransform parentTransform = mTransforms.get(parentNode.getName());
 
+                            Log.d(LOG_TAG,node.getName() + "'s parent: " + parentNode.getName());
                             if (transform != null && parentTransform != null) {
                                 transform.setParent(parentTransform,mEngine.getTransformManager());
                             }
@@ -808,6 +806,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                         if (!node.isVisible()) {
                             apeFilaTransform transform = mTransforms.get(node.getName());
                             if (transform != null) {
+                                // TODO: ....
                                 /* brute-force */
                                 transform.setTransform(
                                         apeMatrix4.ZERO,
@@ -833,7 +832,12 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                     apeVector3 position = node.getPosition();
                     apeQuaternion orientation = node.getOrientation();
                     apeVector3 scale = node.getScale();
-                    // Log.d(LOG_TAG, position.toString() + " " + node.getName());
+                    if (node.isVisible())
+                        Log.d(LOG_TAG, "pos: " + position.toString() + " " + node.getName());
+
+                    if(position.equals(apeVector3.ZERO)) {
+                        Log.d(LOG_TAG, "der pos: " + node.getDerivedPosition() + " " + node.getName());
+                    }
 
                     apeMatrix4 modelMx = new apeMatrix4(scale,orientation,position);
 
@@ -955,17 +959,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     }
 
     private ByteBuffer readUncompressedAsset(String assetName) throws IOException {
-//        AssetFileDescriptor fd = mAssets.openFd(assetName);
-//        InputStream input = fd.createInputStream();
-//        ByteBuffer dst = ByteBuffer.allocate((int) fd.getLength());
-//
-//        ReadableByteChannel src = Channels.newChannel(input);
-//        src.read(dst);
-//        src.close();
-//
-//        dst.rewind();
-//        return dst;
-
         InputStream input = mAssets.open(assetName);
         final int MAX_BYTES = 1048576;
         ByteBuffer dst = ByteBuffer.allocate(MAX_BYTES);

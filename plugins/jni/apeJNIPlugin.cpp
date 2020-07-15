@@ -47,6 +47,7 @@ ape::JNIPlugin::JNIPlugin()
     mpEventManager->connectEvent(ape::Event::Group::LIGHT, std::bind(&JNIPlugin::eventCallBack, this, std::placeholders::_1));
     mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&JNIPlugin::eventCallBack, this, std::placeholders::_1));
     mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(&JNIPlugin::eventCallBack, this, std::placeholders::_1));
+    mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CLONE, std::bind(&JNIPlugin::eventCallBack, this, std::placeholders::_1));
     mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(&JNIPlugin::eventCallBack, this, std::placeholders::_1));
     mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(&JNIPlugin::eventCallBack, this, std::placeholders::_1));
     mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_BOX, std::bind(&JNIPlugin::eventCallBack, this, std::placeholders::_1));
@@ -78,8 +79,6 @@ void ape::JNIPlugin::Init()
 
 void ape::JNIPlugin::eventCallBack(const ape::Event& event)
 {
-//    printf("event type: %d, subject name: %s\n",event.group,event.subjectName.c_str());
-
     __android_log_print(ANDROID_LOG_INFO,"cpplog","event type: %s, subject name: %s\n", mEventTypeNameMap[event.type].c_str(),event.subjectName.c_str());
     if(event.type == Event::Type::GEOMETRY_FILE_FILENAME) {
         if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
@@ -89,19 +88,6 @@ void ape::JNIPlugin::eventCallBack(const ape::Event& event)
                                 fileGeom->getFileName().c_str());
         }
     }
-
-//    if(event.type == ape::Event::Type::GEOMETRY_FILE_PARENTNODE ||
-////       event.type == ape::Event::Type::GEOMETRY_PLANE_PARENTNODE)
-////    {
-////        if(auto geomShared = std::static_pointer_cast<ape::Geometry>(mpSceneManager->getEntity(event.subjectName).lock()))
-////        {
-////            if(auto parentShared = geomShared->getParentNode().lock())
-////            {
-////                std::string parentNodeName = parentShared->getName();
-////                mNodeGeometryMap[parentNodeName] = geomShared;
-////            }
-////        }
-////    }
 
 	mEventDoubleQueue.push(event);
 }

@@ -29,6 +29,7 @@ set(SOURCES
         apeJNIGeometry.cpp
         apeJNIConeGeometry.cpp
         apeJNIFileGeometry.cpp
+        apeJNICloneGeometry.cpp
         apeJNIPlaneGeometry.cpp
         apeJNIMaterial.cpp
         apeJNIFileMaterial.cpp
