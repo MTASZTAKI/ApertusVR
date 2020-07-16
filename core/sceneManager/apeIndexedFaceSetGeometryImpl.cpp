@@ -86,49 +86,36 @@ std::string ape::IndexedFaceSetGeometryImpl::getOwner()
 void ape::IndexedFaceSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
 {
 	allocationIdBitstream->Write(mObjectType);
-	allocationIdBitstream->Write(RakNet::RakString(mName.c_str())); allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mName.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mOwnerID.c_str()));
+	allocationIdBitstream->Write(RakNet::RakString(mParameters.groupName.c_str()));
+	allocationIdBitstream->Write(mCoordinatesSize);
+	for (auto item : mParameters.coordinates)
+		allocationIdBitstream->Write(item);
+	allocationIdBitstream->Write(mIndicesSize);
+	for (auto item : mParameters.indices)
+		allocationIdBitstream->Write(item);
+	allocationIdBitstream->Write(mNormalsSize);
+	for (auto item : mParameters.normals)
+		allocationIdBitstream->Write(item);
+	allocationIdBitstream->Write(mParameters.generateNormals);
+	allocationIdBitstream->Write(mColorsSize);
+	for (auto item : mParameters.colors)
+		allocationIdBitstream->Write(item);
+	allocationIdBitstream->Write(mTextureCoordinatesSize);
+	for (auto item : mParameters.textureCoordinates)
+		allocationIdBitstream->Write(item);
+	allocationIdBitstream->Write(RakNet::RakString(mParameters.materialName.c_str()));
 }
 
 RakNet::RM3SerializationResult ape::IndexedFaceSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	if (serializeParameters->whenLastSerialized == 0)
-	{
-		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
-		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
-		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
-		
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.groupName.c_str()));
-
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mCoordinatesSize);
-		for (auto item : mParameters.coordinates)
-			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
-
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIndicesSize);
-		for (auto item : mParameters.indices)
-			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
-
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mNormalsSize);
-		for (auto item : mParameters.normals)
-			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
-
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mParameters.generateNormals);
-
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColorsSize);
-		for (auto item : mParameters.colors)
-			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
-
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, mTextureCoordinatesSize);
-		for (auto item : mParameters.textureCoordinates)
-			mVariableDeltaSerializer.SerializeVariable(&serializationContext, item);
-
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParameters.materialName.c_str()));
-		
-		mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
-		
-		mVariableDeltaSerializer.EndSerialize(&serializationContext);
-		return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-	}
-	return RakNet::RM3SR_DO_NOT_SERIALIZE;
+	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
+	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
+	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.EndSerialize(&serializationContext);
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
 
 void ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
@@ -136,64 +123,6 @@ void ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 	APE_LOG_FUNC_ENTER();
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-	RakNet::RakString groupName;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, groupName))
-		mParameters.groupName = groupName.C_String();
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCoordinatesSize))
-	{
-		while (mParameters.coordinates.size() < mCoordinatesSize)
-		{
-			float item;
-			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
-				mParameters.coordinates.push_back(item);
-		}
-	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIndicesSize))
-	{
-		while (mParameters.indices.size() < mIndicesSize)
-		{
-			int item;
-			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
-				mParameters.indices.push_back(item);
-		}
-	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mNormalsSize))
-	{
-		while (mParameters.normals.size() < mNormalsSize)
-		{
-			float item;
-			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
-				mParameters.normals.push_back(item);
-		}
-	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters.generateNormals))
-		;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mColorsSize))
-	{
-		while (mParameters.colors.size() < mColorsSize)
-		{
-			float item;
-			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
-				mParameters.colors.push_back(item);
-		}
-	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mTextureCoordinatesSize))
-	{
-		while (mParameters.textureCoordinates.size() < mTextureCoordinatesSize)
-		{
-			float item;
-			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
-				mParameters.textureCoordinates.push_back(item);
-		}
-	}
-	RakNet::RakString materialName;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, materialName))
-	{
-		mParameters.materialName = materialName.C_String();
-		if (auto entity = mpSceneManager->getEntity(mParameters.materialName).lock())
-			mParameters.material = std::static_pointer_cast<ape::Material>(entity);
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_INDEXEDFACESET_PARAMETERS));
-	}
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{

@@ -74,7 +74,7 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		if (auto node = mpSceneManagerImpl->createNode(nodeName.C_String(), true, ownerID.C_String()).lock())
 			return ((ape::NodeImpl*)node.get());
 	}
-	else if (objectType == "ManualTexture")
+	if (objectType == "ManualTexture")
 	{
 		RakNet::RakString entityName;
 		allocationIdBitstream->Read(entityName);
@@ -87,6 +87,72 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			manualTexture->setParameters(manualTextureParameters.width, manualTextureParameters.height, manualTextureParameters.pixelFormat, manualTextureParameters.usage, manualTextureParameters.gammaCorrection, manualTextureParameters.useFsaa, manualTextureParameters.serializeBuffer);
 			return ((ape::ManualTextureImpl*)manualTexture.get());
+		}
+	}
+	if (objectType == "IndexedFaceSetGeometry")
+	{
+		RakNet::RakString entityName;
+		allocationIdBitstream->Read(entityName);
+		RakNet::RakString ownerID;
+		allocationIdBitstream->Read(ownerID);
+		//APE_LOG_DEBUG("Received name: " << entityName.C_String());
+		ape::GeometryIndexedFaceSetParameters indexedFaceSetParameters;
+		RakNet::RakString groupName;
+		allocationIdBitstream->Read(groupName);
+		indexedFaceSetParameters.groupName = groupName.C_String();
+		int coordinatesSize;
+		allocationIdBitstream->Read(coordinatesSize);
+		for (int i = 0; i < coordinatesSize; i++)
+		{
+			float item;
+			allocationIdBitstream->Read(item);
+			indexedFaceSetParameters.coordinates.push_back(item);
+		}
+		int indicesSize;
+		allocationIdBitstream->Read(indicesSize);
+		for (int i = 0; i < indicesSize; i++)
+		{
+			float item;
+			allocationIdBitstream->Read(item);
+			indexedFaceSetParameters.indices.push_back(item);
+		}
+		int normalsSize;
+		allocationIdBitstream->Read(normalsSize);
+		for (int i = 0; i < normalsSize; i++)
+		{
+			float item;
+			allocationIdBitstream->Read(item);
+			indexedFaceSetParameters.normals.push_back(item);
+		}
+		allocationIdBitstream->Read(indexedFaceSetParameters.generateNormals);
+		int colorsSize;
+		allocationIdBitstream->Read(colorsSize);
+		for (int i = 0; i < colorsSize; i++)
+		{
+			float item;
+			allocationIdBitstream->Read(item);
+			indexedFaceSetParameters.colors.push_back(item);
+		}
+		int textureCoordinatesSize;
+		allocationIdBitstream->Read(textureCoordinatesSize);
+		for (int i = 0; i < textureCoordinatesSize; i++)
+		{
+			float item;
+			allocationIdBitstream->Read(item);
+			indexedFaceSetParameters.textureCoordinates.push_back(item);
+		}
+		RakNet::RakString materialName;
+		allocationIdBitstream->Read(materialName);
+		indexedFaceSetParameters.materialName = materialName.C_String();
+		if (auto entity = mpSceneManagerImpl->getEntity(indexedFaceSetParameters.materialName).lock())
+		{
+			indexedFaceSetParameters.material = std::static_pointer_cast<ape::Material>(entity);
+			if (auto indexedFaceSetGeometry = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_INDEXEDFACESET, true, ownerID.C_String()).lock()))
+			{
+				indexedFaceSetGeometry->setParameters(indexedFaceSetParameters.groupName, indexedFaceSetParameters.coordinates, indexedFaceSetParameters.indices,
+					indexedFaceSetParameters.normals, indexedFaceSetParameters.generateNormals, indexedFaceSetParameters.colors, indexedFaceSetParameters.textureCoordinates,
+					indexedFaceSetParameters.material);
+			}
 		}
 	}
 	else
@@ -145,11 +211,6 @@ RakNet::Replica3* ape::ReplicaManagerConnection::AllocReplica(RakNet::BitStream 
 		{
 			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_TEXT, true, ownerID.C_String()).lock())
 				return ((ape::TextGeometryImpl*)entity.get());
-		}
-		else if (objectType == "IndexedFaceSetGeometry")
-		{
-			if (auto entity = mpSceneManagerImpl->createEntity(entityName.C_String(), ape::Entity::GEOMETRY_INDEXEDFACESET, true, ownerID.C_String()).lock())
-				return ((ape::IndexedFaceSetGeometryImpl*)entity.get());
 		}
 		else if (objectType == "IndexedLineSetGeometry")
 		{
