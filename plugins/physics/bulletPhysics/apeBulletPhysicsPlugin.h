@@ -124,6 +124,10 @@ namespace ape
 
 		bool m_balanceInLiquid;
 
+		bool mCollisionDetecionEnable;
+
+		bool mCollisionDetecionSelf;
+
 		/// member pointers for bullet
 
 		btDefaultCollisionConfiguration* m_collisionConfiguration;

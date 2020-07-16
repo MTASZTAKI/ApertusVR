@@ -254,6 +254,7 @@ RakNet::RM3SerializationResult ape::RigidBodyImpl::Serialize(RakNet::SerializePa
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColliderType);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mCollision.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -294,6 +295,12 @@ void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters * deserialize
 		mParentNodeName = parentName.C_String();
 		mParentNode = mpSceneManager->getNode(mParentNodeName);
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_PARENTNODE));
+	}
+	RakNet::RakString collision;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, collision))
+	{
+		mCollision = collision.C_String();
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_COLLISION));
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }

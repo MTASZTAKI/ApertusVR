@@ -46,7 +46,11 @@ ape::BulletPhysicsPlugin::BulletPhysicsPlugin()
 
 	m_eventDoubleQueue = ape::DoubleQueue<Event>();
 
-	mApeRigidBodies = std::map<const btCollisionObject*, ape::RigidBodyWeakPtr>();;
+	mApeRigidBodies = std::map<const btCollisionObject*, ape::RigidBodyWeakPtr>();
+
+	mCollisionDetecionEnable = false;
+
+	mCollisionDetecionSelf = false;
 
 	APE_LOG_FUNC_LEAVE();
 }
@@ -406,6 +410,21 @@ void ape::BulletPhysicsPlugin::Init()
 						m_gravity.setZ(it->value.GetFloat());
 				}*/
 			}
+			if (jsonDocument.HasMember("collisionDetecion"))
+			{
+				rapidjson::Value& collisionDetecion = jsonDocument["collisionDetecion"];
+				for (rapidjson::Value::MemberIterator it = collisionDetecion.MemberBegin(); it != collisionDetecion.MemberEnd(); it++)
+				{
+					if (it->name == "enable")
+					{
+						mCollisionDetecionEnable = it->value.GetBool();
+					}
+					else if (it->name == "frselfeq")
+					{
+						mCollisionDetecionSelf = it->value.GetBool();
+					}
+				}
+			}
 			if (jsonDocument.HasMember("waterWave"))
 			{
 				rapidjson::Value& input = jsonDocument["waterWave"];
@@ -472,37 +491,65 @@ void ape::BulletPhysicsPlugin::Run()
 		m_dynamicsWorld->stepSimulation(m_dtSec, m_maxSubSteps, m_fixedTimeStep);
 		btclock.reset();
 
-		/*begin find collision*/
-		int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
-		for (int i = 0; i < numManifolds; i++)
+		if (mCollisionDetecionEnable)
 		{
-			btPersistentManifold* contactManifold = m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-			const btCollisionObject* obA = contactManifold->getBody0();
-			const btCollisionObject* obB = contactManifold->getBody1();
-			int numContacts = contactManifold->getNumContacts();
-			for (int j = 0; j < numContacts; j++)
+			int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+			for (int i = 0; i < numManifolds; i++)
 			{
-				btManifoldPoint& pt = contactManifold->getContactPoint(j);
-				if (pt.getDistance() < 0.f)
+				btPersistentManifold* contactManifold = m_dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+				const btCollisionObject* obA = contactManifold->getBody0();
+				const btCollisionObject* obB = contactManifold->getBody1();
+				int numContacts = contactManifold->getNumContacts();
+				for (int j = 0; j < numContacts; j++)
 				{
-					const btVector3& ptA = pt.getPositionWorldOnA();
-					const btVector3& ptB = pt.getPositionWorldOnB();
-					const btVector3& normalOnB = pt.m_normalWorldOnB;
-					/*begin set collision*/
-					if (auto apeRigidBodyA = mApeRigidBodies[obA].lock())
+					btManifoldPoint& pt = contactManifold->getContactPoint(j);
+					if (pt.getDistance() < 0.f)
 					{
-						if (auto apeRigidBodyB = mApeRigidBodies[obB].lock())
+						const btVector3& ptA = pt.getPositionWorldOnA();
+						const btVector3& ptB = pt.getPositionWorldOnB();
+						const btVector3& normalOnB = pt.m_normalWorldOnB;
+						if (auto apeRigidBodyA = mApeRigidBodies[obA].lock())
 						{
-							apeRigidBodyA->setCollision(apeRigidBodyB->getName());
-							apeRigidBodyB->setCollision(apeRigidBodyA->getName());
-							APE_LOG_DEBUG("Collision: " << apeRigidBodyA->getName() << " ; " << apeRigidBodyB->getName());
+							if (auto apeRigidBodyB = mApeRigidBodies[obB].lock())
+							{
+								if (mCollisionDetecionSelf)
+								{
+									apeRigidBodyA->setCollision(apeRigidBodyB->getName());
+									apeRigidBodyB->setCollision(apeRigidBodyA->getName());
+								}
+								else
+								{
+									ape::NodeSharedPtr rootNodeA = ape::NodeSharedPtr();
+									if (auto node = apeRigidBodyA->getParentNode().lock())
+									{
+										while (auto parentNode = node->getParentNode().lock())
+										{
+											node = parentNode;
+										}
+										rootNodeA = node;
+									}
+									ape::NodeSharedPtr rootNodeB = ape::NodeSharedPtr();
+									if (auto node = apeRigidBodyB->getParentNode().lock())
+									{
+										while (auto parentNode = node->getParentNode().lock())
+										{
+											node = parentNode;
+										}
+										rootNodeB = node;
+									}
+									if (rootNodeA != rootNodeB)
+									{
+										apeRigidBodyA->setCollision(apeRigidBodyB->getName());
+										apeRigidBodyB->setCollision(apeRigidBodyA->getName());
+										APE_LOG_DEBUG("Collision: " << apeRigidBodyA->getName() << " ; " << apeRigidBodyB->getName());
+									}
+								}
+							}
 						}
 					}
-					/*end set collision*/
 				}
 			}
 		}
-		/*end find collision*/
 
 		for (auto it = m_collisionObjects.rbegin(); it != m_collisionObjects.rend(); it++)
 		{
