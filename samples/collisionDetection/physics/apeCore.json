@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "apeWebSocketServerPlugin",
     "apeBulletPhysicsPlugin"
   ],
   "network": {
