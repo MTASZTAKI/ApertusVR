@@ -242,6 +242,7 @@ RakNet::RM3SerializationResult ape::RigidBodyImpl::Serialize(RakNet::SerializePa
 	RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 	serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 	mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRBType);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mMass);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLinearFriction);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRollingFriction);
@@ -249,7 +250,6 @@ RakNet::RM3SerializationResult ape::RigidBodyImpl::Serialize(RakNet::SerializePa
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLinearDamping);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mAngularDamping);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRestitution);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mRBType);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mBouyancyEnabled);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mColliderType);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mGeometryName.c_str()));
@@ -263,6 +263,7 @@ void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters * deserialize
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRBType);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMass))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
 	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLinearFriction);
@@ -274,7 +275,6 @@ void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters * deserialize
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_DAMPING));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRestitution))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_RESTITUTION));
-	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRBType);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mBouyancyEnabled))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_BOUYANCY));
 	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mColliderType);

@@ -476,9 +476,6 @@ clock_t t = clock();
 void ape::BulletPhysicsPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
-
 	btClock btclock;
 	while (true)
 	{
