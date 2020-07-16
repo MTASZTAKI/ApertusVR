@@ -265,8 +265,7 @@ void ape::RigidBodyImpl::Deserialize(RakNet::DeserializeParameters * deserialize
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mMass))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLinearFriction))
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_MASS));
+	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLinearFriction);
 	mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mRollingFriction);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mSpinningFriction))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::RIGIDBODY_FRICTION));
