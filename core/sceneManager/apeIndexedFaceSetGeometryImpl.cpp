@@ -91,8 +91,8 @@ void ape::IndexedFaceSetGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *
 
 RakNet::RM3SerializationResult ape::IndexedFaceSetGeometryImpl::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	//if (serializeParameters->whenLastSerialized == 0)
-	//{
+	if (serializeParameters->whenLastSerialized == 0)
+	{
 		RakNet::VariableDeltaSerializer::SerializationContext serializationContext;
 		serializeParameters->pro[0].reliability = RELIABLE_ORDERED;
 		mVariableDeltaSerializer.BeginIdenticalSerialize(&serializationContext, serializeParameters->whenLastSerialized == 0, &serializeParameters->outputBitstream[0]);
@@ -127,8 +127,8 @@ RakNet::RM3SerializationResult ape::IndexedFaceSetGeometryImpl::Serialize(RakNet
 		
 		mVariableDeltaSerializer.EndSerialize(&serializationContext);
 		return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
-	//}
-	//return RakNet::RM3SR_DO_NOT_SERIALIZE;
+	}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 void ape::IndexedFaceSetGeometryImpl::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
