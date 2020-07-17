@@ -534,8 +534,16 @@ void ape::BulletPhysicsPlugin::Run()
 										}
 										rootNodeB = node;
 									}
-									if (rootNodeA != rootNodeB)
+									if (rootNodeA.use_count() && rootNodeB.use_count() && rootNodeA != rootNodeB)
 									{
+										if (apeRigidBodyA->getOwner() != mpCoreConfig->getNetworkGUID())
+										{
+											apeRigidBodyA->setOwner(mpCoreConfig->getNetworkGUID());
+										}
+										if (apeRigidBodyB->getOwner() != mpCoreConfig->getNetworkGUID())
+										{
+											apeRigidBodyB->setOwner(mpCoreConfig->getNetworkGUID());
+										}
 										apeRigidBodyA->setCollision(apeRigidBodyB->getName());
 										apeRigidBodyB->setCollision(apeRigidBodyA->getName());
 										APE_LOG_DEBUG("Collision: " << apeRigidBodyA->getName() << " ; " << apeRigidBodyB->getName());
