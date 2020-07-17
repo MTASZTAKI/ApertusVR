@@ -216,13 +216,13 @@ void ape::KinectPlugin::Init()
 				_1BodyGeometry->setParentNode(_1Body[i]);
 				_1BodyGeometry->setMaterial(_1bodyMaterial);
 
-				ape::RigidBodySharedPtr rigidBody;
+				/*ape::RigidBodySharedPtr rigidBody;
 				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("1BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					rigidBody->setGeometry(_1BodyGeometry);
 					rigidBody->setToStatic();
 					rigidBody->setParentNode(_1Body[i]);
-				}
+				}*/
 			}
 		}
 
@@ -253,13 +253,13 @@ void ape::KinectPlugin::Init()
 				_2BodyGeometry->setParentNode(_2Body[i]);
 				_2BodyGeometry->setMaterial(_2bodyMaterial);
 
-				ape::RigidBodySharedPtr rigidBody;
+				/*ape::RigidBodySharedPtr rigidBody;
 				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("2BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					rigidBody->setGeometry(_2BodyGeometry);
 					rigidBody->setToStatic();
 					rigidBody->setParentNode(_2Body[i]);
-				}
+				}*/
 			}
 		}
 
@@ -290,13 +290,13 @@ void ape::KinectPlugin::Init()
 				_3BodyGeometry->setParentNode(_3Body[i]);
 				_3BodyGeometry->setMaterial(_3bodyMaterial);
 
-				ape::RigidBodySharedPtr rigidBody;
+				/*ape::RigidBodySharedPtr rigidBody;
 				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("3BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					rigidBody->setGeometry(_3BodyGeometry);
 					rigidBody->setToStatic();
 					rigidBody->setParentNode(_3Body[i]);
-				}
+				}*/
 			}
 		}
 
@@ -327,13 +327,13 @@ void ape::KinectPlugin::Init()
 				_4BodyGeometry->setParentNode(_4Body[i]);
 				_4BodyGeometry->setMaterial(_4bodyMaterial);
 
-				ape::RigidBodySharedPtr rigidBody;
+				/*ape::RigidBodySharedPtr rigidBody;
 				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("4BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					rigidBody->setGeometry(_4BodyGeometry);
 					rigidBody->setToStatic();
 					rigidBody->setParentNode(_4Body[i]);
-				}
+				}*/
 			}
 		}
 
@@ -364,13 +364,13 @@ void ape::KinectPlugin::Init()
 				_5BodyGeometry->setParentNode(_5Body[i]);
 				_5BodyGeometry->setMaterial(_5bodyMaterial);
 
-				ape::RigidBodySharedPtr rigidBody;
+				/*ape::RigidBodySharedPtr rigidBody;
 				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("5BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
 					rigidBody->setGeometry(_5BodyGeometry);
 					rigidBody->setToStatic();
 					rigidBody->setParentNode(_5Body[i]);
-				}
+				}*/
 			}
 		}
 	}

@@ -410,16 +410,16 @@ void ape::BulletPhysicsPlugin::Init()
 						m_gravity.setZ(it->value.GetFloat());
 				}*/
 			}
-			if (jsonDocument.HasMember("collisionDetecion"))
+			if (jsonDocument.HasMember("collisionDetection"))
 			{
-				rapidjson::Value& collisionDetecion = jsonDocument["collisionDetecion"];
+				rapidjson::Value& collisionDetecion = jsonDocument["collisionDetection"];
 				for (rapidjson::Value::MemberIterator it = collisionDetecion.MemberBegin(); it != collisionDetecion.MemberEnd(); it++)
 				{
 					if (it->name == "enable")
 					{
 						mCollisionDetecionEnable = it->value.GetBool();
 					}
-					else if (it->name == "frselfeq")
+					else if (it->name == "self")
 					{
 						mCollisionDetecionSelf = it->value.GetBool();
 					}

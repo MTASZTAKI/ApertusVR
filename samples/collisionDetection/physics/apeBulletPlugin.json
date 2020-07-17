@@ -3,8 +3,8 @@
   "fixedTimeStep": 0.0046,
   "forceScale": 100,
   "gravity": [ 0, -10, 0 ],
-  "collisionDetecion": {
+  "collisionDetection": {
     "enable": true,
-    "self": false  
+    "self": false
   }
 }
