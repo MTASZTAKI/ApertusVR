@@ -1,5 +1,5 @@
 {
-  "sensorPosition": [ 100.0, 200.0, -450.0 ],
+  "sensorPosition": [ 200.0, 200.0, -450.0 ],
   "sensorOrientation": [ 1, 0, 0, 0 ],
   "showSkeleton": true,
   "showPointCloud": false,
