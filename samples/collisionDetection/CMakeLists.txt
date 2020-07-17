@@ -25,6 +25,8 @@ add_subdirectory (simulatedRobot)
 add_subdirectory (realRobot)
 add_subdirectory (physics)
 add_subdirectory (visualization)
+add_subdirectory (webSocket)
+add_subdirectory (listener)
 
 
 
