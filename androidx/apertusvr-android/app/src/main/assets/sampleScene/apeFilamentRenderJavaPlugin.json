@@ -13,7 +13,8 @@
     },
     "sunLight" : {
         "enable" : true,
-        "intensity" : 1.1e5
+        "intensity" : 1.1e5,
+        "direction" : [0,-1,0]
     },
     "resources" : {
         "resourcePath" : "/models",

@@ -266,15 +266,17 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         mMaterialInstances.put(DEFAULT_MAT_NAME, defaultMat);
     }
 
-    private void setupSunLight(float intensity) {
+    private void setupSunLight(float intensity, apeVector3 direction) {
         mSun = new apeFilaLight(mEngine);
         mSun.lightBuilder = new LightManager.Builder(LightManager.Type.SUN)
                 .color(1f,1f,1f)
                 .intensity(intensity)
+                .sunHaloFalloff(100f)
+                .direction(direction.x,direction.y,direction.z)
                 .castLight(true)
                 .castShadows(true);
         mSun.lightBuilder.build(mEngine,mSun.light);
-        mLights.put("FILAMENT_SUN_LIGHT",mSun);
+        mLights.put("FILAMENT_SUNLIGHT",mSun);
 
         mScene.addEntity(mSun.light);
     }
@@ -312,8 +314,14 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
             /* sunLight config */
             JSONObject sunLightConfig = configJson.getJSONObject("sunLight");
+
             if (sunLightConfig.getBoolean("enable")) {
-                setupSunLight((float) sunLightConfig.getDouble("intensity"));
+                float intensity = (float) sunLightConfig.getDouble("intensity");
+                apeVector3 direction = new apeVector3(
+                        (float) sunLightConfig.getJSONArray("direction").getDouble(0),
+                        (float) sunLightConfig.getJSONArray("direction").getDouble(1),
+                        (float) sunLightConfig.getJSONArray("direction").getDouble(2));
+                setupSunLight(intensity,direction);
             }
 
             /* resources */
@@ -530,7 +538,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                         apeFilaMesh filaMesh = mMeshes.get(event.subjectName);
                         if (filaMesh != null) {
                             apeNode parentNode = fileGeometry.getParentNode();
-                            if (parentNode.isValid() && parentNode.isVisible()) {
+                            if (parentNode.isValid()) {
                                 apeFilaTransform transform = mTransforms.get(parentNode.getName());
                                 if (transform != null) {
                                     if (filaMesh.renderable != Entity.NULL) {
@@ -549,7 +557,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
             }
             else if (event.group == apeEvent.Group.GEOMETRY_CLONE) {
                 apeCloneGeometry cloneGeometry = new apeCloneGeometry(event.subjectName);
-
                 if (cloneGeometry.isValid()) {
                     if (event.type == apeEvent.Type.GEOMETRY_CLONE_CREATE) {
                         mMesheClones.put(event.subjectName, new apeFilaMeshClone());
@@ -562,50 +569,49 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                             mMesheClones.remove(event.subjectName);
                         }
                     }
-                    else if (event.type == apeEvent.Type.GEOMETRY_CLONE_SOURCEGEOMETRY) {
-                        apeGeometry sourceGeometry = cloneGeometry.getSourceGeometry();
+                    else if (event.type == apeEvent.Type.GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME) {
+                        String sourceGeometryName = cloneGeometry.getSourceGeometryGroupName();
 
-                        if (sourceGeometry.isValid()) {
-                            apeFilaMesh sourceFilaMesh = mMeshes.get(sourceGeometry.getName());
-                            apeFilaMeshClone meshClone = mMesheClones.get(event.subjectName);
+                        apeFilaMesh sourceFilaMesh = mMeshes.get(sourceGeometryName);
+                        apeFilaMeshClone meshClone = mMesheClones.get(event.subjectName);
 
-                            if (sourceFilaMesh != null && meshClone != null) {
-                                /* clone the source mesh into a new renderable */
-                                apeFilaMeshLoader.cloneMesh(
-                                        sourceGeometry.getName(), sourceFilaMesh, meshClone,
-                                        mMaterialInstances, mEngine, DEFAULT_MAT_NAME);
+                        if (sourceFilaMesh != null && meshClone != null) {
+                            /* clone the source mesh into a new renderable */
+                            apeFilaMeshLoader.cloneMesh(
+                                    sourceGeometryName, sourceFilaMesh, meshClone,
+                                    mMaterialInstances, mEngine, DEFAULT_MAT_NAME);
 
-                                /* set the unit scele from sourceMesh */
-                                TransformManager tcm = mEngine.getTransformManager();
-                                if (sourceGeometry.getType() == apeEntity.Type.GEOMETRY_FILE) {
-                                    apeFileGeometry sourceFileGeometry = new apeFileGeometry(sourceGeometry.getName());
-                                    float s = sourceFileGeometry.getUnitScale();
-                                    tcm.setTransform(tcm.getInstance(meshClone.renderable),
-                                            new float[] {
-                                                    s, 0f, 0f, 0f,
-                                                    0f, s, 0f, 0f,
-                                                    0f, 0f, s, 0f,
-                                                    0f, 0f, 0f, 1
-                                            });
-                                }
-                                // TODO: init transform for primitve geometries (e.g. plane, cone)
+                            /* set the unit scele from sourceMesh */
+                            TransformManager tcm = mEngine.getTransformManager();
 
-                                mScene.addEntity(meshClone.renderable);
+                            apeEntity.Type sourceGeomType = apeEntity.getEntityType(sourceGeometryName);
+                            if (sourceGeomType == apeEntity.Type.GEOMETRY_FILE) {
+                                apeFileGeometry sourceFileGeometry = new apeFileGeometry(sourceGeometryName);
+                                float s = sourceFileGeometry.getUnitScale();
+                                tcm.setTransform(tcm.getInstance(meshClone.renderable),
+                                        new float[] {
+                                                s, 0f, 0f, 0f,
+                                                0f, s, 0f, 0f,
+                                                0f, 0f, s, 0f,
+                                                0f, 0f, 0f, 1
+                                        });
+                            }
+                            // TODO: init transform for primitve geometries (e.g. plane, cone)
 
-                                /* parentNode was set before this event */
-                                if (meshClone.parentTransform != null) {
-                                    meshClone.setParentTransform(meshClone.parentTransform, tcm);
-                                    meshClone.parentTransform = null;
-                                }
+                            mScene.addEntity(meshClone.renderable);
+
+                            /* parentNode was set before this event */
+                            if (meshClone.parentTransform != null) {
+                                meshClone.setParentTransform(meshClone.parentTransform, tcm);
+                                meshClone.parentTransform = null;
                             }
                         }
                     }
                     else if (event.type == apeEvent.Type.GEOMETRY_CLONE_PARENTNODE) {
                         apeFilaMeshClone meshClone = mMesheClones.get(event.subjectName);
                         if (meshClone != null) {
-                            // TODO: why do we need to check the visiblity?
                             apeNode parentNode = cloneGeometry.getParentNode();
-                            if (parentNode.isValid() && parentNode.isVisible()) {
+                            if (parentNode.isValid()) {
                                 apeFilaTransform transform = mTransforms.get(parentNode.getName());
                                 if (transform != null) {
                                     if (meshClone.renderable != Entity.NULL) {
@@ -668,9 +674,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                                     InputStream input = mAndroidResources.openRawResource(R.raw.plane);
                                     apeFilaMeshLoader.loadMesh(input, event.subjectName,
                                             matInst, mEngine, filaPlane, material.getName());
-
-//                                    apeFilaMeshLoader.loadMesh(input, event.subjectName, mMaterialInstances,
-//                                            mEngine, filaPlane, DEFAULT_MAT_NAME);
 
                                     mScene.addEntity(filaPlane.renderable);
 
@@ -740,6 +743,12 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                                                     0f, 0f, filaCone.radius, 0f,
                                                     0f, 0f, 0f, 1f
                                             });
+
+                                    /* parentNode was set before this event */
+                                    if (filaCone.parentTransform != null) {
+                                        filaCone.setParentTransform(filaCone.parentTransform,tcm);
+                                        filaCone.parentTransform = null;
+                                    }
                                 }
                             }
                         }
@@ -774,8 +783,14 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                             if (parentNode.isValid()) {
                                 apeFilaTransform transform = mTransforms.get(parentNode.getName());
                                 if(transform != null) {
-                                    // TODO: what if there isn't a renderable created when the PARENTNODE event came in?
-                                    filaCone.setParentTransform(transform, mEngine.getTransformManager());
+                                    if (filaCone.renderable != Entity.NULL) {
+                                        filaCone.setParentTransform(
+                                                transform,
+                                                mEngine.getTransformManager());
+                                    }
+                                    else {
+                                        filaCone.parentTransform = transform;
+                                    }
                                 }
                             }
                         }
@@ -812,7 +827,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                             apeColor specular = manualMaterial.getSpecularColor();
                             matInst.setParameter("roughness",
                                     apePhong2Pbr.specularExponent2roughness(
-                                            500.0f * specular.a));
+                                            500.0f * specular.r * specular.g * specular.b));
                             matInst.setParameter("metallic",
                                     apePhong2Pbr.specular2metallic(specular));
                         }
@@ -845,13 +860,13 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
             }
             else if (event.group == apeEvent.Group.NODE) {
                 apeNode node = new apeNode(event.subjectName);
+                // Log.d(LOG_TAG, event.type.toString() + " event: " + event.subjectName);
                 if (node.isValid()) {
                     if (event.type == apeEvent.Type.NODE_CREATE) {
                         apeFilaTransform transform = new apeFilaTransform(mEngine.getTransformManager());
                         transform.setTransform(
                                 apeMatrix4.IDENTITY,
                                 mEngine.getTransformManager());
-//                        Log.d(LOG_TAG,"NODE_CREATE " + event.subjectName);
                         mTransforms.put(node.getName(),transform);
                         mScene.addEntity(transform.entity);
                     }
@@ -868,8 +883,10 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                         if (parentNode.isValid()) {
                             apeFilaTransform transform = mTransforms.get(node.getName());
                             apeFilaTransform parentTransform = mTransforms.get(parentNode.getName());
+                            if (node.getName().contains("_vlftTeacher")) {
+                                Log.d(LOG_TAG, node.getName() + "'s parentNode: " + parentNode.getName());
+                            }
 
-                            Log.d(LOG_TAG,node.getName() + "'s parent: " + parentNode.getName());
                             if (transform != null && parentTransform != null) {
                                 transform.setParent(parentTransform,mEngine.getTransformManager());
                             }
@@ -884,17 +901,48 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                     else if ((event.type == apeEvent.Type.NODE_POSITION ||
                             event.type == apeEvent.Type.NODE_ORIENTATION ||
                             event.type == apeEvent.Type.NODE_SCALE) &&
-                            node.isVisible()) {
+                            node.isVisible() && node.getChildrenVisibility()) {
                         changedNodes.add(node);
                     }
                     else if (event.type == apeEvent.Type.NODE_VISIBILITY) {
-                        if (!node.isVisible()) {
+                        if (!node.isVisible() && node.getChildrenVisibility()) {
                             apeFilaTransform transform = mTransforms.get(node.getName());
                             if (transform != null) {
-                                // TODO: ....
-                                /* brute-force */
+                                // TODO: ...
+                                transform.setTransform(
+                                        apeMatrix4.IDENTITY,
+                                        mEngine.getTransformManager());
+                            }
+                        }
+                        else if (!node.getChildrenVisibility()) {
+                            apeFilaTransform transform = mTransforms.get(node.getName());
+                            if (transform != null) {
+                                // TODO: ...
                                 transform.setTransform(
                                         apeMatrix4.ZERO,
+                                        mEngine.getTransformManager());
+                            }
+                        }
+                        else {
+                            changedNodes.add(node);
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.NODE_CHILDVISIBILITY) {
+                        if (!node.getChildrenVisibility()) {
+                            apeFilaTransform transform = mTransforms.get(node.getName());
+                            if (transform != null) {
+                                // TODO: ...
+                                transform.setTransform(
+                                        apeMatrix4.ZERO,
+                                        mEngine.getTransformManager());
+                            }
+                        }
+                        else if (!node.isVisible()) {
+                            apeFilaTransform transform = mTransforms.get(node.getName());
+                            if (transform != null) {
+                                // TODO: ...
+                                transform.setTransform(
+                                        apeMatrix4.IDENTITY,
                                         mEngine.getTransformManager());
                             }
                         }
@@ -917,13 +965,8 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                     apeVector3 position = node.getPosition();
                     apeQuaternion orientation = node.getOrientation();
                     apeVector3 scale = node.getScale();
-                    if (node.isVisible())
-                        Log.d(LOG_TAG, "pos: " + position.toString() + " " + node.getName());
 
-                    if(position.equals(apeVector3.ZERO)) {
-                        Log.d(LOG_TAG, "der pos: " + node.getDerivedPosition() + " " + node.getName());
-                    }
-
+                    Log.d(LOG_TAG, node.getName() + " " + position.toString());
                     apeMatrix4 modelMx = new apeMatrix4(scale,orientation,position);
 
                     transform.setTransform(

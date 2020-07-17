@@ -70,6 +70,10 @@ public class apeEntity {
         return mType;
     }
 
+    public static Type getEntityType(String entityName) {
+        return Type.values()[ApertusJNI.getEntityType(entityName)];
+    }
+
     public boolean isValid() {
         return ApertusJNI.isEntityValidWithType(mName,mType.ordinal());
     }
