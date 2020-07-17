@@ -34,7 +34,6 @@ public final class ApertusJNI {
     public native String stringFromJNIPlugin(String jhello);
 
     /* apeSystem functions */
-
     public native void startApertusVR(String confPath, AssetManager assetManager);
     public native void stopApertusVR();
 

@@ -92,10 +92,10 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
     /* scene elements */
     private Map<String, apeFilaMesh> mMeshes;
+    private Map<String, apeFilaMeshClone> mMesheClones;
     private Map<String, apeFilaLight> mLights;
     private Map<String, apeFilaTransform> mTransforms;
     private List<Texture> mTextures;
-
 
     /* callbacks */
     private FrameCallback mFrameCallback = new FrameCallback();
@@ -137,21 +137,25 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void onCreate() {
+        /* Init containers */
         mMaterialInstances = new TreeMap<>();
         mChoreographer = Choreographer.getInstance();
         mEventDoubleQueue = new apeDoubleQueue<>(true);
         mLightEventDoubleQueue = new apeDoubleQueue<>(true);
         mLights = new TreeMap<>();
         mMeshes = new TreeMap<>();
+        mMesheClones = new TreeMap<>();
         mTransforms = new TreeMap<>();
         mTextures = new LinkedList<>();
 
 
+        /* setup the surface, and filament*/
         setupSurfaceView();
         setupFilament();
         setupView();
         setupMaterials();
 
+        /* parse json config */
         initConfigs();
 
         /* event connection */
@@ -182,6 +186,11 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     public void onDestroy() {
         mChoreographer.removeFrameCallback(mFrameCallback);
         mUiHelper.detach();
+
+        /* destroy mesh clones */
+        for (apeFilaMeshClone meshClone : mMesheClones.values()) {
+            apeFilaMeshLoader.destroyClone(mEngine, meshClone);
+        }
 
         /* destroy meshes */
         for (apeFilaMesh mesh : mMeshes.values()) {
@@ -528,8 +537,84 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                                         filaMesh.setParentTransform(
                                                 transform,
                                                 mEngine.getTransformManager());
-                                    } else {
+                                    }
+                                    else {
                                         filaMesh.parentTransform = transform;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (event.group == apeEvent.Group.GEOMETRY_CLONE) {
+                apeCloneGeometry cloneGeometry = new apeCloneGeometry(event.subjectName);
+
+                if (cloneGeometry.isValid()) {
+                    if (event.type == apeEvent.Type.GEOMETRY_CLONE_CREATE) {
+                        mMesheClones.put(event.subjectName, new apeFilaMeshClone());
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_CLONE_DELETE) {
+                        apeFilaMeshClone meshClone = mMesheClones.get(event.subjectName);
+                        if (meshClone != null) {
+                            mScene.removeEntity(meshClone.renderable);
+                            apeFilaMeshLoader.destroyClone(mEngine, meshClone);
+                            mMesheClones.remove(event.subjectName);
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_CLONE_SOURCEGEOMETRY) {
+                        apeGeometry sourceGeometry = cloneGeometry.getSourceGeometry();
+
+                        if (sourceGeometry.isValid()) {
+                            apeFilaMesh sourceFilaMesh = mMeshes.get(sourceGeometry.getName());
+                            apeFilaMeshClone meshClone = mMesheClones.get(event.subjectName);
+
+                            if (sourceFilaMesh != null && meshClone != null) {
+                                /* clone the source mesh into a new renderable */
+                                apeFilaMeshLoader.cloneMesh(
+                                        sourceGeometry.getName(), sourceFilaMesh, meshClone,
+                                        mMaterialInstances, mEngine, DEFAULT_MAT_NAME);
+
+                                /* set the unit scele from sourceMesh */
+                                TransformManager tcm = mEngine.getTransformManager();
+                                if (sourceGeometry.getType() == apeEntity.Type.GEOMETRY_FILE) {
+                                    apeFileGeometry sourceFileGeometry = new apeFileGeometry(sourceGeometry.getName());
+                                    float s = sourceFileGeometry.getUnitScale();
+                                    tcm.setTransform(tcm.getInstance(meshClone.renderable),
+                                            new float[] {
+                                                    s, 0f, 0f, 0f,
+                                                    0f, s, 0f, 0f,
+                                                    0f, 0f, s, 0f,
+                                                    0f, 0f, 0f, 1
+                                            });
+                                }
+                                // TODO: init transform for primitve geometries (e.g. plane, cone)
+
+                                mScene.addEntity(meshClone.renderable);
+
+                                /* parentNode was set before this event */
+                                if (meshClone.parentTransform != null) {
+                                    meshClone.setParentTransform(meshClone.parentTransform, tcm);
+                                    meshClone.parentTransform = null;
+                                }
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_CLONE_PARENTNODE) {
+                        apeFilaMeshClone meshClone = mMesheClones.get(event.subjectName);
+                        if (meshClone != null) {
+                            // TODO: why do we need to check the visiblity?
+                            apeNode parentNode = cloneGeometry.getParentNode();
+                            if (parentNode.isValid() && parentNode.isVisible()) {
+                                apeFilaTransform transform = mTransforms.get(parentNode.getName());
+                                if (transform != null) {
+                                    if (meshClone.renderable != Entity.NULL) {
+                                        meshClone.setParentTransform(
+                                                transform,
+                                                mEngine.getTransformManager());
+                                    }
+                                    else {
+                                        meshClone.parentTransform = transform;
                                     }
                                 }
                             }

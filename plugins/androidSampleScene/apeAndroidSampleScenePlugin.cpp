@@ -27,6 +27,7 @@ SOFTWARE.*/
 #include "apeIFileGeometry.h"
 #include "apeIManualMaterial.h"
 #include "apeIConeGeometry.h"
+#include "apeICloneGeometry.h"
 
 ape::AndroidSampleScenePlugin::AndroidSampleScenePlugin()
 {
@@ -200,11 +201,30 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 
         if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
                 mpSceneManager->createEntity("Vibrating_Bowl_Clip", ape::Entity::GEOMETRY_FILE,
-                                             false, "androidSampleScene").lock())) {
-            fileGeom->setUnitScale(0.01f);
-            fileGeom->setFileName("VibratingBowl/Vibrating_Bowl_Clip.obj");
-            fileGeom->setParentNode(node);
-        }
+                                             false, "androidSampleScene").lock()))
+        {
+			fileGeom->setUnitScale(0.01f);
+			fileGeom->setFileName("VibratingBowl/Vibrating_Bowl_Clip.obj");
+			fileGeom->setParentNode(node);
+
+
+			if (auto cloneNode = mpSceneManager->createNode("vibratingBowlClipCloneNode", false,
+                                                            "androidSampleScene").lock())
+			{
+				cloneNode->setPosition(ape::Vector3(18, 0, -13));
+				cloneNode->setOrientation(ape::Quaternion(ape::Degree(-45), ape::Vector3(0, 1, 0)));
+				cloneNode->setParentNode(mRootNodeWeak);
+
+				if (auto cloneGeom = std::static_pointer_cast<ape::ICloneGeometry>(
+						mpSceneManager->createEntity("Vibrating_Bowl_Clip_Clone",
+													 ape::Entity::GEOMETRY_CLONE,
+													 false, "androidSampleScene").lock()))
+				{
+					cloneGeom->setSourceGeometry(fileGeom);
+					cloneGeom->setParentNode(cloneNode);
+				}
+			}
+		}
     }
 
     // Gripper

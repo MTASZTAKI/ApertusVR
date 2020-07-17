@@ -61,7 +61,7 @@ final class apeFilaMeshLoader {
             VertexBuffer vertexBuffer = createVertexBuffer(engine, header, vertexBufferData);
 
             @Entity int renderableEntity = createRenderable(
-                    name, engine, header, indexBuffer,
+                    name, engine, header.aabb, indexBuffer,
                     vertexBuffer, parts, definedMaterials,
                     materials, defaultMatName);
 
@@ -69,13 +69,12 @@ final class apeFilaMeshLoader {
             target.indexBuffer = indexBuffer;
             target.vertexBuffer = vertexBuffer;
             target.aabb = header.aabb;
+            target.parts = parts;
+            target.definedMaterials = definedMaterials;
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
-        Log.e("Filament","Something bad happened at mesh loading");
-        //return null;
     }
 
     static void loadMesh(InputStream input, String name,
@@ -83,6 +82,22 @@ final class apeFilaMeshLoader {
                          Engine engine, apeFilaMesh target,
                          String matName) {
         loadMesh(input, name, Collections.singletonMap(matName,material),engine,target,matName);
+    }
+
+    static void cloneMesh(String sourceMeshName, apeFilaMesh sourceMesh, apeFilaMeshClone target,
+                          Map<String, MaterialInstance> materials,
+                          Engine engine, String defaultMaterialName) {
+        target.sourceMeshName = sourceMeshName;
+        target.renderable = createRenderable(
+                sourceMeshName,engine,sourceMesh.aabb,
+                sourceMesh.indexBuffer,sourceMesh.vertexBuffer,
+                sourceMesh.parts, sourceMesh.definedMaterials,
+                materials, defaultMaterialName);
+    }
+
+    static void destroyClone(Engine engine, apeFilaMeshClone meshClone) {
+        engine.destroyEntity(meshClone.renderable);
+        EntityManager.get().destroy(meshClone.renderable);
     }
 
     private static Header readHeader(InputStream input) throws IOException {
@@ -246,7 +261,7 @@ final class apeFilaMeshLoader {
     private static int createRenderable(
             String name,
             Engine engine,
-            Header header,
+            Box aabb,
             IndexBuffer indexBuffer,
             VertexBuffer vertexBuffer,
             List<Part> parts,
@@ -254,12 +269,10 @@ final class apeFilaMeshLoader {
             Map<String,MaterialInstance> materials,
             String defaultMatName) {
 
-        RenderableManager.Builder builder = new RenderableManager.Builder((int)header.parts);
-        builder.boundingBox(header.aabb);
+        RenderableManager.Builder builder = new RenderableManager.Builder(parts.size());
+        builder.boundingBox(aabb);
 
-
-
-        for (int i = 0; i < (int) header.parts; i++) {
+        for (int i = 0; i < parts.size(); i++) {
             builder.geometry(i,
                     RenderableManager.PrimitiveType.TRIANGLES,
                     vertexBuffer,
@@ -307,7 +320,7 @@ final class apeFilaMeshLoader {
         long indicesSizeInBytes = 0L;
     }
 
-    private static class Part {
+    protected static class Part {
         long offset = 0L;
         long indexCount = 0L;
         long minIndex = 0L;

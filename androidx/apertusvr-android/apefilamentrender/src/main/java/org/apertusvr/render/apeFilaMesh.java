@@ -28,8 +28,11 @@ import com.google.android.filament.IndexBuffer;
 import com.google.android.filament.TransformManager;
 import com.google.android.filament.VertexBuffer;
 
+import org.apertusvr.render.apeFilaMeshLoader.Part;
+
 import org.apertusvr.apeNode;
 
+import java.util.List;
 import java.util.Objects;
 
 class apeFilaMesh {
@@ -68,6 +71,8 @@ class apeFilaMesh {
     @Entity int renderable;
     IndexBuffer indexBuffer;
     VertexBuffer vertexBuffer;
+    List<Part> parts;
+    List<String> definedMaterials;
     Box aabb;
     apeFilaTransform parentTransform;
 }
