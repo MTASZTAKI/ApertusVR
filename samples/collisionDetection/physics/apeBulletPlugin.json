@@ -4,7 +4,7 @@
   "forceScale": 100,
   "gravity": [ 0, -10, 0 ],
   "collisionDetection": {
-    "enable": false,
+    "enable": true,
     "self": false
   }
 }
