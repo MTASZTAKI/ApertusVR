@@ -83,6 +83,7 @@ set (SOURCES
 include_directories(
 	${CMAKE_BINARY_DIR}/Boost/include/boost-1_67
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/crow/include
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 
 add_library (apeWebSocketServerPlugin SHARED ${SOURCES} ${HEADERS})

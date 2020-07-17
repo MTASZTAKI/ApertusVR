@@ -22,6 +22,7 @@
 
 set (CONFIGS
 	apeCore.json
+	apeWebSocketServerPlugin.json
 	)
 
 add_custom_target(

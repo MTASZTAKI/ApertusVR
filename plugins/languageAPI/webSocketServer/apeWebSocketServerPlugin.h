@@ -74,6 +74,12 @@ namespace ape
 
 		void eventCallBack(const ape::Event& event);
 
+		unsigned int mPortNumber;
+
+		std::vector<unsigned int> mEventGroups;
+
+		std::vector<unsigned int> mEventTypes;
+
 	public:
 		WebSocketServerPlugin();
 
