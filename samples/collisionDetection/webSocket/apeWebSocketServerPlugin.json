@@ -1,5 +1,5 @@
 {
   "port": 40080,
-  "eventGroups": [ "25" ],
-  "eventTypes": [ "6410" ]
+  "eventGroups": [ 25 ],
+  "eventTypes": [ 6410 ]
 }
