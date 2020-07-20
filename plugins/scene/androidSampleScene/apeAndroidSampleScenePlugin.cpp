@@ -169,8 +169,7 @@ void ape::AndroidSampleScenePlugin::initGeometries()
     if (auto coneNode = mpSceneManager->createNode("cone01Node",false,"androidSampleScene").lock())
     {
         coneNode->setParentNode(mRootNodeWeak);
-        coneNode->setPosition(ape::Vector3(-10,4.0,-10));
-        coneNode->setOrientation(ape::Quaternion(ape::Degree(90),ape::Vector3(1,0,0)));
+        coneNode->setPosition(ape::Vector3(-10,0.0,-10));
 
         if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(
                 mpSceneManager->createEntity("cone01", ape::Entity::Type::GEOMETRY_CONE,
@@ -187,7 +186,7 @@ void ape::AndroidSampleScenePlugin::initGeometries()
                 cone->setMaterial(material);
             }
 
-            cone->setParameters(3.0f,2.0f,1.0f,ape::Vector2());
+            cone->setParameters(3.0f,4.0f,1.0f,ape::Vector2());
             cone->setParentNode(coneNode);
         }
     }
@@ -220,7 +219,7 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 													 ape::Entity::GEOMETRY_CLONE,
 													 false, "androidSampleScene").lock()))
 				{
-					cloneGeom->setSourceGeometry(fileGeom);
+					cloneGeom->setSourceGeometryGroupName(fileGeom->getName());
 					cloneGeom->setParentNode(cloneNode);
 				}
 			}
@@ -267,7 +266,7 @@ void ape::AndroidSampleScenePlugin::initGeometries()
     	if (auto nodeFloating = mpSceneManager->createNode("PickAndPlayeFloating",false,"androidSampleScene").lock())
     	{
     		nodeFloating->setPosition(ape::Vector3(-1,0,0));
-    		nodeFloating->setVisible(false);
+    		nodeFloating->setChildrenVisibility(false);
 
 			if (auto nodeX = mpSceneManager->createNode("PickAndPlaceNodeX", false,
 														"androidSampleScene").lock()) {

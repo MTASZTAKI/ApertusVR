@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(surfaceView);
 
         if (!apeStarted) {
-            apeJNI.startApertusVR("multiPlayer/helloWorldGuest",getAssets());
+            apeJNI.startApertusVR("androidSampleScene",getAssets());
             apeStarted = true;
         }
 

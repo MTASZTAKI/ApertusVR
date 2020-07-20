@@ -42,7 +42,7 @@ final class apeFilaMeshLoader {
     static void loadMesh(InputStream input, String name,
                          Map<String, MaterialInstance> materials,
                          Engine engine, apeFilaMesh target,
-                         String defaultMatName) {
+                         String defaultMatName, boolean shadow) {
 
         // InputStream input;
         Header header;
@@ -63,7 +63,7 @@ final class apeFilaMeshLoader {
             @Entity int renderableEntity = createRenderable(
                     name, engine, header.aabb, indexBuffer,
                     vertexBuffer, parts, definedMaterials,
-                    materials, defaultMatName);
+                    materials, defaultMatName, shadow);
 
             target.renderable = renderableEntity;
             target.indexBuffer = indexBuffer;
@@ -80,19 +80,19 @@ final class apeFilaMeshLoader {
     static void loadMesh(InputStream input, String name,
                          MaterialInstance material,
                          Engine engine, apeFilaMesh target,
-                         String matName) {
-        loadMesh(input, name, Collections.singletonMap(matName,material),engine,target,matName);
+                         String matName, boolean shadow) {
+        loadMesh(input, name, Collections.singletonMap(matName,material),engine,target,matName, shadow);
     }
 
     static void cloneMesh(String sourceMeshName, apeFilaMesh sourceMesh, apeFilaMeshClone target,
                           Map<String, MaterialInstance> materials,
-                          Engine engine, String defaultMaterialName) {
+                          Engine engine, String defaultMaterialName, boolean shadow) {
         target.sourceMeshName = sourceMeshName;
         target.renderable = createRenderable(
                 sourceMeshName,engine,sourceMesh.aabb,
                 sourceMesh.indexBuffer,sourceMesh.vertexBuffer,
                 sourceMesh.parts, sourceMesh.definedMaterials,
-                materials, defaultMaterialName);
+                materials, defaultMaterialName, shadow);
     }
 
     static void destroyClone(Engine engine, apeFilaMeshClone meshClone) {
@@ -267,7 +267,8 @@ final class apeFilaMeshLoader {
             List<Part> parts,
             List<String> definedMaterials,
             Map<String,MaterialInstance> materials,
-            String defaultMatName) {
+            String defaultMatName,
+            boolean shadowEnabled) {
 
         RenderableManager.Builder builder = new RenderableManager.Builder(parts.size());
         builder.boundingBox(aabb);
@@ -290,6 +291,9 @@ final class apeFilaMeshLoader {
             else {
                 builder.material(i, Objects.requireNonNull(materials.get(defaultMatName)));
             }
+
+            builder.castShadows(shadowEnabled);
+            builder.receiveShadows(shadowEnabled);
         }
 
         @Entity int result =  EntityManager.get().create();

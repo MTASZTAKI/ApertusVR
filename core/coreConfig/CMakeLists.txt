@@ -37,7 +37,7 @@ add_library (apeCoreConfig SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
 if(ANDROID)
-	target_link_libraries (apeCoreConfig android_fopen)
+	target_link_libraries (apeCoreConfig apeAAssetOpen)
 endif()
 
 # Place target xxx into the specified folder in IDEs supporting it

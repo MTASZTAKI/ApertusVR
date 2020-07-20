@@ -20,6 +20,6 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_library(android_fopen SHARED android_fopen.h android_fopen.cpp)
+add_library(apeAAssetOpen SHARED apeAAssetOpen.h apeAAssetOpen.cpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(android_fopen ${android-lib})
+target_link_libraries(apeAAssetOpen ${android-lib})

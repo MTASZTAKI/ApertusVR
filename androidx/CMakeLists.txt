@@ -21,4 +21,4 @@
 #SOFTWARE.
 
 add_subdirectory(JNIStarter)
-add_subdirectory(fopen)
+add_subdirectory(assetOpen)

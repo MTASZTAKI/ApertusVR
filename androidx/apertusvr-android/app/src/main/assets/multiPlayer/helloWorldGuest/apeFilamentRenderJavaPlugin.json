@@ -11,6 +11,14 @@
             "rotateSpeed" : 0.001
         }
     },
+    "shadowOptions" : {
+        "enable" : false,
+        "mapSize" : 1024,
+        "shadowFar" : 0.0,
+        "shadowNearHint" : 1.0,
+        "shadowFarHint" : 1000.0,
+        "maxShadowDistance" : 0.3
+    },
     "sunLight" : {
         "enable" : true,
         "intensity" : 1.1e5,

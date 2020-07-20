@@ -35,5 +35,5 @@ target_link_libraries(apeJNIStarter
                         ${log-lib}
                         ${APERTUSCORE_LIBS}
                         ${android-lib}
-                        android_fopen
+                        apeAAssetOpen
                         )

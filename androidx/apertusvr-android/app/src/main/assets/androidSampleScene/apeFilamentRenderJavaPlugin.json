@@ -11,10 +11,19 @@
             "rotateSpeed" : 0.001
         }
     },
+    "shadowOptions" : {
+        "enable" : true,
+        "mapSize" : 1024,
+        "shadowCascades" : 1,
+        "shadowFar" : 0.0,
+        "shadowNearHint" : 1.0,
+        "shadowFarHint" : 80.0,
+        "maxShadowDistance" : 0.3
+    },
     "sunLight" : {
         "enable" : true,
         "intensity" : 1.1e5,
-        "direction" : [0,-1,0]
+        "direction" : [0.5,-1,0]
     },
     "resources" : {
         "resourcePath" : "/models",

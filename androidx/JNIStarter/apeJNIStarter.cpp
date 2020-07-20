@@ -12,7 +12,7 @@
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 #include <iostream>
-#include "../fopen/android_fopen.h"
+#include "../assetOpen/apeAAssetOpen.h"
 
 void* print_message_function( void *ptr);
 int start_logger(int* pfd, pthread_t& thr);
@@ -70,7 +70,8 @@ Java_org_apertusvr_ApertusJNI_startApertusVR(JNIEnv *env, jobject thiz, jstring 
     pthread_t thr;
     start_logger(pfd,thr);
 
-    android_fopen_set_asset_manager(AAssetManager_fromJava(env,assetManager));
+    //android_fopen_set_asset_manager(AAssetManager_fromJava(env,assetManager));
+    ape::AAssetOpen::setAssetManager(AAssetManager_fromJava(env,assetManager));
 
     const char* confPath = env->GetStringUTFChars(conf_path,nullptr);
 

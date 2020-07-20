@@ -50,7 +50,6 @@ target_link_libraries(apeJNIPlugin
         apeLogManager
 #        apeSystem
         ${log-lib}
-        android_fopen
 #        ${android-lib}
         )
 
