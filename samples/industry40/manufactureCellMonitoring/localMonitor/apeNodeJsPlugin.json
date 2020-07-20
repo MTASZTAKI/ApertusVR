@@ -7,7 +7,7 @@
         {
           "file": "httpSimulator/httpSimulator.js",
           "args": {
-            "fileName": "httpSimulator/ur5.jsonlist",
+            "fileName": "httpSimulator/TwoUR5.jsonlist",
             "delay": 60
           }
         },
