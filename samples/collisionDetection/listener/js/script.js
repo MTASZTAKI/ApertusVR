@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var sock = new WebSocket("ws://10.1.6.130:40080/ws");
+    var sock = new WebSocket("ws://localhost:40080/ws");
 	sock.onopen = () => {
 		console.log('open');
     }
