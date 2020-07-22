@@ -124,6 +124,10 @@ void ape::KinectPlugin::Init()
 				rapidjson::Value& KM3DS = jsonDocument["3dScan"];
 				_3dScan = jsonDocument["3dScan"].GetBool();
 				APE_LOG_DEBUG("3dScan: " << std::to_string(_3dScan));
+
+				rapidjson::Value& KSForceOneSkeleton = jsonDocument["forceOneSkeleton"];
+				forceOneSkeleton = jsonDocument["forceOneSkeleton"].GetBool();
+				APE_LOG_DEBUG("forceOneSkeleton: " << std::to_string(forceOneSkeleton));
 			}
 			fclose(KinectPluginConfigFile);
 		}
@@ -189,188 +193,191 @@ void ape::KinectPlugin::Init()
 			}
 		}
 
-		std::shared_ptr<ape::IManualMaterial> _1bodyMaterial;
-		if (_1bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("1BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+		if (!forceOneSkeleton)
 		{
-			_1bodyMaterial->setDiffuseColor(ape::Color(1.0f, 0.0f, 0.0f));
-			_1bodyMaterial->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
-		}
-
-		for (int i = 0; i < 25; i++)
-		{
-			std::string index = std::to_string(i);
-
-			if (auto myNode = mpSceneManager->createNode("1BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
+			std::shared_ptr<ape::IManualMaterial> _1bodyMaterial;
+			if (_1bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("1BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
-				_1Body.push_back(myNode);
+				_1bodyMaterial->setDiffuseColor(ape::Color(1.0f, 0.0f, 0.0f));
+				_1bodyMaterial->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
 			}
 
-			if (auto childNode = _1Body[i].lock())
+			for (int i = 0; i < 25; i++)
 			{
-				childNode->setParentNode(RootNode);
-			}
+				std::string index = std::to_string(i);
 
-			if (auto _1BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("1BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
-			{
-				_1BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
-				_1BodyGeometry->setParentNode(_1Body[i]);
-				_1BodyGeometry->setMaterial(_1bodyMaterial);
-
-				/*ape::RigidBodySharedPtr rigidBody;
-				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("1BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+				if (auto myNode = mpSceneManager->createNode("1BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 				{
-					rigidBody->setGeometry(_1BodyGeometry);
-					rigidBody->setToStatic();
-					rigidBody->setParentNode(_1Body[i]);
-				}*/
-			}
-		}
+					_1Body.push_back(myNode);
+				}
 
-		std::shared_ptr<ape::IManualMaterial> _2bodyMaterial;
-		if (_2bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("2BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
-		{
-			_2bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
-			_2bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
-		}
-
-		for (int i = 0; i < 25; i++)
-		{
-			std::string index = std::to_string(i);
-
-			if (auto myNode = mpSceneManager->createNode("2BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
-			{
-				_2Body.push_back(myNode);
-			}
-
-			if (auto childNode = _2Body[i].lock())
-			{
-				childNode->setParentNode(RootNode);
-			}
-
-			if (auto _2BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("2BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
-			{
-				_2BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
-				_2BodyGeometry->setParentNode(_2Body[i]);
-				_2BodyGeometry->setMaterial(_2bodyMaterial);
-
-				/*ape::RigidBodySharedPtr rigidBody;
-				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("2BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+				if (auto childNode = _1Body[i].lock())
 				{
-					rigidBody->setGeometry(_2BodyGeometry);
-					rigidBody->setToStatic();
-					rigidBody->setParentNode(_2Body[i]);
-				}*/
-			}
-		}
+					childNode->setParentNode(RootNode);
+				}
 
-		std::shared_ptr<ape::IManualMaterial> _3bodyMaterial;
-		if (_3bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("3BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
-		{
-			_3bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
-			_3bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
-		}
-
-		for (int i = 0; i < 25; i++)
-		{
-			std::string index = std::to_string(i);
-
-			if (auto myNode = mpSceneManager->createNode("3BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
-			{
-				_3Body.push_back(myNode);
-			}
-
-			if (auto childNode = _3Body[i].lock())
-			{
-				childNode->setParentNode(RootNode);
-			}
-
-			if (auto _3BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("3BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
-			{
-				_3BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
-				_3BodyGeometry->setParentNode(_3Body[i]);
-				_3BodyGeometry->setMaterial(_3bodyMaterial);
-
-				/*ape::RigidBodySharedPtr rigidBody;
-				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("3BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+				if (auto _1BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("1BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
-					rigidBody->setGeometry(_3BodyGeometry);
-					rigidBody->setToStatic();
-					rigidBody->setParentNode(_3Body[i]);
-				}*/
-			}
-		}
+					_1BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
+					_1BodyGeometry->setParentNode(_1Body[i]);
+					_1BodyGeometry->setMaterial(_1bodyMaterial);
 
-		std::shared_ptr<ape::IManualMaterial> _4bodyMaterial;
-		if (_4bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("4BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
-		{
-			_4bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
-			_4bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
-		}
-
-		for (int i = 0; i < 25; i++)
-		{
-			std::string index = std::to_string(i);
-
-			if (auto myNode = mpSceneManager->createNode("4BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
-			{
-				_4Body.push_back(myNode);
+					/*ape::RigidBodySharedPtr rigidBody;
+					if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("1BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+					{
+						rigidBody->setGeometry(_1BodyGeometry);
+						rigidBody->setToStatic();
+						rigidBody->setParentNode(_1Body[i]);
+					}*/
+				}
 			}
 
-			if (auto childNode = _4Body[i].lock())
+			std::shared_ptr<ape::IManualMaterial> _2bodyMaterial;
+			if (_2bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("2BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
-				childNode->setParentNode(RootNode);
+				_2bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
+				_2bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
 			}
 
-			if (auto _4BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("4BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
+			for (int i = 0; i < 25; i++)
 			{
-				_4BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
-				_4BodyGeometry->setParentNode(_4Body[i]);
-				_4BodyGeometry->setMaterial(_4bodyMaterial);
+				std::string index = std::to_string(i);
 
-				/*ape::RigidBodySharedPtr rigidBody;
-				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("4BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+				if (auto myNode = mpSceneManager->createNode("2BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 				{
-					rigidBody->setGeometry(_4BodyGeometry);
-					rigidBody->setToStatic();
-					rigidBody->setParentNode(_4Body[i]);
-				}*/
-			}
-		}
+					_2Body.push_back(myNode);
+				}
 
-		std::shared_ptr<ape::IManualMaterial> _5bodyMaterial;
-		if (_5bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("5BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
-		{
-			_5bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
-			_5bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
-		}
-
-		for (int i = 0; i < 25; i++)
-		{
-			std::string index = std::to_string(i);
-
-			if (auto myNode = mpSceneManager->createNode("5BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
-			{
-				_5Body.push_back(myNode);
-			}
-
-			if (auto childNode = _5Body[i].lock())
-			{
-				childNode->setParentNode(RootNode);
-			}
-
-			if (auto _5BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("5BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
-			{
-				_5BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
-				_5BodyGeometry->setParentNode(_5Body[i]);
-				_5BodyGeometry->setMaterial(_5bodyMaterial);
-
-				/*ape::RigidBodySharedPtr rigidBody;
-				if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("5BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+				if (auto childNode = _2Body[i].lock())
 				{
-					rigidBody->setGeometry(_5BodyGeometry);
-					rigidBody->setToStatic();
-					rigidBody->setParentNode(_5Body[i]);
-				}*/
+					childNode->setParentNode(RootNode);
+				}
+
+				if (auto _2BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("2BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
+				{
+					_2BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
+					_2BodyGeometry->setParentNode(_2Body[i]);
+					_2BodyGeometry->setMaterial(_2bodyMaterial);
+
+					/*ape::RigidBodySharedPtr rigidBody;
+					if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("2BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+					{
+						rigidBody->setGeometry(_2BodyGeometry);
+						rigidBody->setToStatic();
+						rigidBody->setParentNode(_2Body[i]);
+					}*/
+				}
+			}
+
+			std::shared_ptr<ape::IManualMaterial> _3bodyMaterial;
+			if (_3bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("3BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+			{
+				_3bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
+				_3bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
+			}
+
+			for (int i = 0; i < 25; i++)
+			{
+				std::string index = std::to_string(i);
+
+				if (auto myNode = mpSceneManager->createNode("3BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
+				{
+					_3Body.push_back(myNode);
+				}
+
+				if (auto childNode = _3Body[i].lock())
+				{
+					childNode->setParentNode(RootNode);
+				}
+
+				if (auto _3BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("3BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
+				{
+					_3BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
+					_3BodyGeometry->setParentNode(_3Body[i]);
+					_3BodyGeometry->setMaterial(_3bodyMaterial);
+
+					/*ape::RigidBodySharedPtr rigidBody;
+					if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("3BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+					{
+						rigidBody->setGeometry(_3BodyGeometry);
+						rigidBody->setToStatic();
+						rigidBody->setParentNode(_3Body[i]);
+					}*/
+				}
+			}
+
+			std::shared_ptr<ape::IManualMaterial> _4bodyMaterial;
+			if (_4bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("4BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+			{
+				_4bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
+				_4bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
+			}
+
+			for (int i = 0; i < 25; i++)
+			{
+				std::string index = std::to_string(i);
+
+				if (auto myNode = mpSceneManager->createNode("4BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
+				{
+					_4Body.push_back(myNode);
+				}
+
+				if (auto childNode = _4Body[i].lock())
+				{
+					childNode->setParentNode(RootNode);
+				}
+
+				if (auto _4BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("4BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
+				{
+					_4BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
+					_4BodyGeometry->setParentNode(_4Body[i]);
+					_4BodyGeometry->setMaterial(_4bodyMaterial);
+
+					/*ape::RigidBodySharedPtr rigidBody;
+					if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("4BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+					{
+						rigidBody->setGeometry(_4BodyGeometry);
+						rigidBody->setToStatic();
+						rigidBody->setParentNode(_4Body[i]);
+					}*/
+				}
+			}
+
+			std::shared_ptr<ape::IManualMaterial> _5bodyMaterial;
+			if (_5bodyMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("5BodyNodeMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+			{
+				_5bodyMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
+				_5bodyMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));
+			}
+
+			for (int i = 0; i < 25; i++)
+			{
+				std::string index = std::to_string(i);
+
+				if (auto myNode = mpSceneManager->createNode("5BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
+				{
+					_5Body.push_back(myNode);
+				}
+
+				if (auto childNode = _5Body[i].lock())
+				{
+					childNode->setParentNode(RootNode);
+				}
+
+				if (auto _5BodyGeometry = std::static_pointer_cast<ape::ISphereGeometry>(mpSceneManager->createEntity("5BodyGeometry" + index, ape::Entity::GEOMETRY_SPHERE, true, mpCoreConfig->getNetworkGUID()).lock()))
+				{
+					_5BodyGeometry->setParameters(2.0f, ape::Vector2(1, 1));
+					_5BodyGeometry->setParentNode(_5Body[i]);
+					_5BodyGeometry->setMaterial(_5bodyMaterial);
+
+					/*ape::RigidBodySharedPtr rigidBody;
+					if (rigidBody = std::static_pointer_cast<ape::IRigidBody>(mpSceneManager->createEntity("5BodyNode" + index + "_rigidBody", ape::Entity::RIGIDBODY, true, mpCoreConfig->getNetworkGUID()).lock()))
+					{
+						rigidBody->setGeometry(_5BodyGeometry);
+						rigidBody->setToStatic();
+						rigidBody->setParentNode(_5Body[i]);
+					}*/
+				}
 			}
 		}
 	}
@@ -568,98 +575,100 @@ void ape::KinectPlugin::Run()
 					}
 				}
 			}
-
-			for (int i = 0; i < 25; i++)
+			if (!forceOneSkeleton)
 			{
-				if (auto bodynode = _1Body[i].lock())
+				for (int i = 0; i < 25; i++)
 				{
-					if (body[1] != NULL)
+					if (auto bodynode = _1Body[i].lock())
 					{
-						if (body[1][i][0] == 0 && body[1][i][1] == 0 && body[1][i][2] == 0)
+						if (body[1] != NULL)
 						{
-							bodynode->setChildrenVisibility(false);
-						}
-						else
-						{
-							bodynode->setChildrenVisibility(true);
-							bodynode->setPosition(ape::Vector3(body[1][i][0] * 100, body[1][i][1] * 100, body[1][i][2] * 100));
-						}
+							if (body[1][i][0] == 0 && body[1][i][1] == 0 && body[1][i][2] == 0)
+							{
+								bodynode->setChildrenVisibility(false);
+							}
+							else
+							{
+								bodynode->setChildrenVisibility(true);
+								bodynode->setPosition(ape::Vector3(body[1][i][0] * 100, body[1][i][1] * 100, body[1][i][2] * 100));
+							}
 
-					}
-				}
-			}
-
-			for (int i = 0; i < 25; i++)
-			{
-				if (auto bodynode = _2Body[i].lock())
-				{
-					if (body[2] != NULL)
-					{
-						if (body[2][i][0] == 0 && body[2][i][1] == 0 && body[2][i][2] == 0)
-						{
-							bodynode->setChildrenVisibility(false);
-						}
-						else
-						{
-							bodynode->setChildrenVisibility(true);
-							bodynode->setPosition(ape::Vector3(body[2][i][0] * 100, body[2][i][1] * 100, body[2][i][2] * 100));
 						}
 					}
 				}
-			}
 
-			for (int i = 0; i < 25; i++)
-			{
-				if (auto bodynode = _3Body[i].lock())
+				for (int i = 0; i < 25; i++)
 				{
-					if (body[3] != NULL)
+					if (auto bodynode = _2Body[i].lock())
 					{
-						if (body[3][i][0] == 0 && body[3][i][1] == 0 && body[3][i][2] == 0)
+						if (body[2] != NULL)
 						{
-							bodynode->setChildrenVisibility(false);
-						}
-						else
-						{
-							bodynode->setChildrenVisibility(true);
-							bodynode->setPosition(ape::Vector3(body[3][i][0] * 100, body[3][i][1] * 100, body[3][i][2] * 100));
+							if (body[2][i][0] == 0 && body[2][i][1] == 0 && body[2][i][2] == 0)
+							{
+								bodynode->setChildrenVisibility(false);
+							}
+							else
+							{
+								bodynode->setChildrenVisibility(true);
+								bodynode->setPosition(ape::Vector3(body[2][i][0] * 100, body[2][i][1] * 100, body[2][i][2] * 100));
+							}
 						}
 					}
 				}
-			}
 
-			for (int i = 0; i < 25; i++)
-			{
-				if (auto bodynode = _4Body[i].lock())
+				for (int i = 0; i < 25; i++)
 				{
-					if (body[4] != NULL)
+					if (auto bodynode = _3Body[i].lock())
 					{
-						if (body[4][i][0] == 0 && body[4][i][1] == 0 && body[4][i][2] == 0)
+						if (body[3] != NULL)
 						{
-							bodynode->setChildrenVisibility(false);
-						}
-						else
-						{
-							bodynode->setChildrenVisibility(true);
-							bodynode->setPosition(ape::Vector3(body[4][i][0] * 100, body[4][i][1] * 100, body[4][i][2] * 100));
+							if (body[3][i][0] == 0 && body[3][i][1] == 0 && body[3][i][2] == 0)
+							{
+								bodynode->setChildrenVisibility(false);
+							}
+							else
+							{
+								bodynode->setChildrenVisibility(true);
+								bodynode->setPosition(ape::Vector3(body[3][i][0] * 100, body[3][i][1] * 100, body[3][i][2] * 100));
+							}
 						}
 					}
 				}
-			}
 
-			for (int i = 0; i < 25; i++)
-			{
-				if (auto bodynode = _5Body[i].lock())
+				for (int i = 0; i < 25; i++)
 				{
-					if (body[5] != NULL)
+					if (auto bodynode = _4Body[i].lock())
 					{
-						if (body[5][i][0] == 0 && body[5][i][1] == 0 && body[5][i][2] == 0)
+						if (body[4] != NULL)
 						{
-							bodynode->setChildrenVisibility(false);
+							if (body[4][i][0] == 0 && body[4][i][1] == 0 && body[4][i][2] == 0)
+							{
+								bodynode->setChildrenVisibility(false);
+							}
+							else
+							{
+								bodynode->setChildrenVisibility(true);
+								bodynode->setPosition(ape::Vector3(body[4][i][0] * 100, body[4][i][1] * 100, body[4][i][2] * 100));
+							}
 						}
-						else
+					}
+				}
+
+				for (int i = 0; i < 25; i++)
+				{
+					if (auto bodynode = _5Body[i].lock())
+					{
+						if (body[5] != NULL)
 						{
-							bodynode->setChildrenVisibility(true);
-							bodynode->setPosition(ape::Vector3(body[5][i][0] * 100, body[5][i][1] * 100, body[5][i][2] * 100));
+							if (body[5][i][0] == 0 && body[5][i][1] == 0 && body[5][i][2] == 0)
+							{
+								bodynode->setChildrenVisibility(false);
+							}
+							else
+							{
+								bodynode->setChildrenVisibility(true);
+								bodynode->setPosition(ape::Vector3(body[5][i][0] * 100, body[5][i][1] * 100, body[5][i][2] * 100));
+							}
 						}
 					}
 				}
@@ -1203,22 +1212,40 @@ void ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 					{
 						for (int j = 0; j < _countof(joints); ++j)
 						{
-							if (joints[j].TrackingState == 2)
+							if (forceOneSkeleton)
 							{
-								body[i][j][0] = joints[j].Position.X;
-								body[i][j][1] = joints[j].Position.Y;
-								body[i][j][2] = joints[j].Position.Z;
+								if (joints[j].TrackingState == 2)
+								{
+									body[0][j][0] = joints[j].Position.X;
+									body[0][j][1] = joints[j].Position.Y;
+									body[0][j][2] = joints[j].Position.Z;
+								}
+								else
+								{
+									body[0][j][0] = 0;
+									body[0][j][1] = 0;
+									body[0][j][2] = 0;
+								}
 							}
 							else
 							{
-								body[i][j][0] = 0;
-								body[i][j][1] = 0;
-								body[i][j][2] = 0;
+								if (joints[j].TrackingState == 2)
+								{
+									body[i][j][0] = joints[j].Position.X;
+									body[i][j][1] = joints[j].Position.Y;
+									body[i][j][2] = joints[j].Position.Z;
+								}
+								else
+								{
+									body[i][j][0] = 0;
+									body[i][j][1] = 0;
+									body[i][j][2] = 0;
+								}
 							}
 						}
 					}
 				}
-				else
+				else if (!forceOneSkeleton)
 				{
 					for (int j = 0; j < 25; j++)
 					{

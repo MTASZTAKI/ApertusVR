@@ -176,6 +176,7 @@ namespace ape
 		bool backgroundRemoval = false;
 		bool maxFPS = false;
 		bool _3dScan = false;
+		bool forceOneSkeleton = false;
 
 		ScanningState sstate = WAITING;
 		Degree turnang = 175.0f;
