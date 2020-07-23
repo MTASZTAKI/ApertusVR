@@ -169,6 +169,7 @@ void ape::KinectPlugin::Init()
 
 			if (auto myNode = mpSceneManager->createNode("0BodyNode" + index, true, mpCoreConfig->getNetworkGUID()).lock())
 			{
+				myNode->setPosition(ape::Vector3(0, i * 100, 0));
 				_0Body.push_back(myNode);
 			}
 
@@ -1222,9 +1223,9 @@ void ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 								}
 								else
 								{
-									body[0][j][0] = 0;
-									body[0][j][1] = 0;
-									body[0][j][2] = 0;
+									body[0][j][0] = j;
+									body[0][j][1] = j;
+									body[0][j][2] = j;
 								}
 							}
 							else
