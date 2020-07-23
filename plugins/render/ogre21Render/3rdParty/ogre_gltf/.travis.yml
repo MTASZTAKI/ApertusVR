@@ -1,0 +1,42 @@
+dist: trusty
+sudo: required
+language: cpp
+compiler: gcc
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y build-essential mercurial cmake libzip-dev libxaw7-dev libfreeimage-dev libfreetype6-dev git libtinyxml-dev libzzip-dev libois-dev
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-7
+      - g++-7
+      - cmake
+
+before_script:
+  - goback=$(pwd)
+  - cd /tmp
+  - mkdir prefix
+  - cd prefix
+  - wget http://ybalrid.info/files/ogre21.tar.xz
+  - tar xvJf ogre21.tar.xz
+  - rm ogre21.tar.xz
+  - sudo cp -r * /
+  - sudo ldconfig -v
+  - cd $goback
+  
+script:
+  - sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
+  - export CC=/usr/bin/gcc-7
+  - export CXX=/usr/bin/g++-7
+  - gcc -v && g++ -v && cmake --version
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
+  
+  

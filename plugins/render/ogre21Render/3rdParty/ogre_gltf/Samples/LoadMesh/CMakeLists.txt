@@ -1,0 +1,1 @@
+Ogre_glTF_config_sample(LoadMesh)

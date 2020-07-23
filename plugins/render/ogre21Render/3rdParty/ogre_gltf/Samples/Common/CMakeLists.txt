@@ -1,0 +1,2 @@
+set(SAMPLES_COMMON_HEADER_FILES SamplesCommon.h)
+set(SAMPLES_COMMON_SOURCE_FILES SamplesCommon.cpp)

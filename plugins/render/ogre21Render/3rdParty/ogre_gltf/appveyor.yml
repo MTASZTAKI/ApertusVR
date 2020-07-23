@@ -1,0 +1,29 @@
+version: 0.0.{build}
+image: Visual Studio 2017
+install:
+- cmd: >-
+    git submodule update --init --recursive
+
+    set build_dir=%cd%
+
+    echo %cd%
+
+    cd C:\
+
+    curl -fsS -o ogre.7z http://ybalrid.info/files/Ogre21SDK.7z
+
+    7z x -y ogre.7z
+
+    cd %build_dir%
+
+    echo %CD%
+    
+    dir
+before_build:
+- cmd: cmake . -G "Visual Studio 15 2017 Win64" -DOGRE_HOME="C:\Ogre21SDK\"
+
+build:
+  project: Ogre_glTF.sln
+  verbosity: minimal
+
+
