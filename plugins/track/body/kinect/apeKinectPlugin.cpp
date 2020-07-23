@@ -1223,9 +1223,9 @@ void ape::KinectPlugin::ProcessBody(int nBodyCount, IBody** ppBodies)
 								}
 								else
 								{
-									body[0][j][0] = j;
-									body[0][j][1] = j;
-									body[0][j][2] = j;
+									body[0][j][0] = 0;
+									body[0][j][1] = j * 100;
+									body[0][j][2] = 0;
 								}
 							}
 							else

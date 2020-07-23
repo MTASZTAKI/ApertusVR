@@ -4,7 +4,7 @@
   ],
   "network": {
     "user": "simulatedRobot",
-    "participant": "guest",
+    "participant": "host",
     "internet": {
       "natPunchThrough": {
         "ip": "195.111.2.95",
