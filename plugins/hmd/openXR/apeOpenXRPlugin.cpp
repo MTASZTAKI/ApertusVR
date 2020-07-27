@@ -466,6 +466,11 @@ void ape::OpenXRPlugin::Init()
 		{
 			APE_LOG_DEBUG("xrCreateSwapchain failed " << result);
 		}
+		else
+		{
+			APE_LOG_DEBUG("xrCreateSwapchain, recommendedImageRectWidth: " << swapchain_info.width);
+			APE_LOG_DEBUG("xrCreateSwapchain, recommendedImageRectHeight: " << swapchain_info.height);
+		}
 		uint32_t surface_count = 0;
 		xrEnumerateSwapchainImages(xrSwapchain, 0, &surface_count, nullptr);
 		std::vector<XrSwapchainImageD3D11KHR> openXRSwapchainTextures;

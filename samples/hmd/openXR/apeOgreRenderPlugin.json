@@ -11,8 +11,8 @@
       "monitorIndex": 0,
       "hidden": true,
       "resolution": {
-        "width": 2200,
-        "height": 2200,
+        "width": 4096,
+        "height": 4096,
         "fullScreen": false
       },
       "miscParams": {
