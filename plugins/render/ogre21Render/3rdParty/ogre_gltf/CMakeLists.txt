@@ -43,9 +43,9 @@ target_include_directories( Ogre_glTF PUBLIC
 	${OGRE_HlmsPbs_INCLUDE_DIRS}
 	${OGRE_INCLUDE_DIR}/Hlms/Common
 	#local include directory
-	./include
-	./src/private_headers
-	./thirdParty/tinygltf/
+	/include
+	/src/private_headers
+	/thirdParty/tinygltf/
 )
 
 target_link_libraries(Ogre_glTF

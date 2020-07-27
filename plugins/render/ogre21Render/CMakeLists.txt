@@ -20,6 +20,10 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+# ogre21deps log begin
+# OGREDEPS_BUILD_SDL2 set to FALSE
+# ogre21deps log begin
+
 #error function
 function (reportError what and when)
 	if (${${when}})
@@ -56,7 +60,8 @@ if (NOT OGRE21_READY)
 	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 		message (STATUS "Configuring ogre21 dependencies for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} 
+			COMMAND ${CMAKE_COMMAND}
+			-OGREDEPS_BUILD_SDL2:BOOL=FALSE			
 			-G ${CMAKE_GENERATOR}
 			${PATH_OGRE21DEPS}
 			WORKING_DIRECTORY ${PATH_OGRE21DEPS_OUT}
