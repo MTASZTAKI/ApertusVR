@@ -1,8 +1,6 @@
 # Ogre_glTF
 
 
-[![Build status](https://ci.appveyor.com/api/projects/status/72mtasrq1qv1uipm/branch/master?svg=true)](https://ci.appveyor.com/project/Ybalrid/ogre-gltf/branch/master)
-[![Build Status](https://travis-ci.com/Ybalrid/Ogre_glTF.svg?branch=master)](https://travis-ci.com/Ybalrid/Ogre_glTF)
 
 [Project public taskboard](https://phabricator.polutropon.games/project/board/4/)
 
