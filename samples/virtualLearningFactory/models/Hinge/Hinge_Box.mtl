@@ -1,22 +1,10 @@
-# 
-# Wavefront material file
-# Converted by the DEEP Exploration  Deep Exploration 5 5.0.2.1477 Release
-# Right Hemisphere, LTD
-# http://www.righthemisphere.com/
-# 
+# OBJ Material Export by Luxion KeyShot
 
-newmtl Steel_Rough
-Ka 0 0 0
+newmtl Steel Rough
 Kd 0.619608 0.592157 0.572549
-Ks 0.5 0.5 0.5
-illum 2
-Ns 8
-map_Kd 
-map_bump 
-bump 
-map_opacity 
-map_d 
-refl 
-map_kS 
-map_kA 
-map_Ns 
+
+newmtl Steel Rough
+Kd 0.619608 0.592157 0.572549
+
+newmtl Steel Rough
+Kd 0.619608 0.592157 0.572549

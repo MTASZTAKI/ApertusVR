@@ -1,22 +1,4 @@
-# 
-# Wavefront material file
-# Converted by the DEEP Exploration  Deep Exploration 5 5.0.2.1477 Release
-# Right Hemisphere, LTD
-# http://www.righthemisphere.com/
-# 
+# OBJ Material Export by Luxion KeyShot
 
-newmtl Paint_Matte_Black
-Ka 0 0 0
+newmtl Paint Matte Black
 Kd 0.276923 0.276923 0.276923
-Ks 0.5 0.5 0.5
-illum 2
-Ns 8
-map_Kd 
-map_bump 
-bump 
-map_opacity 
-map_d 
-refl 
-map_kS 
-map_kA 
-map_Ns 
