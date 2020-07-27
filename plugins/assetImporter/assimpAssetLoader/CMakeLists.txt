@@ -39,7 +39,7 @@ function (reportError what and when)
 	endif ()
 endfunction ()
 #find assimp
-if(MSVC16)
+if(MSVC_TOOLSET_VERSION EQUAL 142)
 	if(EXISTS ${ASSIMP_BUILD_DIR}/code/Debug/assimp-vc142-mtd.lib AND EXISTS ${ASSIMP_BUILD_DIR}/code/Release/assimp-vc142-mt.lib)
 		set(ASSIMP_READY TRUE)
 		message (STATUS "assimp is installed" )
@@ -77,7 +77,7 @@ if (NOT ASSIMP_READY)
 	endforeach ()
 endif ()
 #use assimp
-if(MSVC16)
+if(MSVC_TOOLSET_VERSION EQUAL 142)
 	add_library(MY_ASSIMP STATIC IMPORTED)
 	if (WIN32)
 		set_property(TARGET MY_ASSIMP PROPERTY IMPORTED_LOCATION_DEBUG ${ASSIMP_BUILD_DIR}/code/Debug/assimp-vc142-mtd.lib)
@@ -118,7 +118,7 @@ target_link_libraries (apeAssimpAssetLoaderPlugin apePluginManager apeSceneManag
 # Place target xxx into the specified folder in IDEs supporting it
 set_property (TARGET apeAssimpAssetLoaderPlugin PROPERTY FOLDER "Plugins/AssetImporter")
 
-if(MSVC16)
+if(MSVC_TOOLSET_VERSION EQUAL 142)
 	if (WIN32)
 		file(COPY ${ASSIMP_BUILD_DIR}/code/Debug/assimp-vc142-mtd.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 		file(COPY ${ASSIMP_BUILD_DIR}/code/Release/assimp-vc142-mt.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
