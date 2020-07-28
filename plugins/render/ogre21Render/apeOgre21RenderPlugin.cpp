@@ -99,7 +99,7 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 								if (ogreOldParentNode)
 									ogreOldParentNode->removeChild(ogreNode);
 								auto ogreNodeList = mpOgreSceneManager->findSceneNodes(parentNode->getName());
-								if (ogreNodeList[0] != nullptr)
+								if (!ogreNodeList.empty())
 								{
 									auto ogreNewParentNode = mpOgreSceneManager->getSceneNode(ogreNodeList[0]->getId());
 									ogreNewParentNode->addChild(ogreNode);
@@ -188,8 +188,9 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 				case ape::Event::Type::GEOMETRY_FILE_PARENTNODE:
 				{
 					auto movableObjectList = mpOgreSceneManager->findMovableObjects("Item", geometryName);
-					if (auto movableObject = movableObjectList[0])
+					if (!movableObjectList.empty())
 					{
+						auto ogreItem = (Ogre::Item*)movableObjectList[0];
 						Ogre::SceneNode* ogreParentNode = nullptr;
 						auto ogreNodeList = mpOgreSceneManager->findSceneNodes(parentNodeName);
 						if (!ogreNodeList.empty())
@@ -198,7 +199,7 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 						}
 						if (ogreParentNode)
 						{
-							ogreParentNode->attachObject(movableObject);
+							ogreParentNode->attachObject(ogreItem);
 							//TODO intresting how to manage visibility in multi-user mode
 							if (auto parentNode = geometryFile->getParentNode().lock())
 							{
@@ -218,9 +219,47 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 							Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton().load(fileName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 							Ogre::Item* item = mpOgreSceneManager->createItem(fileName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME, Ogre::SCENE_DYNAMIC);
 						}
-						else if (fileExtension == ".glb" || fileExtension == ".gltf")
+						if (fileExtension == ".glb")
 						{
 							auto adapter = mGltfLoader->loadGlbResource(fileName);
+							auto ogreNode = adapter.getFirstSceneNode(mpOgreSceneManager);
+						}
+						if (fileExtension == ".gltf")
+						{
+							std::stringstream filePath;
+							std::size_t found = fileName.find(":");
+							if (found != std::string::npos)
+							{
+								filePath << fileName;
+							}
+							else
+							{
+								std::string separator = "../";
+								found = fileName.find(separator);
+								if (found != std::string::npos)
+								{
+									struct stat info;
+									if (stat(fileName.c_str(), &info) == -1)
+									{
+										auto found_it = std::find_end(fileName.begin(), fileName.end(), separator.begin(), separator.end());
+										size_t foundPos = found_it - fileName.begin();
+										std::stringstream resourceLocationPath;
+										resourceLocationPath << APE_SOURCE_DIR << fileName.substr(foundPos + 2);
+										filePath << resourceLocationPath.str();
+									}
+									else
+									{
+										filePath << fileName;
+									}
+								}
+								else
+								{
+									std::stringstream resourceLocationPath;
+									resourceLocationPath << APE_SOURCE_DIR << fileName;
+									filePath << resourceLocationPath.str();
+								}
+							}
+							auto adapter = mGltfLoader->loadFromFileSystem(filePath.str());
 							auto ogreNode = adapter.getFirstSceneNode(mpOgreSceneManager);
 						}
 					}
@@ -252,10 +291,11 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 			{
 				//APE_LOG_DEBUG("GEOMETRY_FILE_DELETE: " << event.subjectName);
 				auto movableObjectList = mpOgreSceneManager->findMovableObjects("Item", event.subjectName);
-				if (auto movableObject = movableObjectList[0])
+				if (!movableObjectList.empty())
 				{
-					movableObject->detachFromParent();
-					mpOgreSceneManager->destroyMovableObject(movableObject);
+					auto ogreItem = (Ogre::Item*)movableObjectList[0];
+					ogreItem->detachFromParent();
+					mpOgreSceneManager->destroyMovableObject(ogreItem);
 				}
 			}
 		}
@@ -269,9 +309,9 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 					ogreLight->setName(light->getName());
 				}
 				auto movableObjectList = mpOgreSceneManager->findMovableObjects("Light", event.subjectName);
-				if (auto movableObject = movableObjectList[0])
+				if (!movableObjectList.empty())
 				{
-					Ogre::Light* ogreLight = (Ogre::Light*)movableObject;
+					Ogre::Light* ogreLight = (Ogre::Light*)movableObjectList[0];
 					switch (event.type)
 					{
 					case ape::Event::Type::LIGHT_ATTENUATION:
@@ -343,9 +383,9 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 					}
 				}
 				auto movableObjectList = mpOgreSceneManager->findMovableObjects("Camera", event.subjectName);
-				if (auto movableObject = movableObjectList[0])
+				if (!movableObjectList.empty())
 				{
-					Ogre::Camera* ogreCamera = (Ogre::Camera*)movableObject;
+					Ogre::Camera* ogreCamera = (Ogre::Camera*)movableObjectList[0];
 					switch (event.type)
 					{
 					case ape::Event::Type::CAMERA_WINDOW:

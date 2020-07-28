@@ -90,19 +90,19 @@
 	],
 	"images": [
 		{
-			"uri": "Assets/Models/PBR/damagedHelmet/textures/Default_albedo.jpg"
+			"uri": "Default_albedo.jpg"
 		},
 		{
-			"uri": "Assets/Models/PBR/damagedHelmet/textures/Default_MetalSmooth_converted_metalRoughness.jpg"
+			"uri": "Default_MetalSmooth_converted_metalRoughness.jpg"
 		},
 		{
-			"uri": "Assets/Models/PBR/damagedHelmet/textures/Default_normal.jpg"
+			"uri": "Default_normal.jpg"
 		},
 		{
-			"uri": "Assets/Models/PBR/damagedHelmet/textures/Default_emissive.jpg"
+			"uri": "Default_emissive.jpg"
 		},
 		{
-			"uri": "Assets/Models/PBR/damagedHelmet/textures/Default_AO.jpg"
+			"uri": "Default_AO.jpg"
 		}
 	],
 	"materials": [
