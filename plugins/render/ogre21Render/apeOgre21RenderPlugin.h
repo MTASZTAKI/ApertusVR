@@ -92,6 +92,11 @@ SOFTWARE.*/
 #include "OgreD3D11Texture.h"
 #include "D3D11.h"
 #include "OgreWindowEventUtilities.h"
+#include "OgreHlmsUnlit.h"
+#include "OgreHlmsPbs.h"
+#include "OgreHlmsCommon.h"
+#include "OgreArchiveManager.h"
+#include "OgreHlmsPbsDatablock.h"
 
 #define THIS_PLUGINNAME "apeOgre21RenderPlugin"
 
@@ -156,6 +161,8 @@ namespace ape
 		void processEventDoubleQueue();
 
 		void eventCallBack(const ape::Event& event);
+
+		void registerHlms();
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateOgre21RenderPlugin()

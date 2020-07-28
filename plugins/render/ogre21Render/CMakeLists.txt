@@ -110,52 +110,11 @@ if (WIN32)
 	set_property(TARGET MY_OGRE21_PBS PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE21_BUILD_DIR}/sdk/lib/Release/OgreHlmsPbs.lib)
 endif ()
 
-#find tinyGLTF
-#message (STATUS "try to find Ogre_GLTF" )
-#set(PATH_TINY_GLTF ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_gltf/thirdParty/tinygltf)
-#set(TINY_GLTF FALSE)
-#if (NOT EXISTS ${CMAKE_BINARY_DIR}/tiny_gltf/build)
-#		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/tiny_gltf/build)
-#endif()
-#set (TINY_GLTF_BUILD_DIR ${CMAKE_BINARY_DIR}/tiny_gltf/build)
-#if(EXISTS ${TINY_GLTF_BUILD_DIR}/examples/validator/Debug/tinygltf-validator.lib)
-#	set(TINY_GLTF_READY TRUE)
-#	message (STATUS "Tiny_GLTF is installed" )
-#else ()
-#	set(TINY_GLTF_READY FALSE)
-#	message (STATUS "Tiny_GLTF is not installed" )
-#endif ()
-#try tinyGLTF
-#if (NOT TINY_GLTF_READY)
-#build tinyGLTF
-#	foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
-#		message (STATUS "Configuring Tiny_GLTF for ${CONF}, please wait.....")
-#		execute_process ( 
-#				COMMAND ${CMAKE_COMMAND} 
-#				-G ${CMAKE_GENERATOR} 
-#				${PATH_TINY_GLTF}
-#				WORKING_DIRECTORY ${TINY_GLTF_BUILD_DIR}
-#				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output
-#				)		
-#		reportError (output if error)
-#		message (STATUS "Building Tiny_GLTF for ${CONF}, please wait.....")
-#		execute_process ( 
-#			COMMAND ${CMAKE_COMMAND} --build ${TINY_GLTF_BUILD_DIR} --config ${CONF} --target gltfutil
-#			WORKING_DIRECTORY ${TINY_GLTF_BUILD_DIR}
-#			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
-#		reportError (output if error)
-#		execute_process ( 
-#			COMMAND ${CMAKE_COMMAND} --build ${TINY_GLTF_BUILD_DIR} --config ${CONF} --target tinygltf-validator
-#			WORKING_DIRECTORY ${TINY_GLTF_BUILD_DIR}
-#			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
-#		reportError (output if error)
-#	endforeach ()
-#endif ()
-#add_library(MY_TINY_GLTF STATIC IMPORTED)
-#if (WIN32)
-#	set_property(TARGET MY_TINY_GLTF PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_GLTF_BUILD_DIR}/examples/validator/Debug/tinygltf-validator.lib)
-#	set_property(TARGET MY_TINY_GLTF PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_GLTF_BUILD_DIR}/examples/validator/Release/tinygltf-validator.lib)
-#endif ()
+add_library(MY_OGRE21_UNLIT STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE21_UNLIT PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE21_BUILD_DIR}/sdk/lib/Debug/OgreHlmsUnlit_d.lib)
+	set_property(TARGET MY_OGRE21_UNLIT PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE21_BUILD_DIR}/sdk/lib/Release/OgreHlmsUnlit.lib)
+endif ()
 
 #find ogre_gltf
 set (ENV{OGRE_HOME} ${PATH_OGRE21})
@@ -222,12 +181,13 @@ include_directories(
 	$ENV{OGRE_SDK}/include/OGRE/RenderSystems/GL
 	$ENV{OGRE_SDK}/include/OGRE/Hlms/Common
 	$ENV{OGRE_SDK}/include/OGRE/Hlms/Pbs
+	$ENV{OGRE_SDK}/include/OGRE/Hlms/Unlit
 	${PATH_OGRE21}/OgreMain/include
 	${PATH_OGRE_GLTF}/include
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 add_library (apeOgre21RenderPlugin SHARED ${SOURCES} ${HEADERS})
-target_link_libraries (apeOgre21RenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_OGRE21 MY_OGRE21_PBS MY_OGRE_GLTF  )
+target_link_libraries (apeOgre21RenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_OGRE21 MY_OGRE21_PBS MY_OGRE21_UNLIT MY_OGRE_GLTF  )
 
 set_property (TARGET apeOgre21RenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

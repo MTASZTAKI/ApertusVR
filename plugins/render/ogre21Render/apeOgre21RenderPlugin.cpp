@@ -828,43 +828,32 @@ void ape::Ogre21RenderPlugin::Init()
 		fclose(apeOgre21RenderPluginConfigFile);
 	}	
 	
-	Ogre::LogManager* lm = new Ogre::LogManager();
-	lm->createLog("apeOgre21RenderPlugin.log", true, false, false);
-	mpRoot = new Ogre::Root("", "", "");
-	//Ogre::LogManager::getSingleton().createLog("apeOgre21RenderPlugin.log", true, false, false);
+	mpRoot = OGRE_NEW Ogre::Root("", "", "apeOgre21RenderPlugin.log");
 
-	#if defined (_DEBUG)
-		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
-		if (mOgre21RenderPluginConfig.renderSystem == "DX11")
-			mpRoot->loadPlugin( "RenderSystem_Direct3D11_d" );
-		else if (mOgre21RenderPluginConfig.renderSystem == "DX9")
-			mpRoot->loadPlugin("RenderSystem_Direct3D9_d");
-		else 
-			mpRoot->loadPlugin( "RenderSystem_GL_d" );
-		mpRoot->loadPlugin("Plugin_CgProgramManager_d");
-	#else
-		Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_LOW);
-		if (mOgre21RenderPluginConfig.renderSystem == "DX11")
-			mpRoot->loadPlugin("RenderSystem_Direct3D11");
-		else if (mOgre21RenderPluginConfig.renderSystem == "DX9")
-			mpRoot->loadPlugin("RenderSystem_Direct3D9");
-		else
-			mpRoot->loadPlugin("RenderSystem_GL");
-		mpRoot->loadPlugin("Plugin_CgProgramManager");
-	#endif
+
+#if defined (_DEBUG)
+	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
+	if (mOgre21RenderPluginConfig.renderSystem == "DX11")
+		mpRoot->loadPlugin("RenderSystem_Direct3D11_d");
+	else
+		mpRoot->loadPlugin("RenderSystem_GL3Plus_d");
+	mpRoot->loadPlugin("ogre_gltf_d");
+#else
+	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
+	if (mOgre21RenderPluginConfig.renderSystem == "DX11")
+		mpRoot->loadPlugin("RenderSystem_Direct3D11");
+	else
+		mpRoot->loadPlugin("RenderSystem_GL3Plus");
+	mpRoot->loadPlugin("ogre_gltf");
+#endif
     
 	Ogre::RenderSystem* renderSystem = nullptr;
 	if (mOgre21RenderPluginConfig.renderSystem == "DX11")
 		renderSystem = mpRoot->getRenderSystemByName("Direct3D11 Rendering Subsystem");
 	else
-		renderSystem = mpRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
-	
-	mpRoot->setRenderSystem(renderSystem);
-	
-	mpRoot->initialise(false, "ape");
-	//mpOgreSceneManager = mpRoot->createSceneManager(Ogre::ST_GENERIC);
+		renderSystem = mpRoot->getRenderSystemByName("Open_GL3Plus Rendering Subsystem");
 
-	mpRoot->addFrameListener(this);
+	mpRoot->setRenderSystem(renderSystem);
 
 	Ogre::RenderWindowList renderWindowList;
 	Ogre::RenderWindowDescriptionList winDescList;
@@ -902,8 +891,29 @@ void ape::Ogre21RenderPlugin::Init()
 			mRenderWindows[winDesc.name]->setHidden(mOgre21RenderPluginConfig.ogreRenderWindowConfigList[i].hidden);
 		}
 	}
-	//Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-	//mpHlmsPbsManager = new Ogre::HlmsManager(mpOgreSceneManager);
+	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
+	{
+		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
+	}
+
+	mpRoot->initialise(false, "ape");
+
+	Ogre::InstancingThreadedCullingMethod instancingThreadedCullingMethod = Ogre::INSTANCING_CULLING_SINGLETHREAD; 
+
+#if OGRE_DEBUG_MODE
+	const size_t numThreads = 1;
+#else
+	const size_t numThreads = std::max<size_t>(1, Ogre::PlatformInformation::getNumLogicalCores());
+	if (numThreads > 1)
+		instancingThreadedCullingMethod = Ogre::INSTANCING_CULLING_THREADED;
+#endif
+
+	mpRoot->addFrameListener(this);
+
+	registerHlms();
+
+	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups(true);
+
 	int mainWindowID = 0; //first window will be the main window
 	Ogre::RenderWindowDescription mainWindowDesc = winDescList[mainWindowID];
 	mpWindowEventUtilities = new Ogre::WindowEventUtilities();
@@ -920,4 +930,66 @@ void ape::Ogre21RenderPlugin::Init()
 		mOgre21RenderPluginConfig.ogreRenderWindowConfigList[mainWindowID].height);
 	mpCoreConfig->setWindowConfig(windowConfig);
 	APE_LOG_FUNC_LEAVE();
+}
+
+void ape::Ogre21RenderPlugin::registerHlms()
+{
+	static const Ogre::String OGRE_RENDERSYSTEM_DIRECTX11 = "Direct3D11 Rendering Subsystem";
+	static const Ogre::String OGRE_RENDERSYSTEM_OPENGL3PLUS = "OpenGL 3+ Rendering Subsystem";
+	static const Ogre::String OGRE_RENDERSYSTEM_METAL = "Metal Rendering Subsystem";
+
+	Ogre::RenderSystem* renderSystem = mpRoot->getRenderSystem();
+
+	Ogre::HlmsUnlit* hlmsUnlit = nullptr;
+	Ogre::HlmsPbs* hlmsPbs = nullptr;
+
+	Ogre::ArchiveVec library;
+
+	Ogre::String shaderSyntax = "GLSL";
+	if (renderSystem->getName() == OGRE_RENDERSYSTEM_DIRECTX11)
+		shaderSyntax = "HLSL";
+	else if (renderSystem->getName() == OGRE_RENDERSYSTEM_METAL)
+		shaderSyntax = "Metal";
+	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
+	{
+		if (resourceLocation.find("Hlms/Common") != std::string::npos)
+		{
+			auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(resourceLocation, "FileSystem", true);
+			library.push_back(archiveLibrary);
+		}
+		if (resourceLocation.find("Common/Any") != std::string::npos)
+		{
+			auto archiveLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(resourceLocation, "FileSystem", true);
+			library.push_back(archiveLibraryAny);
+		}
+		if (resourceLocation.find("Pbs") != std::string::npos)
+		{
+			auto archiveLibraryPbs = Ogre::ArchiveManager::getSingletonPtr()->load(resourceLocation, "FileSystem", true);
+			hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archiveLibraryPbs, &library);
+			mpRoot->getHlmsManager()->registerHlms(hlmsPbs);
+			library.push_back(archiveLibraryPbs);
+		}
+		if (resourceLocation.find("Unlit") != std::string::npos)
+		{
+			auto archiveLibraryUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(resourceLocation, "FileSystem", true);
+			hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveLibraryUnlit, &library);
+			mpRoot->getHlmsManager()->registerHlms(hlmsUnlit);
+			library.push_back(archiveLibraryUnlit);
+		}
+	}
+
+
+	if (renderSystem->getName() == "Direct3D11 Rendering Subsystem")
+	{
+		bool supportsNoOverwriteOnTextureBuffers;
+		renderSystem->getCustomAttribute("MapNoOverwriteOnDynamicBufferSRV",
+			&supportsNoOverwriteOnTextureBuffers);
+
+		if (!supportsNoOverwriteOnTextureBuffers)
+		{
+			hlmsPbs->setTextureBufferDefaultSize(512 * 1024);
+			hlmsUnlit->setTextureBufferDefaultSize(512 * 1024);
+		}
+	}
+
 }

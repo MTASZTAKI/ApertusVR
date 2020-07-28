@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,41 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (360ImageScene)
-add_subdirectory (360ImageGalleryScene)
-add_subdirectory (360StereoImageScene)
-add_subdirectory (360VideoScene)
-add_subdirectory (helloWorldScene)
-add_subdirectory (inGameBrowserScene)
-add_subdirectory (oceanAndSkySimulationScene)
-add_subdirectory (physicsSimulationScene)
-add_subdirectory (sampleScene)
-add_subdirectory (photorealisticScene)
+#error function
+function (reportError what and when)
+	if (${${when}})
+		message (${${what}})
+	endif ()
+endfunction ()
+#
+
+# Add all header and cpp files in the directory to the project
+set (HEADERS
+	apePhotorealisticScenePlugin.h
+	)
+
+set (SOURCES 
+	apePhotorealisticScenePlugin.cpp
+	)
+
+include_directories(
+	
+	
+	)
+
+add_library (apePhotorealisticScenePlugin SHARED ${SOURCES} ${HEADERS})
+
+# Link with dependency libraries
+target_link_libraries (apePhotorealisticScenePlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeSceneMakerMacro)
+if (WIN32)
+	# we have to link to some DirectX libraries
+	target_link_libraries (apePhotorealisticScenePlugin dinput8 dxguid)
+endif ()
+
+set_property (TARGET apePhotorealisticScenePlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+
+set_property (TARGET apePhotorealisticScenePlugin PROPERTY FOLDER "Plugins/Scene")
+
+
+
+

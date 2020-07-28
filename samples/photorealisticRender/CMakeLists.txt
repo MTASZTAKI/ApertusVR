@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (360ImageScene)
-add_subdirectory (360ImageGalleryScene)
-add_subdirectory (360StereoImageScene)
-add_subdirectory (360VideoScene)
-add_subdirectory (helloWorldScene)
-add_subdirectory (inGameBrowserScene)
-add_subdirectory (oceanAndSkySimulationScene)
-add_subdirectory (physicsSimulationScene)
-add_subdirectory (sampleScene)
-add_subdirectory (photorealisticScene)
+set (CONFIGS
+	apeOgre21RenderPlugin.json
+	apeViewPointManagerPlugin.json
+	apeCore.json
+	)
+
+add_custom_target(
+    PhotorealisticRender ALL
+    SOURCES ${CONFIGS}
+)
+
+set_property (TARGET PhotorealisticRender PROPERTY FOLDER "Samples")
