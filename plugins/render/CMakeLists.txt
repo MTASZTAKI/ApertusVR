@@ -21,5 +21,5 @@
 #SOFTWARE.
 
 add_subdirectory (ogreRender)
-add_subdirectory (ogre21Render)
+#add_subdirectory (ogre21Render)
 
