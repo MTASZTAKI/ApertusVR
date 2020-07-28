@@ -954,24 +954,24 @@ void ape::Ogre21RenderPlugin::registerHlms()
 		shaderSyntax = "Metal";
 	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
 	{
-		if (resourceLocation.find("Hlms/Common") != std::string::npos)
+		if (resourceLocation.find("Hlms/Common") != std::string::npos && resourceLocation.find(shaderSyntax) != std::string::npos)
 		{
 			auto archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(resourceLocation, "FileSystem", true);
 			library.push_back(archiveLibrary);
 		}
-		if (resourceLocation.find("Common/Any") != std::string::npos)
+		if (resourceLocation.find("Any") != std::string::npos)
 		{
 			auto archiveLibraryAny = Ogre::ArchiveManager::getSingletonPtr()->load(resourceLocation, "FileSystem", true);
 			library.push_back(archiveLibraryAny);
 		}
-		if (resourceLocation.find("Pbs") != std::string::npos)
+		if (resourceLocation.find("Pbs") != std::string::npos && resourceLocation.find(shaderSyntax) != std::string::npos && resourceLocation.find("Any") == std::string::npos)
 		{
 			auto archiveLibraryPbs = Ogre::ArchiveManager::getSingletonPtr()->load(resourceLocation, "FileSystem", true);
 			hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archiveLibraryPbs, &library);
 			mpRoot->getHlmsManager()->registerHlms(hlmsPbs);
 			library.push_back(archiveLibraryPbs);
 		}
-		if (resourceLocation.find("Unlit") != std::string::npos)
+		if (resourceLocation.find("Unlit") != std::string::npos && resourceLocation.find(shaderSyntax) != std::string::npos && resourceLocation.find("Any") == std::string::npos)
 		{
 			auto archiveLibraryUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(resourceLocation, "FileSystem", true);
 			hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveLibraryUnlit, &library);
