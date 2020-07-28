@@ -40,17 +40,23 @@ set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME}${Og
 target_include_directories( Ogre_glTF PUBLIC
 	#Ogre and the physics based high level material system
 	${OGRE_INCLUDE_DIRS}
-	${OGRE_HlmsPbs_INCLUDE_DIRS}
-	${OGRE_INCLUDE_DIR}/Hlms/Common
+	$ENV{OGRE_HlmsPbs_INCLUDE_DIRS}
+	$ENV{OGRE_HlmsCommon_INCLUDE_DIRS}
 	#local include directory
 	./include
 	./src/private_headers
 	./thirdParty/tinygltf/
 )
 
+add_library(MY_OGRE21_PBS STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE21_PBS PROPERTY IMPORTED_LOCATION_DEBUG $ENV{OGRE_BUILD}/sdk/lib/Debug/OgreHlmsPbs_d.lib)
+	set_property(TARGET MY_OGRE21_PBS PROPERTY IMPORTED_LOCATION_RELEASE $ENV{OGRE_BUILD}/sdk/lib/Release/OgreHlmsPbs.lib)
+endif ()
+
 target_link_libraries(Ogre_glTF
 	${OGRE_LIBRARIES}
-	${OGRE_HlmsPbs_LIBRARIES}
+	MY_OGRE21_PBS
 )
 
 add_subdirectory(Samples)

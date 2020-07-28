@@ -104,6 +104,12 @@ if (WIN32)
 	set_property(TARGET MY_OGRE21 PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE21_BUILD_DIR}/sdk/lib/Release/OgreMain.lib)
 endif ()
 
+add_library(MY_OGRE21_PBS STATIC IMPORTED)
+if (WIN32)
+	set_property(TARGET MY_OGRE21_PBS PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE21_BUILD_DIR}/sdk/lib/Debug/OgreHlmsPbs_d.lib)
+	set_property(TARGET MY_OGRE21_PBS PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE21_BUILD_DIR}/sdk/lib/Release/OgreHlmsPbs.lib)
+endif ()
+
 #find tinyGLTF
 #message (STATUS "try to find Ogre_GLTF" )
 #set(PATH_TINY_GLTF ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_gltf/thirdParty/tinygltf)
@@ -157,6 +163,8 @@ set (ENV{OGRE_SOURCE} ${PATH_OGRE21})
 set (ENV{OGRE_SDK} ${OGRE21_BUILD_DIR}/sdk)
 set (ENV{OGRE_BUILD} ${OGRE21_BUILD_DIR})
 set (ENV{OGRE_DEPENDENCIES_DIR} ${PATH_OGRE21DEPS_OUT}/ogre21deps)
+set (ENV{OGRE_HlmsCommon_INCLUDE_DIRS} ${OGRE21_BUILD_DIR}/sdk/include/OGRE/Hlms/Common)
+set (ENV{OGRE_HlmsPbs_INCLUDE_DIRS} ${OGRE21_BUILD_DIR}/sdk/include/OGRE/Hlms/Pbs) 
 message (STATUS "try to find Ogre_GLTF" )
 set(PATH_OGRE_GLTF ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ogre_gltf)
 set(OGRE_GLTF_READY FALSE)
@@ -164,7 +172,7 @@ if (NOT EXISTS ${CMAKE_BINARY_DIR}/ogre_gltf/build)
 		file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/ogre_gltf/build)
 endif()
 set (OGRE_GLTF_BUILD_DIR ${CMAKE_BINARY_DIR}/ogre_gltf/build)
-if(EXISTS ${OGRE_GLTF_BUILD_DIR}/bin/release/ogre_gltf.dll)
+if(EXISTS ${OGRE_GLTF_BUILD_DIR}/release/Ogre_glTF.dll)
 	set(OGRE_GLTF_READY TRUE)
 	message (STATUS "Ogre_GLTF is installed" )
 else ()
@@ -186,7 +194,7 @@ if (NOT OGRE_GLTF_READY)
 		reportError (output if error)
 		message (STATUS "Building ogre_gltf for ${CONF}, please wait.....")
 		execute_process ( 
-			COMMAND ${CMAKE_COMMAND} --build ${OGRE_GLTF_BUILD_DIR} --config ${CONF} --target install
+			COMMAND ${CMAKE_COMMAND} --build ${OGRE_GLTF_BUILD_DIR} --config ${CONF} --target Ogre_glTF
 			WORKING_DIRECTORY ${OGRE_GLTF_BUILD_DIR}
 			RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 		reportError (output if error)
@@ -194,8 +202,8 @@ if (NOT OGRE_GLTF_READY)
 endif ()
 add_library(MY_OGRE_GLTF STATIC IMPORTED)
 if (WIN32)
-	set_property(TARGET MY_OGRE_GLTF PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_GLTF_BUILD_DIR}/lib/Debug/ogre_gltf.lib)
-	set_property(TARGET MY_OGRE_GLTF PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_GLTF_BUILD_DIR}/lib/Release/ogre_gltf.lib)
+	set_property(TARGET MY_OGRE_GLTF PROPERTY IMPORTED_LOCATION_DEBUG ${OGRE_GLTF_BUILD_DIR}/Debug/Ogre_glTF.lib)
+	set_property(TARGET MY_OGRE_GLTF PROPERTY IMPORTED_LOCATION_RELEASE ${OGRE_GLTF_BUILD_DIR}/Release/Ogre_glTF.lib)
 endif ()
 # apeOgre21RenderPlugin
 set (HEADERS
@@ -212,25 +220,29 @@ include_directories(
 	$ENV{OGRE_SDK}/include/OGRE
 	$ENV{OGRE_SDK}/include/OGRE/RenderSystems/Direct3D11
 	$ENV{OGRE_SDK}/include/OGRE/RenderSystems/GL
+	$ENV{OGRE_SDK}/include/OGRE/Hlms/Common
+	$ENV{OGRE_SDK}/include/OGRE/Hlms/Pbs
 	${PATH_OGRE21}/OgreMain/include
-	${OGRE_GLTF_BUILD_DIR}/sdk/include/Ogre_GLTF
+	${PATH_OGRE_GLTF}/include
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
-add_library (apeOgreRenderPlugin SHARED ${SOURCES} ${HEADERS})
-target_link_libraries (apeOgreRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_OGRE21 MY_OGRE21_RENDER_GL MY_OGRE21_RENDER_D11 MY_OGRE_GLTF )
+add_library (apeOgre21RenderPlugin SHARED ${SOURCES} ${HEADERS})
+target_link_libraries (apeOgre21RenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_OGRE21 MY_OGRE21_PBS MY_OGRE_GLTF  )
 
 set_property (TARGET apeOgre21RenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
 set_property (TARGET apeOgre21RenderPlugin PROPERTY FOLDER "Plugins/Render")
 if (WIN32)
 	file(COPY ${OGRE21_BUILD_DIR}/bin/debug/OgreMain_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE21_BUILD_DIR}/bin/debug/RenderSystem_GL_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE21_BUILD_DIR}/bin/debug/RenderSystem_GL3Plus_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${OGRE21_BUILD_DIR}/bin/debug/RenderSystem_Direct3D11_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-	file(COPY ${OGRE_GLTF_BUILD_DIR}/bin/debug/ogre_gltf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE21_BUILD_DIR}/bin/debug/OgreHlmsPbs_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${OGRE_GLTF_BUILD_DIR}/debug/Ogre_glTF_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${OGRE21_BUILD_DIR}/bin/release/OgreMain.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE21_BUILD_DIR}/bin/release/RenderSystem_GL.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE21_BUILD_DIR}/bin/release/RenderSystem_GL3Plus.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${OGRE21_BUILD_DIR}/bin/release/RenderSystem_Direct3D11.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${OGRE_GLTF_BUILD_DIR}/bin/release/ogre_gltf.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE21_BUILD_DIR}/bin/release/OgreHlmsPbs.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${OGRE_GLTF_BUILD_DIR}/release/Ogre_glTF.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif ()
 
 
