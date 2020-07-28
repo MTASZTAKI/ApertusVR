@@ -97,6 +97,7 @@ SOFTWARE.*/
 #include "OgreHlmsCommon.h"
 #include "OgreArchiveManager.h"
 #include "OgreHlmsPbsDatablock.h"
+#include "Ogre_glTF_OgrePlugin.hpp"
 
 #define THIS_PLUGINNAME "apeOgre21RenderPlugin"
 
@@ -138,9 +139,9 @@ namespace ape
 
 		std::map<std::string, Ogre::RenderWindow*> mRenderWindows;
 
-		Ogre::HlmsManager* mpHlmsPbsManager;
-
 		Ogre::WindowEventUtilities* mpWindowEventUtilities;
+
+		Ogre_glTF::glTFLoaderInterface* mpGlTFLoaderInterface;
 
 		ape::ISceneManager* mpSceneManager;
 

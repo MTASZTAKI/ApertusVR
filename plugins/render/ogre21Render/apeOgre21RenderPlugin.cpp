@@ -40,7 +40,7 @@ ape::Ogre21RenderPlugin::Ogre21RenderPlugin( )
 	mpRoot = nullptr;
 	mpOgreSceneManager = nullptr;
 	mRenderWindows = std::map<std::string, Ogre::RenderWindow*>();
-	mpHlmsPbsManager = nullptr;
+	mpGlTFLoaderInterface = nullptr;
 	mOgre21RenderPluginConfig = ape::Ogre21RenderPluginConfig();
 	mOgreCameras = std::vector<Ogre::Camera*>();
 	mpWindowEventUtilities = nullptr;
@@ -911,6 +911,8 @@ void ape::Ogre21RenderPlugin::Init()
 			mRenderWindows[winDesc.name]->setHidden(mOgre21RenderPluginConfig.ogreRenderWindowConfigList[i].hidden);
 		}
 	}
+
+	mpGlTFLoaderInterface = Ogre_glTF::gltfPluginAccessor::findPlugin()->getLoader();
 
 	registerHlms();
 
