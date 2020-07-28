@@ -38,5 +38,6 @@ add_subdirectory (tracking)
 add_subdirectory (e-Learning)
 add_subdirectory (userInterface)
 add_subdirectory (virtualLearningFactory)
+add_subdirectory (photorealisticRender)
 
 

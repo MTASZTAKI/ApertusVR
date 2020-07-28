@@ -828,8 +828,9 @@ void ape::Ogre21RenderPlugin::Init()
 		fclose(apeOgre21RenderPluginConfigFile);
 	}	
 	
-	mpRoot = OGRE_NEW Ogre::Root("", "", "apeOgre21RenderPlugin.log");
-
+	Ogre::LogManager* lm = new Ogre::LogManager();
+	lm->createLog("apeOgre21RenderPlugin.log", true, false, false);
+	mpRoot = OGRE_NEW Ogre::Root("", "", "");
 
 #if defined (_DEBUG)
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
@@ -854,6 +855,25 @@ void ape::Ogre21RenderPlugin::Init()
 		renderSystem = mpRoot->getRenderSystemByName("Open_GL3Plus Rendering Subsystem");
 
 	mpRoot->setRenderSystem(renderSystem);
+
+	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
+	{
+		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
+	}
+
+	mpRoot->initialise(false, "ape");
+
+	Ogre::InstancingThreadedCullingMethod instancingThreadedCullingMethod = Ogre::INSTANCING_CULLING_SINGLETHREAD; 
+
+#if OGRE_DEBUG_MODE
+	const size_t numThreads = 1;
+#else
+	const size_t numThreads = std::max<size_t>(1, Ogre::PlatformInformation::getNumLogicalCores());
+	if (numThreads > 1)
+		instancingThreadedCullingMethod = Ogre::INSTANCING_CULLING_THREADED;
+#endif
+
+	mpRoot->addFrameListener(this);
 
 	Ogre::RenderWindowList renderWindowList;
 	Ogre::RenderWindowDescriptionList winDescList;
@@ -891,24 +911,6 @@ void ape::Ogre21RenderPlugin::Init()
 			mRenderWindows[winDesc.name]->setHidden(mOgre21RenderPluginConfig.ogreRenderWindowConfigList[i].hidden);
 		}
 	}
-	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
-	{
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(resourceLocation, "FileSystem");
-	}
-
-	mpRoot->initialise(false, "ape");
-
-	Ogre::InstancingThreadedCullingMethod instancingThreadedCullingMethod = Ogre::INSTANCING_CULLING_SINGLETHREAD; 
-
-#if OGRE_DEBUG_MODE
-	const size_t numThreads = 1;
-#else
-	const size_t numThreads = std::max<size_t>(1, Ogre::PlatformInformation::getNumLogicalCores());
-	if (numThreads > 1)
-		instancingThreadedCullingMethod = Ogre::INSTANCING_CULLING_THREADED;
-#endif
-
-	mpRoot->addFrameListener(this);
 
 	registerHlms();
 

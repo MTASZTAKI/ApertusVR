@@ -1,8 +1,8 @@
 {
   "plugins": [
-    "apeOgreRenderPlugin",
+    "apeOgre21RenderPlugin",
 	"apeOisUserInputPlugin",
-	"apePhotorealisticScenePlugin",
+	"apePhotorealisticScenePlugin"
   ],
   "network": {
     "user": "",
@@ -25,20 +25,21 @@
     "selected": "none",
     "resourceLocations": [
       "/plugins/render/ogreRender21/resources/Common/Any",
-	  "/plugins/render/ogreRender21/resources/Common/GLSL",
-	  "/plugins/render/ogreRender21/resources/Common/GLSLES",
-	  "/plugins/render/ogreRender21/resources/Common/HLSL",
-	  "/plugins/render/ogreRender21/resources/Common/Metal",
-	  "/plugins/render/ogreRender21/resources/Unlit/Any",
-	  "/plugins/render/ogreRender21/resources/Unlit/GLSL",
-	  "/plugins/render/ogreRender21/resources/Unlit/GLSLES",
-	  "/plugins/render/ogreRender21/resources/Unlit/HLSL",
-	  "/plugins/render/ogreRender21/resources/Unlit/Metal",
-	  "/plugins/render/ogreRender21/resources/Pbs/Any",
-	  "/plugins/render/ogreRender21/resources/Pbs/GLSL",
-	  "/plugins/render/ogreRender21/resources/Pbs/GLSLES",
-	  "/plugins/render/ogreRender21/resources/Pbs/HLSL",
-	  "/plugins/render/ogreRender21/resources/Pbs/Metal",
+      "/plugins/render/ogreRender21/resources/Common/GLSL",
+      "/plugins/render/ogreRender21/resources/Common/GLSLES",
+      "/plugins/render/ogreRender21/resources/Common/HLSL",
+      "/plugins/render/ogreRender21/resources/Common/Metal",
+      "/plugins/render/ogreRender21/resources/Unlit/Any",
+      "/plugins/render/ogreRender21/resources/Unlit/GLSL",
+      "/plugins/render/ogreRender21/resources/Unlit/GLSLES",
+      "/plugins/render/ogreRender21/resources/Unlit/HLSL",
+      "/plugins/render/ogreRender21/resources/Unlit/Metal",
+      "/plugins/render/ogreRender21/resources/Pbs/Any",
+      "/plugins/render/ogreRender21/resources/Pbs/GLSL",
+      "/plugins/render/ogreRender21/resources/Pbs/GLSLES",
+      "/plugins/render/ogreRender21/resources/Pbs/HLSL",
+      "/plugins/render/ogreRender21/resources/Pbs/Metal",
+      "/plugins/scene/photorealisticScene/resources"
     ]
   }
 }

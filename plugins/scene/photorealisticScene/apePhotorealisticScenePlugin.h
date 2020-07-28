@@ -54,7 +54,7 @@ SOFTWARE.*/
 #include "apeInterpolator.h"
 #include "apeSceneMakerMacro.h"
 
-#define THIS_PLUGINNAME "apePhotoRealisticScenePlugin"
+#define THIS_PLUGINNAME "apePhotorealisticScenePlugin"
 
 namespace ape
 {
@@ -69,7 +69,7 @@ namespace ape
 
 		ape::SceneMakerMacro* mpSceneMakerMacro;
 
-		ape::NodeWeakPtr mPlanetNode;
+		ape::NodeWeakPtr mNode;
 
 		void eventCallBack(const ape::Event& event);
 
