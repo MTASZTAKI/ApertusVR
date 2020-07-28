@@ -20,17 +20,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_OGREUTILITIES_H
-#define APE_OGREUTILITIES_H
+#ifndef APE_OGRE21UTILITIES_H
+#define APE_OGRE21UTILITIES_H
 
 #include <sstream>
 #include <iostream>
 #include <iomanip>
-#include "apeOgreRenderPlugin.h"
+#include "apeOgre21RenderPlugin.h"
 
 namespace ape
 {
-	void SaveVoidBufferToImage(const std::wstring &filename, const void* buffer, int width, int height)
+	void SaveVoidBufferToImageOgre21(const std::wstring &filename, const void* buffer, int width, int height)
 	{
 		// Populate the bitmap info header.
 		BITMAPINFOHEADER info;

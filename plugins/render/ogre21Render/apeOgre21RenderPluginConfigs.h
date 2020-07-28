@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_OGRERENDERPLUGINCONFIGS_H
-#define APE_OGRERENDERPLUGINCONFIGS_H
+#ifndef APE_OGRERENDER21PLUGINCONFIGS_H
+#define APE_OGRERENDER21PLUGINCONFIGS_H
 
 #include <vector>
 #include <string>
@@ -32,7 +32,7 @@ SOFTWARE.*/
 
 namespace ape
 {
-	struct OgreCameraConfig
+	struct Ogre21CameraConfig
 	{
 		std::string name;
 
@@ -48,7 +48,7 @@ namespace ape
 
 		std::string parentNodeName;
 
-		OgreCameraConfig()
+		Ogre21CameraConfig()
 		{
 			this->name = std::string();
 			this->positionOffset = ape::Vector3();
@@ -59,7 +59,7 @@ namespace ape
 			this->parentNodeName = std::string();
 		}
 
-		OgreCameraConfig(
+		Ogre21CameraConfig(
 			std::string name,
 			ape::Vector3 positionOffset,
 			ape::Quaternion orientationOffset,
@@ -78,19 +78,19 @@ namespace ape
 		}
 	};
 
-	struct OgreLodLevelsConfig
+	struct Ogre21LodLevelsConfig
 	{
 		bool autoGenerateAndSave;
 
 		float bias;
 
-		OgreLodLevelsConfig()
+		Ogre21LodLevelsConfig()
 		{
 			this->autoGenerateAndSave = false;
 			this->bias = 0.0f;
 		}
 
-		OgreLodLevelsConfig(
+		Ogre21LodLevelsConfig(
 			bool autoGenerateAndSave,
 			float bias)
 		{
@@ -99,9 +99,9 @@ namespace ape
 		}
 	};
 
-	struct OgreViewPortConfig
+	struct Ogre21ViewPortConfig
 	{
-		std::vector<OgreCameraConfig> cameras;
+		std::vector<Ogre21CameraConfig> cameras;
 
 		int zOrder;
 
@@ -113,9 +113,9 @@ namespace ape
 
 		int height;
 
-		OgreViewPortConfig()
+		Ogre21ViewPortConfig()
 		{
-			this->cameras = std::vector<OgreCameraConfig>();
+			this->cameras = std::vector<Ogre21CameraConfig>();
 			this->zOrder = 0;
 			this->left = 0;
 			this->top = 0;
@@ -123,8 +123,8 @@ namespace ape
 			this->height = 0;
 		}
 
-		OgreViewPortConfig(
-			std::vector<OgreCameraConfig> cameras,
+		Ogre21ViewPortConfig(
+			std::vector<Ogre21CameraConfig> cameras,
 		int zOrder,
 		int left,
 		int top,
@@ -140,9 +140,9 @@ namespace ape
 		}
 	};
 
-	typedef std::vector < ape::OgreViewPortConfig > OgreViewPortConfigList;
+	typedef std::vector < ape::Ogre21ViewPortConfig > Ogre21ViewPortConfigList;
 
-	struct OgreRenderWindowConfig
+	struct Ogre21RenderWindowConfig
 	{
 		bool enable;
 
@@ -168,11 +168,11 @@ namespace ape
 
 		int colorDepth;
 
-		ape::OgreViewPortConfigList viewportList;
+		ape::Ogre21ViewPortConfigList viewportList;
 
 		std::string windowHandler;
 
-		OgreRenderWindowConfig()
+		Ogre21RenderWindowConfig()
 		{
 			this->enable = true;
 			this->name = "";
@@ -186,11 +186,11 @@ namespace ape
 			this->fsaa = 0;
 			this->fsaaHint = "";
 			this->colorDepth = 0;
-			this->viewportList = ape::OgreViewPortConfigList();
+			this->viewportList = ape::Ogre21ViewPortConfigList();
 			this->windowHandler = "";
 		}
 
-		OgreRenderWindowConfig(bool enable,
+		Ogre21RenderWindowConfig(bool enable,
 		std::string name,
 		int monitorIndex,
 		bool hidden,
@@ -202,7 +202,7 @@ namespace ape
 		int fsaa,
 		int fsaaHint,
 		int colorDepth,
-		ape::OgreViewPortConfigList viewportList,
+		ape::Ogre21ViewPortConfigList viewportList,
 		std::string windowHandler = "")
 		{
 			this->enable = enable;
@@ -222,26 +222,26 @@ namespace ape
 		}
 	};
 
-	typedef std::vector < ape::OgreRenderWindowConfig > OgreRenderWindowConfigList;
+	typedef std::vector < ape::Ogre21RenderWindowConfig > Ogre21RenderWindowConfigList;
 
-	struct OgreRenderPluginConfig
+	struct Ogre21RenderPluginConfig
 	{
-		OgreRenderWindowConfigList ogreRenderWindowConfigList;
-		OgreLodLevelsConfig ogreLodLevelsConfig;
+		Ogre21RenderWindowConfigList ogreRenderWindowConfigList;
+		Ogre21LodLevelsConfig ogreLodLevelsConfig;
 		std::string shading;
 		std::string renderSystem;
 
-		OgreRenderPluginConfig()
+		Ogre21RenderPluginConfig()
 		{
-			this->ogreRenderWindowConfigList = OgreRenderWindowConfigList();
-			this->ogreLodLevelsConfig = OgreLodLevelsConfig();
+			this->ogreRenderWindowConfigList = Ogre21RenderWindowConfigList();
+			this->ogreLodLevelsConfig = Ogre21LodLevelsConfig();
 			this->shading = std::string();
 			this->renderSystem = std::string();
 		}
 
-		OgreRenderPluginConfig(
-			OgreRenderWindowConfigList ogreRenderWindowConfigList,
-			OgreLodLevelsConfig ogreLodLevelsConfig,
+		Ogre21RenderPluginConfig(
+			Ogre21RenderWindowConfigList ogreRenderWindowConfigList,
+			Ogre21LodLevelsConfig ogreLodLevelsConfig,
 			std::string shading,
 			std::string renderSystem)
 		{
