@@ -35,7 +35,7 @@ void ape::apePhotoRealisticScenePlugin::Init()
 		light->setDiffuseColor(ape::Color(0.8f, 0.8f, 0.8f));
 		light->setSpecularColor(ape::Color(0.8f, 0.8f, 0.8f));
 	}
-	mNode = mpSceneManager->createNode("planetNode", true, mpCoreConfig->getNetworkGUID());
+	mNode = mpSceneManager->createNode("gltfMovementNode", true, mpCoreConfig->getNetworkGUID());
 	if (auto node = mNode.lock())
 	{
 		node->setPosition(ape::Vector3(0, 150, 0));

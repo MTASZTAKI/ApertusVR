@@ -71,6 +71,8 @@ SOFTWARE.*/
 #include "OgreSceneNode.h"
 #include "OgreEntity.h"
 #include "OgreMovableObject.h"
+#include "OgreMesh2.h"
+#include "OgreMeshManager2.h"
 #include "OgreMeshManager.h"
 #include "OgreMaterialManager.h"
 #include "OgreMesh.h"
@@ -141,7 +143,7 @@ namespace ape
 
 		Ogre::WindowEventUtilities* mpWindowEventUtilities;
 
-		Ogre_glTF::glTFLoaderInterface* mpGlTFLoaderInterface;
+		std::unique_ptr<Ogre_glTF::glTFLoader> mGltfLoader;
 
 		ape::ISceneManager* mpSceneManager;
 
