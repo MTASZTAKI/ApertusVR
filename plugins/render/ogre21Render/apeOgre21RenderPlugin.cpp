@@ -103,8 +103,6 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 								{
 									auto ogreNewParentNode = mpOgreSceneManager->getSceneNode(ogreNodeList[0]->getId());
 									ogreNewParentNode->addChild(ogreNode);
-									//TODO intresting how to manage visibility in multi-user mode
-									ogreNewParentNode->setVisible(parentNode->getChildrenVisibility(), true);
 								}
 							}
 						}
@@ -200,11 +198,6 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 						if (ogreParentNode)
 						{
 							ogreParentNode->attachObject(ogreItem);
-							//TODO intresting how to manage visibility in multi-user mode
-							if (auto parentNode = geometryFile->getParentNode().lock())
-							{
-								ogreParentNode->setVisible(parentNode->getChildrenVisibility(), true);
-							}
 						}
 					}
 				}
@@ -261,6 +254,21 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 							}
 							auto adapter = mGltfLoader->loadFromFileSystem(filePath.str());
 							auto ogreNode = adapter.getFirstSceneNode(mpOgreSceneManager);
+							Ogre::SceneNode* newOgreParentNode = nullptr;
+							auto ogreNodeList = mpOgreSceneManager->findSceneNodes(parentNodeName);
+							if (!ogreNodeList.empty())
+							{
+								newOgreParentNode = mpOgreSceneManager->getSceneNode(ogreNodeList[0]->getId());
+							}
+							if (newOgreParentNode)
+							{
+								auto oldOgreParentNode = ogreNode->getParentSceneNode();
+								if (newOgreParentNode != oldOgreParentNode)
+								{
+									oldOgreParentNode->removeChild(ogreNode);
+									newOgreParentNode->addChild(ogreNode);
+								}
+							}
 						}
 					}
 				}
@@ -362,7 +370,8 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 			{
 				if (event.type == ape::Event::Type::CAMERA_CREATE)
 				{
-					mOgreCameras.push_back(mpOgreSceneManager->createCamera(event.subjectName));
+					auto ogreCamera = mpOgreSceneManager->createCamera(event.subjectName);
+					mOgreCameras.push_back(ogreCamera);
 					for (int i = 0; i < mOgre21RenderPluginConfig.ogreRenderWindowConfigList.size(); i++)
 					{
 						for (int j = 0; j < mOgre21RenderPluginConfig.ogreRenderWindowConfigList[i].viewportList.size(); j++)
@@ -382,10 +391,9 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 						}
 					}
 				}
-				auto movableObjectList = mpOgreSceneManager->findMovableObjects("Camera", event.subjectName);
-				if (!movableObjectList.empty())
+				auto ogreCamera = mpOgreSceneManager->findCamera(event.subjectName);
+				if (ogreCamera)
 				{
-					Ogre::Camera* ogreCamera = (Ogre::Camera*)movableObjectList[0];
 					switch (event.type)
 					{
 					case ape::Event::Type::CAMERA_WINDOW:
@@ -410,6 +418,10 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 										{
 											APE_LOG_DEBUG("ogreViewport: " << "zorder: " << zorder << " left: " << left << " top: " << top << " width: " << width << " height: " << height);
 											ogreCamera->setAspectRatio(Ogre::Real(ogreViewPort->getActualWidth()) / Ogre::Real(ogreViewPort->getActualHeight()));
+											auto compositor = mpRoot->getCompositorManager2();
+											const char workspaceName[] = "workspace0";
+											compositor->createBasicWorkspaceDef(workspaceName, Ogre::ColourValue{ 0.2f, 0.3f, 0.4f });
+											auto workspace = compositor->addWorkspace(mpOgreSceneManager, mRenderWindows[mOgre21RenderPluginConfig.ogreRenderWindowConfigList[i].name], ogreCamera, workspaceName, true);
 										}
 									}
 								}
@@ -849,6 +861,8 @@ void ape::Ogre21RenderPlugin::Init()
 	}
 
 	mpOgreSceneManager = mpRoot->createSceneManager(Ogre::ST_GENERIC, numThreads, instancingThreadedCullingMethod);
+	mpOgreSceneManager->showBoundingBoxes(true);
+	mpOgreSceneManager->setDisplaySceneNodes(true);
 
 	mGltfLoader = std::make_unique<Ogre_glTF::glTFLoader>();
 
@@ -876,17 +890,53 @@ void ape::Ogre21RenderPlugin::Init()
 
 void ape::Ogre21RenderPlugin::registerHlms()
 {
-	static const Ogre::String OGRE_RENDERSYSTEM_DIRECTX11 = "Direct3D11 Rendering Subsystem";
+	Ogre::String dataFolder;
+	for (auto resourceLocation : mpCoreConfig->getNetworkConfig().resourceLocations)
+	{
+		auto pos = resourceLocation.find("ogre21Render/resources/");
+		if (pos != std::string::npos)
+		{
+			dataFolder = resourceLocation.substr(0, pos + 23);
+			break;
+		}
+	}
+	Ogre::String dataFolderPath;
+	Ogre::StringVector libraryFoldersPaths;
+	if (mOgre21RenderPluginConfig.shading == "unlit")
+	{
+		Ogre::HlmsUnlit::getDefaultPaths(dataFolderPath, libraryFoldersPaths);
+		Ogre::Archive* archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(dataFolder + dataFolderPath, "FileSystem", true);
+		Ogre::ArchiveVec archiveUnlitLibraryFolders;
+		for (const auto& libraryFolderPath : libraryFoldersPaths)
+		{
+			Ogre::Archive* archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(dataFolder + libraryFolderPath, "FileSystem", true);
+			archiveUnlitLibraryFolders.push_back(archiveLibrary);
+		}
+		Ogre::HlmsUnlit* hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit(archiveUnlit, &archiveUnlitLibraryFolders);
+		Ogre::Root::getSingleton().getHlmsManager()->registerHlms(hlmsUnlit);
+		hlmsUnlit->setDebugOutputPath(false, false);
+	}
+	if (mOgre21RenderPluginConfig.shading == "pbs")
+	{
+		Ogre::HlmsPbs::getDefaultPaths(dataFolderPath, libraryFoldersPaths);
+		Ogre::Archive* archivePbs = Ogre::ArchiveManager::getSingletonPtr()->load(dataFolder + dataFolderPath, "FileSystem", true);
+		Ogre::ArchiveVec archivePbsLibraryFolders;
+		for (const auto& libraryFolderPath : libraryFoldersPaths)
+		{
+			Ogre::Archive* archiveLibrary = Ogre::ArchiveManager::getSingletonPtr()->load(dataFolder + libraryFolderPath, "FileSystem", true);
+			archivePbsLibraryFolders.push_back(archiveLibrary);
+		}
+		Ogre::HlmsPbs* hlmsPbs = OGRE_NEW Ogre::HlmsPbs(archivePbs, &archivePbsLibraryFolders);
+		Ogre::Root::getSingleton().getHlmsManager()->registerHlms(hlmsPbs);
+		hlmsPbs->setDebugOutputPath(false, false);
+	}
+	/*static const Ogre::String OGRE_RENDERSYSTEM_DIRECTX11 = "Direct3D11 Rendering Subsystem";
 	static const Ogre::String OGRE_RENDERSYSTEM_OPENGL3PLUS = "OpenGL 3+ Rendering Subsystem";
 	static const Ogre::String OGRE_RENDERSYSTEM_METAL = "Metal Rendering Subsystem";
-
 	Ogre::RenderSystem* renderSystem = mpRoot->getRenderSystem();
-
 	Ogre::HlmsUnlit* hlmsUnlit = nullptr;
 	Ogre::HlmsPbs* hlmsPbs = nullptr;
-
 	Ogre::ArchiveVec library;
-
 	Ogre::String shaderSyntax = "GLSL";
 	if (renderSystem->getName() == OGRE_RENDERSYSTEM_DIRECTX11)
 		shaderSyntax = "HLSL";
@@ -919,8 +969,6 @@ void ape::Ogre21RenderPlugin::registerHlms()
 			library.push_back(archiveLibraryUnlit);
 		}
 	}
-
-
 	if (renderSystem->getName() == "Direct3D11 Rendering Subsystem")
 	{
 		bool supportsNoOverwriteOnTextureBuffers;
@@ -932,6 +980,5 @@ void ape::Ogre21RenderPlugin::registerHlms()
 			hlmsPbs->setTextureBufferDefaultSize(512 * 1024);
 			hlmsUnlit->setTextureBufferDefaultSize(512 * 1024);
 		}
-	}
-
+	}*/
 }

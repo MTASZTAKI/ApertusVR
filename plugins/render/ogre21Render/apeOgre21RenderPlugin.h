@@ -99,6 +99,7 @@ SOFTWARE.*/
 #include "OgreHlmsCommon.h"
 #include "OgreArchiveManager.h"
 #include "OgreHlmsPbsDatablock.h"
+#include "Compositor/OgreCompositorManager2.h"
 #include "Ogre_glTF_OgrePlugin.hpp"
 
 #define THIS_PLUGINNAME "apeOgre21RenderPlugin"

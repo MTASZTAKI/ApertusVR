@@ -1,8 +1,9 @@
 {
   "plugins": [
     "apeOgre21RenderPlugin",
-	"apeOisUserInputPlugin",
-	"apePhotorealisticScenePlugin"
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "apePhotorealisticScenePlugin"
   ],
   "network": {
     "user": "",
@@ -24,21 +25,21 @@
     },
     "selected": "none",
     "resourceLocations": [
-      "/plugins/render/ogre21Render/resources/Common/Any",
-      "/plugins/render/ogre21Render/resources/Common/GLSL",
-      "/plugins/render/ogre21Render/resources/Common/GLSLES",
-      "/plugins/render/ogre21Render/resources/Common/HLSL",
-      "/plugins/render/ogre21Render/resources/Common/Metal",
-      "/plugins/render/ogre21Render/resources/Unlit/Any",
-      "/plugins/render/ogre21Render/resources/Unlit/GLSL",
-      "/plugins/render/ogre21Render/resources/Unlit/GLSLES",
-      "/plugins/render/ogre21Render/resources/Unlit/HLSL",
-      "/plugins/render/ogre21Render/resources/Unlit/Metal",
-      "/plugins/render/ogre21Render/resources/Pbs/Any",
-      "/plugins/render/ogre21Render/resources/Pbs/GLSL",
-      "/plugins/render/ogre21Render/resources/Pbs/GLSLES",
-      "/plugins/render/ogre21Render/resources/Pbs/HLSL",
-      "/plugins/render/ogre21Render/resources/Pbs/Metal",
+      "/plugins/render/ogre21Render/resources/Hlms/Common/Any",
+      "/plugins/render/ogre21Render/resources/Hlms/Common/GLSL",
+      "/plugins/render/ogre21Render/resources/Hlms/Common/GLSLES",
+      "/plugins/render/ogre21Render/resources/Hlms/Common/HLSL",
+      "/plugins/render/ogre21Render/resources/Hlms/Common/Metal",
+      "/plugins/render/ogre21Render/resources/Hlms/Unlit/Any",
+      "/plugins/render/ogre21Render/resources/Hlms/Unlit/GLSL",
+      "/plugins/render/ogre21Render/resources/Hlms/Unlit/GLSLES",
+      "/plugins/render/ogre21Render/resources/Hlms/Unlit/HLSL",
+      "/plugins/render/ogre21Render/resources/Hlms/Unlit/Metal",
+      "/plugins/render/ogre21Render/resources/Hlms/Pbs/Any",
+      "/plugins/render/ogre21Render/resources/Hlms/Pbs/GLSL",
+      "/plugins/render/ogre21Render/resources/Hlms/Pbs/GLSLES",
+      "/plugins/render/ogre21Render/resources/Hlms/Pbs/HLSL",
+      "/plugins/render/ogre21Render/resources/Hlms/Pbs/Metal",
       "/plugins/scene/photorealisticScene/resources"
     ]
   }
