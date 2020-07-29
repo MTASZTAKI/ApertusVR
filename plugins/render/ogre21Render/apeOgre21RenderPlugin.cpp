@@ -331,6 +331,9 @@ void ape::Ogre21RenderPlugin::processEventDoubleQueue()
 					case ape::Event::Type::LIGHT_DIRECTION:
 						ogreLight->setDirection(ape::ConversionToOgre21(light->getLightDirection()));
 						break;
+					case ape::Event::Type::LIGHT_POWER:
+						ogreLight->setPowerScale(light->getPowerScale());
+						break;
 					case ape::Event::Type::LIGHT_SPECULAR:
 						ogreLight->setSpecularColour(ape::ConversionToOgre21(light->getSpecularColor()));
 						break;

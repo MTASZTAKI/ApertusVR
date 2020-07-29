@@ -96,6 +96,8 @@ namespace ape
 
 		virtual Vector3 getLightDirection() = 0;
 
+		virtual float getPowerScale() = 0;
+
 		virtual void setLightType(ape::Light::Type lightType) = 0;
 
 		virtual void setDiffuseColor(Color diffuseColor) = 0;
@@ -107,6 +109,8 @@ namespace ape
 		virtual void setLightAttenuation(LightAttenuation lightAttenuation) = 0;
 
 		virtual void setLightDirection(Vector3 lightDirection) = 0;
+
+		virtual void setPowerScale(float powerScale) = 0;
 
 		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 

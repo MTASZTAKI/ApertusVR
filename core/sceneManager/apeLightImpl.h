@@ -49,6 +49,8 @@ namespace ape
 		LightAttenuation getLightAttenuation() override;
 		
 		Vector3 getLightDirection() override;
+
+		float getPowerScale() override;
 		
 		void setLightType(Light::Type lightType) override;
 		
@@ -61,6 +63,8 @@ namespace ape
 		void setLightAttenuation(LightAttenuation lightAttenuation) override; 
 		
 		void setLightDirection(Vector3 lightDirection) override;
+
+		void setPowerScale(float powerScale) override;
 
 		void setParentNode(ape::NodeWeakPtr parentNode) override;
 
@@ -96,6 +100,8 @@ namespace ape
 		NodeWeakPtr mParentNode;
 
 		std::string mParentNodeName;
+
+		float mPowerScale;
 	};
 }
 

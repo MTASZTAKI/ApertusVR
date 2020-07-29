@@ -34,6 +34,7 @@ ape::LightImpl::LightImpl(std::string name, bool replicate, std::string ownerID,
 	mLightDirection = ape::Vector3();
 	mParentNode = ape::NodeWeakPtr();
 	mParentNodeName = std::string();
+	mPowerScale = 1.0f;
 }
 
 ape::LightImpl::~LightImpl()
@@ -69,6 +70,11 @@ ape::LightAttenuation ape::LightImpl::getLightAttenuation()
 ape::Vector3 ape::LightImpl::getLightDirection()
 {
 	return mLightDirection;
+}
+
+float ape::LightImpl::getPowerScale()
+{
+	return mPowerScale;
 }
 
 ape::NodeWeakPtr ape::LightImpl::getParentNode()
@@ -118,6 +124,12 @@ void ape::LightImpl::setLightDirection( Vector3 lightDirection )
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::LIGHT_DIRECTION));
 }
 
+void ape::LightImpl::setPowerScale(float powerScale)
+{
+	mPowerScale = powerScale;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::LIGHT_POWER));
+}
+
 void ape::LightImpl::setLightType( ape::Light::Type lightType )
 {
 	mLightType = lightType;
@@ -151,6 +163,7 @@ RakNet::RM3SerializationResult ape::LightImpl::Serialize(RakNet::SerializeParame
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightSpotRange);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightAttenuation);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mLightDirection);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mPowerScale);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mParentNodeName.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
@@ -172,6 +185,8 @@ void ape::LightImpl::Deserialize(RakNet::DeserializeParameters *deserializeParam
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::LIGHT_ATTENUATION));
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mLightDirection))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::LIGHT_DIRECTION));
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mPowerScale))
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::LIGHT_POWER));
 	RakNet::RakString parentName;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, parentName))
 	{

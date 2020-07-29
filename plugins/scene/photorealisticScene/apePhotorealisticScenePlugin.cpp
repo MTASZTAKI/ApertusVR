@@ -36,6 +36,7 @@ void ape::apePhotoRealisticScenePlugin::Init()
 			light->setParentNode(node);
 			light->setLightType(ape::Light::Type::DIRECTIONAL);
 			light->setLightDirection(ape::Vector3(-1, -1, -0.5f));
+			light->setPowerScale(5);
 		}
 	}
 	if (auto node = mpSceneManager->createNode("lightNode2", true, mpCoreConfig->getNetworkGUID()).lock())
@@ -45,6 +46,7 @@ void ape::apePhotoRealisticScenePlugin::Init()
 			light->setParentNode(node);
 			light->setLightType(ape::Light::Type::DIRECTIONAL);
 			light->setLightDirection(ape::Vector3(1, 1, 0.5f));
+			light->setPowerScale(5);
 		}
 	}
 	mNode = mpSceneManager->createNode("gltfNode", true, mpCoreConfig->getNetworkGUID());
