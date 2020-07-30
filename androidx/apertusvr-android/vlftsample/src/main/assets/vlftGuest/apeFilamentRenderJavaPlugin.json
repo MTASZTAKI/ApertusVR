@@ -2,31 +2,30 @@
     "camera" : {
         "fov" : 45.0,
         "nearClip" : 0.1,
-        "farClip" : 40.0,
+        "farClip" : 1000.0,
         "controller" : {
-            "position" : [0, 4, 10],
-            "horizontal" : 3.1415,
-            "vertical" : 0.0,
-            "speed" : 0.1,
+            "position" : [0, 120, -180],
+            "horizontal" : 0.0,
+            "vertical" : -0.5236,
+            "speed" : 2.0,
             "rotateSpeed" : 0.001
         }
     },
     "shadowOptions" : {
         "enable" : false,
         "mapSize" : 1024,
-        "shadowCascades" : 1,
         "shadowFar" : 0.0,
         "shadowNearHint" : 1.0,
-        "shadowFarHint" : 80.0,
+        "shadowFarHint" : 1000.0,
         "maxShadowDistance" : 0.3
     },
     "sunLight" : {
         "enable" : true,
         "intensity" : 1.1e5,
-        "direction" : [1.0,-1,0]
+        "direction" : [-1.0, -1.0, 0.0]
     },
     "resources" : {
         "resourcePath" : "/models",
-        "resourcePrefix" : ""
+        "resourcePrefix" : "../../samples/virtualLearningFactory/models/"
     }
 }

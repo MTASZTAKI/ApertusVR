@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/apefilamentrender" />
             <option value="$PROJECT_DIR$/apertusvr" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/vlftsample" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

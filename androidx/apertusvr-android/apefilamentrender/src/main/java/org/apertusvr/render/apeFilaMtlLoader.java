@@ -22,6 +22,8 @@ SOFTWARE.*/
 
 package org.apertusvr.render;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Size;
 
@@ -60,6 +62,10 @@ final class apeFilaMtlLoader {
         MtlRecord currentMtl = null;
         while (fileReader.ready()) {
             String line = fileReader.readLine();
+
+            if(line == null || line.length() == 0 || line.charAt(0) == '#') {
+                continue;
+            }
 
             if (line.contains("newmtl ")) {
                 String mtlName = line.substring(7);

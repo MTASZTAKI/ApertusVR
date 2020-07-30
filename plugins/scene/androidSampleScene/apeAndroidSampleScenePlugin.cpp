@@ -170,6 +170,7 @@ void ape::AndroidSampleScenePlugin::initGeometries()
     {
         coneNode->setParentNode(mRootNodeWeak);
         coneNode->setPosition(ape::Vector3(-10,0.0,-10));
+        //coneNode->setOrientation(ape::Quaternion(ape::Degree(180.f),ape::Vector3(1,0,0)));
 
         if (auto cone = std::static_pointer_cast<ape::IConeGeometry>(
                 mpSceneManager->createEntity("cone01", ape::Entity::Type::GEOMETRY_CONE,

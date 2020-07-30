@@ -1,4 +1,5 @@
-package org.apertusvr.app;
+package org.apertusvr.vlftsample;
+
 
 import org.apertusvr.ApertusJNI;
 
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(surfaceView);
 
         if (!apeStarted) {
-            apeJNI.startApertusVR("androidSampleScene",getAssets());
+            apeJNI.startApertusVR("vlftGuest",getAssets());
             apeStarted = true;
         }
 
@@ -85,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     class FrameCallback implements Choreographer.FrameCallback {
-            @Override
-            public void doFrame(long frameTimeNanos) {
-                choreographer.postFrameCallback(this);
+        @Override
+        public void doFrame(long frameTimeNanos) {
+            choreographer.postFrameCallback(this);
 
-                if(apeStarted) {
-                    ApertusJNI.processEventDoubleQueue();
-                }
+            if(apeStarted) {
+                ApertusJNI.processEventDoubleQueue();
             }
+        }
     }
 }

@@ -347,6 +347,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
             /* resources */
             JSONObject resourcesConfig = configJson.getJSONObject("resources");
             mResourcePath = mContext.getFilesDir() + resourcesConfig.getString("resourcePath");
+            Log.d(LOG_TAG, "FILES DIR: " + mContext.getFilesDir());
             mResourcePrefix = resourcesConfig.getString("resourcePrefix");
         }
         catch (IOException | JSONException e) {
@@ -480,6 +481,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
         while (!mEventDoubleQueue.emptyPop()) {
             apeEvent event = mEventDoubleQueue.front();
+            Log.d(LOG_TAG, event.type.toString() + " " + event.subjectName);
 
             if (event.group == apeEvent.Group.GEOMETRY_FILE) {
                 apeFileGeometry fileGeometry = new apeFileGeometry(event.subjectName);

@@ -270,10 +270,14 @@ final class apeFilaMeshLoader {
             String defaultMatName,
             boolean shadowEnabled) {
 
-        RenderableManager.Builder builder = new RenderableManager.Builder(parts.size());
-        builder.boundingBox(aabb);
+        int size = parts == null ? 0 : parts.size();
 
-        for (int i = 0; i < parts.size(); i++) {
+        RenderableManager.Builder builder = new RenderableManager.Builder(size);
+        if(aabb != null) {
+            builder.boundingBox(aabb);
+        }
+
+        for (int i = 0; i < size; i++) {
             builder.geometry(i,
                     RenderableManager.PrimitiveType.TRIANGLES,
                     vertexBuffer,
