@@ -1,5 +1,5 @@
-include ':vlftsample'
 rootProject.name='ApertusVR-Android'
 include ':app'
 include ':apertusvr'
 include ':apefilamentrender'
+include ':vlftsample'

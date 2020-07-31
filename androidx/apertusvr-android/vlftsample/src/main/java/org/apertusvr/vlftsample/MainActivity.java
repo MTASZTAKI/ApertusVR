@@ -1,6 +1,5 @@
 package org.apertusvr.vlftsample;
 
-
 import org.apertusvr.ApertusJNI;
 
 import org.apertusvr.render.apeFilamentRenderPlugin;
