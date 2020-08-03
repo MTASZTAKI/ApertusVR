@@ -113,6 +113,7 @@ ape::VLFTAnimationPlayerPlugin::VLFTAnimationPlayerPlugin()
 	mStudents = std::vector<ape::NodeWeakPtr>();
 	mStudentsMovementLoggingFile = std::ofstream();
 	mSpaghettiNodeNames = std::vector<std::string>();
+	mIsAllSpaghettiVisible = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -139,7 +140,7 @@ void ape::VLFTAnimationPlayerPlugin::drawSpaghettiSection(const ape::Vector3& st
 			ape::Color color(1, 0, 0);
 			spagetthiLineSection->setParameters(coordinates, indices, color);
 			spagetthiLineSection->setParentNode(spaghettiNode);
-			if (!spaghettiNode->getChildrenVisibility())
+			if (!mIsAllSpaghettiVisible)
 			{
 				spaghettiNode->setChildrenVisibility(false);
 			}
@@ -216,6 +217,8 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			{
 				attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node);
 				node->setChildrenVisibility(true);
+				node->setPosition(mParsedAnimations[i].position);
+				node->setOrientation(mParsedAnimations[i].orientation);
 			}
 			if (mParsedAnimations[i].type == quicktype::EventType::HIDE)
 			{
@@ -224,6 +227,10 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 			if (mParsedAnimations[i].type == quicktype::EventType::LINK)
 			{
 				//;
+			}
+			if (mParsedAnimations[i].type == quicktype::EventType::TRAIL)
+			{
+				showSpaghetti(node->getName(), mParsedAnimations[i].trail);
 			}
 			if (mParsedAnimations[i].type == quicktype::EventType::STATE)
 			{
@@ -319,6 +326,26 @@ void ape::VLFTAnimationPlayerPlugin::playAnimation()
 		}
 	}
 	mIsPlayRunning = false;
+}
+
+void ape::VLFTAnimationPlayerPlugin::showSpaghetti(std::string name, bool show)
+{
+	if (auto spaghettiNode = mpSceneManager->getNode(name + "_spaghettiNode").lock())
+	{
+		spaghettiNode->setChildrenVisibility(show);
+	}
+}
+
+void ape::VLFTAnimationPlayerPlugin::showAllSpaghetti(bool show)
+{
+	for (auto spaghettiNodeName : mSpaghettiNodeNames)
+	{
+		if (auto spaghettiNode = mpSceneManager->getNode(spaghettiNodeName).lock())
+		{
+			spaghettiNode->setChildrenVisibility(show);
+		}
+	}
+	mIsAllSpaghettiVisible = show;
 }
 
 void ape::VLFTAnimationPlayerPlugin::startPlayAnimationThread()
@@ -444,23 +471,25 @@ void ape::VLFTAnimationPlayerPlugin::eventCallBack(const ape::Event & event)
 					if (auto spaghettiNode = mpSceneManager->getNode(clickedNode->getName() + "_spaghettiNode").lock())
 					{
 						if (spaghettiNode->getChildrenVisibility())
-							spaghettiNode->setChildrenVisibility(false);
+						{
+							showSpaghetti(clickedNode->getName(), false);
+						}
 						else
-							spaghettiNode->setChildrenVisibility(true);
+						{
+							showSpaghetti(clickedNode->getName(), false);
+						}
 					}
 				}
 			}
 			else if (browser->getClickedElementName() == "spaghettiAll")
 			{
-				for (auto spaghettiNodeName : mSpaghettiNodeNames)
+				if (!mIsAllSpaghettiVisible)
 				{
-					if (auto spaghettiNode = mpSceneManager->getNode(spaghettiNodeName).lock())
-					{
-						if (spaghettiNode->getChildrenVisibility())
-							spaghettiNode->setChildrenVisibility(false);
-						else
-							spaghettiNode->setChildrenVisibility(true);
-					}
+					showAllSpaghetti(true);
+				}
+				else
+				{
+					showAllSpaghetti(false);
 				}
 			}
 			else if (browser->getClickedElementName() == "view")
@@ -612,6 +641,9 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeVLFTAnimationPlayerPlugin.json";
 	FILE* apeVLFTAnimationPlayerPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	mAnimations = nlohmann::json::parse(apeVLFTAnimationPlayerPluginConfigFile);
+	quicktype::Context* context = &mAnimations.get_mutable_context();
+	if (context)
+		mIsAllSpaghettiVisible = mAnimations.get_context().get_asset_trail();
 	for (const auto& node : mAnimations.get_nodes())
 	{
 		mAnimatedNodeNames.push_back(node.get_name());
@@ -624,7 +656,20 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 					Animation animation;
 					animation.type = action.get_event().get_type();
 					animation.nodeName = node.get_name();
-					animation.parentNodeName = *action.get_event().get_placement_rel_to();
+					if (action.get_event().get_placement_rel_to())
+					{
+						animation.parentNodeName = *action.get_event().get_placement_rel_to();
+					}
+					if (action.get_event().get_position())
+					{
+						auto position = *action.get_event().get_position();
+						animation.position = ape::Vector3(position[0], position[1], position[2]);
+					}
+					if (action.get_event().get_rotation())
+					{
+						auto orientation = *action.get_event().get_rotation();
+						animation.orientation = ape::Quaternion(orientation[0], orientation[1], orientation[2], orientation[3]);
+					}
 					animation.time = atoi(action.get_trigger().get_data().c_str());
 					mParsedAnimations.push_back(animation);
 				}
@@ -661,6 +706,15 @@ void ape::VLFTAnimationPlayerPlugin::Init()
 						animation.url = *action.get_event().get_data();
 					if (action.get_event().get_descr())
 						animation.descr = *action.get_event().get_data();
+					mParsedAnimations.push_back(animation);
+				}
+				if (action.get_event().get_type() == quicktype::EventType::TRAIL)
+				{
+					Animation animation;
+					animation.type = action.get_event().get_type();
+					animation.nodeName = node.get_name();
+					if (action.get_event().get_value())
+						animation.trail = *action.get_event().get_value();
 					mParsedAnimations.push_back(animation);
 				}
 				if (action.get_event().get_type() == quicktype::EventType::ANIMATION)

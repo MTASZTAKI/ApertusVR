@@ -73,6 +73,7 @@ namespace ape
 			std::string url;
 			std::string descr;
 			std::string fileName;
+			bool trail;
 		};
 	private:
 		ape::ISceneManager* mpSceneManager;
@@ -113,6 +114,8 @@ namespace ape
 
 		bool mIsStudentsMovementLogging;
 
+		bool mIsAllSpaghettiVisible;
+
 		std::vector<ape::NodeWeakPtr> mStudents;
 
 		std::ofstream mStudentsMovementLoggingFile;
@@ -131,6 +134,10 @@ namespace ape
 		~VLFTAnimationPlayerPlugin();
 
 		void playAnimation();
+
+		void showSpaghetti(std::string name, bool show);
+
+		void showAllSpaghetti(bool show);
 
 		void drawSpaghettiSection(const ape::Vector3& startPosition, const ape::NodeSharedPtr& node, std::string& spaghettiSectionName);
 

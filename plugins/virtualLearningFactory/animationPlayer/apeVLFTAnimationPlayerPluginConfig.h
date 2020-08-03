@@ -18,307 +18,360 @@
 #ifndef NLOHMANN_OPT_HELPER
 #define NLOHMANN_OPT_HELPER
 namespace nlohmann {
-	template <typename T>
-	struct adl_serializer<std::shared_ptr<T>> {
-		static void to_json(json & j, const std::shared_ptr<T> & opt) {
-			if (!opt) j = nullptr; else j = *opt;
-		}
+    template <typename T>
+    struct adl_serializer<std::shared_ptr<T>> {
+        static void to_json(json& j, const std::shared_ptr<T>& opt) {
+            if (!opt) j = nullptr; else j = *opt;
+        }
 
-		static std::shared_ptr<T> from_json(const json & j) {
-			if (j.is_null()) return std::unique_ptr<T>(); else return std::unique_ptr<T>(new T(j.get<T>()));
-		}
-	};
+        static std::shared_ptr<T> from_json(const json& j) {
+            if (j.is_null()) return std::unique_ptr<T>(); else return std::unique_ptr<T>(new T(j.get<T>()));
+        }
+    };
 }
 #endif
 
 namespace quicktype {
-	using nlohmann::json;
+    using nlohmann::json;
 
-	inline json get_untyped(const json & j, const char * property) {
-		if (j.find(property) != j.end()) {
-			return j.at(property).get<json>();
-		}
-		return json();
-	}
+    inline json get_untyped(const json& j, const char* property) {
+        if (j.find(property) != j.end()) {
+            return j.at(property).get<json>();
+        }
+        return json();
+    }
 
-	inline json get_untyped(const json & j, std::string property) {
-		return get_untyped(j, property.data());
-	}
+    inline json get_untyped(const json& j, std::string property) {
+        return get_untyped(j, property.data());
+    }
 
-	template <typename T>
-	inline std::shared_ptr<T> get_optional(const json & j, const char * property) {
-		if (j.find(property) != j.end()) {
-			return j.at(property).get<std::shared_ptr<T>>();
-		}
-		return std::shared_ptr<T>();
-	}
+    template <typename T>
+    inline std::shared_ptr<T> get_optional(const json& j, const char* property) {
+        if (j.find(property) != j.end()) {
+            return j.at(property).get<std::shared_ptr<T>>();
+        }
+        return std::shared_ptr<T>();
+    }
 
-	template <typename T>
-	inline std::shared_ptr<T> get_optional(const json & j, std::string property) {
-		return get_optional<T>(j, property.data());
-	}
+    template <typename T>
+    inline std::shared_ptr<T> get_optional(const json& j, std::string property) {
+        return get_optional<T>(j, property.data());
+    }
 
-	class Bookmark {
-	public:
-		Bookmark() = default;
-		virtual ~Bookmark() = default;
+    class Bookmark {
+    public:
+        Bookmark() = default;
+        virtual ~Bookmark() = default;
 
-	private:
-		std::string name;
-		std::string time;
+    private:
+        std::string name;
+        std::string time;
 
-	public:
-		const std::string & get_name() const { return name; }
-		std::string & get_mutable_name() { return name; }
-		void set_name(const std::string & value) { this->name = value; }
+    public:
+        const std::string& get_name() const { return name; }
+        std::string& get_mutable_name() { return name; }
+        void set_name(const std::string& value) { this->name = value; }
 
-		const std::string & get_time() const { return time; }
-		std::string & get_mutable_time() { return time; }
-		void set_time(const std::string & value) { this->time = value; }
-	};
+        const std::string& get_time() const { return time; }
+        std::string& get_mutable_time() { return time; }
+        void set_time(const std::string& value) { this->time = value; }
+    };
 
-	enum class EventType : int { ANIMATION, ANIMATION_ADDITIVE, HIDE, LINK, SHOW, STATE };
+    class Context {
+    public:
+        Context() = default;
+        virtual ~Context() = default;
 
-	class Event {
-	public:
-		Event() = default;
-		virtual ~Event() = default;
+    private:
+        bool asset_trail;
 
-	private:
-		quicktype::EventType type;
-		std::shared_ptr<std::string> placement_rel_to;
-		std::shared_ptr<std::string> descr;
-		std::shared_ptr<std::string> data;
-		std::shared_ptr<std::string> url;
+    public:
+        const bool& get_asset_trail() const { return asset_trail; }
+        bool& get_mutable_asset_trail() { return asset_trail; }
+        void set_asset_trail(const bool& value) { this->asset_trail = value; }
+    };
 
-	public:
-		const quicktype::EventType & get_type() const { return type; }
-		quicktype::EventType & get_mutable_type() { return type; }
-		void set_type(const quicktype::EventType & value) { this->type = value; }
+    enum class EventType : int { ANIMATION, ANIMATION_ADDITIVE, HIDE, LINK, SHOW, STATE, TRAIL };
 
-		std::shared_ptr<std::string> get_placement_rel_to() const { return placement_rel_to; }
-		void set_placement_rel_to(std::shared_ptr<std::string> value) { this->placement_rel_to = value; }
+    class Event {
+    public:
+        Event() = default;
+        virtual ~Event() = default;
 
-		std::shared_ptr<std::string> get_descr() const { return descr; }
-		void set_descr(std::shared_ptr<std::string> value) { this->descr = value; }
+    private:
+        quicktype::EventType type;
+        std::shared_ptr<std::string> descr;
+        std::shared_ptr<std::vector<double>> position;
+        std::shared_ptr<std::vector<double>> rotation;
+        std::shared_ptr<std::string> placement_rel_to;
+        std::shared_ptr<std::string> data;
+        std::shared_ptr<bool> value;
+        std::shared_ptr<std::string> url;
 
-		std::shared_ptr<std::string> get_data() const { return data; }
-		void set_data(std::shared_ptr<std::string> value) { this->data = value; }
+    public:
+        const quicktype::EventType& get_type() const { return type; }
+        quicktype::EventType& get_mutable_type() { return type; }
+        void set_type(const quicktype::EventType& value) { this->type = value; }
 
-		std::shared_ptr<std::string> get_url() const { return url; }
-		void set_url(std::shared_ptr<std::string> value) { this->url = value; }
-	};
+        std::shared_ptr<std::string> get_descr() const { return descr; }
+        void set_descr(std::shared_ptr<std::string> value) { this->descr = value; }
 
-	enum class TriggerType : int { TIMESTAMP };
+        std::shared_ptr<std::vector<double>> get_position() const { return position; }
+        void set_position(std::shared_ptr<std::vector<double>> value) { this->position = value; }
 
-	class Trigger {
-	public:
-		Trigger() = default;
-		virtual ~Trigger() = default;
+        std::shared_ptr<std::vector<double>> get_rotation() const { return rotation; }
+        void set_rotation(std::shared_ptr<std::vector<double>> value) { this->rotation = value; }
 
-	private:
-		quicktype::TriggerType type;
-		std::string data;
+        std::shared_ptr<std::string> get_placement_rel_to() const { return placement_rel_to; }
+        void set_placement_rel_to(std::shared_ptr<std::string> value) { this->placement_rel_to = value; }
 
-	public:
-		const quicktype::TriggerType & get_type() const { return type; }
-		quicktype::TriggerType & get_mutable_type() { return type; }
-		void set_type(const quicktype::TriggerType & value) { this->type = value; }
+        std::shared_ptr<std::string> get_data() const { return data; }
+        void set_data(std::shared_ptr<std::string> value) { this->data = value; }
 
-		const std::string & get_data() const { return data; }
-		std::string & get_mutable_data() { return data; }
-		void set_data(const std::string & value) { this->data = value; }
-	};
+        std::shared_ptr<bool> get_value() const { return value; }
+        void set_value(std::shared_ptr<bool> value) { this->value = value; }
 
-	class Action {
-	public:
-		Action() = default;
-		virtual ~Action() = default;
+        std::shared_ptr<std::string> get_url() const { return url; }
+        void set_url(std::shared_ptr<std::string> value) { this->url = value; }
+    };
 
-	private:
-		quicktype::Trigger trigger;
-		quicktype::Event event;
+    enum class TriggerType : int { TIMESTAMP };
 
-	public:
-		const quicktype::Trigger & get_trigger() const { return trigger; }
-		quicktype::Trigger & get_mutable_trigger() { return trigger; }
-		void set_trigger(const quicktype::Trigger & value) { this->trigger = value; }
+    class Trigger {
+    public:
+        Trigger() = default;
+        virtual ~Trigger() = default;
 
-		const quicktype::Event & get_event() const { return event; }
-		quicktype::Event & get_mutable_event() { return event; }
-		void set_event(const quicktype::Event & value) { this->event = value; }
-	};
+    private:
+        quicktype::TriggerType type;
+        std::string data;
 
-	class Node {
-	public:
-		Node() = default;
-		virtual ~Node() = default;
+    public:
+        const quicktype::TriggerType& get_type() const { return type; }
+        quicktype::TriggerType& get_mutable_type() { return type; }
+        void set_type(const quicktype::TriggerType& value) { this->type = value; }
 
-	private:
-		std::string name;
-		std::vector<quicktype::Action> actions;
+        const std::string& get_data() const { return data; }
+        std::string& get_mutable_data() { return data; }
+        void set_data(const std::string& value) { this->data = value; }
+    };
 
-	public:
-		const std::string & get_name() const { return name; }
-		std::string & get_mutable_name() { return name; }
-		void set_name(const std::string & value) { this->name = value; }
+    class Action {
+    public:
+        Action() = default;
+        virtual ~Action() = default;
 
-		const std::vector<quicktype::Action> & get_actions() const { return actions; }
-		std::vector<quicktype::Action> & get_mutable_actions() { return actions; }
-		void set_actions(const std::vector<quicktype::Action> & value) { this->actions = value; }
-	};
+    private:
+        quicktype::Trigger trigger;
+        quicktype::Event event;
 
-	class Animations {
-	public:
-		Animations() = default;
-		virtual ~Animations() = default;
+    public:
+        const quicktype::Trigger& get_trigger() const { return trigger; }
+        quicktype::Trigger& get_mutable_trigger() { return trigger; }
+        void set_trigger(const quicktype::Trigger& value) { this->trigger = value; }
 
-	private:
-		std::vector<quicktype::Node> nodes;
-		std::vector<quicktype::Bookmark> bookmarks;
+        const quicktype::Event& get_event() const { return event; }
+        quicktype::Event& get_mutable_event() { return event; }
+        void set_event(const quicktype::Event& value) { this->event = value; }
+    };
 
-	public:
-		const std::vector<quicktype::Node> & get_nodes() const { return nodes; }
-		std::vector<quicktype::Node> & get_mutable_nodes() { return nodes; }
-		void set_nodes(const std::vector<quicktype::Node> & value) { this->nodes = value; }
+    class Node {
+    public:
+        Node() = default;
+        virtual ~Node() = default;
 
-		const std::vector<quicktype::Bookmark> & get_bookmarks() const { return bookmarks; }
-		std::vector<quicktype::Bookmark> & get_mutable_bookmarks() { return bookmarks; }
-		void set_bookmarks(const std::vector<quicktype::Bookmark> & value) { this->bookmarks = value; }
-	};
+    private:
+        std::string name;
+        std::vector<quicktype::Action> actions;
+
+    public:
+        const std::string& get_name() const { return name; }
+        std::string& get_mutable_name() { return name; }
+        void set_name(const std::string& value) { this->name = value; }
+
+        const std::vector<quicktype::Action>& get_actions() const { return actions; }
+        std::vector<quicktype::Action>& get_mutable_actions() { return actions; }
+        void set_actions(const std::vector<quicktype::Action>& value) { this->actions = value; }
+    };
+
+    class Animations {
+    public:
+        Animations() = default;
+        virtual ~Animations() = default;
+
+    private:
+        quicktype::Context context;
+        std::vector<quicktype::Node> nodes;
+        std::vector<quicktype::Bookmark> bookmarks;
+
+    public:
+        const quicktype::Context& get_context() const { return context; }
+        quicktype::Context& get_mutable_context() { return context; }
+        void set_context(const quicktype::Context& value) { this->context = value; }
+
+        const std::vector<quicktype::Node>& get_nodes() const { return nodes; }
+        std::vector<quicktype::Node>& get_mutable_nodes() { return nodes; }
+        void set_nodes(const std::vector<quicktype::Node>& value) { this->nodes = value; }
+
+        const std::vector<quicktype::Bookmark>& get_bookmarks() const { return bookmarks; }
+        std::vector<quicktype::Bookmark>& get_mutable_bookmarks() { return bookmarks; }
+        void set_bookmarks(const std::vector<quicktype::Bookmark>& value) { this->bookmarks = value; }
+    };
 }
 
 namespace nlohmann {
-	namespace detail {
-		void from_json(const json & j, quicktype::Bookmark & x);
-		void to_json(json & j, const quicktype::Bookmark & x);
+    namespace detail {
+        void from_json(const json& j, quicktype::Bookmark& x);
+        void to_json(json& j, const quicktype::Bookmark& x);
 
-		void from_json(const json & j, quicktype::Event & x);
-		void to_json(json & j, const quicktype::Event & x);
+        void from_json(const json& j, quicktype::Context& x);
+        void to_json(json& j, const quicktype::Context& x);
 
-		void from_json(const json & j, quicktype::Trigger & x);
-		void to_json(json & j, const quicktype::Trigger & x);
+        void from_json(const json& j, quicktype::Event& x);
+        void to_json(json& j, const quicktype::Event& x);
 
-		void from_json(const json & j, quicktype::Action & x);
-		void to_json(json & j, const quicktype::Action & x);
+        void from_json(const json& j, quicktype::Trigger& x);
+        void to_json(json& j, const quicktype::Trigger& x);
 
-		void from_json(const json & j, quicktype::Node & x);
-		void to_json(json & j, const quicktype::Node & x);
+        void from_json(const json& j, quicktype::Action& x);
+        void to_json(json& j, const quicktype::Action& x);
 
-		void from_json(const json & j, quicktype::Animations & x);
-		void to_json(json & j, const quicktype::Animations & x);
+        void from_json(const json& j, quicktype::Node& x);
+        void to_json(json& j, const quicktype::Node& x);
 
-		void from_json(const json & j, quicktype::EventType & x);
-		void to_json(json & j, const quicktype::EventType & x);
+        void from_json(const json& j, quicktype::Animations& x);
+        void to_json(json& j, const quicktype::Animations& x);
 
-		void from_json(const json & j, quicktype::TriggerType & x);
-		void to_json(json & j, const quicktype::TriggerType & x);
+        void from_json(const json& j, quicktype::EventType& x);
+        void to_json(json& j, const quicktype::EventType& x);
 
-		inline void from_json(const json & j, quicktype::Bookmark& x) {
-			x.set_name(j.at("name").get<std::string>());
-			x.set_time(j.at("time").get<std::string>());
-		}
+        void from_json(const json& j, quicktype::TriggerType& x);
+        void to_json(json& j, const quicktype::TriggerType& x);
 
-		inline void to_json(json & j, const quicktype::Bookmark & x) {
-			j = json::object();
-			j["name"] = x.get_name();
-			j["time"] = x.get_time();
-		}
+        inline void from_json(const json& j, quicktype::Bookmark& x) {
+            x.set_name(j.at("name").get<std::string>());
+            x.set_time(j.at("time").get<std::string>());
+        }
 
-		inline void from_json(const json & j, quicktype::Event& x) {
-			x.set_type(j.at("type").get<quicktype::EventType>());
-			x.set_placement_rel_to(quicktype::get_optional<std::string>(j, "placementRelTo"));
-			x.set_descr(quicktype::get_optional<std::string>(j, "descr"));
-			x.set_data(quicktype::get_optional<std::string>(j, "data"));
-			x.set_url(quicktype::get_optional<std::string>(j, "URL"));
-		}
+        inline void to_json(json& j, const quicktype::Bookmark& x) {
+            j = json::object();
+            j["name"] = x.get_name();
+            j["time"] = x.get_time();
+        }
 
-		inline void to_json(json & j, const quicktype::Event & x) {
-			j = json::object();
-			j["type"] = x.get_type();
-			j["placementRelTo"] = x.get_placement_rel_to();
-			j["descr"] = x.get_descr();
-			j["data"] = x.get_data();
-			j["URL"] = x.get_url();
-		}
+        inline void from_json(const json& j, quicktype::Context& x) {
+            x.set_asset_trail(j.at("assetTrail").get<bool>());
+        }
 
-		inline void from_json(const json & j, quicktype::Trigger& x) {
-			x.set_type(j.at("type").get<quicktype::TriggerType>());
-			x.set_data(j.at("data").get<std::string>());
-		}
+        inline void to_json(json& j, const quicktype::Context& x) {
+            j = json::object();
+            j["assetTrail"] = x.get_asset_trail();
+        }
 
-		inline void to_json(json & j, const quicktype::Trigger & x) {
-			j = json::object();
-			j["type"] = x.get_type();
-			j["data"] = x.get_data();
-		}
+        inline void from_json(const json& j, quicktype::Event& x) {
+            x.set_type(j.at("type").get<quicktype::EventType>());
+            x.set_descr(quicktype::get_optional<std::string>(j, "descr"));
+            x.set_position(quicktype::get_optional<std::vector<double>>(j, "position"));
+            x.set_rotation(quicktype::get_optional<std::vector<double>>(j, "rotation"));
+            x.set_placement_rel_to(quicktype::get_optional<std::string>(j, "placementRelTo"));
+            x.set_data(quicktype::get_optional<std::string>(j, "data"));
+            x.set_value(quicktype::get_optional<bool>(j, "value"));
+            x.set_url(quicktype::get_optional<std::string>(j, "URL"));
+        }
 
-		inline void from_json(const json & j, quicktype::Action& x) {
-			x.set_trigger(j.at("trigger").get<quicktype::Trigger>());
-			x.set_event(j.at("event").get<quicktype::Event>());
-		}
+        inline void to_json(json& j, const quicktype::Event& x) {
+            j = json::object();
+            j["type"] = x.get_type();
+            j["descr"] = x.get_descr();
+            j["position"] = x.get_position();
+            j["rotation"] = x.get_rotation();
+            j["placementRelTo"] = x.get_placement_rel_to();
+            j["data"] = x.get_data();
+            j["value"] = x.get_value();
+            j["URL"] = x.get_url();
+        }
 
-		inline void to_json(json & j, const quicktype::Action & x) {
-			j = json::object();
-			j["trigger"] = x.get_trigger();
-			j["event"] = x.get_event();
-		}
+        inline void from_json(const json& j, quicktype::Trigger& x) {
+            x.set_type(j.at("type").get<quicktype::TriggerType>());
+            x.set_data(j.at("data").get<std::string>());
+        }
 
-		inline void from_json(const json & j, quicktype::Node& x) {
-			x.set_name(j.at("name").get<std::string>());
-			x.set_actions(j.at("actions").get<std::vector<quicktype::Action>>());
-		}
+        inline void to_json(json& j, const quicktype::Trigger& x) {
+            j = json::object();
+            j["type"] = x.get_type();
+            j["data"] = x.get_data();
+        }
 
-		inline void to_json(json & j, const quicktype::Node & x) {
-			j = json::object();
-			j["name"] = x.get_name();
-			j["actions"] = x.get_actions();
-		}
+        inline void from_json(const json& j, quicktype::Action& x) {
+            x.set_trigger(j.at("trigger").get<quicktype::Trigger>());
+            x.set_event(j.at("event").get<quicktype::Event>());
+        }
 
-		inline void from_json(const json & j, quicktype::Animations& x) {
-			x.set_nodes(j.at("nodes").get<std::vector<quicktype::Node>>());
-			x.set_bookmarks(j.at("bookmarks").get<std::vector<quicktype::Bookmark>>());
-		}
+        inline void to_json(json& j, const quicktype::Action& x) {
+            j = json::object();
+            j["trigger"] = x.get_trigger();
+            j["event"] = x.get_event();
+        }
 
-		inline void to_json(json & j, const quicktype::Animations & x) {
-			j = json::object();
-			j["nodes"] = x.get_nodes();
-			j["bookmarks"] = x.get_bookmarks();
-		}
+        inline void from_json(const json& j, quicktype::Node& x) {
+            x.set_name(j.at("name").get<std::string>());
+            x.set_actions(j.at("actions").get<std::vector<quicktype::Action>>());
+        }
 
-		inline void from_json(const json & j, quicktype::EventType & x) {
-			if (j == "animation") x = quicktype::EventType::ANIMATION;
-			else if (j == "animationAdditive") x = quicktype::EventType::ANIMATION_ADDITIVE;
-			else if (j == "hide") x = quicktype::EventType::HIDE;
-			else if (j == "link") x = quicktype::EventType::LINK;
-			else if (j == "show") x = quicktype::EventType::SHOW;
-			else if (j == "state") x = quicktype::EventType::STATE;
-			else throw "Input JSON does not conform to schema";
-		}
+        inline void to_json(json& j, const quicktype::Node& x) {
+            j = json::object();
+            j["name"] = x.get_name();
+            j["actions"] = x.get_actions();
+        }
 
-		inline void to_json(json & j, const quicktype::EventType & x) {
-			switch (x) {
-			case quicktype::EventType::ANIMATION: j = "animation"; break;
-			case quicktype::EventType::ANIMATION_ADDITIVE: j = "animationAdditive"; break;
-			case quicktype::EventType::HIDE: j = "hide"; break;
-			case quicktype::EventType::LINK: j = "link"; break;
-			case quicktype::EventType::SHOW: j = "show"; break;
-			case quicktype::EventType::STATE: j = "state"; break;
-			default: throw "This should not happen";
-			}
-		}
+        inline void from_json(const json& j, quicktype::Animations& x) {
+            x.set_context(j.at("context").get<quicktype::Context>());
+            x.set_nodes(j.at("nodes").get<std::vector<quicktype::Node>>());
+            x.set_bookmarks(j.at("bookmarks").get<std::vector<quicktype::Bookmark>>());
+        }
 
-		inline void from_json(const json & j, quicktype::TriggerType & x) {
-			if (j == "timestamp") x = quicktype::TriggerType::TIMESTAMP;
-			else throw "Input JSON does not conform to schema";
-		}
+        inline void to_json(json& j, const quicktype::Animations& x) {
+            j = json::object();
+            j["context"] = x.get_context();
+            j["nodes"] = x.get_nodes();
+            j["bookmarks"] = x.get_bookmarks();
+        }
 
-		inline void to_json(json & j, const quicktype::TriggerType & x) {
-			switch (x) {
-			case quicktype::TriggerType::TIMESTAMP: j = "timestamp"; break;
-			default: throw "This should not happen";
-			}
-		}
-	}
+        inline void from_json(const json& j, quicktype::EventType& x) {
+            if (j == "animation") x = quicktype::EventType::ANIMATION;
+            else if (j == "animationAdditive") x = quicktype::EventType::ANIMATION_ADDITIVE;
+            else if (j == "hide") x = quicktype::EventType::HIDE;
+            else if (j == "link") x = quicktype::EventType::LINK;
+            else if (j == "show") x = quicktype::EventType::SHOW;
+            else if (j == "state") x = quicktype::EventType::STATE;
+            else if (j == "trail") x = quicktype::EventType::TRAIL;
+            else throw "Input JSON does not conform to schema";
+        }
+
+        inline void to_json(json& j, const quicktype::EventType& x) {
+            switch (x) {
+            case quicktype::EventType::ANIMATION: j = "animation"; break;
+            case quicktype::EventType::ANIMATION_ADDITIVE: j = "animationAdditive"; break;
+            case quicktype::EventType::HIDE: j = "hide"; break;
+            case quicktype::EventType::LINK: j = "link"; break;
+            case quicktype::EventType::SHOW: j = "show"; break;
+            case quicktype::EventType::STATE: j = "state"; break;
+            case quicktype::EventType::TRAIL: j = "trail"; break;
+            default: throw "This should not happen";
+            }
+        }
+
+        inline void from_json(const json& j, quicktype::TriggerType& x) {
+            if (j == "timestamp") x = quicktype::TriggerType::TIMESTAMP;
+            else throw "Input JSON does not conform to schema";
+        }
+
+        inline void to_json(json& j, const quicktype::TriggerType& x) {
+            switch (x) {
+            case quicktype::TriggerType::TIMESTAMP: j = "timestamp"; break;
+            default: throw "This should not happen";
+            }
+        }
+    }
 }
 
