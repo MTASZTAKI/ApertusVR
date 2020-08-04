@@ -25,6 +25,12 @@
         "intensity" : 1.1e5,
         "direction" : [1.0,-1,0]
     },
+    "skybox" : {
+        "enable" : true,
+        "skyboxName" : "skybox",
+        "resourcePath" : "envs",
+        "iblIntensity" : 40000.0
+    },
     "resources" : {
         "resourcePath" : "/models",
         "resourcePrefix" : ""

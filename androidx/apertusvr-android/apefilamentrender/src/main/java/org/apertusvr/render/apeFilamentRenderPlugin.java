@@ -84,6 +84,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     private apeFilaLight mSun;
     private boolean mShadowEnabled;
     private LightManager.ShadowOptions mShadowOptions;
+    private apeFilaIbl mIbl;
 
 
     /* materials */
@@ -124,8 +125,11 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         public float nearClip;
         public float farClip;
     }
-
     CameraConfigs mCameraConfigs;
+
+    float mIblIntensity;
+    String mSkyboxName;
+    String mSkyboxResourcePath;
 
     public apeFilamentRenderPlugin(Context context, Lifecycle lifecycle, SurfaceView surfaceView,
                                    Resources resources, AssetManager assets) {
@@ -168,6 +172,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_CLONE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_PLANE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.MATERIAL_MANUAL, mEventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.MATERIAL_FILE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_CONE, mEventCallback);
     }
 
@@ -214,6 +219,9 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         for (MaterialInstance materialInstance : mMaterialInstances.values()) {
             mEngine.destroyMaterialInstance(materialInstance);
         }
+
+        /* destroy ibl */
+        apeFilaIblLoader.destroyIbl(mEngine,mIbl);
 
         /* destroy materials */
         mEngine.destroyMaterial(mColoredMaterial);
@@ -343,6 +351,17 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                         (float) sunLightConfig.getJSONArray("direction").getDouble(2));
                 setupSunLight(intensity,direction);
             }
+
+            /* skybox config */
+
+            JSONObject skyboxConfig = configJson.getJSONObject("skybox");
+
+            if (skyboxConfig.getBoolean("enable")) {
+                mSkyboxName = skyboxConfig.getString("skyboxName");
+                mIblIntensity = (float) skyboxConfig.getDouble("iblIntensity");
+                mSkyboxResourcePath = skyboxConfig.getString("resourcePath");
+            }
+
 
             /* resources */
             JSONObject resourcesConfig = configJson.getJSONObject("resources");
@@ -482,6 +501,11 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         while (!mEventDoubleQueue.emptyPop()) {
             apeEvent event = mEventDoubleQueue.front();
             Log.d(LOG_TAG, event.type.toString() + " " + event.subjectName);
+
+            if(event.subjectName.contains("_STATE")) {
+                mEventDoubleQueue.pop();
+                continue;
+            }
 
             if (event.group == apeEvent.Group.GEOMETRY_FILE) {
                 apeFileGeometry fileGeometry = new apeFileGeometry(event.subjectName);
@@ -921,6 +945,39 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
                         mEngine.destroyMaterialInstance(matInst);
                         mMaterialInstances.remove(event.subjectName);
                     }
+                }
+            }
+            else if (event.group == apeEvent.Group.MATERIAL_FILE) {
+                apeFileMaterial fileMaterial = new apeFileMaterial(event.subjectName);
+
+                if (fileMaterial.isValid()) {
+                    if (event.type == apeEvent.Type.MATERIAL_FILE_CREATE) {
+                        if (event.subjectName.equals(mSkyboxName)) {
+                            mIbl = new apeFilaIbl();
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.MATERIAL_FILE_FILENAME) {
+                        if (event.subjectName.equals(mSkyboxName) && mIbl != null) {
+                            String fileName = mSkyboxResourcePath + "/" + fileMaterial.getFileName();
+                            apeFilaIblLoader.loadIblAsset(mAssets,fileName,mEngine,mIbl);
+                            mIbl.indirectLight.setIntensity(mIblIntensity);
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.MATERIAL_FILE_SETASSKYBOX) {
+                        if(mIbl != null && mIbl.skybox != null && mIbl.indirectLight != null) {
+                            mScene.setSkybox(mIbl.skybox);
+                            mScene.setIndirectLight(mIbl.indirectLight);
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.MATERIAL_FILE_TEXTURE) {
+                        apeTexture texture = fileMaterial.getTexture();
+                        if (texture.getType() == apeEntity.Type.TEXTURE_FILE) {
+                            apeFileTexture fileTexture = (apeFileTexture) texture;
+                        }
+                    }
+                }
+                else if (event.type == apeEvent.Type.MATERIAL_FILE_DELETE) {
+                    apeFilaIblLoader.destroyIbl(mEngine,mIbl);
                 }
             }
             else if (event.group == apeEvent.Group.NODE) {

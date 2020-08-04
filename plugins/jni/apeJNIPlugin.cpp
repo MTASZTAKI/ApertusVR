@@ -80,13 +80,18 @@ void ape::JNIPlugin::Init()
 void ape::JNIPlugin::eventCallBack(const ape::Event& event)
 {
     __android_log_print(ANDROID_LOG_INFO,"cpplog","event type: %s, subject name: %s\n", mEventTypeNameMap[event.type].c_str(),event.subjectName.c_str());
-    if(event.type == Event::Type::GEOMETRY_FILE_FILENAME) {
-        if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
-                mpSceneManager->getEntity(event.subjectName).lock()))
-        {
-            __android_log_print(ANDROID_LOG_INFO, "cpplog", "File name: %s",
-                                fileGeom->getFileName().c_str());
-        }
+//    if(event.type == Event::Type::GEOMETRY_FILE_FILENAME) {
+//        if (auto fileGeom = std::static_pointer_cast<ape::IFileGeometry>(
+//                mpSceneManager->getEntity(event.subjectName).lock()))
+//        {
+//            __android_log_print(ANDROID_LOG_INFO, "cpplog", "File name: %s",
+//                                fileGeom->getFileName().c_str());
+//        }
+//    }
+
+    if (event.group == Event::Group::SKY)
+    {
+        __android_log_print(ANDROID_LOG_INFO, "cpplog", "!!! SKY EVENT !!!");
     }
 
 	mEventDoubleQueue.push(event);

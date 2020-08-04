@@ -24,6 +24,12 @@
         "intensity" : 1.1e5,
         "direction" : [-1.0, -1.0, 0.0]
     },
+    "skybox" : {
+        "enable" : true,
+        "skyboxName" : "skyBox",
+        "resourcePath" : "envs",
+        "iblIntensity" : 40000.0
+    },
     "resources" : {
         "resourcePath" : "/models",
         "resourcePrefix" : "../../samples/virtualLearningFactory/models/"

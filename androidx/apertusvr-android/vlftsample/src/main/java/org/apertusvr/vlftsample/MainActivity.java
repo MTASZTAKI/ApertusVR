@@ -11,6 +11,8 @@ import android.view.SurfaceView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 
@@ -44,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
         if (!apeStarted) {
             apeJNI.startApertusVR("vlftGuest",getAssets());
             apeStarted = true;
+        }
+
+        try {
+            InputStream is0 = getAssets().open("vlftGuest/apeCore.json");
+            InputStream is = getAssets().open("envs/skyBox/m0_nx.rgb32f");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         initRenderPlugin();
