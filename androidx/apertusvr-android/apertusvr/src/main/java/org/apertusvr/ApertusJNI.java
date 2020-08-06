@@ -235,4 +235,10 @@ public final class ApertusJNI {
 
     /* --- Config --- */
     public static native String getConfigFolderPath();
+
+    /* --- SceneNetwork --- */
+    static native int getSceneNetworkParticipantType();
+    static native boolean isSceneNetworkRoomRunning(String roomName);
+    static native void connectSceneNetworkToRoom(String roomName);
+    static native String getSceneNetworkCurrentRoomName();
 }
