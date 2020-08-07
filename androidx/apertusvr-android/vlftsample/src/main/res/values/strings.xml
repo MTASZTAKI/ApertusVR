@@ -5,4 +5,5 @@
     <string name="connect_button">CONNECT</string>
     <string name="room_name_text_view">Room name</string>
     <string name="edit_room_name">Enter room name</string>
+    <string name="load_cache_button">LOAD CACHE</string>
 </resources>

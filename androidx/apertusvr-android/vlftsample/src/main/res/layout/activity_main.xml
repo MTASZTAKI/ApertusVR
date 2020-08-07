@@ -80,8 +80,9 @@
         android:layout_width="222dp"
         android:layout_height="45dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="188dp"
         android:backgroundTint="@color/vlftDarkBlue"
         android:onClick="connectBtnPressed"
         android:text="@string/connect_button"
@@ -90,6 +91,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loadCacheBtn" />
+
+    <Button
+        android:id="@+id/loadCacheBtn"
+        android:layout_width="222dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="@color/vlftDarkBlue"
+        android:onClick="loadCacheBtnPressed"
+        android:text="@string/load_cache_button"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toTopOf="@+id/connectButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editRoomName"
-        app:layout_constraintVertical_bias="0.174" />
+        app:layout_constraintVertical_bias="0.379" />
 </androidx.constraintlayout.widget.ConstraintLayout>

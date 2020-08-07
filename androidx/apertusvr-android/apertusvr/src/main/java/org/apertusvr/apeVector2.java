@@ -4,6 +4,13 @@ import androidx.annotation.Size;
 
 public final class apeVector2 {
 
+    static {
+        UP = new apeVector2(0f,1f);
+        RIGHT = new apeVector2(1f,0f);
+        ONE = new apeVector2(1f,1f);
+        ZERO = new apeVector2(0f,0f);
+    }
+
     public apeVector2() {
         x = y = 0;
     }
@@ -50,4 +57,9 @@ public final class apeVector2 {
     }
 
     public float x, y;
+
+    public static final apeVector2 UP;
+    public static final apeVector2 RIGHT;
+    public static final apeVector2 ONE;
+    public static final apeVector2 ZERO;
 }

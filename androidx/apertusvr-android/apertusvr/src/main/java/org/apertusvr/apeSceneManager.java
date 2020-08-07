@@ -26,4 +26,20 @@ public final class apeSceneManager {
         return null;
     }
 
+    public static apeNode createNode(String name, boolean replicate, String ownerID) {
+        if(ApertusJNI.createSceneManagerNode(name,replicate,ownerID)) {
+            return new apeNode(name);
+        }
+
+        return null;
+    }
+
+    public static apeEntity createEntity(String name, apeEntity.Type type, boolean replicate, String ownerID) {
+        if (ApertusJNI.createSceneManagerEntity(name,type.ordinal(),replicate,ownerID)) {
+            return new apeEntity(name,type);
+        }
+
+        return null;
+    }
+
 }

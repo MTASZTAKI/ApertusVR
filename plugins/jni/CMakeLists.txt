@@ -36,6 +36,8 @@ set(SOURCES
         apeJNIManualMaterial.cpp
         apeJNIFileTexture.cpp
         apeJNISceneNetwork.cpp
+        apeJNISceneManager.cpp
+        apeJNICoreConfig.cpp
         )
 
 set(HEADERS

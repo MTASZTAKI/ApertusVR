@@ -234,11 +234,18 @@ public final class ApertusJNI {
     public static native void processEventDoubleQueue();
 
     /* --- Config --- */
-    public static native String getConfigFolderPath();
+    static native String getCoreConfigConfigFolderPath();
+    static native String getCoreConfigNetworkGUID();
 
     /* --- SceneNetwork --- */
     static native int getSceneNetworkParticipantType();
     static native boolean isSceneNetworkRoomRunning(String roomName);
     static native void connectSceneNetworkToRoom(String roomName);
     static native String getSceneNetworkCurrentRoomName();
+
+    /* --- SceneManager --- */
+    static native boolean createSceneManagerNode(String name, boolean replicate, String ownerID);
+    static native boolean createSceneManagerEntity(String name, int type, boolean replicate, String ownerID);
+//    static native void deleteSceneManagerNode(String name);
+//    static native void deleteSceneManagerEntity(String name);
 }

@@ -39,8 +39,8 @@ public class apeCameraController {
         STOPPED
     }
 
-    private float mRotateSpeed = 0.001f;
-    private float mSpeed = 0.8f;
+    private float mRotateSpeed;
+    private float mSpeed;
     private float mHorizontal;
     private float mVertical;
 

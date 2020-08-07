@@ -299,8 +299,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     }
 
     private void initConfigs() {
-
-        String configFolderPath = ApertusJNI.getConfigFolderPath();
+        String configFolderPath = apeCoreConfig.getConfigFolderPath(); //ApertusJNI.getConfigFolderPath();
         try {
             ByteBuffer buffer = readUncompressedAsset(
                     configFolderPath + "/apeFilamentRenderJavaPlugin.json");
@@ -500,7 +499,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
         while (!mEventDoubleQueue.emptyPop()) {
             apeEvent event = mEventDoubleQueue.front();
-            Log.d(LOG_TAG, event.type.toString() + " " + event.subjectName);
+            // Log.d(LOG_TAG, event.type.toString() + " " + event.subjectName);
 
             if(event.subjectName.contains("_STATE")) {
                 mEventDoubleQueue.pop();

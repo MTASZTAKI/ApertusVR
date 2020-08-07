@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public final class apeNode {
 
-    enum TransformationSpace {
+    public enum TransformationSpace {
         LOCAL,
         PARENT,
         WORLD,

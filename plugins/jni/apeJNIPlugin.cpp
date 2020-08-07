@@ -595,13 +595,3 @@ Java_org_apertusvr_ApertusJNI_processEventDoubleQueue(JNIEnv *env, jclass clazz)
         eventDoubleQueue->pop();
     }
 }
-
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_org_apertusvr_ApertusJNI_getConfigFolderPath(JNIEnv *env, jclass clazz)
-{
-    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
-    const char* configFolderPath = jniPlugin->getCoreConfig()->getConfigFolderPath().c_str();
-
-    return env->NewStringUTF(configFolderPath);
-}
