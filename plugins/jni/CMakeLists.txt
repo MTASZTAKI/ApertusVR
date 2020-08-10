@@ -38,6 +38,7 @@ set(SOURCES
         apeJNISceneNetwork.cpp
         apeJNISceneManager.cpp
         apeJNICoreConfig.cpp
+        apeJNITextGeometry.cpp
         )
 
 set(HEADERS

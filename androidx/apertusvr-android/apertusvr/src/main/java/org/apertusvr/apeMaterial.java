@@ -46,6 +46,14 @@ public class apeMaterial extends apeEntity {
         INVALID_SBT
     }
 
+    public static class apeMaterialBuilder implements apeBuilder<apeMaterial> {
+
+        @Override
+        public apeMaterial build(String name, apeEntity.Type type) {
+            return new apeMaterial(name,type);
+        }
+    }
+
     apeMaterial(String name, Type type) {
         super(name, type);
     }

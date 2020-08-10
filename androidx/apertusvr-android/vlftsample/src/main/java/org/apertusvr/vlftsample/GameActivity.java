@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import org.apertusvr.ApertusJNI;
+import org.apertusvr.apeDegree;
 import org.apertusvr.apeEntity;
 import org.apertusvr.apeNode;
 import org.apertusvr.apeSceneNetwork;
@@ -23,6 +24,7 @@ import org.apertusvr.apeColor;
 import org.apertusvr.apeManualMaterial;
 import org.apertusvr.apeConeGeometry;
 import org.apertusvr.apeVector2;
+import org.apertusvr.apeTextGeometry;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -60,30 +62,30 @@ public class GameActivity extends AppCompatActivity {
             MainActivity.apeStarted = true;
         }
 
-        assert userName != null;
-        createUserAvatar(userName);
-
         apeSceneNetwork.connectToRoom(roomName);
+        apeNode userNode = createUserAvatar(userName);
+
 
         setContentView(surfaceView);
-        initRenderPlugin();
+        initRenderPlugin(userNode);
     }
+
 
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
     }
 
-    private void initRenderPlugin() {
+    private void initRenderPlugin(apeNode userNode) {
         renderPlugin = new apeFilamentRenderPlugin(
                 this, getLifecycle(), surfaceView,
-                getResources(), getAssets());
+                getResources(), getAssets(), userNode);
         getLifecycle().addObserver(renderPlugin);
     }
 
     private apeNode createUserAvatar(String userName) {
 
-        if(userName.length() > 0) {
+        if(userName != null && userName.length() > 0) {
             String GUID = apeCoreConfig.getNetworkGUID();
             apeNode userNode = apeSceneManager.createNode(
                     userName + "_" + GUID, true, GUID);
@@ -91,10 +93,10 @@ public class GameActivity extends AppCompatActivity {
 
                 userNode.setPosition(new apeVector3(0f, 150f, 150f));
 
-                apeManualMaterial userMaterial = (apeManualMaterial) apeSceneManager.createEntity(
+                apeManualMaterial userMaterial = Objects.requireNonNull(apeSceneManager.createEntity(
                         userName + "_" + GUID + "_Material",
                         apeEntity.Type.MATERIAL_MANUAL,
-                        true, GUID);
+                        true, GUID)).cast(new apeManualMaterial.apeManualMaterialBuilder());
 
                 if(userMaterial != null && userMaterial.isValid()) {
                     apeColor color = new apeColor(
@@ -110,12 +112,12 @@ public class GameActivity extends AppCompatActivity {
 
                     if (userConeNode != null && userConeNode.isValid()) {
                         userConeNode.setParentNode(userNode);
-                        userConeNode.rotate(90.0f, apeVector3.RIGHT, apeNode.TransformationSpace.WORLD);
+                        userConeNode.rotate(270f * apeDegree.deg2rad, apeVector3.RIGHT, apeNode.TransformationSpace.WORLD);
 
-                        apeConeGeometry userCone = (apeConeGeometry) apeSceneManager.createEntity(
+                        apeConeGeometry userCone = Objects.requireNonNull(apeSceneManager.createEntity(
                                 userName + "_" + GUID + "_ConeGeometry",
                                 apeEntity.Type.GEOMETRY_CONE,
-                                true, GUID);
+                                true, GUID)).cast(new apeConeGeometry.apeConeBuilder());
 
                         if (userCone != null && userCone.isValid()) {
                             userCone.setParameters(10.0f,30.0f, 1.0f, apeVector2.ONE);
@@ -124,10 +126,27 @@ public class GameActivity extends AppCompatActivity {
                         }
                     }
 
+                    apeNode userNameTextNode = apeSceneManager.createNode(
+                            userName + "_" + GUID + "_TextNode", true, GUID);
+                    if (userNameTextNode != null && userNameTextNode.isValid()) {
+                        userNameTextNode.setParentNode(userNode);
+                        userNameTextNode.setPosition(new apeVector3(0f, 10f, 0f));
 
+                        apeTextGeometry userNameText = Objects.requireNonNull(apeSceneManager.createEntity(
+                                userName + "_" + GUID + "_TextGeometry", apeEntity.Type.GEOMETRY_TEXT, true, GUID))
+                                .cast(new apeTextGeometry.apeTextGeometryBuilder());
+
+                        if (userNameText != null && userNameText.isValid()) {
+                            userNameText.setCaption(userName);
+                            userNameText.setParentNode(userNameTextNode);
+                        }
+                    }
                 }
+
+                return userNode;
             }
         }
+
         return null;
     }
 

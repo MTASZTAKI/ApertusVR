@@ -62,6 +62,10 @@ public class apeEntity {
         mType = type;
     }
 
+    public <apeType extends apeEntity> apeType cast(apeBuilder<apeType> builder) {
+        return builder.build(mName,mType);
+    }
+
     public String getName() {
         return mName;
     }
@@ -77,6 +81,8 @@ public class apeEntity {
     public boolean isValid() {
         return ApertusJNI.isEntityValidWithType(mName,mType.ordinal());
     }
+
+
 
     @Override
     public boolean equals(Object obj) {

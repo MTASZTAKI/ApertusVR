@@ -2,6 +2,18 @@ package org.apertusvr;
 
 public class apeManualMaterial extends apeMaterial {
 
+    public static class apeManualMaterialBuilder implements apeBuilder<apeManualMaterial> {
+
+        @Override
+        public apeManualMaterial build(String name, Type type) {
+            if (type == Type.MATERIAL_MANUAL) {
+                return new apeManualMaterial(name);
+            }
+
+            return null;
+        }
+    }
+
     public apeManualMaterial(String name) {
         super(name, Type.MATERIAL_MANUAL);
     }

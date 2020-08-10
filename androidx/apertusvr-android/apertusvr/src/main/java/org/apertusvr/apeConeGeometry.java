@@ -33,6 +33,18 @@ public class apeConeGeometry extends apeGeometry {
         }
     }
 
+    public static class apeConeBuilder implements apeBuilder<apeConeGeometry> {
+
+        @Override
+        public apeConeGeometry build(String name, Type type) {
+            if (type == Type.GEOMETRY_CONE) {
+                return new apeConeGeometry(name);
+            }
+
+            return null;
+        }
+    }
+
     public apeConeGeometry(String name) {
         super(name, Type.GEOMETRY_CONE);
     }

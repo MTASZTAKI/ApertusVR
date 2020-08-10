@@ -86,7 +86,6 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     private LightManager.ShadowOptions mShadowOptions;
     private apeFilaIbl mIbl;
 
-
     /* materials */
     private Material mColoredMaterial;
     private Material mTexturedMaterial;
@@ -100,6 +99,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     private Map<String, apeFilaLight> mLights;
     private Map<String, apeFilaTransform> mTransforms;
     private List<Texture> mTextures;
+    private apeNode mUserNode;
 
     /* callbacks */
     private FrameCallback mFrameCallback = new FrameCallback();
@@ -132,12 +132,13 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
     String mSkyboxResourcePath;
 
     public apeFilamentRenderPlugin(Context context, Lifecycle lifecycle, SurfaceView surfaceView,
-                                   Resources resources, AssetManager assets) {
+                                   Resources resources, AssetManager assets, apeNode userNode) {
         mContext = context;
         mLifecycle = lifecycle;
         mSurfaceView = surfaceView;
         mAndroidResources = resources;
         mAssets = assets;
+        mUserNode = userNode;
     }
 
     /* -- Lifecycle event handlers -- */
@@ -325,7 +326,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
             float rotateSpeed = (float) controllerConfigs.getDouble("rotateSpeed");
             mCameraController = new apeCameraController(
                     position,horizontal,vertical,
-                    speed, rotateSpeed,mSurfaceView);
+                    speed, rotateSpeed,mSurfaceView,mUserNode);
 
             /* shadow options */
             JSONObject shadowOptionsConfig = configJson.getJSONObject("shadowOptions");

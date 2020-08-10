@@ -180,6 +180,19 @@ public final class ApertusJNI {
     static native void setConeGeometryOwner(String nativeCone, String ownerID);
     static native String getConeGeometryOwner(String nativeCone);
 
+    /* --- TextGeometry --- */
+    static native String getTextGeometryCaption(String nativeTextGeometry);
+    static native void setTextGeometryCaption(String nativeTextGeometry, String caption);
+    static native void clearTextGeometryCaption(String nativeTextGeometry);
+    static native boolean isTextGeometryVisible(String nativeTextGeometry);
+    static native void setTextGeometryVisible(String nativeTextGeometry, boolean enabled);
+    static native void setTextGeometryParentNode(String nativeTextGeometry, String parentNode);
+    static native void showTextGeometryOnTop(String nativeTextGeometry, boolean show);
+    static native boolean isTextGeometryShownOnTop(String nativeTextGeometry);
+    static native void setTextGeometryOwner(String nativeTextGeometry, String ownerID);
+    static native String getTextGeometryOwner(String nativeTextGeometry);
+
+
     /* --- Material --- */
     static native int getMaterialCullingMode(String nativeMaterial);
     static native int getMaterialManualCullingMode(String nativeMaterial);

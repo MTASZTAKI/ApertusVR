@@ -1,6 +1,6 @@
 package org.apertusvr;
 
-public class apeCloneGeometry extends apeGeometry {
+public final class apeCloneGeometry extends apeGeometry {
 
     public apeCloneGeometry(String name) {
         super(name, Type.GEOMETRY_CLONE);

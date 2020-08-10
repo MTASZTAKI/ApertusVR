@@ -29,6 +29,9 @@ import android.view.View;
 
 import com.google.android.filament.Camera;
 
+import org.apertusvr.apeNode;
+import org.apertusvr.apeQuaternion;
+import org.apertusvr.apeRadian;
 import org.apertusvr.apeVector3;
 
 public class apeCameraController {
@@ -46,6 +49,8 @@ public class apeCameraController {
 
     private apeVector3 mPosition;
 
+    private apeNode mCameraNode;
+
     boolean lockAngles = false;
 
     private final float M_PI = 3.14159265f;
@@ -54,7 +59,7 @@ public class apeCameraController {
 
     @SuppressLint("ClickableViewAccessibility")
     public apeCameraController(apeVector3 position, float horizontal, float vertical,
-                               float speed, float rotateSpeed, SurfaceView surfaceView) {
+                               float speed, float rotateSpeed, SurfaceView surfaceView, apeNode cameraNode) {
         mPosition = position;
         mHorizontal = horizontal;
         mVertical = vertical;
@@ -62,6 +67,7 @@ public class apeCameraController {
         mRotateSpeed = rotateSpeed;
         mMotionState = MotionState.STOPPED;
         surfaceView.setOnTouchListener(new onTouchListener());
+        mCameraNode = cameraNode;
     }
 
     public void setCameraTransform(Camera camera, float dt) {
@@ -93,6 +99,13 @@ public class apeCameraController {
         camera.lookAt(mPosition.x, mPosition.y, mPosition.z,
                 mPosition.x + direction.x, mPosition.y + direction.y, mPosition.z + direction.z,
                 up.x,up.y, up.z);
+
+        if (mCameraNode != null && mCameraNode.isValid()) {
+            mCameraNode.setPosition(mPosition);
+            apeQuaternion q1 = new apeQuaternion(new apeRadian(mHorizontal), apeVector3.UP);
+            apeQuaternion q2 = new apeQuaternion(new apeRadian(-mVertical), apeVector3.RIGHT);
+            mCameraNode.setOrientation(q1.product(q2));
+        }
     }
 
     private float clamp(float x, float a, float b) {

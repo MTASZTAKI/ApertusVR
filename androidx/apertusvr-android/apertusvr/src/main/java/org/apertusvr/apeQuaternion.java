@@ -89,6 +89,10 @@ public final class apeQuaternion {
         z = sinHalfAngle * axis.z;
     }
 
+    public void fromEuler(float yaw, float pith, float roll) {
+
+    }
+
     public boolean equals(final apeQuaternion q2, float tolerance) {
         return  (Math.abs(w - q2.w) < tolerance) &&
                 (Math.abs(x - q2.x) < tolerance) &&
