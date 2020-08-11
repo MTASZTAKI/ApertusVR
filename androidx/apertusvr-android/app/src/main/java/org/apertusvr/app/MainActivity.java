@@ -2,6 +2,7 @@ package org.apertusvr.app;
 
 import org.apertusvr.ApertusJNI;
 
+import org.apertusvr.apeSystem;
 import org.apertusvr.render.apeFilamentRenderPlugin;
 
 import android.annotation.SuppressLint;
@@ -41,9 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(surfaceView);
 
-        if (!apeStarted) {
-            apeJNI.startApertusVR("androidSampleScene",getAssets());
-            apeStarted = true;
+        if (!apeSystem.isRunning()) {
+            apeSystem.start("androidSampleScene", getAssets());
         }
 
         initRenderPlugin();
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private void initRenderPlugin() {
         renderPlugin = new apeFilamentRenderPlugin(
                 this, getLifecycle(), surfaceView,
-                getResources(), getAssets());
+                getResources(), getAssets(), null);
         getLifecycle().addObserver(renderPlugin);
     }
 
@@ -77,21 +77,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         choreographer.removeFrameCallback(frameCallback);
-        if(apeStarted) {
-            apeJNI.stopApertusVR();
-            apeStarted = false;
+        if(apeSystem.isRunning()) {
+            apeSystem.stop();
         }
     }
 
 
     class FrameCallback implements Choreographer.FrameCallback {
-            @Override
-            public void doFrame(long frameTimeNanos) {
-                choreographer.postFrameCallback(this);
+        @Override
+        public void doFrame(long frameTimeNanos) {
+            choreographer.postFrameCallback(this);
 
-                if(apeStarted) {
-                    ApertusJNI.processEventDoubleQueue();
-                }
+            if(apeSystem.isRunning()) {
+                ApertusJNI.processEventDoubleQueue();
             }
+        }
     }
 }

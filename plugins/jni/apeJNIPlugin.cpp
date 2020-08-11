@@ -555,16 +555,6 @@ void ape::JNIPlugin::initEventNumberMap()
 
 
 // ---- jni ----
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_org_apertusvr_ApertusJNI_stringFromJNIPlugin(JNIEnv *env, jobject thiz, jstring jhello)
-{
-    const char* hello = env->GetStringUTFChars(jhello,NULL);
-    std::stringstream ss;
-    ss << hello << "\n(this message went through the JNI plugin)";
-    env->ReleaseStringUTFChars(jhello,hello);
-    return env->NewStringUTF(ss.str().c_str());
-}
 
 extern "C"
 JNIEXPORT void JNICALL

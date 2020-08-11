@@ -5,7 +5,7 @@
         "farClip" : 1000.0,
         "controller" : {
             "position" : [0, 120, -180],
-            "horizontal" : 0.0,
+            "horizontal" : 3.1415,
             "vertical" : 0.0,
             "speed" : 2.0,
             "rotateSpeed" : 0.001

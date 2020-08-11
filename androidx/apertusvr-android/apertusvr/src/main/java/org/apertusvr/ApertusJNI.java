@@ -31,16 +31,13 @@ public final class ApertusJNI {
 
     public static final String NA_STR = "";
 
-    public native String stringFromJNIPlugin(String jhello);
-
-    /* apeSystem functions */
-    public native void startApertusVR(String confPath, AssetManager assetManager);
-    public native void stopApertusVR();
-
-
     /* --------------------------------------------------- */
     /* -------------- JNI wrapper functions -------------- */
     /* --------------------------------------------------- */
+
+    /* apeSystem */
+    static native void startApertusVR(String confPath, AssetManager assetManager);
+    static native void stopApertusVR();
 
     /* --- Entity --- */
     static native int getEntityType(String nativeEntity);

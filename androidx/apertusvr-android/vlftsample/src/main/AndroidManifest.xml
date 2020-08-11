@@ -16,8 +16,7 @@
             android:screenOrientation="sensorLandscape">
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="sensorPortrait">
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

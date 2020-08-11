@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Choreographer;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Button;
 
 import org.apertusvr.ApertusJNI;
 import org.apertusvr.apeDegree;
@@ -19,15 +17,15 @@ import org.apertusvr.apeSceneManager;
 import org.apertusvr.apeVector3;
 import org.apertusvr.render.apeFilamentRenderPlugin;
 import org.apertusvr.apeCoreConfig;
-import org.apertusvr.apeMaterial;
 import org.apertusvr.apeColor;
 import org.apertusvr.apeManualMaterial;
 import org.apertusvr.apeConeGeometry;
 import org.apertusvr.apeVector2;
 import org.apertusvr.apeTextGeometry;
+import org.apertusvr.apeSystem;
 
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+
 
 public class GameActivity extends AppCompatActivity {
 
@@ -56,10 +54,8 @@ public class GameActivity extends AppCompatActivity {
         String roomName = intent.getStringExtra(MainActivity.EXTRA_ROOMNAME);
 
 
-        if (!MainActivity.apeStarted) {
-            ApertusJNI apeJNI = new ApertusJNI();
-            apeJNI.startApertusVR("vlftGuest",getAssets());
-            MainActivity.apeStarted = true;
+        if (!apeSystem.isRunning()) {
+            apeSystem.start("vlftGuest",getAssets());
         }
 
         apeSceneNetwork.connectToRoom(roomName);
@@ -87,6 +83,7 @@ public class GameActivity extends AppCompatActivity {
 
         if(userName != null && userName.length() > 0) {
             String GUID = apeCoreConfig.getNetworkGUID();
+
             apeNode userNode = apeSceneManager.createNode(
                     userName + "_" + GUID, true, GUID);
             if (userNode != null && userNode.isValid()) {
@@ -177,15 +174,9 @@ public class GameActivity extends AppCompatActivity {
         super.onDestroy();
         choreographer.removeFrameCallback(frameCallback);
 
-        if(MainActivity.apeStarted) {
-            // TODO: ...
-            Log.d(LOG_TAG,"STOP APEVR");
-            ApertusJNI apeJNI = new ApertusJNI();
-            apeJNI.stopApertusVR();
-            MainActivity.apeStarted = false;
+        if(apeSystem.isRunning()) {
+            apeSystem.stop();
         }
-
-        // finish();
     }
 
     class FrameCallback implements Choreographer.FrameCallback {

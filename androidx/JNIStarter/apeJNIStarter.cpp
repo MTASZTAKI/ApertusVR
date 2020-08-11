@@ -78,7 +78,7 @@ Java_org_apertusvr_ApertusJNI_startApertusVR(JNIEnv *env, jobject thiz, jstring 
 
     env->ReleaseStringUTFChars(conf_path, confPath);
 
-    printf("ape system started\n");
+    printf("ape::System started\n");
 }
 
 extern "C"

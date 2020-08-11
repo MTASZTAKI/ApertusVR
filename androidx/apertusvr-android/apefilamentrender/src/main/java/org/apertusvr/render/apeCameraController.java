@@ -46,21 +46,24 @@ public class apeCameraController {
     private float mSpeed;
     private float mHorizontal;
     private float mVertical;
-
     private apeVector3 mPosition;
-
     private apeNode mCameraNode;
-
     boolean lockAngles = false;
+    private MotionState mMotionState;
 
     private final float M_PI = 3.14159265f;
 
-    private MotionState mMotionState;
 
     @SuppressLint("ClickableViewAccessibility")
     public apeCameraController(apeVector3 position, float horizontal, float vertical,
                                float speed, float rotateSpeed, SurfaceView surfaceView, apeNode cameraNode) {
-        mPosition = position;
+        if (cameraNode != null) {
+            mPosition = cameraNode.getPosition();
+        }
+        else {
+            mPosition = position;
+        }
+
         mHorizontal = horizontal;
         mVertical = vertical;
         mSpeed = speed;

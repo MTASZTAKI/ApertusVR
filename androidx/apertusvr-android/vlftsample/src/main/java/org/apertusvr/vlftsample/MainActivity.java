@@ -1,10 +1,9 @@
 package org.apertusvr.vlftsample;
 
-import org.apertusvr.ApertusJNI;
 import org.apertusvr.apeSceneNetwork;
+import org.apertusvr.apeSystem;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,9 +34,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_ROOMNAME = "org.apertusvr.vlftsample.ROOMNAME";
     private static final String LOG_IN_CACHE_FILE = "lastLogIn.txt";
 
-    ApertusJNI apeJNI = new ApertusJNI();
-    public static boolean apeStarted = false;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -48,10 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        if (!apeStarted) {
-            Log.d(LOG_TAG, "START APEVR");
-            apeJNI.startApertusVR("vlftGuest",getAssets());
-            apeStarted = true;
+        if (!apeSystem.isRunning()) {
+            apeSystem.start("vlftGuest", getAssets());
         }
     }
 
@@ -63,11 +57,16 @@ public class MainActivity extends AppCompatActivity {
         EditText editRoom = (EditText) findViewById(R.id.editRoomName);
         String roomName = editRoom.getText().toString();
 
+        if(userName.trim().length() == 0) {
+            Toast toast = Toast.makeText(this, "Username can not be empty!", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
         if(apeSceneNetwork.isRoomRunning(roomName)) {
             intent.putExtra(EXTRA_USERNAME, userName);
             intent.putExtra(EXTRA_ROOMNAME, roomName);
 
-            // TODO: cache the userName and roomName
             File file = new File(getCacheDir(), LOG_IN_CACHE_FILE);
             try {
                 FileOutputStream fos = new FileOutputStream(file);
@@ -78,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
             }
             catch (IOException e) {
                 e.printStackTrace();
-                Log.d(LOG_TAG, "WOW");
             }
 
             startActivity(intent);
@@ -104,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (IOException e) {
             e.printStackTrace();
-            Log.d(LOG_TAG, "WOW11");
         }
 
         EditText editUser = (EditText) findViewById(R.id.editUserName);
