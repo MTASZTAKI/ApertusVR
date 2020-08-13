@@ -18,9 +18,7 @@ void* print_message_function( void *ptr);
 int start_logger(int* pfd, pthread_t& thr);
 const char*android_log_tag = "cpplog";
 
-int pfd[2];
-pthread_t thr;
-
+#define ANDROID_PIPE_LOG 0
 
 int start_logger(int* pfd, pthread_t& thr)
 {
@@ -64,11 +62,14 @@ void* print_message_function( void *ptr )
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_org_apertusvr_ApertusJNI_startApertusVR(JNIEnv *env, jobject thiz, jstring conf_path, jobject assetManager)
+Java_org_apertusvr_ApertusJNI_startApertusVR(JNIEnv *env, jclass clazz, jstring conf_path, jobject assetManager)
 {
+
+#if ANDROID_PIPE_LOG
     int pfd[2];
     pthread_t thr;
     start_logger(pfd,thr);
+#endif
 
     ape::AAssetOpen::setAssetManager(AAssetManager_fromJava(env,assetManager));
 
@@ -77,12 +78,10 @@ Java_org_apertusvr_ApertusJNI_startApertusVR(JNIEnv *env, jobject thiz, jstring 
     ape::System::Start(confPath,true);
 
     env->ReleaseStringUTFChars(conf_path, confPath);
-
-    printf("ape::System started\n");
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_org_apertusvr_ApertusJNI_stopApertusVR(JNIEnv *env, jobject thiz) {
+Java_org_apertusvr_ApertusJNI_stopApertusVR(JNIEnv *env, jclass clazz) {
     ape::System::Stop();
 }

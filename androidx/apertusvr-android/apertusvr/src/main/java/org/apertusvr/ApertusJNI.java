@@ -256,6 +256,6 @@ public final class ApertusJNI {
     /* --- SceneManager --- */
     static native boolean createSceneManagerNode(String name, boolean replicate, String ownerID);
     static native boolean createSceneManagerEntity(String name, int type, boolean replicate, String ownerID);
-//    static native void deleteSceneManagerNode(String name);
-//    static native void deleteSceneManagerEntity(String name);
+    static native void deleteSceneManagerNode(String name);
+    static native void deleteSceneManagerEntity(String name);
 }

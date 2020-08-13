@@ -64,7 +64,6 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 #ifndef __ANDROID__
 	FILE* apeCoreConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 #else
-	//FILE* apeCoreConfigFile = android_fopen(fileFullPath.str().c_str(),"r");
 	FILE* apeCoreConfigFile = ape::AAssetOpen::open(fileFullPath.str().c_str(),"r");
 #endif
 

@@ -55,7 +55,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public final class apeFilamentRenderPlugin implements LifecycleObserver {
+public final class apeFilamentRenderPlugin implements apePlugin {
     static {
         Filament.init();
     }
@@ -143,7 +143,7 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
 
     /* -- Lifecycle event handlers -- */
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    @Override
     public void onCreate() {
         /* Init containers */
         mMaterialInstances = new TreeMap<>();
@@ -177,21 +177,21 @@ public final class apeFilamentRenderPlugin implements LifecycleObserver {
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_CONE, mEventCallback);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    @Override
     public void onStart() {
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    @Override
     public void onResume() {
         mChoreographer.postFrameCallback(mFrameCallback);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    @Override
     public void onPause() {
         mChoreographer.removeFrameCallback(mFrameCallback);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    @Override
     public void onDestroy() {
         mChoreographer.removeFrameCallback(mFrameCallback);
         mUiHelper.detach();

@@ -39,6 +39,7 @@ public class GameActivity extends AppCompatActivity {
     private apeFilamentRenderPlugin renderPlugin;
     private SurfaceView surfaceView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +54,12 @@ public class GameActivity extends AppCompatActivity {
         String userName = intent.getStringExtra(MainActivity.EXTRA_USERNAME);
         String roomName = intent.getStringExtra(MainActivity.EXTRA_ROOMNAME);
 
-
         if (!apeSystem.isRunning()) {
             apeSystem.start("vlftGuest",getAssets());
         }
 
         apeSceneNetwork.connectToRoom(roomName);
         apeNode userNode = createUserAvatar(userName);
-
 
         setContentView(surfaceView);
         initRenderPlugin(userNode);
@@ -69,7 +68,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        //forbid back button usage in app
     }
 
     private void initRenderPlugin(apeNode userNode) {

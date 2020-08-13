@@ -9,9 +9,7 @@ public class apeSceneNetwork {
         INVALID
     }
 
-    private apeSceneNetwork() {
-
-    }
+    private apeSceneNetwork() {}
 
     public static ParticipantType getParticipantType() {
         return ParticipantType.values()[ApertusJNI.getSceneNetworkParticipantType()];

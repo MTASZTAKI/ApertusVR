@@ -4,10 +4,6 @@ public final class apeSceneManager {
 
     private apeSceneManager() {}
 
-
-//    public static Map<String,apeNode> getNodes() {
-//    }
-
     public static apeNode getNode(String name) {
         if(ApertusJNI.isNodeValid(name))
             return new apeNode(name);
@@ -40,6 +36,14 @@ public final class apeSceneManager {
         }
 
         return null;
+    }
+
+    public static void deleteNode(String name) {
+        ApertusJNI.deleteSceneManagerNode(name);
+    }
+
+    public static void deleteEntity(String name) {
+        ApertusJNI.deleteSceneManagerEntity(name);
     }
 
 }

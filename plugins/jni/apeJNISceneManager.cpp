@@ -60,22 +60,27 @@ Java_org_apertusvr_ApertusJNI_createSceneManagerEntity(JNIEnv *env, jclass clazz
     return (jboolean) success;
 }
 
-//
-//extern "C"
-//JNIEXPORT void JNICALL
-//Java_org_apertusvr_ApertusJNI_deleteSceneManagerNode(JNIEnv *env, jclass clazz, jstring name)
-//{
-//    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
-//    const char* nodeName = env->GetStringUTFChars(name,nullptr);
-//
-//    jniPlugin->getSceneManager()->deleteEntity(nodeName);
-//
-//    env->ReleaseStringUTFChars(name,nodeName);
-//}
-//
-//extern "C"
-//JNIEXPORT void JNICALL
-//Java_org_apertusvr_ApertusJNI_deleteSceneManagerEntity(JNIEnv *env, jclass clazz, jstring name)
-//{
-//
-//}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_org_apertusvr_ApertusJNI_deleteSceneManagerNode(JNIEnv *env, jclass clazz, jstring name)
+{
+    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
+    const char* nodeName = env->GetStringUTFChars(name,nullptr);
+
+    jniPlugin->getSceneManager()->deleteNode(std::string(nodeName));
+
+    env->ReleaseStringUTFChars(name,nodeName);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_org_apertusvr_ApertusJNI_deleteSceneManagerEntity(JNIEnv *env, jclass clazz, jstring name)
+{
+    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
+    const char* entityName = env->GetStringUTFChars(name, nullptr);
+
+    jniPlugin->getSceneManager()->deleteEntity(std::string(entityName));
+
+    env->ReleaseStringUTFChars(name, entityName);
+}
