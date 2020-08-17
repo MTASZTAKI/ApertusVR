@@ -1,0 +1,626 @@
+{
+"context": {
+    "assetTrail": false
+  },
+  "nodes": [
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#Pallet.1",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "0"
+          },
+          "event": {
+            "type": "show",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_PalletPosition"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "0"
+          },
+          "event": {
+            "type": "state",
+            "descr": "empty pallet"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "3000"
+          },
+          "event": {
+            "type": "animationAdditive",
+            "data": "animations/pallet90degRotation.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "4000"
+          },
+          "event": {
+            "type": "animationAdditive",
+            "data": "animations/pallet90degRotation.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "5000"
+          },
+          "event": {
+            "type": "animationAdditive",
+            "data": "animations/pallet90degRotation.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "6000"
+          },
+          "event": {
+            "type": "animationAdditive",
+            "data": "animations/pallet90degRotation.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "8000"
+          },
+          "event": {
+            "type": "state",
+            "data": "../../samples/virtualLearningFactory/models/Pallet/Pallet_Wing.OBJ",
+            "descr": "part loaded"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "10000"
+          },
+          "event": {
+            "type": "animationAdditive",
+            "data": "animations/palletAdvance100.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "20000"
+          },
+          "event": {
+            "type": "animationAdditive",
+            "data": "animations/palletAdvance100.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "30000"
+          },
+          "event": {
+            "type": "animationAdditive",
+            "data": "animations/palletAdvance100.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "35000"
+          },
+          "event": {
+            "type": "hide"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_FloatingX",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "1000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingX.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_Static"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_FloatingX",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "11000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingX.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_Static"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_FloatingX",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "21000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingX.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_Static"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_FloatingY",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "1000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingY.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_FloatingZ"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_FloatingY",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "11000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingY.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_FloatingZ"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_FloatingY",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "21000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingY.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_FloatingZ"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_FloatingZ",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "1000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingZ.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_FloatingX"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_FloatingZ",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "11000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingZ.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_FloatingX"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_FloatingZ",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "21000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_FloatingZ.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_FloatingX"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_Gripper1",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "1000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_Gripper1.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_FloatingY"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_Gripper1",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "11000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_Gripper1.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_FloatingY"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_Gripper1",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "21000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_Gripper1.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_FloatingY"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_Gripper2",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "1000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_Gripper2.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS01.PPs_FloatingY"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_Gripper2",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "11000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_Gripper2.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS02.PPs_FloatingY"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_Gripper2",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "21000"
+          },
+          "event": {
+            "type": "animation",
+            "data": "animations/PPs_Gripper2.txt",
+            "placementRelTo": "http://www.ontoeng.com/VLFT_Test07#WS03.PPs_FloatingY"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS01",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "0"
+          },
+          "event": {
+            "type": "link",
+            "data": "logs/WS01_log_2020-05-17.txt",
+            "descr": "State log of WS01 dtd. 17-05-2020",
+            "URL": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/logs/WS01_log_2020-05-17.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "20000"
+          },
+          "event": {
+            "type": "link",
+            "data": "logs/WS01_log_2020-05-18.txt",
+            "descr": "State log of WS01 dtd. 18-05-2020",
+            "URL": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/logs/WS01_log_2020-05-18.txt"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "0"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "1000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "working"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "11000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "12000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "failed.01"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS02",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "0"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "10000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "working"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "11000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "20000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "working"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "21000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "22000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "failed.02"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS03",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "0"
+          },
+          "event": {
+            "type": "state",
+            "descr": "working"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "20000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "21000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "working"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "30000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "31000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "working"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "32000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "failed.03"
+          }
+        }
+      ]
+    },
+    {
+      "name": "http://www.ontoeng.com/VLFT_Test07#WS04",
+      "actions": [
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "0"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "30000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "31000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "working"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "32000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        },
+        {
+          "trigger": {
+            "type": "timestamp",
+            "data": "35000"
+          },
+          "event": {
+            "type": "state",
+            "descr": "idle"
+          }
+        }
+      ]
+    }
+  ],
+  "bookmarks": [
+    {
+      "name": "bookmark_1",
+      "time": "7500"
+    },
+    {
+      "name": "bookmark_2",
+      "time": "1200"
+    }
+  ]
+}

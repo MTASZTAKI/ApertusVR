@@ -1,0 +1,86 @@
+{
+  "plugins": [
+    "apeNodeJsPlugin",
+    "apeWebSocketServerPlugin",
+    "apeOgreRenderPlugin",
+    "apeOisUserInputPlugin",
+    "apeViewPointManagerPlugin",
+    "apeCefBrowserPlugin",
+    "apeVLFTUIManagerPlugin",
+    "apeAssimpAssetLoaderPlugin",
+    "apeSampleScenePlugin",
+    "apeVLFTSceneLoaderPlugin",
+    "apeVLFTAnimationPlayerPlugin"
+  ],
+  "network": {
+    "user": "VLFT_Local",
+    "participant": "local",
+    "internet": {
+      "natPunchThrough": {
+        "ip": "195.111.2.95",
+        "port": "61666"
+      },
+      "lobby": {
+        "ip": "195.111.2.95",
+        "port": "8888",
+        "room": "vlft_TestCase07"
+      }
+    },
+    "lan": {
+      "ip": "",
+      "port": ""
+    },
+    "selected": "internet",
+    "resourceZipUrl": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/virtualLearningFactory.zip",
+    "resourceMd5Url": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/virtualLearningFactory.md5",
+    "resourceDownloadLocation": "../../samples/virtualLearningFactory",
+    "resourceLocations": [
+      "../../plugins/render/ogreRender/resources/fonts",
+      "../../plugins/render/ogreRender/resources/materials",
+      "../../plugins/render/ogreRender/resources/pbs",
+      "../../plugins/render/ogreRender/resources/rtss",
+      "../../plugins/render/ogreRender/resources/rtss/Cg",
+      "../../plugins/render/ogreRender/resources/rtss/GLSL",
+      "../../plugins/render/ogreRender/resources/rtss/GLSL150",
+      "../../plugins/render/ogreRender/resources/rtss/GLSLES",
+      "../../plugins/render/ogreRender/resources/rtss/HLSL",
+      "../../plugins/render/ogreRender/resources/rtss/materials",
+      "../../plugins/render/ogreRender/resources/hydrax",
+      "../../plugins/render/ogreRender/resources/skyx",
+      "../../macros/sceneMaker/resources",
+      "../../samples/virtualLearningFactory/models/Box",
+      "../../samples/virtualLearningFactory/models/buildings/buildingP",
+      "../../samples/virtualLearningFactory/models/Camera",
+      "../../samples/virtualLearningFactory/models/Conveyor",
+      "../../samples/virtualLearningFactory/models/elements/acdc",
+      "../../samples/virtualLearningFactory/models/elements/barrel",
+      "../../samples/virtualLearningFactory/models/elements/crate",
+      "../../samples/virtualLearningFactory/models/elements/fitting",
+      "../../samples/virtualLearningFactory/models/elements/pallet",
+      "../../samples/virtualLearningFactory/models/elements/paperbox",
+      "../../samples/virtualLearningFactory/models/elements/table",
+      "../../samples/virtualLearningFactory/models/elements/trolley",
+      "../../samples/virtualLearningFactory/models/elements/workingTable",
+      "../../samples/virtualLearningFactory/models/elements/workingTable2",
+      "../../samples/virtualLearningFactory/models/Hinge",
+      "../../samples/virtualLearningFactory/models/machines/Haas",
+      "../../samples/virtualLearningFactory/models/machines/TC108",
+      "../../samples/virtualLearningFactory/models/machines/TC52",
+      "../../samples/virtualLearningFactory/models/machines/TC67H",
+      "../../samples/virtualLearningFactory/models/machines/VC1020",
+      "../../samples/virtualLearningFactory/models/machines/VC650",
+      "../../samples/virtualLearningFactory/models/machines/WM2",
+      "../../samples/virtualLearningFactory/models/Pallet",
+      "../../samples/virtualLearningFactory/models/PickAndPlace",
+      "../../samples/virtualLearningFactory/models/PinInsertion",
+      "../../samples/virtualLearningFactory/models/Riveting",
+      "../../samples/virtualLearningFactory/models/RoboticArm",
+      "../../samples/virtualLearningFactory/models/RotatingTable",
+      "../../samples/virtualLearningFactory/models/Tightener",
+      "../../samples/virtualLearningFactory/models/UniversalRobot",
+      "../../samples/virtualLearningFactory/models/VibratingBowl"
+    ]
+  }
+}
+
+

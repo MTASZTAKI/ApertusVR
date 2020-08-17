@@ -1,0 +1,13 @@
+{
+  "httpServer": {
+    "port": 4000
+  },
+  "pluginManager": {
+    "plugins": [
+      {
+        "file": "virtualLearningFactoryUI/virtualLearningFactoryUI.js",
+        "public": "virtualLearningFactoryUI/public"
+      }
+    ]
+  }
+}
