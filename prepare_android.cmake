@@ -23,7 +23,6 @@
 find_library(log-lib log)
 find_library(android-lib android)
 
-set(PREBUILT_ANDROID_LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/androidx/libs)
 set(ANDROID_SYSROOT ${ANDROID_NDK}/sysroot)
 
 if(${ANDROID_ABI} STREQUAL "arm64-v8a")

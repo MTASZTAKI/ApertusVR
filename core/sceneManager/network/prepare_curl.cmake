@@ -73,30 +73,35 @@ elseif (APPLE OR (LINUX AND NOT ANDROID))
 	endif ()
 elseif(ANDROID)
 	set(CURL_READY FALSE)
-	if(EXISTS ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/lib/libssl.a AND 
-		EXISTS ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/lib/libcrypto.a)
+
+	set(CURL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/network/3rdParty/curl)
+
+
+	if(EXISTS ${CURL_SOURCE_DIR}/android/openssl/${ANDROID_ABI}/lib/libssl.a AND 
+		EXISTS ${CURL_SOURCE_DIR}/android/openssl/${ANDROID_ABI}/lib/libcrypto.a)
 		set(OPENSSL_INSTALLED TRUE)
 		message(STATUS "OpenSSL is installed.")
-				
-		set(OPENSSL_INCLUDE_DIRS ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/include)
+
+		set(OPENSSL_DIR ${CURL_SOURCE_DIR}/android/openssl)
+		set(OPENSSL_INCLUDE_DIRS ${OPENSSL_DIR}/${ANDROID_ABI}/include)
 
 		add_library(libssl STATIC IMPORTED)
-		set_target_properties(libssl PROPERTIES IMPORTED_LOCATION ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/lib/libssl.a)
+		set_target_properties(libssl PROPERTIES IMPORTED_LOCATION ${OPENSSL_DIR}/${ANDROID_ABI}/lib/libssl.a)
 		add_library(libcrypto STATIC IMPORTED)
-		set_target_properties(libcrypto PROPERTIES IMPORTED_LOCATION ${PREBUILT_ANDROID_LIBS_DIR}/openssl/${ANDROID_ABI}/lib/libcrypto.a)
+		set_target_properties(libcrypto PROPERTIES IMPORTED_LOCATION ${OPENSSL_DIR}/${ANDROID_ABI}/lib/libcrypto.a)
 	else()
 		set(OPENSSL_INSTALLED FALSE)
 		message(FATAL_ERROR "OpenSSL is not installed.")
 		# TODO: install openssl from cmake...
 	endif()
 
-	if(OPENSSL_INSTALLED AND EXISTS ${PREBUILT_ANDROID_LIBS_DIR}/curl/${ANDROID_ABI}/lib/libcurl.a)
+	if(OPENSSL_INSTALLED AND EXISTS ${CURL_SOURCE_DIR}/android/${ANDROID_ABI}/lib/libcurl.a)
 		message(STATUS "Curl is installed.")
 		
-		set(CURL_INCLUDE_DIRS ${PREBUILT_ANDROID_LIBS_DIR}/curl/${ANDROID_ABI}/include)
+		set(CURL_INCLUDE_DIRS ${CURL_SOURCE_DIR}/android/${ANDROID_ABI}/include)
 
 		add_library(MY_CURL STATIC IMPORTED)
-		set_target_properties(MY_CURL PROPERTIES IMPORTED_LOCATION ${PREBUILT_ANDROID_LIBS_DIR}/curl/${ANDROID_ABI}/lib/libcurl.a)
+		set_target_properties(MY_CURL PROPERTIES IMPORTED_LOCATION ${CURL_SOURCE_DIR}/android/${ANDROID_ABI}/lib/libcurl.a)
 		set(CURL_READY TRUE)
 	else()
 		message(FATAL_ERROR "Curl is not installed.")
