@@ -29,11 +29,11 @@ set (APERTUSCORE_LIBS
     apeSceneManager
     apeSystem
     apeCoreConfig
+    apeAndroidAssetOpen
 )
 
 target_link_libraries(apeJNIStarter
                         ${log-lib}
                         ${APERTUSCORE_LIBS}
                         ${android-lib}
-                        apeAAssetOpen
                         )

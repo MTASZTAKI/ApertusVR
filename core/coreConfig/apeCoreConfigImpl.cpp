@@ -33,7 +33,7 @@ SOFTWARE.*/
 #include "rapidjson/prettywriter.h"
 #include "apeCoreConfigImpl.h"
 #ifdef ANDROID
-#include "../../androidx/assetOpen/apeAAssetOpen.h"
+#include "apeAndroidAssetOpen.h"
 #endif
 
 ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
@@ -64,7 +64,7 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 #ifndef __ANDROID__
 	FILE* apeCoreConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 #else
-	FILE* apeCoreConfigFile = ape::AAssetOpen::open(fileFullPath.str().c_str(),"r");
+	FILE* apeCoreConfigFile = ape::AndroidAssetOpen::open(fileFullPath.str().c_str(), "r");
 #endif
 
 	char readBuffer[65536];

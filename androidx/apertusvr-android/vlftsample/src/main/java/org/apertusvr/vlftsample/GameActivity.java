@@ -68,7 +68,8 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //forbid back button usage in app
+        // forbid back button usage in app
+        // this is not necessary if the ApertusVR start/stop methods are fixed.
     }
 
     private void initRenderPlugin(apeNode userNode) {

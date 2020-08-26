@@ -20,28 +20,30 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set(SOURCES
+add_subdirectory(starter)
+
+set (SOURCES
         apeJNIPlugin.cpp
-        apeJNIEntity.cpp
-        apeJNINode.cpp
-        apeJNILight.cpp
-        apeJNICamera.cpp
-        apeJNIGeometry.cpp
-        apeJNIConeGeometry.cpp
-        apeJNIFileGeometry.cpp
-        apeJNICloneGeometry.cpp
-        apeJNIPlaneGeometry.cpp
-        apeJNIMaterial.cpp
-        apeJNIFileMaterial.cpp
-        apeJNIManualMaterial.cpp
-        apeJNIFileTexture.cpp
-        apeJNISceneNetwork.cpp
-        apeJNISceneManager.cpp
-        apeJNICoreConfig.cpp
-        apeJNITextGeometry.cpp
+        wrappers/apeJNIEntity.cpp
+        wrappers/apeJNINode.cpp
+        wrappers/apeJNILight.cpp
+        wrappers/apeJNICamera.cpp
+        wrappers/apeJNIGeometry.cpp
+        wrappers/apeJNIConeGeometry.cpp
+        wrappers/apeJNIFileGeometry.cpp
+        wrappers/apeJNICloneGeometry.cpp
+        wrappers/apeJNIPlaneGeometry.cpp
+        wrappers/apeJNIMaterial.cpp
+        wrappers/apeJNIFileMaterial.cpp
+        wrappers/apeJNIManualMaterial.cpp
+        wrappers/apeJNIFileTexture.cpp
+        wrappers/apeJNISceneNetwork.cpp
+        wrappers/apeJNISceneManager.cpp
+        wrappers/apeJNICoreConfig.cpp
+        wrappers/apeJNITextGeometry.cpp
         )
 
-set(HEADERS
+set (HEADERS
         apeJNIPlugin.h)
 
 add_library(apeJNIPlugin SHARED ${SOURCES} ${HEADERS})
@@ -58,6 +60,6 @@ target_link_libraries(apeJNIPlugin
         )
 
 set_property (TARGET apeJNIPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
-set_property(TARGET apeJNIPlugin PROPERTY FOLDER "Plugins/jni")
+set_property (TARGET apeJNIPlugin PROPERTY FOLDER "Plugins/languageAPI/jni")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories (${CMAKE_CURRENT_SOURCE_DIR})

@@ -300,7 +300,7 @@ public final class apeFilamentRenderPlugin implements apePlugin {
     }
 
     private void initConfigs() {
-        String configFolderPath = apeCoreConfig.getConfigFolderPath(); //ApertusJNI.getConfigFolderPath();
+        String configFolderPath = apeCoreConfig.getConfigFolderPath();
         try {
             ByteBuffer buffer = readUncompressedAsset(
                     configFolderPath + "/apeFilamentRenderJavaPlugin.json");

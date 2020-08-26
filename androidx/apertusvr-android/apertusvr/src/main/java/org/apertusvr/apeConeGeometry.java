@@ -4,7 +4,7 @@ import androidx.annotation.Size;
 
 public class apeConeGeometry extends apeGeometry {
 
-    public class GeometryConeParameters
+    public static class GeometryConeParameters
     {
         public float radius;
         public float height;
