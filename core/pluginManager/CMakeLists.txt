@@ -44,11 +44,14 @@ include_directories(
 # Add the dynamic library target to the project
 add_library (apePluginManager SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (apePluginManager apeCoreConfig apeLogManager)
 # Link with dependency libraries
-if (NOT WIN32)
+if(WIN32)
+	target_link_libraries (apePluginManager apeCoreConfig apeLogManager)
+elseif(ANDROID)
+	target_link_libraries (apePluginManager apeCoreConfig apeLogManager dl)
+else()
 	target_link_libraries (apePluginManager apeCoreConfig apeLogManager dl pthread)
-endif ()
+endif()
 
 # Add preprocessor definitions
 set_property (TARGET apePluginManager PROPERTY COMPILE_DEFINITIONS BUILDING_APE_PLUGINMANAGER_DLL BUILDING_APE_INTERNAL_PLUGINMANAGER)

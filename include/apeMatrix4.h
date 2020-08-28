@@ -84,6 +84,11 @@ namespace ape
 			m[3][3] = m33;
 		}
 
+		Matrix4(const Vector3& scale, const Quaternion& rotation, const Vector3& translation)
+		{
+			makeTransform(scale,rotation,translation);
+		}
+
 		void swap(Matrix4& other)
 		{
 			std::swap(m[0][0], other.m[0][0]);

@@ -58,7 +58,9 @@ SOFTWARE.*/
 //#define APE_LOG_ENABLE_TRACE
 #define APE_LOG_ENABLE_WARNING
 #define APE_LOG_ENABLE_ERROR
+#ifndef __ANDROID__
 #define APE_LOG_ENABLE_COLORIZE
+#endif
 
 #define COLOR_ORANGE "\033[0;33m"
 #define COLOR_LIGHT_RED "\033[0;91m"
@@ -96,7 +98,7 @@ SOFTWARE.*/
 				  << APE_LOG_DELIMITER << SS \
 		);
 #else
-	#define LOG(LEVEL, SS) \
+	#define APE_LOG(LEVEL, SS) \
 		APE_LOG_WRITE(LEVEL, "LN " << APE_LOG_FILL(APE_LOG_LINE_WIDTH) << __LINE__ \
 				  << APE_LOG_DELIMITER << APE_LOG_FILL(APE_LOG_FUNC_WIDTH) << __FUNCTION_NAME__ \
 				  << APE_LOG_DELIMITER << SS \

@@ -1,4 +1,4 @@
-#include "ApeCloneGeometryImpl.h"
+#include "apeCloneGeometryImpl.h"
 /*MIT License
 
 Copyright (c) 2018 MTA SZTAKI

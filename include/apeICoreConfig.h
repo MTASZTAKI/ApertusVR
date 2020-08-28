@@ -210,8 +210,8 @@ namespace ape
 			this->renderSystem = std::string();
 			this->handle = nullptr;
 			this->device = nullptr;
-			this->width = unsigned int();
-			this->height = unsigned int();
+			this->width = 0u;
+			this->height = 0u;
 		}
 
 		WindowConfig(

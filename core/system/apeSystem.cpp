@@ -62,5 +62,6 @@ void ape::System::Stop()
 	delete gpSceneManagerImpl;
 	delete gpPluginManagerImpl;
 	delete gpCoreConfigImpl;
+	delete gpLogManagerImpl;
 }
 

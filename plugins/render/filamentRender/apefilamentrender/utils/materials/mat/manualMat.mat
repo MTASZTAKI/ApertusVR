@@ -1,0 +1,47 @@
+material {
+    name : Manual,
+    requires : [
+        uv0
+    ],
+    shadingModel : lit,
+    parameters : [
+        {
+            type : sampler2d,
+            name : albedoTex
+        },
+        {
+            type : float4,
+            name : albedoCol
+        },
+        {
+            type : float,
+            name : metallic
+        },
+        {
+            type : float,
+            name : roughness
+        },
+        {
+            type : bool,
+            name : useTexture
+        }
+    ]
+}
+
+fragment {
+    void material(inout MaterialInputs material)
+    {
+        prepareMaterial(material);
+        if(materialParams.useTexture)
+        {
+            material.baseColor = texture(materialParams_albedoTex, getUV0());
+        }
+        else
+        {
+            material.baseColor = materialParams.albedoCol;
+        }
+
+        material.metallic = materialParams.metallic;
+        material.roughness = materialParams.roughness;
+    }
+}

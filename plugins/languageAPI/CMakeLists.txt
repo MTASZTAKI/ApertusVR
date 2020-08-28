@@ -20,5 +20,9 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (jsAPI)
-add_subdirectory (webSocketServer)
+if(NOT ANDROID)
+    add_subdirectory (jsAPI)
+    add_subdirectory (webSocketServer)
+else()
+    add_subdirectory (jni)
+endif()

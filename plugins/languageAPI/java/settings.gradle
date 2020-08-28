@@ -1,0 +1,2 @@
+include ':apertusvr'
+rootProject.name = "ApertusVR"

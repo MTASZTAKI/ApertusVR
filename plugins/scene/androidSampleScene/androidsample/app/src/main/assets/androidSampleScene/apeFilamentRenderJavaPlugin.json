@@ -1,0 +1,38 @@
+{
+    "camera" : {
+        "fov" : 45.0,
+        "nearClip" : 0.1,
+        "farClip" : 40.0,
+        "controller" : {
+            "position" : [0, 4, 10],
+            "horizontal" : 3.1415,
+            "vertical" : 0.0,
+            "speed" : 0.1,
+            "rotateSpeed" : 0.001
+        }
+    },
+    "shadowOptions" : {
+        "enable" : false,
+        "mapSize" : 1024,
+        "shadowCascades" : 1,
+        "shadowFar" : 0.0,
+        "shadowNearHint" : 1.0,
+        "shadowFarHint" : 80.0,
+        "maxShadowDistance" : 0.3
+    },
+    "sunLight" : {
+        "enable" : true,
+        "intensity" : 1.1e5,
+        "direction" : [1.0,-1,0]
+    },
+    "skybox" : {
+        "enable" : true,
+        "skyboxName" : "skybox",
+        "resourcePath" : "envs",
+        "iblIntensity" : 40000.0
+    },
+    "resources" : {
+        "resourcePath" : "/models",
+        "resourcePrefix" : ""
+    }
+}

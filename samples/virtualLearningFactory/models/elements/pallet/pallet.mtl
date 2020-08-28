@@ -10,7 +10,7 @@ Ka 0.309804 0.309804 0.309804
 Kd 1 1 1
 Ks 0 0 0
 illum 2
-Ns 4
+Ns 64
 map_Kd pallet0.jpg
 map_bump 
 bump 

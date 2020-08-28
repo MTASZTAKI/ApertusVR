@@ -109,6 +109,10 @@ include_directories(
 	${MY_ZIP_INCLUDE_DIR}
 	)
 
+if(ANDROID)
+	include_directories(${OPENSSL_INCLUDE_DIRS})
+endif()
+
 # Add the dinamic library target to the project
 add_library(apeSceneManager SHARED ${SOURCES} ${HEADERS})
 
@@ -132,6 +136,8 @@ endif ()
 
 if (WIN32)
 	list(APPEND APE_LINK_LIBS_SCENEMANAGER ws2_32)
+elseif(ANDROID)
+	list(APPEND APE_LINK_LIBS_SCENEMANAGER libssl libcrypto)
 endif ()
 
 target_link_libraries(apeSceneManager ${APE_LINK_LIBS_SCENEMANAGER})

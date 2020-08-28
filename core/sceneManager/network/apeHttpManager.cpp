@@ -31,6 +31,9 @@ SOFTWARE.*/
 	#include "curl/curl.h"
 	#include "curl/easy.h"
 #endif
+#ifdef ANDROID
+	#include <thread>
+#endif
 
 size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
@@ -78,7 +81,9 @@ size_t downloadRemoteConfigFile(void *ptr, size_t size, size_t nmemb, FILE *stre
 int unzip(const char *filename, void *arg) {
 	static int i = 0;
 	int n = *(int *)arg;
+#ifndef ANDROID
 	APE_LOG_DEBUG("Extracted: "<< filename, << " " << ++i << " of " << n);
+#endif
 	gUnzipFinished = true;
 	return 0;
 }

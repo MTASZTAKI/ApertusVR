@@ -37,8 +37,8 @@ ape::LogManagerImpl::~LogManagerImpl()
 {
 	mOutFileStream.close();
 
-	delete mStream;
-	mStream = NULL;
+	// delete mStream;
+	mStream = nullptr;
 }
 
 std::string ape::LogManagerImpl::getFileNameFromPath(const std::string& path)

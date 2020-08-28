@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="291dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editRoomName"
+        app:srcCompat="@drawable/ic_vlftlogo_with_text" />
+
+    <TextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/username_text_view"
+        android:textColor="@color/vlftDarkBlue"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editUserName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/roomNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/room_name_text_view"
+        android:textColor="@color/vlftDarkBlue"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editUserName"
+        app:layout_constraintTop_toBottomOf="@+id/editUserName" />
+
+    <EditText
+        android:id="@+id/editUserName"
+        android:layout_width="289dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/edit_username_text"
+        android:inputType="textPersonName"
+        android:textColor="@color/vlftDarkBlue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
+
+    <EditText
+        android:id="@+id/editRoomName"
+        android:layout_width="289dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/edit_room_name"
+        android:inputType="textPersonName"
+        android:textColor="@color/vlftDarkBlue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomNameTextView" />
+
+    <Button
+        android:id="@+id/connectButton"
+        android:layout_width="222dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="24dp"
+        android:backgroundTint="@color/vlftDarkBlue"
+        android:onClick="connectBtnPressed"
+        android:text="@string/connect_button"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toBottomOf="@+id/editRoomName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editRoomName"
+        app:layout_constraintTop_toTopOf="@+id/editRoomName" />
+
+    <Button
+        android:id="@+id/loadCacheBtn"
+        android:layout_width="222dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="24dp"
+        android:backgroundTint="@color/vlftDarkBlue"
+        android:onClick="loadCacheBtnPressed"
+        android:text="@string/load_cache_button"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toBottomOf="@+id/editUserName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editUserName"
+        app:layout_constraintTop_toTopOf="@+id/editUserName" />
+</androidx.constraintlayout.widget.ConstraintLayout>
