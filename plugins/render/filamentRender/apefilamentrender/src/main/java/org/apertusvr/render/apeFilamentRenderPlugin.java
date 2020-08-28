@@ -1087,12 +1087,7 @@ public final class apeFilamentRenderPlugin implements apePlugin {
             if (node.isValid()) {
                 apeFilaTransform transform = mTransforms.get(node.getName());
                 if (transform != null) {
-                    apeVector3 position = node.getPosition();
-                    apeQuaternion orientation = node.getOrientation();
-                    apeVector3 scale = node.getScale();
-
-                    apeMatrix4 modelMx = new apeMatrix4(scale,orientation,position);
-
+                    apeMatrix4 modelMx = node.getModelMatrix();
                     transform.setTransform(
                             modelMx.transpose(),
                             mEngine.getTransformManager());
