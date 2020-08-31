@@ -1,0 +1,17 @@
+C:/zip/build/armeabi-v7a/CMakeFiles/zip.dir
+C:/zip/build/armeabi-v7a/CMakeFiles/install/strip.dir
+C:/zip/build/armeabi-v7a/CMakeFiles/uninstall.dir
+C:/zip/build/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+C:/zip/build/armeabi-v7a/CMakeFiles/test.dir
+C:/zip/build/armeabi-v7a/CMakeFiles/install.dir
+C:/zip/build/armeabi-v7a/CMakeFiles/install/local.dir
+C:/zip/build/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/zip/build/armeabi-v7a/CMakeFiles/list_install_components.dir
+C:/zip/build/armeabi-v7a/test/CMakeFiles/test.out.dir
+C:/zip/build/armeabi-v7a/test/CMakeFiles/rebuild_cache.dir
+C:/zip/build/armeabi-v7a/test/CMakeFiles/test.dir
+C:/zip/build/armeabi-v7a/test/CMakeFiles/install/local.dir
+C:/zip/build/armeabi-v7a/test/CMakeFiles/install.dir
+C:/zip/build/armeabi-v7a/test/CMakeFiles/edit_cache.dir
+C:/zip/build/armeabi-v7a/test/CMakeFiles/list_install_components.dir
+C:/zip/build/armeabi-v7a/test/CMakeFiles/install/strip.dir

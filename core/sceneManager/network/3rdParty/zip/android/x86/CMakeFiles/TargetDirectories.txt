@@ -1,0 +1,17 @@
+C:/zip/build/x86/CMakeFiles/zip.dir
+C:/zip/build/x86/CMakeFiles/install/strip.dir
+C:/zip/build/x86/CMakeFiles/uninstall.dir
+C:/zip/build/x86/CMakeFiles/rebuild_cache.dir
+C:/zip/build/x86/CMakeFiles/test.dir
+C:/zip/build/x86/CMakeFiles/install.dir
+C:/zip/build/x86/CMakeFiles/install/local.dir
+C:/zip/build/x86/CMakeFiles/edit_cache.dir
+C:/zip/build/x86/CMakeFiles/list_install_components.dir
+C:/zip/build/x86/test/CMakeFiles/test.out.dir
+C:/zip/build/x86/test/CMakeFiles/rebuild_cache.dir
+C:/zip/build/x86/test/CMakeFiles/test.dir
+C:/zip/build/x86/test/CMakeFiles/install/local.dir
+C:/zip/build/x86/test/CMakeFiles/install.dir
+C:/zip/build/x86/test/CMakeFiles/edit_cache.dir
+C:/zip/build/x86/test/CMakeFiles/list_install_components.dir
+C:/zip/build/x86/test/CMakeFiles/install/strip.dir
