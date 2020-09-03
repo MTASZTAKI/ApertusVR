@@ -1,0 +1,130 @@
+[
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_aperusvr_foreground.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-hdpi\\ic_aperusvr_foreground.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_aperusvr_round.xml.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_aperusvr_round.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_aperusvr_foreground.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-mdpi\\ic_aperusvr_foreground.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_aperusvr.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_aperusvr.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_aperusvr.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-hdpi\\ic_aperusvr.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_aperusvr.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_aperusvr.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_aperusvr_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_aperusvr_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_aperusvr_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_aperusvr_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_aperusvr_foreground.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_aperusvr_foreground.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_aperusvr.xml.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_aperusvr.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_aperusvr_foreground.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_aperusvr_foreground.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_aperusvr_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-hdpi\\ic_aperusvr_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_aperusvr_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xhdpi\\ic_aperusvr_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_aperusvr_foreground.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xhdpi\\ic_aperusvr_foreground.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_aperusvr.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xhdpi\\ic_aperusvr.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\drawable-v24\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_aperusvr_round.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-mdpi\\ic_aperusvr_round.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\layout_activity_main.xml.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-mdpi_ic_aperusvr.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-mdpi\\ic_aperusvr.png"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\ApertusVR\\plugins\\scene\\androidSampleScene\\androidsample\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    }
+]

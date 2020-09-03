@@ -1,0 +1,37 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+	package
+		ADDED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:2:5-28
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+		ADDED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+		ADDED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:1-5:12
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml:1:11-69
+uses-sdk
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+		ADDED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+		ADDED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml
+		INJECTED from C:\ApertusVR\plugins\languageAPI\java\apertusvr\src\main\AndroidManifest.xml

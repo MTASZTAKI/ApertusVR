@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1267264909/ApertusVR.iml" filepath="$PROJECT_DIR$/.idea/modules/-1267264909/ApertusVR.iml" group="ApertusVR" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/apertusvr.iml" filepath="$PROJECT_DIR$/.idea/modules/apertusvr.iml" group="ApertusVR/apertusvr" />
+    </modules>
+  </component>
+</project>

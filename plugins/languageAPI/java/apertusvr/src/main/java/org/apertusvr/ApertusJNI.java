@@ -189,6 +189,23 @@ public final class ApertusJNI {
     static native void setTextGeometryOwner(String nativeTextGeometry, String ownerID);
     static native String getTextGeometryOwner(String nativeTextGeometry);
 
+    /* --- SphereGeometry --- */
+    static native void setSphereGeometryParameters(String nativeSphere, float radius, float tileX, float tileY);
+    static native @Size(3) float[] getSphereGeometryParameters(String nativeSphere);
+    static native void setSphereGeometryParentNode(String nativeSphere, String parentNode);
+    static native void setSphereGeometryMaterial(String nativeSphere, String material);
+    static native String getSphereGeometryMaterial(String nativeSphere);
+    static native void setSphereGeometryOwner(String nativeSphere, String ownerID);
+    static native String getSphereGeometryOwner(String nativeSphere);
+
+    /* --- CylinderGeometry --- */
+    static native void setCylinderGeometryParameters(String nativeCylinder, float radius, float height, float tile);
+    static native @Size(3) float[] getCylinderGeometryParameters(String nativeCylinder);
+    static native void setCylinderGeometryParentNode(String nativeCylinder, String parentNode);
+    static native void setCylinderGeometryMaterial(String nativeCylinder, String material);
+    static native String getCylinderGeometryMaterial(String nativeCylinder);
+    static native void setCylinderGeometryOwner(String nativeCylinder, String ownerID);
+    static native String getCylinderGeometryOwner(String nativeCylinder);
 
     /* --- Material --- */
     static native int getMaterialCullingMode(String nativeMaterial);

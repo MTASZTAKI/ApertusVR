@@ -41,6 +41,8 @@ set (SOURCES
         wrappers/apeJNISceneManager.cpp
         wrappers/apeJNICoreConfig.cpp
         wrappers/apeJNITextGeometry.cpp
+        wrappers/apeJNISphereGeometry.cpp
+        wrappers/apeJNICylinderGeometry.cpp
         )
 
 set (HEADERS

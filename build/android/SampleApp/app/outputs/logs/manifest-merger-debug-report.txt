@@ -1,0 +1,151 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+MERGED from [:filament-20200403-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\283f2038893fa44b65e4a98d33e23e4b\jetified-filament-20200403-android\AndroidManifest.xml:2:1-9:12
+MERGED from [:apertusvr-091-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\e4de7b749ac309091fa9d3c44af2cfae\jetified-apertusvr-091-android\AndroidManifest.xml:2:1-12:12
+MERGED from [:apefilamentrender-091-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\b272ff5034e08421b1f49d4839b965fe\jetified-apefilamentrender-091-android\AndroidManifest.xml:2:1-12:12
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\f209091eb3926c649f0b3346884e478c\appcompat-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\75baa063235eedb7ab2cc635bdb88d73\constraintlayout-1.1.3\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\12c076570219bdc2a11e9d0df335391a\fragment-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\23f12b0a995277db82a9d4b860245889\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\4c1ade53cc4b20d7bc631ac17d3bfca4\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\ebc8011c39d26c440b76466a9b971345\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\2118a7099009bdd29f0289728ee82c0d\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\f52c60a67eb4c2183a64b296ae574169\jetified-activity-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\32488318cfc756fa0f6ae91e625fa530\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\0878a65179abd6a1b5016c6981bce614\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\d1ea25f3382273eed14315b543469208\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\76f2b6439d16df60df3177021482ee5a\core-1.1.0\AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\7c0677be8011741026309ef690a9f4db\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\67aa86ef8808cac41aa5afe6d271f3ea\versionedparcelable-1.1.0\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\098c479f6892902db16f6d5e04f3818b\lifecycle-runtime-2.1.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\8cf26fd0d5f767ad6dfe1019ab25b952\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\86f8c8e32c7613bbe5e86eb4377e9413\jetified-savedstate-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\bcf856ddfeb04b3b73ed182739910d39\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\c6f1e76c078a7e4f5288325854cab247\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\7282e00d74c6a6acf53f4bfd68421266\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\73114719268a97e9fd391905563b2ee9\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+	package
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:4:5-32
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:3:5-51
+	android:versionCode
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:1-23:12
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.INTERNET
+ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:5:5-67
+	android:name
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:5:22-64
+application
+ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:7:5-21:19
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\75baa063235eedb7ab2cc635bdb88d73\constraintlayout-1.1.3\AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\75baa063235eedb7ab2cc635bdb88d73\constraintlayout-1.1.3\AndroidManifest.xml:9:5-20
+MERGED from [androidx.core:core:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\76f2b6439d16df60df3177021482ee5a\core-1.1.0\AndroidManifest.xml:24:5-89
+MERGED from [androidx.core:core:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\76f2b6439d16df60df3177021482ee5a\core-1.1.0\AndroidManifest.xml:24:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\67aa86ef8808cac41aa5afe6d271f3ea\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\67aa86ef8808cac41aa5afe6d271f3ea\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\76f2b6439d16df60df3177021482ee5a\core-1.1.0\AndroidManifest.xml:24:18-86
+	android:supportsRtl
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:12:9-35
+	android:label
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:10:9-41
+	android:roundIcon
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:11:9-54
+	android:icon
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:9:9-43
+	android:allowBackup
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:8:9-35
+	android:theme
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:13:9-40
+activity#org.apertusvr.app.MainActivity
+ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:14:9-20:20
+	android:name
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:14:19-47
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:15:13-19:29
+action#android.intent.action.MAIN
+ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:16:17-69
+	android:name
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:16:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:18:17-77
+	android:name
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml:18:27-74
+uses-sdk
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+MERGED from [:filament-20200403-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\283f2038893fa44b65e4a98d33e23e4b\jetified-filament-20200403-android\AndroidManifest.xml:5:5-7:41
+MERGED from [:filament-20200403-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\283f2038893fa44b65e4a98d33e23e4b\jetified-filament-20200403-android\AndroidManifest.xml:5:5-7:41
+MERGED from [:apertusvr-091-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\e4de7b749ac309091fa9d3c44af2cfae\jetified-apertusvr-091-android\AndroidManifest.xml:7:5-9:41
+MERGED from [:apertusvr-091-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\e4de7b749ac309091fa9d3c44af2cfae\jetified-apertusvr-091-android\AndroidManifest.xml:7:5-9:41
+MERGED from [:apefilamentrender-091-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\b272ff5034e08421b1f49d4839b965fe\jetified-apefilamentrender-091-android\AndroidManifest.xml:7:5-9:41
+MERGED from [:apefilamentrender-091-android:] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\b272ff5034e08421b1f49d4839b965fe\jetified-apefilamentrender-091-android\AndroidManifest.xml:7:5-9:41
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\f209091eb3926c649f0b3346884e478c\appcompat-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\f209091eb3926c649f0b3346884e478c\appcompat-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\75baa063235eedb7ab2cc635bdb88d73\constraintlayout-1.1.3\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\75baa063235eedb7ab2cc635bdb88d73\constraintlayout-1.1.3\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\12c076570219bdc2a11e9d0df335391a\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\12c076570219bdc2a11e9d0df335391a\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\23f12b0a995277db82a9d4b860245889\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\23f12b0a995277db82a9d4b860245889\jetified-appcompat-resources-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\4c1ade53cc4b20d7bc631ac17d3bfca4\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\4c1ade53cc4b20d7bc631ac17d3bfca4\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\ebc8011c39d26c440b76466a9b971345\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\ebc8011c39d26c440b76466a9b971345\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\2118a7099009bdd29f0289728ee82c0d\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\2118a7099009bdd29f0289728ee82c0d\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\f52c60a67eb4c2183a64b296ae574169\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\f52c60a67eb4c2183a64b296ae574169\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\32488318cfc756fa0f6ae91e625fa530\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\32488318cfc756fa0f6ae91e625fa530\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\0878a65179abd6a1b5016c6981bce614\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\0878a65179abd6a1b5016c6981bce614\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\d1ea25f3382273eed14315b543469208\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\d1ea25f3382273eed14315b543469208\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\76f2b6439d16df60df3177021482ee5a\core-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\76f2b6439d16df60df3177021482ee5a\core-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\7c0677be8011741026309ef690a9f4db\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\7c0677be8011741026309ef690a9f4db\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\67aa86ef8808cac41aa5afe6d271f3ea\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\67aa86ef8808cac41aa5afe6d271f3ea\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\098c479f6892902db16f6d5e04f3818b\lifecycle-runtime-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\098c479f6892902db16f6d5e04f3818b\lifecycle-runtime-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\8cf26fd0d5f767ad6dfe1019ab25b952\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\8cf26fd0d5f767ad6dfe1019ab25b952\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\86f8c8e32c7613bbe5e86eb4377e9413\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\86f8c8e32c7613bbe5e86eb4377e9413\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\bcf856ddfeb04b3b73ed182739910d39\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\bcf856ddfeb04b3b73ed182739910d39\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\c6f1e76c078a7e4f5288325854cab247\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\c6f1e76c078a7e4f5288325854cab247\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\7282e00d74c6a6acf53f4bfd68421266\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\7282e00d74c6a6acf53f4bfd68421266\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\73114719268a97e9fd391905563b2ee9\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Erik\.gradle\caches\transforms-2\files-2.1\73114719268a97e9fd391905563b2ee9\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+		ADDED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
+		INJECTED from C:\ApertusVR\plugins\scene\androidSampleScene\androidsample\app\src\main\AndroidManifest.xml
