@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\ApertusVR\\apertusvr\\intermediates\\res\\merged\\release\\drawable-v21\\notification_action_background.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\76f2b6439d16df60df3177021482ee5a\\core-1.1.0\\res\\drawable-v21\\notification_action_background.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\ApertusVR\\apertusvr\\intermediates\\res\\merged\\release\\drawable-v21\\abc_edit_text_material.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\f209091eb3926c649f0b3346884e478c\\appcompat-1.1.0\\res\\drawable-v21\\abc_edit_text_material.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\ApertusVR\\apertusvr\\intermediates\\res\\merged\\release\\drawable-v21\\abc_btn_colored_material.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\f209091eb3926c649f0b3346884e478c\\appcompat-1.1.0\\res\\drawable-v21\\abc_btn_colored_material.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\ApertusVR\\apertusvr\\intermediates\\res\\merged\\release\\drawable-v21\\abc_action_bar_item_background_material.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\f209091eb3926c649f0b3346884e478c\\appcompat-1.1.0\\res\\drawable-v21\\abc_action_bar_item_background_material.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\ApertusVR\\apertusvr\\intermediates\\res\\merged\\release\\drawable-v21\\abc_dialog_material_background.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\f209091eb3926c649f0b3346884e478c\\appcompat-1.1.0\\res\\drawable-v21\\abc_dialog_material_background.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\ApertusVR\\apertusvr\\intermediates\\res\\merged\\release\\drawable-v21\\abc_list_divider_material.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\f209091eb3926c649f0b3346884e478c\\appcompat-1.1.0\\res\\drawable-v21\\abc_list_divider_material.xml"
+    }
+]

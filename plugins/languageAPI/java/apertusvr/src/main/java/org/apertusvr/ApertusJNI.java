@@ -207,6 +207,33 @@ public final class ApertusJNI {
     static native void setCylinderGeometryOwner(String nativeCylinder, String ownerID);
     static native String getCylinderGeometryOwner(String nativeCylinder);
 
+    /* --- TorusGeometry --- */
+    static native void setTorusGeometryParameters(String nativeTorus, float radius, float sectionRadius, float tileX, float tileY);
+    static native @Size(4) float[] getTorusGeometryParameters(String nativeTorus);
+    static native void setTorusGeometryParentNode(String nativeTorus, String parentNode);
+    static native void setTorusGeometryMaterial(String nativeTorus, String material);
+    static native String getTorusGeometryMaterial(String nativeTorus);
+    static native void setTorusGeometryOwner(String nativeTorus, String ownerID);
+    static native String getTorusGeometryOwner(String nativeTorus);
+
+    /* --- TubeGeometry --- */
+    static native void setTubeGeometryParameters(String nativeTube, float height, float tile);
+    static native @Size(2) float[] getTubeGeometryParameters(String nativeTube);
+    static native void setTubeGeometryParentNode(String nativeTube, String parentNode);
+    static native void setTubeGeometryMaterial(String nativeTube, String material);
+    static native String getTubeGeometryMaterial(String nativeTube);
+    static native void setTubeGeometryOwner(String nativeTube, String ownerID);
+    static native String getTubeGeometryOwner(String nativeTube);
+
+    /* --- BoxGeometry --- */
+    static native void setBoxGeometryParameters(String nativeBox, float dimensionX, float dimensionY,float dimensionZ);
+    static native @Size(3) float[] getBoxGeometryParameters(String nativeBox);
+    static native void setBoxGeometryParentNode(String nativeBox, String parentNode);
+    static native void setBoxGeometryMaterial(String nativeBox, String material);
+    static native String getBoxGeometryMaterial(String nativeBox);
+    static native void setBoxGeometryOwner(String nativeBox, String ownerID);
+    static native String getBoxGeometryOwner(String nativeBox);
+
     /* --- Material --- */
     static native int getMaterialCullingMode(String nativeMaterial);
     static native int getMaterialManualCullingMode(String nativeMaterial);
@@ -248,6 +275,7 @@ public final class ApertusJNI {
     static native int getManualMaterialZOrder(String nativeManualMaterial);
     static native void setManualMaterialOwner(String nativeManualMaterial, String ownerID);
     static native String getManualMaterialOwner(String nativeManualMaterial);
+
 
     /* --- FileTexture --- */
     static native void setFileTextureFileName(String nativeFileTexture, String fileName);

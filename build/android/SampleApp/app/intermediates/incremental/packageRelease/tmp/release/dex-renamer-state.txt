@@ -1,0 +1,4 @@
+#Thu Sep 10 17:57:18 CEST 2020
+base.0=c\:\\ApertusVR\\build\\android\\SampleApp\\app\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "applicationId": "org.apertusvr.render",
+  "variantType": "LIBRARY",
+  "elements": [
+    {
+      "outputType": {
+        "type": "MERGED_MANIFESTS"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 1,
+        "versionName": "1.0",
+        "outputFile": "apefilamentrender-release.aar",
+        "fullName": "release",
+        "baseName": "release",
+        "dirName": ""
+      },
+      "path": "../../library_manifest/release/AndroidManifest.xml",
+      "properties": {
+        "packageId": "org.apertusvr.render",
+        "split": ""
+      }
+    }
+  ]
+}

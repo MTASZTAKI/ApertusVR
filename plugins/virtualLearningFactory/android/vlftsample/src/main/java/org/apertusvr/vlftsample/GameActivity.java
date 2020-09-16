@@ -139,11 +139,9 @@ public class GameActivity extends AppCompatActivity {
                         }
                     }
                 }
-
                 return userNode;
             }
         }
-
         return null;
     }
 

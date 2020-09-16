@@ -4,6 +4,18 @@ import androidx.annotation.Size;
 
 public class apeSphereGeometry extends apeGeometry {
 
+    public static class apeSphereBuilder implements apeBuilder<apeSphereGeometry> {
+
+        @Override
+        public apeSphereGeometry build(String name, Type type) {
+            if (type == Type.GEOMETRY_SPHERE) {
+                return new apeSphereGeometry(name);
+            }
+
+            return null;
+        }
+    }
+
     public class GeometrySphereParameters
     {
         public float radius;

@@ -28,6 +28,11 @@ SOFTWARE.*/
 #include "apeIManualMaterial.h"
 #include "apeIConeGeometry.h"
 #include "apeICloneGeometry.h"
+#include "apeISphereGeometry.h"
+#include "apeICylinderGeometry.h"
+#include "apeITorusGeometry.h"
+#include "apeITubeGeometry.h"
+#include "apeIBoxGeometry.h"
 
 ape::AndroidSampleScenePlugin::AndroidSampleScenePlugin()
 {
@@ -189,6 +194,33 @@ void ape::AndroidSampleScenePlugin::initGeometries()
 
             cone->setParameters(3.0f,4.0f,1.0f,ape::Vector2());
             cone->setParentNode(coneNode);
+        }
+    }
+    
+
+    if (auto boxNode = mpSceneManager->createNode("box01Node",false,"androidSampleScene").lock())
+    {
+        boxNode->setParentNode(mRootNodeWeak);
+        boxNode->setPosition(ape::Vector3(-15,0.0,-10));
+        //boxNode->setOrientation(ape::Quaternion(ape::Degree(180.f),ape::Vector3(1,0,0)));
+
+        if (auto box = std::static_pointer_cast<ape::IBoxGeometry>(
+                mpSceneManager->createEntity("box01", ape::Entity::Type::GEOMETRY_BOX,
+                                             false, "androidSampleScene").lock()))
+        {
+            if (auto material = std::static_pointer_cast<ape::IManualMaterial>(
+                    mpSceneManager->createEntity("box01Material", ape::Entity::MATERIAL_MANUAL,
+                                                 false, "androidSampleScene").lock()))
+            {
+                material->setAmbientColor(ape::Color(0.0f, 0.0f, 0.0f));
+                material->setDiffuseColor(ape::Color(0.1f, 0.2f, 0.8f, 1.f));
+                material->setSpecularColor(ape::Color(0.5f, 0.5f, 0.5f, 0.05f));
+
+                box->setMaterial(material);
+            }
+
+            box->setParameters(ape::Vector3(5.0f, 1.0f, 3.0f));
+            box->setParentNode(boxNode);
         }
     }
 

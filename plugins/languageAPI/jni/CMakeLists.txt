@@ -43,6 +43,9 @@ set (SOURCES
         wrappers/apeJNITextGeometry.cpp
         wrappers/apeJNISphereGeometry.cpp
         wrappers/apeJNICylinderGeometry.cpp
+        wrappers/apeJNITorusGeometry.cpp
+        wrappers/apeJNITubeGeometry.cpp
+        wrappers/apeJNIBoxGeometry.cpp
         )
 
 set (HEADERS

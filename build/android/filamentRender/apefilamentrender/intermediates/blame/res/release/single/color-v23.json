@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_tint_spinner.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_tint_spinner.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_tint_switch_track.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_tint_switch_track.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_tint_default.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_tint_default.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_btn_colored_text_material.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_btn_colored_text_material.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_tint_seek_thumb.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_tint_seek_thumb.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_tint_btn_checkable.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_tint_btn_checkable.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_tint_edittext.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_tint_edittext.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_btn_colored_borderless_text_material.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_btn_colored_borderless_text_material.xml"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\color-v23\\abc_color_highlight_material.xml",
+        "source": "C:\\Users\\Erik\\.gradle\\caches\\transforms-2\\files-2.1\\bf96d2b5a86ecd602a621e7e96856420\\appcompat-1.2.0\\res\\color-v23\\abc_color_highlight_material.xml"
+    }
+]

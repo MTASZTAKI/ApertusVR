@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\cube.filamesh",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\cube.filamesh"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\torus.filamesh",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\torus.filamesh"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\sphere.filamesh",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\sphere.filamesh"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\manual_mat.filamat",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\manual_mat.filamat"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\tube.filamesh",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\tube.filamesh"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\default_colored_mat.filamat",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\default_colored_mat.filamat"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\default_textured_mat.filamat",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\default_textured_mat.filamat"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\cylinder1.filamesh",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\cylinder1.filamesh"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\cone.filamesh",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\cone.filamesh"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\plane.filamesh",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\plane.filamesh"
+    },
+    {
+        "merged": "c:\\ApertusVR\\build\\android\\filamentRender\\apefilamentrender\\intermediates\\res\\merged\\release\\raw\\cylinder.filamesh",
+        "source": "C:\\ApertusVR\\plugins\\render\\filamentRender\\apefilamentrender\\src\\main\\res\\raw\\cylinder.filamesh"
+    }
+]

@@ -4,6 +4,19 @@ import androidx.annotation.Size;
 
 public class apeCylinderGeometry extends apeGeometry {
 
+    public static class apeCylinderBuilder implements apeBuilder<apeCylinderGeometry> {
+
+        @Override
+        public apeCylinderGeometry build(String name, Type type) {
+            if (type == Type.GEOMETRY_CYLINDER) {
+                return new apeCylinderGeometry(name);
+            }
+
+            return null;
+        }
+    }
+
+
     public class GeometryCylinderParameters
     {
         public float radius;
@@ -30,7 +43,7 @@ public class apeCylinderGeometry extends apeGeometry {
     }
 
     public apeCylinderGeometry(String name) {
-        super(name, Type.GEOMETRY_CONE);
+        super(name, Type.GEOMETRY_CYLINDER);
     }
 
     public void setParameters(float radius, float height, float tile) {

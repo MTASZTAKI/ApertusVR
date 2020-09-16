@@ -175,6 +175,11 @@ public final class apeFilamentRenderPlugin implements apePlugin {
         apeEventManager.connectEvent(apeEvent.Group.MATERIAL_MANUAL, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.MATERIAL_FILE, mEventCallback);
         apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_CONE, mEventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_SPHERE, mEventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_CYLINDER, mEventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_TORUS, mEventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_TUBE, mEventCallback);
+        apeEventManager.connectEvent(apeEvent.Group.GEOMETRY_BOX, mEventCallback);
     }
 
     @Override
@@ -879,6 +884,484 @@ public final class apeFilamentRenderPlugin implements apePlugin {
                     }
                 }
             }
+            else if (event.group == apeEvent.Group.GEOMETRY_SPHERE) {
+                apeSphereGeometry sphereGeometry = new apeSphereGeometry(event.subjectName);
+
+                if (sphereGeometry.isValid()) {
+                    if (event.type == apeEvent.Type.GEOMETRY_SPHERE_CREATE) {
+                        mMeshes.put(event.subjectName, new apeFilaSphereMesh());
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_SPHERE_MATERIAL) {
+                        // TODO: handle the case when there's a material already attached to the plane
+                        apeFilaSphereMesh filaSphere = (apeFilaSphereMesh) mMeshes.get(event.subjectName);
+
+                        if (filaSphere != null) {
+                            apeMaterial material = sphereGeometry.getMaterial();
+                            if (material.isValid()) {
+                                MaterialInstance materialInstance = mMaterialInstances.get(material.getName());
+                                if (materialInstance != null) {
+                                    InputStream input = mAndroidResources.openRawResource(R.raw.sphere);
+
+                                    apeFilaMeshLoader.loadMesh(
+                                            input, event.subjectName,
+                                            materialInstance, mEngine,
+                                            filaSphere, material.getName(),
+                                            mShadowEnabled);
+
+                                    mScene.addEntity(filaSphere.renderable);
+
+                                    TransformManager tcm = mEngine.getTransformManager();
+                                    tcm.setTransform(tcm.getInstance(filaSphere.renderable),
+                                            new float[]{
+                                                    filaSphere.radius, 0f, 0f, 0f,
+                                                    0f, filaSphere.radius, 0f, 0f,
+                                                    0f, 0f, filaSphere.radius, 0f,
+                                                    0f, 0f, 0f, 1f
+                                            });
+
+                                    /* parentNode was set before this event */
+                                    if (filaSphere.parentTransform != null) {
+                                        filaSphere.setParentTransform(filaSphere.parentTransform,tcm);
+                                        filaSphere.parentTransform = null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_SPHERE_PARAMETERS) {
+                        apeFilaSphereMesh filaSphere = (apeFilaSphereMesh) mMeshes.get(event.subjectName);
+                        if (filaSphere != null) {
+                            apeSphereGeometry.GeometrySphereParameters parameters = sphereGeometry.getParameters();
+                            float radius = parameters.radius;
+
+                            if (filaSphere.renderable != Entity.NULL) {
+                                TransformManager tcm = mEngine.getTransformManager();
+                                tcm.setTransform(tcm.getInstance(filaSphere.renderable),
+                                        new float[]{
+                                                radius, 0f, 0f, 0f,
+                                                0f, radius, 0f, 0f,
+                                                0f, 0f, radius, 0f,
+                                                0f, 0f, 0f, 1f
+                                        });
+                            }
+                            else {
+                                filaSphere.radius = radius;
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_SPHERE_PARENTNODE) {
+                        apeFilaSphereMesh filaSphere = (apeFilaSphereMesh) mMeshes.get(event.subjectName);
+                        if (filaSphere != null) {
+                            apeNode parentNode = sphereGeometry.getParentNode();
+                            if (parentNode.isValid()) {
+                                apeFilaTransform transform = mTransforms.get(parentNode.getName());
+                                if(transform != null) {
+                                    if (filaSphere.renderable != Entity.NULL) {
+                                        filaSphere.setParentTransform(
+                                                transform,
+                                                mEngine.getTransformManager());
+                                    }
+                                    else {
+                                        filaSphere.parentTransform = transform;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (event.type == apeEvent.Type.GEOMETRY_SPHERE_DELETE) {
+                    apeFilaConeMesh filaCone = (apeFilaConeMesh) mMeshes.get(event.subjectName);
+                    if (filaCone != null) {
+                        mScene.removeEntity(filaCone.renderable);
+                        apeFilaMeshLoader.destroyMesh(mEngine,filaCone);
+                        mMeshes.remove(event.subjectName);
+                    }
+                }
+            }
+            else if (event.group == apeEvent.Group.GEOMETRY_CYLINDER) {
+                apeCylinderGeometry cylinderGeometry = new apeCylinderGeometry(event.subjectName);
+
+                if (cylinderGeometry.isValid()) {
+                    if (event.type == apeEvent.Type.GEOMETRY_CYLINDER_CREATE) {
+                        mMeshes.put(event.subjectName, new apeFilaCylinderMesh());
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_CYLINDER_MATERIAL) {
+                        // TODO: handle the case when there's a material already attached to the plane
+                        apeFilaCylinderMesh filaCylinder = (apeFilaCylinderMesh) mMeshes.get(event.subjectName);
+
+                        if (filaCylinder != null) {
+                            apeMaterial material = cylinderGeometry.getMaterial();
+                            if (material.isValid()) {
+                                MaterialInstance materialInstance = mMaterialInstances.get(material.getName());
+                                if (materialInstance != null) {
+                                    InputStream input = mAndroidResources.openRawResource(R.raw.cylinder);
+
+                                    apeFilaMeshLoader.loadMesh(
+                                            input, event.subjectName,
+                                            materialInstance, mEngine,
+                                            filaCylinder, material.getName(),
+                                            mShadowEnabled);
+
+                                    mScene.addEntity(filaCylinder.renderable);
+
+                                    TransformManager tcm = mEngine.getTransformManager();
+                                    tcm.setTransform(tcm.getInstance(filaCylinder.renderable),
+                                            new float[]{
+                                                    filaCylinder.radius, 0f, 0f, 0f,
+                                                    0f, filaCylinder.height, 0f, 0f,
+                                                    0f, 0f, filaCylinder.radius, 0f,
+                                                    0f, 0f, 0f, 1f
+                                            });
+
+                                    /* parentNode was set before this event */
+                                    if (filaCylinder.parentTransform != null) {
+                                        filaCylinder.setParentTransform(filaCylinder.parentTransform,tcm);
+                                        filaCylinder.parentTransform = null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_CYLINDER_PARAMETERS) {
+                        apeFilaCylinderMesh filaCylinder = (apeFilaCylinderMesh) mMeshes.get(event.subjectName);
+                        if (filaCylinder != null) {
+                            apeCylinderGeometry.GeometryCylinderParameters parameters = cylinderGeometry.getParameters();
+                            float radius = parameters.radius;
+                            float height = parameters.height;
+
+                            if (filaCylinder.renderable != Entity.NULL) {
+                                TransformManager tcm = mEngine.getTransformManager();
+                                tcm.setTransform(tcm.getInstance(filaCylinder.renderable),
+                                        new float[]{
+                                                radius, 0f, 0f, 0f,
+                                                0f, height, 0f, 0f,
+                                                0f, 0f, radius, 0f,
+                                                0f, 0f, 0f, 1f
+                                        });
+                            }
+                            else {
+                                filaCylinder.radius = radius;
+                                filaCylinder.height = height;
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_CYLINDER_PARENTNODE) {
+                        apeFilaCylinderMesh filaCylinder = (apeFilaCylinderMesh) mMeshes.get(event.subjectName);
+                        if (filaCylinder != null) {
+                            apeNode parentNode = cylinderGeometry.getParentNode();
+                            if (parentNode.isValid()) {
+                                apeFilaTransform transform = mTransforms.get(parentNode.getName());
+                                if(transform != null) {
+                                    if (filaCylinder.renderable != Entity.NULL) {
+                                        filaCylinder.setParentTransform(
+                                                transform,
+                                                mEngine.getTransformManager());
+                                    }
+                                    else {
+                                        filaCylinder.parentTransform = transform;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (event.type == apeEvent.Type.GEOMETRY_CYLINDER_DELETE) {
+                    apeFilaCylinderMesh filaCylinder = (apeFilaCylinderMesh) mMeshes.get(event.subjectName);
+                    if (filaCylinder != null) {
+                        mScene.removeEntity(filaCylinder.renderable);
+                        apeFilaMeshLoader.destroyMesh(mEngine,filaCylinder);
+                        mMeshes.remove(event.subjectName);
+                    }
+                }
+            }
+
+            else if (event.group == apeEvent.Group.GEOMETRY_TORUS) {
+                apeTorusGeometry torusGeometry = new apeTorusGeometry(event.subjectName);
+
+                if (torusGeometry.isValid()) {
+                    if (event.type == apeEvent.Type.GEOMETRY_TORUS_CREATE) {
+                        mMeshes.put(event.subjectName, new apeFilaTorusMesh());
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_TORUS_MATERIAL) {
+                        // TODO: handle the case when there's a material already attached to the plane
+                        apeFilaTorusMesh filaTorus = (apeFilaTorusMesh) mMeshes.get(event.subjectName);
+
+                        if (filaTorus != null) {
+                            apeMaterial material = torusGeometry.getMaterial();
+                            if (material.isValid()) {
+                                MaterialInstance materialInstance = mMaterialInstances.get(material.getName());
+                                if (materialInstance != null) {
+                                    InputStream input = mAndroidResources.openRawResource(R.raw.torus);
+
+                                    apeFilaMeshLoader.loadMesh(
+                                            input, event.subjectName,
+                                            materialInstance, mEngine,
+                                            filaTorus, material.getName(),
+                                            mShadowEnabled);
+
+                                    mScene.addEntity(filaTorus.renderable);
+
+                                    TransformManager tcm = mEngine.getTransformManager();
+                                    tcm.setTransform(tcm.getInstance(filaTorus.renderable),
+                                            new float[]{
+                                                    filaTorus.radius, 0f, 0f, 0f,
+                                                    0f, filaTorus.sectionRadius, 0f, 0f,
+                                                    0f, 0f, filaTorus.radius, 0f,
+                                                    0f, 0f, 0f, 1f
+                                            });
+
+                                    /* parentNode was set before this event */
+                                    if (filaTorus.parentTransform != null) {
+                                        filaTorus.setParentTransform(filaTorus.parentTransform,tcm);
+                                        filaTorus.parentTransform = null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_TORUS_PARAMETERS) {
+                        apeFilaTorusMesh filaTorus = (apeFilaTorusMesh) mMeshes.get(event.subjectName);
+                        if (filaTorus != null) {
+                            apeTorusGeometry.GeometryTorusParameters parameters = torusGeometry.getParameters();
+                            float radius = parameters.radius;
+                            float sectionRadius = parameters.sectionRadius;
+
+                            if (filaTorus.renderable != Entity.NULL) {
+                                TransformManager tcm = mEngine.getTransformManager();
+                                tcm.setTransform(tcm.getInstance(filaTorus.renderable),
+                                        new float[]{
+                                                radius, 0f, 0f, 0f,
+                                                0f, sectionRadius, 0f, 0f,
+                                                0f, 0f, radius, 0f,
+                                                0f, 0f, 0f, 1f
+                                        });
+                            }
+                            else {
+                                filaTorus.radius = radius;
+                                filaTorus.sectionRadius = sectionRadius;
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_TORUS_PARENTNODE) {
+                        apeFilaTorusMesh filaTorus = (apeFilaTorusMesh) mMeshes.get(event.subjectName);
+                        if (filaTorus != null) {
+                            apeNode parentNode = torusGeometry.getParentNode();
+                            if (parentNode.isValid()) {
+                                apeFilaTransform transform = mTransforms.get(parentNode.getName());
+                                if(transform != null) {
+                                    if (filaTorus.renderable != Entity.NULL) {
+                                        filaTorus.setParentTransform(
+                                                transform,
+                                                mEngine.getTransformManager());
+                                    }
+                                    else {
+                                        filaTorus.parentTransform = transform;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (event.type == apeEvent.Type.GEOMETRY_TORUS_DELETE) {
+                    apeFilaTorusMesh filaTorus = (apeFilaTorusMesh) mMeshes.get(event.subjectName);
+                    if (filaTorus != null) {
+                        mScene.removeEntity(filaTorus.renderable);
+                        apeFilaMeshLoader.destroyMesh(mEngine,filaTorus);
+                        mMeshes.remove(event.subjectName);
+                    }
+                }
+            }
+
+            else if (event.group == apeEvent.Group.GEOMETRY_TUBE) {
+                apeTubeGeometry tubeGeometry = new apeTubeGeometry(event.subjectName);
+
+                if (tubeGeometry.isValid()) {
+                    if (event.type == apeEvent.Type.GEOMETRY_TUBE_CREATE) {
+                        mMeshes.put(event.subjectName, new apeFilaTubeMesh());
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_TUBE_MATERIAL) {
+                        // TODO: handle the case when there's a material already attached to the plane
+                        apeFilaTubeMesh filaTube = (apeFilaTubeMesh) mMeshes.get(event.subjectName);
+
+                        if (filaTube != null) {
+                            apeMaterial material = tubeGeometry.getMaterial();
+                            if (material.isValid()) {
+                                MaterialInstance materialInstance = mMaterialInstances.get(material.getName());
+                                if (materialInstance != null) {
+                                    InputStream input = mAndroidResources.openRawResource(R.raw.tube);
+
+                                    apeFilaMeshLoader.loadMesh(
+                                            input, event.subjectName,
+                                            materialInstance, mEngine,
+                                            filaTube, material.getName(),
+                                            mShadowEnabled);
+
+                                    mScene.addEntity(filaTube.renderable);
+
+                                    TransformManager tcm = mEngine.getTransformManager();
+                                    tcm.setTransform(tcm.getInstance(filaTube.renderable),
+                                            new float[]{
+                                                    filaTube.height, 0f, 0f, 0f,
+                                                    0f, 1.0f, 0f, 0f,
+                                                    0f, 0f, filaTube.height, 0f,
+                                                    0f, 0f, 0f, 1f
+                                            });
+
+                                    /* parentNode was set before this event */
+                                    if (filaTube.parentTransform != null) {
+                                        filaTube.setParentTransform(filaTube.parentTransform,tcm);
+                                        filaTube.parentTransform = null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_TUBE_PARAMETERS) {
+                        apeFilaTubeMesh filaTube = (apeFilaTubeMesh) mMeshes.get(event.subjectName);
+                        if (filaTube != null) {
+                            apeTubeGeometry.GeometryTubeParameters parameters = tubeGeometry.getParameters();
+                            float height = parameters.height;
+
+                            if (filaTube.renderable != Entity.NULL) {
+                                TransformManager tcm = mEngine.getTransformManager();
+                                tcm.setTransform(tcm.getInstance(filaTube.renderable),
+                                        new float[]{
+                                                height, 0f, 0f, 0f,
+                                                0f, 1.0f, 0f, 0f,
+                                                0f, 0f, height, 0f,
+                                                0f, 0f, 0f, 1f
+                                        });
+                            }
+                            else {
+                                filaTube.height = height;
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_TUBE_PARENTNODE) {
+                        apeFilaTubeMesh filaTube = (apeFilaTubeMesh) mMeshes.get(event.subjectName);
+                        if (filaTube != null) {
+                            apeNode parentNode = tubeGeometry.getParentNode();
+                            if (parentNode.isValid()) {
+                                apeFilaTransform transform = mTransforms.get(parentNode.getName());
+                                if(transform != null) {
+                                    if (filaTube.renderable != Entity.NULL) {
+                                        filaTube.setParentTransform(
+                                                transform,
+                                                mEngine.getTransformManager());
+                                    }
+                                    else {
+                                        filaTube.parentTransform = transform;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (event.type == apeEvent.Type.GEOMETRY_TUBE_DELETE) {
+                    apeFilaTubeMesh filaTube = (apeFilaTubeMesh) mMeshes.get(event.subjectName);
+                    if (filaTube != null) {
+                        mScene.removeEntity(filaTube.renderable);
+                        apeFilaMeshLoader.destroyMesh(mEngine,filaTube);
+                        mMeshes.remove(event.subjectName);
+                    }
+                }
+            }
+
+            else if (event.group == apeEvent.Group.GEOMETRY_BOX) {
+                apeBoxGeometry boxGeometry = new apeBoxGeometry(event.subjectName);
+
+                if (boxGeometry.isValid()) {
+                    if (event.type == apeEvent.Type.GEOMETRY_BOX_CREATE) {
+                        mMeshes.put(event.subjectName, new apeFilaBoxMesh());
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_BOX_MATERIAL) {
+                        // TODO: handle the case when there's a material already attached to the plane
+                        apeFilaBoxMesh filaBox = (apeFilaBoxMesh) mMeshes.get(event.subjectName);
+
+                        if (filaBox != null) {
+                            apeMaterial material = boxGeometry.getMaterial();
+                            if (material.isValid()) {
+                                MaterialInstance materialInstance = mMaterialInstances.get(material.getName());
+                                if (materialInstance != null) {
+                                    InputStream input = mAndroidResources.openRawResource(R.raw.cube);
+
+                                    apeFilaMeshLoader.loadMesh(
+                                            input, event.subjectName,
+                                            materialInstance, mEngine,
+                                            filaBox, material.getName(),
+                                            mShadowEnabled);
+
+                                    mScene.addEntity(filaBox.renderable);
+
+                                    TransformManager tcm = mEngine.getTransformManager();
+                                    tcm.setTransform(tcm.getInstance(filaBox.renderable),
+                                            new float[]{
+                                                    filaBox.dimensions.x, 0f, 0f, 0f,
+                                                    0f, filaBox.dimensions.y, 0f, 0f,
+                                                    0f, 0f, filaBox.dimensions.z, 0f,
+                                                    0f, 0f, 0f, 1f
+                                            });
+
+                                    /* parentNode was set before this event */
+                                    if (filaBox.parentTransform != null) {
+                                        filaBox.setParentTransform(filaBox.parentTransform,tcm);
+                                        filaBox.parentTransform = null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_BOX_PARAMETERS) {
+                        apeFilaBoxMesh filaBox = (apeFilaBoxMesh) mMeshes.get(event.subjectName);
+                        if (filaBox != null) {
+                            apeBoxGeometry.GeometryBoxParameters parameters = boxGeometry.getParameters();
+                            apeVector3 dimensions = parameters.dimensions;
+
+                            if (filaBox.renderable != Entity.NULL) {
+                                TransformManager tcm = mEngine.getTransformManager();
+                                tcm.setTransform(tcm.getInstance(filaBox.renderable),
+                                        new float[]{
+                                                dimensions.x, 0f, 0f, 0f,
+                                                0f, dimensions.y, 0f, 0f,
+                                                0f, 0f, dimensions.z, 0f,
+                                                0f, 0f, 0f, 1f
+                                        });
+                            }
+                            else {
+                                filaBox.dimensions = dimensions;
+                            }
+                        }
+                    }
+                    else if (event.type == apeEvent.Type.GEOMETRY_BOX_PARENTNODE) {
+                        apeFilaBoxMesh filaBox = (apeFilaBoxMesh) mMeshes.get(event.subjectName);
+                        if (filaBox != null) {
+                            apeNode parentNode = boxGeometry.getParentNode();
+                            if (parentNode.isValid()) {
+                                apeFilaTransform transform = mTransforms.get(parentNode.getName());
+                                if(transform != null) {
+                                    if (filaBox.renderable != Entity.NULL) {
+                                        filaBox.setParentTransform(
+                                                transform,
+                                                mEngine.getTransformManager());
+                                    }
+                                    else {
+                                        filaBox.parentTransform = transform;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (event.type == apeEvent.Type.GEOMETRY_BOX_DELETE) {
+                    apeFilaBoxMesh filaBox = (apeFilaBoxMesh) mMeshes.get(event.subjectName);
+                    if (filaBox != null) {
+                        mScene.removeEntity(filaBox.renderable);
+                        apeFilaMeshLoader.destroyMesh(mEngine,filaBox);
+                        mMeshes.remove(event.subjectName);
+                    }
+                }
+            }
+            
             else if (event.group == apeEvent.Group.MATERIAL_MANUAL) {
                 apeManualMaterial manualMaterial = new apeManualMaterial(event.subjectName);
 

@@ -1,0 +1,10 @@
+R_DEF: Internal format may change without notice
+local
+raw cone
+raw cube
+raw cylinder
+raw default_colored_mat
+raw default_textured_mat
+raw manual_mat
+raw plane
+raw spehere
