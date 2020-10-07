@@ -4,8 +4,7 @@
     "apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
     "apeKinectHeadTrackingPlugin",
-    "apeCefBrowserPlugin",
-    "ape360VideoScenePlugin"
+    "apeCefBrowserPlugin"
   ],
   "network": {
     "user": "indusrty40GuestCAVE",
