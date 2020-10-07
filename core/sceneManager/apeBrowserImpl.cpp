@@ -259,7 +259,10 @@ void ape::BrowserImpl::Deserialize(RakNet::DeserializeParameters *deserializePar
 	{
 		mGeometryName = geometryName.C_String();
 		mGeometry = std::static_pointer_cast<ape::Geometry>(mpSceneManager->getEntity(mGeometryName).lock());
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_GEOMETRY));
+		if (auto geomtery = mGeometry.lock())
+		{
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_GEOMETRY));
+		}
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mReloadDeltaTrigger))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_RELOAD));
