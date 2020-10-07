@@ -25,13 +25,13 @@ void ape::Video360ScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 	//TODO we have to wait because of the possible GPU race
-	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 	if (auto browserNode = mpSceneManager->createNode("browserNode", true, mpCoreConfig->getNetworkGUID()).lock())
 	{
 		browserNode->setPosition(ape::Vector3(-100, 170, 0));
 		if (auto browserGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("sphere.mesh", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
-			browserGeometry->setFileName("thetaSphere.mesh");
+			browserGeometry->setFileName("sphere.mesh");
 			browserGeometry->setParentNode(browserNode);
 			if (auto browser = std::static_pointer_cast<ape::IBrowser>(mpSceneManager->createEntity("browser", ape::Entity::BROWSER, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{

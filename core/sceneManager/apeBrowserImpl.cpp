@@ -76,6 +76,7 @@ void ape::BrowserImpl::setGeometry(ape::GeometryWeakPtr geometry)
 {
 	if (auto geometrySP = geometry.lock())
 	{
+		mGeometryName = geometrySP->getName();
 		mGeometry = geometry;
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::BROWSER_GEOMETRY));
 	}
