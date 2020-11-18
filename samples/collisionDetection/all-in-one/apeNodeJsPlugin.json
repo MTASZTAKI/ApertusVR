@@ -1,0 +1,19 @@
+{
+    "httpServer": {
+        "port":  4000
+    },
+    "pluginManager": {
+      "plugins": [
+        {
+          "file": "httpSimulator/httpSimulator.js",
+          "args": {
+            "fileName": "httpSimulator/ur10.jsonlist",
+            "delay": 60
+          }
+        },
+        {
+          "file": "x3dLoader/x3dLoader.js"
+        }
+      ]
+    }
+}
