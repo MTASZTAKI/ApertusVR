@@ -67,10 +67,10 @@ function getOverlayBrowserLastMessage() {
 	});
 }
 
-function setClickedNodeState(sec) {
-	console.log('setClickedNodeState(): ' + clickedNodeName + ' @ ' + sec);
+function setClickedNodeState(msec) {
+	console.log('setClickedNodeState(): ' + clickedNodeName + ' @ ' + msec);
 	for (let [key, value] of parsedStates) {
-		if (key == sec) {
+		if (key == msec) {
 			var pos = value.indexOf("@");
 			var nodeName = value.substring(0, pos);
 			currentStates.set(nodeName, value.substring(pos + 1, value.length));
@@ -587,8 +587,7 @@ function updateProperties() {
 		getClickedNodeOrientation();
 		document.getElementById('selectedNodePose').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')' +
 			' Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
-		var sec = Math.floor((lastMessage / 1000) % 60);
-		setClickedNodeState(sec);
+		setClickedNodeState(lastMessage);
 	}
 }
 
