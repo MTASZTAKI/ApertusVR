@@ -25,6 +25,7 @@ var updateMeAttachedInterval;
 var lastMessage;
 var parsedStates = new Map();
 var parsedStatesSortedDesc = new Map();
+var currentURL2Copy;
 
 function convertHex(hex, opacity) {
 	hex = hex.replace('#', '');
@@ -127,36 +128,28 @@ function setClickedNodeState(msec) {
 	}
 }
 
-function myCopyTextFunction(inputID) {
-  var copyText = document.getElementById(inputID);
-  copyText.select();
-  copyText.setSelectionRange(0, 99999);
-  document.execCommand("copy");
+function copyToClipboard(){
+	console.log('copyToClipboard(): ' + currentURL2Copy);
+    var container = document.getElementById("infoSection");
+	var inp = document.createElement("input");
+	inp.type = "text";
+	container.appendChild(inp); 
+	inp.value = currentURL2Copy;
+	inp.select();
+	document.execCommand("Copy");
+	container.removeChild(container.lastChild);
 }
 
-function getLog() {
-	console.log('getLog(): ');
-	var logsDiv = document.getElementById('Log');
+function updateClickedNodeLink(msec) {
+	console.log('updateClickedNodeLink(): ' + msec);
 	animationJSON.nodes.forEach(function (node) {
 		node.actions.forEach(function (action) {
-			if (action.event.type == "link") {
-				var logDiv = document.getElementById(action.event.URL);
-				/*if (typeof (logDiv) != 'undefined' && logDiv != null) {
-					newDiv.innerHTML = action.event.URL;
+			if (action.event.type == "link" && action.trigger.type == "timestamp") {
+				if (Number(action.trigger.data) < msec)
+				{
+					document.getElementById('selectedNodeLink').innerHTML = 'Link: ' + action.event.URL;
+					currentURL2Copy = action.event.URL;
 				}
-				else {*/
-					var newInput = document.createElement('input');
-					newInput.id = action.event.URL;
-					newInput.value = action.event.URL;
-					var newButton = document.createElement('button');
-					newButton.id = action.event.URL + "_button";
-					newButton.innerHTML = "Copy";
-					newButton.addEventListener('click', function () {
-						myCopyTextFunction(action.event.URL);
-					});
-					logsDiv.appendChild(newInput);
-					logsDiv.appendChild(newButton);
-				//}
 			}
 		});
 	});
@@ -619,7 +612,6 @@ function parseAnimationJSON() {
 	$.get(url, function (json) {
 		animationJSON = json;
 		console.log("JSON Data: " + JSON.stringify(json));
-		getLog();
 		animationJSON.nodes.forEach(function (node) {
 			var foundState = false;
 			node.actions.forEach(function (action) {
@@ -658,6 +650,7 @@ function updateProperties() {
 		document.getElementById('selectedNodePose').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')' +
 			' Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
 		setClickedNodeState(lastMessage);
+		updateClickedNodeLink(lastMessage);
 	}
 }
 
