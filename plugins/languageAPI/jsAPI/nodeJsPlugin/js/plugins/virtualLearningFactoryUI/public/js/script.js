@@ -24,6 +24,7 @@ var updateOverlayBrowserLastMessageInterval;
 var updateMeAttachedInterval;
 var lastMessage;
 var parsedStates = new Map();
+var parsedStatesSortedDesc = new Map();
 
 function convertHex(hex, opacity) {
 	hex = hex.replace('#', '');
@@ -68,10 +69,38 @@ function getOverlayBrowserLastMessage() {
 	});
 }
 
+function findLastState(msec){
+	console.log('findLastState(): ' + clickedNodeName + ' @ ' + msec);
+	for (let [key, value] of parsedStatesSortedDesc) {
+		var pos = value.indexOf("@");
+		var nodeName = value.substring(0, pos);
+		var text = value.substring(pos + 1);
+		if (nodeName == clickedNodeName)
+		{
+			console.log('clickedNodeName:' + clickedNodeName + ' nodeName:' + nodeName);
+			if (key < msec) {
+				document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+				break;
+			}
+		}
+		else
+		{
+			var groupPos = clickedNodeName.lastIndexOf(".");
+			var groupName = clickedNodeName.substring(0, groupPos);
+			console.log('nodeName:' + nodeName + ' groupName:' + groupName);
+			if (nodeName == groupName)
+			{
+				if (key < msec) {
+					document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+					break;
+				}
+			}
+		}
+	}
+}
+
 function setClickedNodeState(msec) {
 	console.log('setClickedNodeState(): ' + clickedNodeName + ' @ ' + msec);
-	console.log("parsedStates");
-	console.log(parsedStates);
 	for (let [key, value] of parsedStates) {
 		if (key == msec) {
 			var pos = value.indexOf("@");
@@ -81,6 +110,7 @@ function setClickedNodeState(msec) {
 			if (nodeName == clickedNodeName)
 			{
 				document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+				break;
 			}
 			else
 			{
@@ -90,9 +120,9 @@ function setClickedNodeState(msec) {
 				if (nodeName == groupName)
 				{
 					document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+					break;
 				}
 			}
-			break;
 		}
 	}
 }
@@ -549,7 +579,7 @@ function findState(nodeName, stateName) {
 					if (asset.parentObject == node.name) {
 						node.actions.forEach(function (action) {
 							if (action.event.type == "state" && action.trigger.type == "timestamp") {
-								parsedStates.set(action.trigger.data, stateName + "@" + action.event.descr);
+								parsedStates.set(Number(action.trigger.data), stateName + "@" + action.event.descr);
 								foundState = true;
 							}
 						});
@@ -580,7 +610,7 @@ function parseAnimationJSON() {
 			var foundState = false;
 			node.actions.forEach(function (action) {
 				if (action.event.type == "state" && action.trigger.type == "timestamp") {
-					parsedStates.set(action.trigger.data, node.name + "@" + action.event.descr);
+					parsedStates.set(Number(action.trigger.data), node.name + "@" + action.event.descr);
 					foundState = true;
 				}
 			});
@@ -590,6 +620,9 @@ function parseAnimationJSON() {
 		});
 		console.log("parsedStates");
 		console.log(parsedStates);
+		parsedStatesSortedDesc = new Map([...parsedStates.entries()].reverse());
+		console.log("parsedStatesSortedDesc");
+		console.log(parsedStatesSortedDesc);
 	});
 }
 
@@ -971,7 +1004,9 @@ $(document).ready(function () {
 			document.getElementById('selectedNodeNameTitle').innerHTML = clickedNodeName;
 			getClickedNodeDesc();
 			document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
-			//setClickedNodeState(lastMessage);
+			
+			document.getElementById('selectedNodeState').innerHTML = 'State: ';
+			findLastState(lastMessage);
         }
     }
     $("button").click(function () {
