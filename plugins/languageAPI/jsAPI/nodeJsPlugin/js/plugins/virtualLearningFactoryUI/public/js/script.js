@@ -24,7 +24,6 @@ var updateOverlayBrowserLastMessageInterval;
 var updateMeAttachedInterval;
 var lastMessage;
 var parsedStates = new Map();
-var currentStates = new Map();
 
 function convertHex(hex, opacity) {
 	hex = hex.replace('#', '');
@@ -64,23 +63,37 @@ function getOverlayBrowserLastMessage() {
 		lastMessage = res.data.items[0].lastMessage;
 		console.log('getOverlayBrowserLastMessage(): res: ', lastMessage);
 		updateAnimationTime(lastMessage);
+		updateStateStream(lastMessage);
+		updateProperties();
 	});
 }
 
 function setClickedNodeState(msec) {
 	console.log('setClickedNodeState(): ' + clickedNodeName + ' @ ' + msec);
+	console.log("parsedStates");
+	console.log(parsedStates);
 	for (let [key, value] of parsedStates) {
 		if (key == msec) {
 			var pos = value.indexOf("@");
 			var nodeName = value.substring(0, pos);
-			currentStates.set(nodeName, value.substring(pos + 1, value.length));
-			document.getElementById('stateStreamText').innerHTML = 'State Stream: ' + value;
+			var text = value.substring(pos + 1);
+			console.log('clickedNodeName:' + clickedNodeName + ' nodeName:' + nodeName);
+			if (nodeName == clickedNodeName)
+			{
+				document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+			}
+			else
+			{
+				var groupPos = clickedNodeName.lastIndexOf(".");
+				var groupName = clickedNodeName.substring(0, groupPos);
+				console.log('nodeName:' + nodeName + ' groupName:' + groupName);
+				if (nodeName == groupName)
+				{
+					document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+				}
+			}
 			break;
 		}
-	}
-	if (currentStates.get(clickedNodeName).length) {
-		clickedNodeState = currentStates.get(clickedNodeName);
-		document.getElementById('selectedNodeState').innerHTML = 'State: ' + clickedNodeState;
 	}
 }
 
@@ -103,6 +116,17 @@ function getLog() {
 			}
 		});
 	});
+}
+function updateStateStream(msec)
+{
+	for (let [key, value] of parsedStates) {
+		if (key == msec) {
+			var pos = value.indexOf("@");
+			var nodeName = value.substring(0, pos);
+			document.getElementById('stateStreamText').innerHTML = 'State Stream: ' + value;
+			break;
+		}
+	}
 }
 
 function updateAnimationTime(time) {
@@ -486,7 +510,6 @@ function sendConnectParams() {
 	setClickedElement('connect' + 'userType:' + selectedUserType + 'roomName:' + roomName + 'userName:' + selectedUserName);
 	showDesiredMenu(selectedUserType);
 	getConfigFolderPath();
-	updatePropertiesInterval = setInterval(updateProperties, 40);
 }
 
 
@@ -805,7 +828,7 @@ function refreshAvailableRooms() {
 	console.log('refreshAvailableRooms: ' + url);
 	var selectRoom = document.getElementById('selectRoom');
 	$.get(url, function (data) {
-		//console.log("data: " + data);
+		console.log("data: " + data);
 		var posFolders = data.indexOf("[DIR]");
 		var foldersSTR = data.substring(posFolders, data.length);
 		var posFolderStart = 0;
@@ -829,9 +852,9 @@ function refreshAvailableRooms() {
 				selectRoom.appendChild(newOption);
 				uploadedRooms.push(folderSTR);
 			}
-			//console.log("posFolderStart: " + posFolderStart + " posFolderEnd: " + posFolderEnd);
+			console.log("posFolderStart: " + posFolderStart + " posFolderEnd: " + posFolderEnd);
 			console.log("folderSTR: " + folderSTR);
-			//console.log("foldersSTR: " + foldersSTR);
+			console.log("foldersSTR: " + foldersSTR);
 		}
 		if (document.getElementById('radioTeacher').checked || document.getElementById('radioStudent').checked) {
 			uploadedRooms.forEach(function (uploadeRoom) {
@@ -948,8 +971,7 @@ $(document).ready(function () {
 			document.getElementById('selectedNodeNameTitle').innerHTML = clickedNodeName;
 			getClickedNodeDesc();
 			document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
-			clickedNodeState = "";
-			document.getElementById('selectedNodeState').innerHTML = 'State: ' + clickedNodeState;
+			//setClickedNodeState(lastMessage);
         }
     }
     $("button").click(function () {
