@@ -127,22 +127,36 @@ function setClickedNodeState(msec) {
 	}
 }
 
+function myCopyTextFunction(inputID) {
+  var copyText = document.getElementById(inputID);
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+}
+
 function getLog() {
 	console.log('getLog(): ');
 	var logsDiv = document.getElementById('Log');
 	animationJSON.nodes.forEach(function (node) {
 		node.actions.forEach(function (action) {
 			if (action.event.type == "link") {
-				var logDiv = document.getElementById(action.event.data);
-				if (typeof (logDiv) != 'undefined' && logDiv != null) {
-					logDiv.innerHTML = action.event.descr + " was saved to " + action.event.data;
+				var logDiv = document.getElementById(action.event.URL);
+				/*if (typeof (logDiv) != 'undefined' && logDiv != null) {
+					newDiv.innerHTML = action.event.URL;
 				}
-				else {
-					var newDiv = document.createElement('div');
-					newDiv.id = action.event.data;
-					newDiv.innerHTML = action.event.descr + " was saved to " + action.event.data;
-					logsDiv.appendChild(newDiv);
-				}
+				else {*/
+					var newInput = document.createElement('input');
+					newInput.id = action.event.URL;
+					newInput.value = action.event.URL;
+					var newButton = document.createElement('button');
+					newButton.id = action.event.URL + "_button";
+					newButton.innerHTML = "Copy";
+					newButton.addEventListener('click', function () {
+						myCopyTextFunction(action.event.URL);
+					});
+					logsDiv.appendChild(newInput);
+					logsDiv.appendChild(newButton);
+				//}
 			}
 		});
 	});
