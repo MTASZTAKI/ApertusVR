@@ -144,11 +144,32 @@ function updateClickedNodeLink(msec) {
 	console.log('updateClickedNodeLink(): ' + msec);
 	animationJSON.nodes.forEach(function (node) {
 		node.actions.forEach(function (action) {
-			if (action.event.type == "link" && action.trigger.type == "timestamp") {
-				if (Number(action.trigger.data) < msec)
+			if (node.name == clickedNodeName)
+			{
+				console.log('clickedNodeName:' + clickedNodeName + ' node.name:' + node.name);
+				if (action.event.type == "link" && action.trigger.type == "timestamp") {
+					if (Number(action.trigger.data) < msec)
+					{
+						document.getElementById('selectedNodeLink').innerHTML = 'Link: ' + action.event.URL;
+						currentURL2Copy = action.event.URL;
+					}
+				}
+			}
+			else
+			{
+				var groupPos = clickedNodeName.lastIndexOf(".");
+				var groupName = clickedNodeName.substring(0, groupPos);
+				console.log('node.name:' + node.name + ' groupName:' + groupName);
+				if (node.name == groupName)
 				{
-					document.getElementById('selectedNodeLink').innerHTML = 'Link: ' + action.event.URL;
-					currentURL2Copy = action.event.URL;
+					if (action.event.type == "link" && action.trigger.type == "timestamp") 
+					{
+						if (Number(action.trigger.data) < msec)
+						{
+							document.getElementById('selectedNodeLink').innerHTML = 'Link: ' + action.event.URL;
+							currentURL2Copy = action.event.URL;
+						}
+					}
 				}
 			}
 		});
@@ -1014,6 +1035,8 @@ $(document).ready(function () {
 			
 			document.getElementById('selectedNodeState').innerHTML = 'State: ';
 			findLastState(lastMessage);
+			
+			document.getElementById('selectedNodeLink').innerHTML = 'Link: ';
         }
     }
     $("button").click(function () {
