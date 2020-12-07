@@ -99,34 +99,66 @@ function findLastState(msec){
 		}
 	}
 }
-
 function setClickedNodeState(msec) {
-	console.log('setClickedNodeState(): ' + clickedNodeName + ' @ ' + msec);
-	for (let [key, value] of parsedStates) {
-		if (key == msec) {
-			var pos = value.indexOf("@");
-			var nodeName = value.substring(0, pos);
-			var text = value.substring(pos + 1);
-			console.log('clickedNodeName:' + clickedNodeName + ' nodeName:' + nodeName);
-			if (nodeName == clickedNodeName)
+	console.log('setClickedNodeState(): ' + msec);
+	animationJSON.nodes.forEach(function (node) {
+		node.actions.forEach(function (action) {
+			if (node.name == clickedNodeName)
 			{
-				document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
-				break;
+				console.log('clickedNodeName:' + clickedNodeName + ' node.name:' + node.name);
+				if (action.event.type == "state" && action.trigger.type == "timestamp") {
+					if (Number(action.trigger.data) < msec)
+					{
+						document.getElementById('selectedNodeState').innerHTML = 'State: ' + action.event.descr;
+					}
+				}
 			}
 			else
 			{
 				var groupPos = clickedNodeName.lastIndexOf(".");
 				var groupName = clickedNodeName.substring(0, groupPos);
-				console.log('nodeName:' + nodeName + ' groupName:' + groupName);
-				if (nodeName == groupName)
+				console.log('node.name:' + node.name + ' groupName:' + groupName);
+				if (node.name == groupName)
 				{
-					document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
-					break;
+					if (action.event.type == "state" && action.trigger.type == "timestamp") 
+					{
+						if (Number(action.trigger.data) < msec)
+						{
+							document.getElementById('selectedNodeState').innerHTML = 'State: ' + action.event.descr;
+						}
+					}
 				}
 			}
-		}
-	}
+		});
+	});
 }
+// function setClickedNodeState(msec) {
+// 	console.log('setClickedNodeState(): ' + clickedNodeName + ' @ ' + msec);
+// 	for (let [key, value] of parsedStates) {
+// 		if (key == msec) {
+// 			var pos = value.indexOf("@");
+// 			var nodeName = value.substring(0, pos);
+// 			var text = value.substring(pos + 1);
+// 			console.log('clickedNodeName:' + clickedNodeName + ' nodeName:' + nodeName);
+// 			if (nodeName == clickedNodeName)
+// 			{
+// 				document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+// 				break;
+// 			}
+// 			else
+// 			{
+// 				var groupPos = clickedNodeName.lastIndexOf(".");
+// 				var groupName = clickedNodeName.substring(0, groupPos);
+// 				console.log('nodeName:' + nodeName + ' groupName:' + groupName);
+// 				if (nodeName == groupName)
+// 				{
+// 					document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+// 					break;
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 function copyToClipboard(){
 	console.log('copyToClipboard(): ' + currentURL2Copy);
@@ -1034,7 +1066,7 @@ $(document).ready(function () {
 			document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
 			
 			document.getElementById('selectedNodeState').innerHTML = 'State: ';
-			findLastState(lastMessage);
+			//findLastState(lastMessage);
 			
 			document.getElementById('selectedNodeLink').innerHTML = 'Link: ';
         }
