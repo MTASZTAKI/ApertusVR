@@ -5,10 +5,15 @@ var userNodePostion;
 var otherUserNodeNames = [];
 var otherUserNodePositions = [];
 var clickedNodeName = "";
+var clickedNodeDescr;
+var clickedNodeType;
 var clickedNodePosition;
 var clickedNodeOrientation;
-var clickedNodeDescr;
-var clickedNodeState;
+var clickedNodeGroup = ""
+var clickedNodeGroupType = ""
+var clickedNodeGroupDescr;
+var clickedNodeGroupPosition;
+var clickedNodeGroupOrientation;
 var log;
 var roomName;
 var configFolderPath;
@@ -80,7 +85,7 @@ function findLastState(msec){
 		{
 			console.log('clickedNodeName:' + clickedNodeName + ' nodeName:' + nodeName);
 			if (key < msec) {
-				document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+				document.getElementById('selectedNodeState').innerHTML = text;
 				break;
 			}
 		}
@@ -92,7 +97,7 @@ function findLastState(msec){
 			if (nodeName == groupName)
 			{
 				if (key < msec) {
-					document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
+					document.getElementById('selectedNodeState').innerHTML = text;
 					break;
 				}
 			}
@@ -109,22 +114,23 @@ function setClickedNodeState(msec) {
 				if (action.event.type == "state" && action.trigger.type == "timestamp") {
 					if (Number(action.trigger.data) < msec)
 					{
-						document.getElementById('selectedNodeState').innerHTML = 'State: ' + action.event.descr;
+						document.getElementById('selectedNodeState').innerHTML = action.event.descr;
 					}
 				}
 			}
 			else
 			{
-				var groupPos = clickedNodeName.lastIndexOf(".");
-				var groupName = clickedNodeName.substring(0, groupPos);
-				console.log('node.name:' + node.name + ' groupName:' + groupName);
-				if (node.name == groupName)
+				// var groupPos = clickedNodeName.lastIndexOf(".");
+				// var groupName = clickedNodeName.substring(0, groupPos);
+				// console.log('node.name:' + node.name + ' groupName:' + groupName);
+				console.log('node.name:' + node.name + ' groupName:' + clickedNodeGroup);
+				if (node.name == clickedNodeGroup)
 				{
 					if (action.event.type == "state" && action.trigger.type == "timestamp") 
 					{
 						if (Number(action.trigger.data) < msec)
 						{
-							document.getElementById('selectedNodeState').innerHTML = 'State: ' + action.event.descr;
+							document.getElementById('selectedNodeState').innerHTML = action.event.descr;
 						}
 					}
 				}
@@ -132,33 +138,7 @@ function setClickedNodeState(msec) {
 		});
 	});
 }
-// function setClickedNodeState(msec) {
-// 	console.log('setClickedNodeState(): ' + clickedNodeName + ' @ ' + msec);
-// 	for (let [key, value] of parsedStates) {
-// 		if (key == msec) {
-// 			var pos = value.indexOf("@");
-// 			var nodeName = value.substring(0, pos);
-// 			var text = value.substring(pos + 1);
-// 			console.log('clickedNodeName:' + clickedNodeName + ' nodeName:' + nodeName);
-// 			if (nodeName == clickedNodeName)
-// 			{
-// 				document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
-// 				break;
-// 			}
-// 			else
-// 			{
-// 				var groupPos = clickedNodeName.lastIndexOf(".");
-// 				var groupName = clickedNodeName.substring(0, groupPos);
-// 				console.log('nodeName:' + nodeName + ' groupName:' + groupName);
-// 				if (nodeName == groupName)
-// 				{
-// 					document.getElementById('selectedNodeState').innerHTML = 'State: ' + text;
-// 					break;
-// 				}
-// 			}
-// 		}
-// 	}
-// }
+
 
 function copyToClipboard(){
 	console.log('copyToClipboard(): ' + currentURL2Copy);
@@ -182,23 +162,24 @@ function updateClickedNodeLink(msec) {
 				if (action.event.type == "link" && action.trigger.type == "timestamp") {
 					if (Number(action.trigger.data) < msec)
 					{
-						document.getElementById('selectedNodeLink').innerHTML = 'Link: ' + action.event.URL;
+						document.getElementById('selectedNodeLink').innerHTML = action.event.URL;
 						currentURL2Copy = action.event.URL;
 					}
 				}
 			}
 			else
 			{
-				var groupPos = clickedNodeName.lastIndexOf(".");
-				var groupName = clickedNodeName.substring(0, groupPos);
-				console.log('node.name:' + node.name + ' groupName:' + groupName);
-				if (node.name == groupName)
+				// var groupPos = clickedNodeName.lastIndexOf(".");
+				// var groupName = clickedNodeName.substring(0, groupPos);
+				// console.log('node.name:' + node.name + ' groupName:' + groupName);
+				console.log('node.name:' + node.name + ' groupName:' + clickedNodeGroup);
+				if (node.name == clickedNodeGroup)
 				{
 					if (action.event.type == "link" && action.trigger.type == "timestamp") 
 					{
 						if (Number(action.trigger.data) < msec)
 						{
-							document.getElementById('selectedNodeLink').innerHTML = 'Link: ' + action.event.URL;
+							document.getElementById('selectedNodeLink').innerHTML = action.event.URL;
 							currentURL2Copy = action.event.URL;
 						}
 					}
@@ -271,38 +252,89 @@ function findDescr(parentName) {
 
 function getClickedNodeDesc() {
 	console.log('getClickedNodeDesc(): ' + clickedNodeName);
+	clickedNodeDescr = "";
+	clickedNodeGroupDescr = "";
 	for (let asset of sceneJSON.assets) {
-		if (asset.id == clickedNodeName) {
-			clickedNodeDescr = clickedNodeName;
-			if (asset.descr) {
+		if (asset.id == clickedNodeName) {			
+			if (asset.descr)
 				clickedNodeDescr = asset.descr;
-				break;
+			if (asset.type)
+				clickedNodeType = asset.type.substring(asset.type.lastIndexOf("#")+1);
+		}
+		if (asset.id == clickedNodeGroup) {		
+			if (asset.descr)
+				clickedNodeGroupDescr = asset.descr;
+			if (asset.type)
+				clickedNodeGroupType = asset.type.substring(asset.type.lastIndexOf("#")+1);
+		}	
+		// if(clickedNodeDescr && clickedNodeGroupDescr)	
+		// 	break;
+	};
+}
+
+function clearClickedInfo() {
+	clickedNodeName = "";
+	clickedNodeType = "";
+	clickedNodeDescr = "";
+	clickedNodePosition = "";
+	clickedNodeOrientation = "";
+	clickedNodeGroup = ""
+	clickedNodeGroupType = ""
+	clickedNodeGroupDescr = "";
+	clickedNodeGroupPosition = "";
+	clickedNodeGroupOrientation = "";
+}
+
+function findGroup(assetID) {
+	for (let asset of sceneJSON.assets) {
+		if (asset.id == assetID) {
+			clickedNodeGroup = asset.id;
+			if (asset.parentObject) {
+				findGroup(asset.parentObject);
 			}
-			else {
-				if (asset.parentObject) {
-					findDescr(asset.parentObject);
-				}
-			}
+			else break;
 		}
 	};
 }
 
+
 function getClickedNodeOrientation() {
 	console.log('getClickedNodeOrientation(): ' + clickedNodeName);
 	var nodeName = { name: clickedNodeName };
+	var nodeGroup = { name: clickedNodeGroup};
 	doPostRequest(apiEndPoint + "/nodeDerivedOrientation", nodeName, function (res) {
 		clickedNodeOrientation= res.data.items[0].orientation;
 		console.log('getClickedNodeDerivedOrientation(): res: ', clickedNodeOrientation);
+		document.getElementById('selectedNodeOrientation').innerHTML = '(' + clickedNodeOrientation.w + ', ' + clickedNodeOrientation.x + ', ' + clickedNodeOrientation.y + ', ' + clickedNodeOrientation.z + ')';
 	});
+	if(clickedNodeGroup){
+		doPostRequest(apiEndPoint + "/nodeDerivedOrientation", nodeGroup, function (res) {
+			clickedNodeGroupOrientation= res.data.items[0].orientation;
+			console.log('getClickedNodeDerivedOrientation(): res: ', clickedNodeGroupOrientation);
+			document.getElementById('selectedNodeGroupOrientation').innerHTML = '(' + clickedNodeGroupOrientation.w + ', ' + clickedNodeGroupOrientation.x + ', ' + clickedNodeGroupOrientation.y + ', ' + clickedNodeGroupOrientation.z + ')';
+		});	
+	}
+	else document.getElementById('selectedNodeGroupOrientation').innerHTML = '';
 }
 
 function getClickedNodePosition() {
 	console.log('getClickedNodeDerivedPosition(): ' + clickedNodeName);
 	var nodeName = { name: clickedNodeName};
+	var nodeGroup = { name: clickedNodeGroup};
 	doPostRequest(apiEndPoint + "/nodeDerivedPosition", nodeName, function (res) {
 		clickedNodePosition = res.data.items[0].position;
 		console.log('getClickedNodeDerivedPosition(): res: ', clickedNodePosition);
-	});
+		document.getElementById('selectedNodePosition').innerHTML = '(' + clickedNodePosition.x + ', ' + clickedNodePosition.y + ', ' + clickedNodePosition.z + ')';
+	});	
+	if(clickedNodeGroup){
+		doPostRequest(apiEndPoint + "/nodeDerivedPosition", nodeGroup, function (res) {
+			clickedNodeGroupPosition = res.data.items[0].position;
+			console.log('getClickedNodeDerivedPosition(): res: ', clickedNodeGroupPosition);
+			document.getElementById('selectedNodeGroupPosition').innerHTML = '(' + clickedNodeGroupPosition.x + ', ' + clickedNodeGroupPosition.y + ', ' + clickedNodeGroupPosition.z + ')';	
+		});			
+	}
+	else document.getElementById('selectedNodeGroupPosition').innerHTML = '';
+
 }
 
 function getUserNodePosition() {
@@ -700,8 +732,12 @@ function updateProperties() {
 	if (clickedNodeName.length) {
 		getClickedNodePosition();
 		getClickedNodeOrientation();
-		document.getElementById('selectedNodePose').innerHTML = 'Position: (' + clickedNodePosition.x + ',' + clickedNodePosition.y + ',' + clickedNodePosition.z + ')' +
-			' Orientation: (' + clickedNodeOrientation.w + ',' + clickedNodeOrientation.x + ',' + clickedNodeOrientation.y + ',' + clickedNodeOrientation.z + ')';
+
+		// document.getElementById('selectedNodePosition').innerHTML = '(' + clickedNodePosition.x + ', ' + clickedNodePosition.y + ', ' + clickedNodePosition.z + ')';
+		// document.getElementById('selectedNodeOrientation').innerHTML = '(' + clickedNodeOrientation.w + ', ' + clickedNodeOrientation.x + ', ' + clickedNodeOrientation.y + ', ' + clickedNodeOrientation.z + ')';
+		// document.getElementById('selectedNodeGroupPosition').innerHTML = '(' + clickedNodeGroupPosition.x + ', ' + clickedNodeGroupPosition.y + ', ' + clickedNodeGroupPosition.z + ')';
+		// document.getElementById('selectedNodeGroupOrientation').innerHTML = '(' + clickedNodeGroupOrientation.w + ', ' + clickedNodeGroupOrientation.x + ', ' + clickedNodeGroupOrientation.y + ', ' + clickedNodeGroupOrientation.z + ')';
+
 		setClickedNodeState(lastMessage);
 		updateClickedNodeLink(lastMessage);
 	}
@@ -1058,17 +1094,36 @@ $(document).ready(function () {
         console.log('eventObj: ', eventObj);
 		
 		if (eventObj.type == 11) {
+
+			// clear all (e.g. needed if planarNode is clicked)
+			clearClickedInfo();
+
 			$("#nodeName").val(eventObj.subjectName);
 			clickedNodeName = eventObj.subjectName;
+
 			console.log(' show bounding box - select: ', clickedNodeName);
 			document.getElementById('selectedNodeNameTitle').innerHTML = clickedNodeName;
+
+			findGroup(clickedNodeName); // search Group and store in clickedNodeGroup
+			document.getElementById('selectedNodeGroup').innerHTML = clickedNodeGroup;		
+
 			getClickedNodeDesc();
-			document.getElementById('selectedNodeDescription').innerHTML = 'Description: ' + clickedNodeDescr;
-			
-			document.getElementById('selectedNodeState').innerHTML = 'State: ';
-			//findLastState(lastMessage);
-			
-			document.getElementById('selectedNodeLink').innerHTML = 'Link: ';
+			// document.getElementById('selectedNodeType').innerHTML = clickedNodeType;	
+			document.getElementById('selectedNodeGroupType').innerHTML = clickedNodeGroupType;	
+			// document.getElementById('selectedNodeDescription').innerHTML = clickedNodeDescr;
+			document.getElementById('selectedNodeGroupDescription').innerHTML = clickedNodeGroupDescr;	
+
+			// state ancd link
+			document.getElementById('selectedNodeState').innerHTML = '';		
+			document.getElementById('selectedNodeLink').innerHTML = '';
+
+			// Update of variables inside functions
+			getClickedNodePosition();
+			getClickedNodeOrientation();			
+			// document.getElementById('selectedNodePosition').innerHTML = '(' + clickedNodePosition.x + ', ' + clickedNodePosition.y + ', ' + clickedNodePosition.z + ')';
+			// document.getElementById('selectedNodeOrientation').innerHTML = '(' + clickedNodeOrientation.w + ', ' + clickedNodeOrientation.x + ', ' + clickedNodeOrientation.y + ', ' + clickedNodeOrientation.z + ')';
+			// document.getElementById('selectedNodeGroupPosition').innerHTML = '(' + clickedNodeGroupPosition.x + ', ' + clickedNodeGroupPosition.y + ', ' + clickedNodeGroupPosition.z + ')';
+			// document.getElementById('selectedNodeGroupOrientation').innerHTML = '(' + clickedNodeGroupOrientation.w + ', ' + clickedNodeGroupOrientation.x + ', ' + clickedNodeGroupOrientation.y + ', ' + clickedNodeGroupOrientation.z + ')';
         }
     }
     $("button").click(function () {
