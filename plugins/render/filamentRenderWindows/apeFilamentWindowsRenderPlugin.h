@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_OGRE21RENDERPLUGIN_H
-#define APE_OGRE21RENDERPLUGIN_H
+#ifndef APE_FILAMENTWINDOWSRENDERPLUGIN_H
+#define APE_FILAMENTWINDOWSRENDERPLUGIN_H
 
 #include <chrono>
 #include <fstream>
@@ -61,57 +61,19 @@ SOFTWARE.*/
 #include "apeUserInputMacro.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
-#include "apeOgre21Conversions.h"
-#include "apeOgre21RenderPluginConfigs.h"
-#include "OgreSceneManager.h"
-#include "OgreRoot.h"
-#include "OgreConfigFile.h"
-#include "OgreLogManager.h"
-#include "OgreResourceGroupManager.h"
-#include "OgreSceneNode.h"
-#include "OgreEntity.h"
-#include "OgreMovableObject.h"
-#include "OgreMesh2.h"
-#include "OgreMeshManager2.h"
-#include "OgreMeshManager.h"
-#include "OgreMaterialManager.h"
-#include "OgreMesh.h"
-#include "OgreSubMesh.h"
-#include "OgreRenderWindow.h"
-#include "OgreManualObject.h"
-#include "OgreMaterial.h"
-#include "OgreMaterialManager.h"
-#include "OgreFrameListener.h"
-#include "OgreTextureManager.h"
-#include "OgreHardwarePixelBuffer.h"
-#include "OgreMaterial.h"
-#include "OgreTechnique.h"
-#include "OgreWindowEventUtilities.h"
-#include "OgreHlmsManager.h"
-#include "OgrePixelCountLodStrategy.h"
-#include "OgreTextureManager.h"
-#include "OgreD3D11RenderSystem.h"
-#include "OgreD3D11Texture.h"
-#include "D3D11.h"
-#include "OgreWindowEventUtilities.h"
-#include "OgreHlmsUnlit.h"
-#include "OgreHlmsPbs.h"
-#include "OgreHlmsCommon.h"
-#include "OgreArchiveManager.h"
-#include "OgreHlmsPbsDatablock.h"
-#include "Compositor/OgreCompositorManager2.h"
-#include "Ogre_glTF_OgrePlugin.hpp"
+#include "filament/FilamentAPI.h"
+#include "gltfio/AssetLoader.h"
 
-#define THIS_PLUGINNAME "apeOgre21RenderPlugin"
+#define THIS_PLUGINNAME "apeFilamentWindowsRenderPlugin"
 
 namespace ape
 {
-	class Ogre21RenderPlugin : public IPlugin, public Ogre::FrameListener, public Ogre::WindowEventListener
+	class FilamentWindowsRenderPlugin : public IPlugin
 	{
 	public:
-		Ogre21RenderPlugin();
+		FilamentWindowsRenderPlugin();
 
-		~Ogre21RenderPlugin();
+		~FilamentWindowsRenderPlugin();
 
 		void Init() override;
 
@@ -125,27 +87,7 @@ namespace ape
 
 		void Restart() override;
 
-		bool frameStarted(const Ogre::FrameEvent& evt) override;
-
-		bool frameRenderingQueued(const Ogre::FrameEvent& evt) override;
-
-		bool frameEnded(const Ogre::FrameEvent& evt) override;
-
-		void windowResized(Ogre::RenderWindow* rw) override;
-
 	private:
-		Ogre::Root* mpRoot;
-
-		Ogre::SceneManager* mpOgreSceneManager;
-
-		std::vector<Ogre::Camera*> mOgreCameras;
-
-		std::map<std::string, Ogre::RenderWindow*> mRenderWindows;
-
-		Ogre::WindowEventUtilities* mpWindowEventUtilities;
-
-		std::unique_ptr<Ogre_glTF::glTFLoader> mGltfLoader;
-
 		ape::ISceneManager* mpSceneManager;
 
 		ape::IEventManager* mpEventManager;
@@ -156,27 +98,31 @@ namespace ape
 
 		ape::DoubleQueue<Event> mEventDoubleQueue;
 
-		ape::Ogre21RenderPluginConfig mOgre21RenderPluginConfig;
-
 		std::vector<ape::ManualTextureWeakPtr> mRttList;
 
 		ape::UserInputMacro* mpUserInputMacro;
 
+		filament::Engine* mpFilamentEngine;
+
+		gltfio::AssetLoader* mpGltfAssetLoader;
+
+		utils::NameComponentManager* mpFilamentNameComponentManager;
+
+		gltfio::MaterialProvider* mpFilamentMaterialProvider;
+
 		void processEventDoubleQueue();
 
 		void eventCallBack(const ape::Event& event);
-
-		void registerHlms();
 	};
 	
-	APE_PLUGIN_FUNC ape::IPlugin* CreateOgre21RenderPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateFilamentWindowsRenderPlugin()
 	{
-		return new ape::Ogre21RenderPlugin;
+		return new ape::FilamentWindowsRenderPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyOgre21RenderPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyFilamentWindowsRenderPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::Ogre21RenderPlugin*)plugin;
+		delete (ape::FilamentWindowsRenderPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -184,7 +130,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		apeRegisterPlugin(THIS_PLUGINNAME, CreateOgre21RenderPlugin, DestroyOgre21RenderPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateFilamentWindowsRenderPlugin, DestroyFilamentWindowsRenderPlugin);
 		return 0;
 	}
 }

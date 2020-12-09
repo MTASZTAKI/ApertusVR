@@ -50,10 +50,20 @@ if (NOT FILAMENT_READY)
 	)
 endif ()
 add_library(MY_FILAMENT STATIC IMPORTED)
-if (WIN32)
-	set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/lib/x86_64/mdd/filament.lib)
-	set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/lib/x86_64/md/filament.lib)
-endif ()
+set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/lib/x86_64/mdd/filament.lib)
+set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/lib/x86_64/md/filament.lib)
+
+add_library(MY_FILAMENT_UTILS STATIC IMPORTED)
+set_property(TARGET MY_FILAMENT_UTILS PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/lib/x86_64/mdd/utils.lib)
+set_property(TARGET MY_FILAMENT_UTILS PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/lib/x86_64/md/utils.lib)
+
+add_library(MY_FILAMENT_GLTFIO STATIC IMPORTED)
+set_property(TARGET MY_FILAMENT_GLTFIO PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/lib/x86_64/mdd/gltfio.lib)
+set_property(TARGET MY_FILAMENT_GLTFIO PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/lib/x86_64/md/gltfio.lib)
+
+add_library(MY_FILAMENT_GLTFIO_CORE STATIC IMPORTED)
+set_property(TARGET MY_FILAMENT_GLTFIO_CORE PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/lib/x86_64/mdd/gltfio_core.lib)
+set_property(TARGET MY_FILAMENT_GLTFIO_CORE PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/lib/x86_64/md/gltfio_core.lib)
 
 set (HEADERS
 	apeFilamentWindowsRenderPlugin.h
@@ -67,7 +77,7 @@ include_directories(
 	
 add_library (apeFilamentWindowsRenderPlugin SHARED ${SOURCES} ${HEADERS})
 
-target_link_libraries (apeFilamentWindowsRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_FILAMENT )
+target_link_libraries (apeFilamentWindowsRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_FILAMENT MY_FILAMENT_UTILS MY_FILAMENT_GLTFIO MY_FILAMENT_GLTFIO_CORE)
 
 set_property (TARGET apeFilamentWindowsRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
