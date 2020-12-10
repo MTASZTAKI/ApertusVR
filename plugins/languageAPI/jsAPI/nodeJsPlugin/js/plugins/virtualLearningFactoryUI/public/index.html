@@ -88,13 +88,27 @@
 		</div>
 		<div id="Log" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7)">
 		</div>
-		<div id="infoSection" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7);max-width:400px;max-height:500px">
-			<div id="selectedNodeNameTitle" class="card-header"></div>
+		<div id="infoSection" class="card border-dark mb-3" style="background-color:rgba(255, 255, 255, 0.7);max-width:430px;max-height:500px">
+			<!-- <div id="selectedNodeNameTitle" class="card-header"><b></b></div> -->
 			<div class="card-body text-dark">
-				<p id="selectedNodeLink" class="card-title">Link: N/A</p>
-				<p id="selectedNodeState" class="card-title">State: N/A</p>
-				<p id="selectedNodePose" class="card-text">Pose: N/A </p>
-				<p id="selectedNodeDescription" class="card-text">Description: N/A </p>
+				<p class="card-text" style="margin-top: -1em;margin-bottom: -0.5em"> 
+					<b>ID: </b> <span id="selectedNodeNameTitle">N/A</span> <br>
+					<!-- <b>Type: </b><span id="selectedNodeType">N/A</span> <br> -->
+					<!-- <b>Description: </b><span id="selectedNodeDescription">N/A</span> <br> -->
+					<b>Position: </b> <span id="selectedNodePosition">N/A</span> <br>
+					<b>Orientation: </b> <span id="selectedNodeOrientation">N/A</span> 
+				</p>
+				<hr style="height:2px;color:gray;background-color:black">
+				<p style="margin-top: -1em;margin-bottom: -1em;text-align:center;"><b>Group Information</b> </p>
+				<hr style="height:1px;color:gray;background-color:gray">
+				<p class="card-text" style="margin-top: -1em;">
+					<b>ID:</b> <span id="selectedNodeGroup">N/A</span> <br>
+					<b>Type: </b><span id="selectedNodeGroupType">N/A</span> <br>
+					<b>Description: </b><span id="selectedNodeGroupDescription">N/A</span> <br>
+					<b>Position: </b> <span id="selectedNodeGroupPosition">N/A</span> <br>
+					<b>State: </b> <span id="selectedNodeState">N/A</span><br>
+					<b>Log: </b> <span id="selectedNodeLink">N/A</span>
+				</p>		
 			</div>
 			<div class="btn-group-horizontal" style="min-width:300px">
 				<!--<button id="view" type="button" class="btn btn-outline-dark btn-lg"><span class="oi oi-eye"></span></button>-->
