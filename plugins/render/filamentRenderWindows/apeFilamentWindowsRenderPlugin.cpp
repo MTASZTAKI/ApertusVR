@@ -32,7 +32,6 @@ ape::FilamentWindowsRenderPlugin::FilamentWindowsRenderPlugin( )
 	mpEventManager->connectEvent(ape::Event::Group::WATER, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
-	mpGltfAssetLoader = gltfio::AssetLoader::create({ mpFilamentEngine, mpFilamentMaterialProvider, mpFilamentNameComponentManager });
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -348,19 +347,19 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 	}
 }
 
-void ape::FilamentWindowsRenderPlugin::Stop()
+void ape::FilamentWindowsRenderPlugin::Init()
 {
-	
-}
-
-void ape::FilamentWindowsRenderPlugin::Suspend()
-{
-	
-}
-
-void ape::FilamentWindowsRenderPlugin::Restart()
-{
-	
+	APE_LOG_FUNC_ENTER();
+	mpFilamentEngine = filament::Engine::create(filament::Engine::Backend::OPENGL);
+	mpFilamentSwapChain = mpFilamentEngine->createSwapChain(1024, 768);
+	mpFilamentRenderer = mpFilamentEngine->createRenderer();
+	mpFilamentCamera = mpFilamentEngine->createCamera(utils::EntityManager::get().create());
+	mpFilamentView = mpFilamentEngine->createView();
+	mpFilamentScene = mpFilamentEngine->createScene();
+	mpFilamentView->setCamera(mpFilamentCamera);
+	mpFilamentView->setScene(mpFilamentScene);
+	//mpGltfAssetLoader = gltfio::AssetLoader::create({ mpFilamentEngine, mpFilamentMaterialProvider, mpFilamentNameComponentManager });
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ape::FilamentWindowsRenderPlugin::Run()
@@ -368,7 +367,16 @@ void ape::FilamentWindowsRenderPlugin::Run()
 	APE_LOG_FUNC_ENTER();
 	try
 	{
-		;
+		while (true)
+		{
+			if (mpFilamentRenderer->beginFrame(mpFilamentSwapChain))
+			{
+				mpFilamentRenderer->render(mpFilamentView);
+				//APE_LOG_DEBUG("render");
+				mpFilamentRenderer->endFrame();
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		}
 	}
 	catch (std::exception exp)
 	{
@@ -389,10 +397,17 @@ void ape::FilamentWindowsRenderPlugin::Step()
 	}
 }
 
-void ape::FilamentWindowsRenderPlugin::Init()
+void ape::FilamentWindowsRenderPlugin::Stop()
 {
-	APE_LOG_FUNC_ENTER();
-	mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	//mpCoreConfig->setWindowConfig(windowConfig);
-	APE_LOG_FUNC_LEAVE();
+
+}
+
+void ape::FilamentWindowsRenderPlugin::Suspend()
+{
+
+}
+
+void ape::FilamentWindowsRenderPlugin::Restart()
+{
+
 }

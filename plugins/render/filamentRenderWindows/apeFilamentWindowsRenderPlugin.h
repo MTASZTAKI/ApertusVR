@@ -61,8 +61,24 @@ SOFTWARE.*/
 #include "apeUserInputMacro.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
+#include "filameshio/MeshReader.h"
 #include "filament/FilamentAPI.h"
+#include "filament/RenderableManager.h"
+#include "filament/Engine.h"
+#include "filament/Material.h"
+#include "filament/Renderer.h"
+#include "filament/SwapChain.h"
+#include "filament/View.h"
+#include "filament/Viewport.h"
+#include "filament/Camera.h"
+#include "filament/Scene.h"
+#include "filament/SwapChain.h"
+#include "filament/Renderer.h"
 #include "gltfio/AssetLoader.h"
+#include "gltfio/FilamentAsset.h"
+#include "gltfio/ResourceLoader.h"
+#include "gltfio/FilamentInstance.h"
+#include "utils/EntityManager.h"
 
 #define THIS_PLUGINNAME "apeFilamentWindowsRenderPlugin"
 
@@ -105,6 +121,16 @@ namespace ape
 		filament::Engine* mpFilamentEngine;
 
 		gltfio::AssetLoader* mpGltfAssetLoader;
+
+		filament::Renderer* mpFilamentRenderer;
+
+		filament::SwapChain* mpFilamentSwapChain;
+
+		filament::Camera* mpFilamentCamera;
+
+		filament::View* mpFilamentView;
+
+		filament::Scene* mpFilamentScene;
 
 		utils::NameComponentManager* mpFilamentNameComponentManager;
 
