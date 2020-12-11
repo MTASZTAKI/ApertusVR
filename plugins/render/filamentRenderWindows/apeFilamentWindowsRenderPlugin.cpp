@@ -184,7 +184,37 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 									filePath << resourceLocationPath.str();
 								}
 							}
-							;
+							std::ifstream in(filePath.str().c_str(), std::ifstream::ate | std::ifstream::binary);
+							long contentSize = static_cast<long>(in.tellg());
+							if (contentSize <= 0) 
+							{
+								APE_LOG_DEBUG("Unable to open " << filePath.str());
+							}
+							else
+							{
+								APE_LOG_DEBUG(filePath.str() << " was opened");
+							}
+							std::ifstream inBin(filePath.str().c_str(), std::ifstream::binary | std::ifstream::in);
+							std::vector<uint8_t> buffer(static_cast<unsigned long>(contentSize));
+							if (!inBin.read((char*)buffer.data(), contentSize))
+							{
+								APE_LOG_DEBUG("Unable to read " << filePath.str());
+							}
+							else
+							{
+								APE_LOG_DEBUG(filePath.str() << " was read");
+							}
+							auto asset = mpGltfAssetLoader->createAssetFromJson(buffer.data(), buffer.size());
+							buffer.clear();
+							buffer.shrink_to_fit();
+							if (!asset)
+							{
+								APE_LOG_DEBUG("Unable to parse " << filePath.str());
+							}
+							else
+							{
+								APE_LOG_DEBUG(filePath.str() << " was parsed");
+							}
 						}
 					}
 				}
@@ -381,6 +411,7 @@ void ape::FilamentWindowsRenderPlugin::Run()
 				//APE_LOG_DEBUG("render");
 				mpFilamentRenderer->endFrame();
 			}
+			processEventDoubleQueue();
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 	}
