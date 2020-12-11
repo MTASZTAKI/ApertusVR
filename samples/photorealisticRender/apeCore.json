@@ -1,6 +1,7 @@
 {
   "plugins": [
-    "apeOgre21RenderPlugin",
+    "apeSdlWindowPlugin",
+    "apeFilamentWindowsRenderPlugin",
     "apeOisUserInputPlugin",
     "apeViewPointManagerPlugin",
     "apePhotorealisticScenePlugin"

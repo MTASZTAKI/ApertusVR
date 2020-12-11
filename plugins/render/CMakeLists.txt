@@ -22,6 +22,7 @@
 
 add_subdirectory (ogreRender)
 #add_subdirectory (ogre21Render)
+add_subdirectory (sdlWindow)
 if (WIN32)
 add_subdirectory (filamentRenderWindows)
 endif ()
