@@ -350,8 +350,12 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 void ape::FilamentWindowsRenderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	APE_LOG_DEBUG("waiting for main window");
+	while (mpCoreConfig->getWindowConfig().handle == nullptr)
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	APE_LOG_DEBUG("main window was found");
 	mpFilamentEngine = filament::Engine::create(filament::Engine::Backend::OPENGL);
-	mpFilamentSwapChain = mpFilamentEngine->createSwapChain(1024, 768);
+	mpFilamentSwapChain = mpFilamentEngine->createSwapChain(mpCoreConfig->getWindowConfig().handle);
 	mpFilamentRenderer = mpFilamentEngine->createRenderer();
 	mpFilamentCamera = mpFilamentEngine->createCamera(utils::EntityManager::get().create());
 	mpFilamentView = mpFilamentEngine->createView();
@@ -372,7 +376,7 @@ void ape::FilamentWindowsRenderPlugin::Run()
 			if (mpFilamentRenderer->beginFrame(mpFilamentSwapChain))
 			{
 				mpFilamentRenderer->render(mpFilamentView);
-				//APE_LOG_DEBUG("render");
+				APE_LOG_DEBUG("render");
 				mpFilamentRenderer->endFrame();
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
