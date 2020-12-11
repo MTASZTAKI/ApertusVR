@@ -78,7 +78,9 @@ SOFTWARE.*/
 #include "gltfio/FilamentAsset.h"
 #include "gltfio/ResourceLoader.h"
 #include "gltfio/FilamentInstance.h"
+#include "gltfio/MaterialProvider.h"
 #include "utils/EntityManager.h"
+#include "utils/NameComponentManager.h"
 
 #define THIS_PLUGINNAME "apeFilamentWindowsRenderPlugin"
 

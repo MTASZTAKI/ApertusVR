@@ -362,7 +362,9 @@ void ape::FilamentWindowsRenderPlugin::Init()
 	mpFilamentScene = mpFilamentEngine->createScene();
 	mpFilamentView->setCamera(mpFilamentCamera);
 	mpFilamentView->setScene(mpFilamentScene);
-	//mpGltfAssetLoader = gltfio::AssetLoader::create({ mpFilamentEngine, mpFilamentMaterialProvider, mpFilamentNameComponentManager });
+	mpFilamentMaterialProvider = gltfio::createMaterialGenerator(mpFilamentEngine);
+	mpFilamentNameComponentManager = new utils::NameComponentManager(utils::EntityManager::get());
+	mpGltfAssetLoader = gltfio::AssetLoader::create({ mpFilamentEngine, mpFilamentMaterialProvider, mpFilamentNameComponentManager });
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -376,7 +378,7 @@ void ape::FilamentWindowsRenderPlugin::Run()
 			if (mpFilamentRenderer->beginFrame(mpFilamentSwapChain))
 			{
 				mpFilamentRenderer->render(mpFilamentView);
-				APE_LOG_DEBUG("render");
+				//APE_LOG_DEBUG("render");
 				mpFilamentRenderer->endFrame();
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
