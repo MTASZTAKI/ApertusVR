@@ -214,6 +214,14 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 							else
 							{
 								APE_LOG_DEBUG(filePath.str() << " was parsed");
+								if (mpFilamentResourceLoader->loadResources(asset))
+								{
+									APE_LOG_DEBUG("resources load OK");
+								}
+								else
+								{
+									APE_LOG_DEBUG("resources load FAILED");
+								}
 							}
 						}
 					}
@@ -394,7 +402,29 @@ void ape::FilamentWindowsRenderPlugin::Init()
 	mpFilamentView->setScene(mpFilamentScene);
 	mpFilamentMaterialProvider = gltfio::createMaterialGenerator(mpFilamentEngine);
 	mpFilamentNameComponentManager = new utils::NameComponentManager(utils::EntityManager::get());
+	mFilamentSunlight = utils::EntityManager::get().create();
+	mpFilamentLightManagerBuilder = new filament::LightManager::Builder(filament::LightManager::Type::SUN);
+	mpFilamentLightManagerBuilder->color(filament::Color::toLinear<filament::ACCURATE>({ 0.98, 0.92, 0.89 }));
+	mpFilamentLightManagerBuilder->intensity(100000.0f);
+	filament::math::float3 sunlightDirection = { 0.6, -1.0, -0.8 };
+	mpFilamentLightManagerBuilder->direction(sunlightDirection);
+	mpFilamentLightManagerBuilder->castShadows(true);
+	mpFilamentLightManagerBuilder->sunAngularRadius(1.9);
+	mpFilamentLightManagerBuilder->sunHaloSize(10.0);
+	mpFilamentLightManagerBuilder->sunHaloFalloff(80.0);
+	mpFilamentLightManagerBuilder->build(*mpFilamentEngine, mFilamentSunlight);
+	mpFilamentScene->addEntity(mFilamentSunlight);
+	filament::View::AmbientOcclusionOptions ambientOcclusionOptions;
+	ambientOcclusionOptions.upsampling = filament::View::QualityLevel::HIGH;
+	mpFilamentView->setAmbientOcclusionOptions(ambientOcclusionOptions);
 	mpGltfAssetLoader = gltfio::AssetLoader::create({ mpFilamentEngine, mpFilamentMaterialProvider, mpFilamentNameComponentManager });
+	gltfio::ResourceConfiguration resourceConfiguration;
+	resourceConfiguration.engine = mpFilamentEngine;
+	auto resourceLocation = mpCoreConfig->getNetworkConfig().resourceLocations[0];
+	resourceConfiguration.gltfPath = resourceLocation.c_str();
+	resourceConfiguration.normalizeSkinningWeights = true;
+	resourceConfiguration.recomputeBoundingBoxes = false;
+	mpFilamentResourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
 	APE_LOG_FUNC_LEAVE();
 }
 

@@ -64,6 +64,7 @@ SOFTWARE.*/
 #include "filameshio/MeshReader.h"
 #include "filament/FilamentAPI.h"
 #include "filament/RenderableManager.h"
+#include "filament/LightManager.h"
 #include "filament/Engine.h"
 #include "filament/Material.h"
 #include "filament/Renderer.h"
@@ -81,6 +82,9 @@ SOFTWARE.*/
 #include "gltfio/MaterialProvider.h"
 #include "utils/EntityManager.h"
 #include "utils/NameComponentManager.h"
+#include "math/mathfwd.h"
+#include "math/vec3.h"
+#include "math/TVecHelpers.h"
 
 #define THIS_PLUGINNAME "apeFilamentWindowsRenderPlugin"
 
@@ -134,9 +138,15 @@ namespace ape
 
 		filament::Scene* mpFilamentScene;
 
+		filament::LightManager::Builder* mpFilamentLightManagerBuilder;
+
+		utils::Entity mFilamentSunlight;
+
 		utils::NameComponentManager* mpFilamentNameComponentManager;
 
 		gltfio::MaterialProvider* mpFilamentMaterialProvider;
+
+		gltfio::ResourceLoader* mpFilamentResourceLoader;
 
 		void processEventDoubleQueue();
 
