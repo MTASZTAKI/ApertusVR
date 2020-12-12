@@ -214,7 +214,14 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 							else
 							{
 								APE_LOG_DEBUG(filePath.str() << " was parsed");
-								if (mpFilamentResourceLoader->loadResources(asset))
+								gltfio::ResourceConfiguration resourceConfiguration;
+								resourceConfiguration.engine = mpFilamentEngine;
+								auto resourceLocation = filePath.str();
+								resourceConfiguration.gltfPath = resourceLocation.c_str();
+								resourceConfiguration.normalizeSkinningWeights = true;
+								resourceConfiguration.recomputeBoundingBoxes = false;
+								auto filamentResourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
+								if (filamentResourceLoader->loadResources(asset))
 								{
 									APE_LOG_DEBUG("resources load OK");
 								}
@@ -222,6 +229,7 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 								{
 									APE_LOG_DEBUG("resources load FAILED");
 								}
+								delete filamentResourceLoader;
 							}
 						}
 					}
@@ -418,13 +426,6 @@ void ape::FilamentWindowsRenderPlugin::Init()
 	ambientOcclusionOptions.upsampling = filament::View::QualityLevel::HIGH;
 	mpFilamentView->setAmbientOcclusionOptions(ambientOcclusionOptions);
 	mpGltfAssetLoader = gltfio::AssetLoader::create({ mpFilamentEngine, mpFilamentMaterialProvider, mpFilamentNameComponentManager });
-	gltfio::ResourceConfiguration resourceConfiguration;
-	resourceConfiguration.engine = mpFilamentEngine;
-	auto resourceLocation = mpCoreConfig->getNetworkConfig().resourceLocations[0];
-	resourceConfiguration.gltfPath = resourceLocation.c_str();
-	resourceConfiguration.normalizeSkinningWeights = true;
-	resourceConfiguration.recomputeBoundingBoxes = false;
-	mpFilamentResourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
 	APE_LOG_FUNC_LEAVE();
 }
 

@@ -146,8 +146,6 @@ namespace ape
 
 		gltfio::MaterialProvider* mpFilamentMaterialProvider;
 
-		gltfio::ResourceLoader* mpFilamentResourceLoader;
-
 		void processEventDoubleQueue();
 
 		void eventCallBack(const ape::Event& event);
