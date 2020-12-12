@@ -64,6 +64,8 @@ SOFTWARE.*/
 #include "filameshio/MeshReader.h"
 #include "filament/FilamentAPI.h"
 #include "filament/RenderableManager.h"
+#include "filament/VertexBuffer.h"
+#include "filament/IndexBuffer.h"
 #include "filament/LightManager.h"
 #include "filament/Engine.h"
 #include "filament/Material.h"

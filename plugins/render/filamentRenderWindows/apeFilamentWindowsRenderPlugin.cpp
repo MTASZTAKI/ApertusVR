@@ -1,5 +1,8 @@
 #include "apeFilamentWindowsRenderPlugin.h"
 
+static const filament::math::float2 TRIANGLE_VERTICES[3] = { {1, 0}, {-0.5, 0.866}, {-0.5, -0.866} };
+static constexpr uint16_t TRIANGLE_INDICES[3] = { 0, 1, 2 };
+
 ape::FilamentWindowsRenderPlugin::FilamentWindowsRenderPlugin( )
 {
 	APE_LOG_FUNC_ENTER();
@@ -224,6 +227,26 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 								if (filamentResourceLoader->loadResources(asset))
 								{
 									APE_LOG_DEBUG("resources load OK");
+
+									mpFilamentScene->addEntities(asset->getEntities(), asset->getEntityCount());
+
+									/*auto vb = filament::VertexBuffer::Builder()
+										.vertexCount(3).bufferCount(1)
+										.attribute(filament::VertexAttribute::POSITION, 0, filament::VertexBuffer::AttributeType::FLOAT2, 0, 8)
+										.build(*mpFilamentEngine);
+									vb->setBufferAt(*mpFilamentEngine, 0,
+										filament::VertexBuffer::BufferDescriptor(TRIANGLE_VERTICES, 24, nullptr));
+									auto ib = filament::IndexBuffer::Builder()
+										.indexCount(3).bufferType(filament::IndexBuffer::IndexType::USHORT)
+										.build(*mpFilamentEngine);
+									ib->setBuffer(*mpFilamentEngine, filament::IndexBuffer::BufferDescriptor(TRIANGLE_INDICES, 6, nullptr));
+									auto renderable = utils::EntityManager::get().create();
+									filament::RenderableManager::Builder(1)
+										.boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+										.geometry(0, filament::RenderableManager::PrimitiveType::TRIANGLES, vb, ib, 0, 3)
+										.build(*mpFilamentEngine, renderable);
+									mpFilamentScene->addEntity(renderable);*/
+
 								}
 								else
 								{
