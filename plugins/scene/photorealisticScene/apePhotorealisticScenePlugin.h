@@ -71,6 +71,8 @@ namespace ape
 
 		ape::NodeWeakPtr mNode;
 
+		bool mIsRenderReady;
+
 		void eventCallBack(const ape::Event& event);
 
 	public:

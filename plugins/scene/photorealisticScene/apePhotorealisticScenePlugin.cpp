@@ -9,6 +9,7 @@ ape::apePhotoRealisticScenePlugin::apePhotoRealisticScenePlugin()
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&apePhotoRealisticScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
+	mIsRenderReady = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -22,13 +23,25 @@ ape::apePhotoRealisticScenePlugin::~apePhotoRealisticScenePlugin()
 
 void ape::apePhotoRealisticScenePlugin::eventCallBack(const ape::Event& event)
 {
-
+	if (event.type == ape::Event::Type::CAMERA_WINDOW)
+	{
+		mIsRenderReady = true;
+	}
 }
 
 void ape::apePhotoRealisticScenePlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	APE_LOG_FUNC_LEAVE();
+}
 
+void ape::apePhotoRealisticScenePlugin::Run()
+{
+	APE_LOG_FUNC_ENTER();
+	APE_LOG_DEBUG("waiting for renderer is ready");
+	while (!mIsRenderReady)
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	APE_LOG_DEBUG("renderer is ready");
 	if (auto node = mpSceneManager->createNode("lightNode1", true, mpCoreConfig->getNetworkGUID()).lock())
 	{
 		if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light1", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
@@ -66,12 +79,6 @@ void ape::apePhotoRealisticScenePlugin::Init()
 			glbMeshFile->setParentNode(node);
 		}*/
 	}
-	APE_LOG_FUNC_LEAVE();
-}
-
-void ape::apePhotoRealisticScenePlugin::Run()
-{
-	APE_LOG_FUNC_ENTER();
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
