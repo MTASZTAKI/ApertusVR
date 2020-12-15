@@ -342,7 +342,7 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 									camera->setNearClipDistance(cameraSetting.nearClip);
 									camera->setFarClipDistance(cameraSetting.farClip);
 									camera->setFOVy(cameraSetting.fovY.toRadian());
-									mpFilamentCamera->setProjection(cameraSetting.fovY.degree, aspectRatio, cameraSetting.nearClip, cameraSetting.farClip);
+									//mpFilamentCamera->setProjection(cameraSetting.fovY.degree, aspectRatio, cameraSetting.nearClip, cameraSetting.farClip);
 								}
 							}
 						}
