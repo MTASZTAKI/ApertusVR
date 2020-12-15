@@ -133,6 +133,7 @@ set_property(TARGET MY_FILAMENT_MATDBG PROPERTY IMPORTED_LOCATION_DEBUG ${FILAME
 set_property(TARGET MY_FILAMENT_MATDBG PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/lib/x86_64/md/matdbg.lib)
 
 set (HEADERS
+        apeFilamentWindowsRenderPluginConfigs.h
 	apeFilamentWindowsRenderPlugin.h
 	)
 set (SOURCES
@@ -140,6 +141,7 @@ set (SOURCES
 	)
 include_directories(
 	${FILAMENT_PREBUILD_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	)
 	
 add_library (apeFilamentWindowsRenderPlugin SHARED ${SOURCES} ${HEADERS})

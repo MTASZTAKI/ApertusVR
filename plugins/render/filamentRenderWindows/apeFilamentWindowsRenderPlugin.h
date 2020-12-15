@@ -61,6 +61,7 @@ SOFTWARE.*/
 #include "apeUserInputMacro.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
+#include "apeFilamentWindowsRenderPluginConfigs.h"
 #include "filameshio/MeshReader.h"
 #include "filament/FilamentAPI.h"
 #include "filament/RenderableManager.h"
@@ -147,6 +148,8 @@ namespace ape
 		utils::NameComponentManager* mpFilamentNameComponentManager;
 
 		gltfio::MaterialProvider* mpFilamentMaterialProvider;
+
+		ape::FilamentWindowsRenderPluginConfig mFilamentWindowsRenderPluginConfig;
 
 		void processEventDoubleQueue();
 

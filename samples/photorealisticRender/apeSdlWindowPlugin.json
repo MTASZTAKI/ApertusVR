@@ -1,0 +1,13 @@
+{
+  "windows": [
+    {
+      "monitorIndex": 0,
+      "name": "PhotorealisticRender",
+      "resolution": {
+        "width": 1400,
+        "height": 1050,
+        "fullScreen": false
+      }
+    }
+  ]
+}

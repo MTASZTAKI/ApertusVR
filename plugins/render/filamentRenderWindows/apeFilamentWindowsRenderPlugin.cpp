@@ -1,3 +1,8 @@
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/filewritestream.h"
 #include "apeFilamentWindowsRenderPlugin.h"
 
 static const filament::math::float2 TRIANGLE_VERTICES[3] = { {1, 0}, {-0.5, 0.866}, {-0.5, -0.866} };
@@ -35,6 +40,17 @@ ape::FilamentWindowsRenderPlugin::FilamentWindowsRenderPlugin( )
 	mpEventManager->connectEvent(ape::Event::Group::WATER, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mFilamentWindowsRenderPluginConfig = ape::FilamentWindowsRenderPluginConfig();
+	mpFilamentEngine = nullptr;
+	mpGltfAssetLoader = nullptr;
+	mpFilamentRenderer = nullptr;
+	mpFilamentSwapChain = nullptr;
+	mpFilamentCamera = nullptr;
+	mpFilamentView = nullptr;
+	mpFilamentScene = nullptr;
+	mpFilamentLightManagerBuilder = nullptr;
+	mpFilamentNameComponentManager = nullptr;
+	mpFilamentMaterialProvider = nullptr;
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -227,26 +243,7 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 								if (filamentResourceLoader->loadResources(asset))
 								{
 									APE_LOG_DEBUG("resources load OK");
-
 									mpFilamentScene->addEntities(asset->getEntities(), asset->getEntityCount());
-
-									/*auto vb = filament::VertexBuffer::Builder()
-										.vertexCount(3).bufferCount(1)
-										.attribute(filament::VertexAttribute::POSITION, 0, filament::VertexBuffer::AttributeType::FLOAT2, 0, 8)
-										.build(*mpFilamentEngine);
-									vb->setBufferAt(*mpFilamentEngine, 0,
-										filament::VertexBuffer::BufferDescriptor(TRIANGLE_VERTICES, 24, nullptr));
-									auto ib = filament::IndexBuffer::Builder()
-										.indexCount(3).bufferType(filament::IndexBuffer::IndexType::USHORT)
-										.build(*mpFilamentEngine);
-									ib->setBuffer(*mpFilamentEngine, filament::IndexBuffer::BufferDescriptor(TRIANGLE_INDICES, 6, nullptr));
-									auto renderable = utils::EntityManager::get().create();
-									filament::RenderableManager::Builder(1)
-										.boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-										.geometry(0, filament::RenderableManager::PrimitiveType::TRIANGLES, vb, ib, 0, 3)
-										.build(*mpFilamentEngine, renderable);
-									mpFilamentScene->addEntity(renderable);*/
-
 								}
 								else
 								{
@@ -329,7 +326,27 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 			{
 				if (event.type == ape::Event::Type::CAMERA_CREATE)
 				{
-					;
+					mpFilamentCamera = mpFilamentEngine->createCamera(utils::EntityManager::get().create());
+					for (int i = 0; i < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList.size(); i++)
+					{
+						for (int j = 0; j < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
+						{
+							for (int k = 0; k < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
+							{
+								auto cameraSetting = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
+								if (cameraSetting.name == camera->getName())
+								{
+									float aspectRatio = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].width / mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].height;
+									camera->setWindow(mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].name);
+									camera->setFocalLength(1.0f);
+									camera->setNearClipDistance(cameraSetting.nearClip);
+									camera->setFarClipDistance(cameraSetting.farClip);
+									camera->setFOVy(cameraSetting.fovY.toRadian());
+									mpFilamentCamera->setProjection(cameraSetting.fovY.degree, aspectRatio, cameraSetting.nearClip, cameraSetting.farClip);
+								}
+							}
+						}
+					}
 				}
 				else
 				{
@@ -337,7 +354,36 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 					{
 					case ape::Event::Type::CAMERA_WINDOW:
 					{
-						;
+						for (int i = 0; i < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList.size(); i++)
+						{
+							for (int j = 0; j < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
+							{
+								auto renderWindowSetting = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i];
+								auto viewportSetting = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j];
+								for (int k = 0; k < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
+								{
+									auto cameraSetting = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
+									if (cameraSetting.name == camera->getName())
+									{
+										int zorder = viewportSetting.zOrder;
+										float width = (float)viewportSetting.width / (float)renderWindowSetting.width;
+										float height = (float)viewportSetting.height / (float)renderWindowSetting.height;
+										float left = (float)viewportSetting.left / (float)renderWindowSetting.width;
+										float top = (float)viewportSetting.top / (float)renderWindowSetting.height;
+										mpFilamentView = mpFilamentEngine->createView();
+										if (mpFilamentView)
+										{
+											APE_LOG_DEBUG("filamentViewport: " << "zorder: " << zorder << " left: " << left << " top: " << top << " width: " << width << " height: " << height);
+											mpFilamentView->setCamera(mpFilamentCamera);
+											mpFilamentView->setViewport({ viewportSetting.left, viewportSetting.top, (unsigned int)viewportSetting.width, (unsigned int)viewportSetting.height });}
+											mpFilamentView->setScene(mpFilamentScene);
+											filament::View::AmbientOcclusionOptions ambientOcclusionOptions;
+											ambientOcclusionOptions.upsampling = filament::View::QualityLevel::HIGH;
+											mpFilamentView->setAmbientOcclusionOptions(ambientOcclusionOptions);
+									}
+								}
+							}
+						}
 					}
 					break;
 					case ape::Event::Type::CAMERA_PARENTNODE:
@@ -423,15 +469,159 @@ void ape::FilamentWindowsRenderPlugin::Init()
 	while (mpCoreConfig->getWindowConfig().handle == nullptr)
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	APE_LOG_DEBUG("main window was found");
+	std::stringstream fileFullPath;
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeFilamentWindowsRenderPlugin.json";
+	FILE* apeFilamentWindowsRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	char readBuffer[65536];
+	if (apeFilamentWindowsRenderPluginConfigFile)
+	{
+		rapidjson::FileReadStream jsonFileReaderStream(apeFilamentWindowsRenderPluginConfigFile, readBuffer, sizeof(readBuffer));
+		rapidjson::Document jsonDocument;
+		jsonDocument.ParseStream(jsonFileReaderStream);
+		if (jsonDocument.IsObject())
+		{
+			rapidjson::Value& renderSystem = jsonDocument["renderSystem"];
+			mFilamentWindowsRenderPluginConfig.renderSystem = renderSystem.GetString();
+			rapidjson::Value& lodLevels = jsonDocument["lodLevels"];
+			for (rapidjson::Value::MemberIterator lodLevelsMemberIterator =
+				lodLevels.MemberBegin(); lodLevelsMemberIterator != lodLevels.MemberEnd(); ++lodLevelsMemberIterator)
+			{
+				if (lodLevelsMemberIterator->name == "autoGenerateAndSave")
+					mFilamentWindowsRenderPluginConfig.filamentLodLevelsConfig.autoGenerateAndSave = lodLevelsMemberIterator->value.GetBool();
+				else if (lodLevelsMemberIterator->name == "bias")
+					mFilamentWindowsRenderPluginConfig.filamentLodLevelsConfig.bias = lodLevelsMemberIterator->value.GetFloat();
+			}
+			if (jsonDocument.HasMember("shading"))
+			{
+				rapidjson::Value& shading = jsonDocument["shading"];
+				mFilamentWindowsRenderPluginConfig.shading = shading.GetString();
+			}
+			rapidjson::Value& renderWindows = jsonDocument["renderWindows"];
+			for (auto& renderWindow : renderWindows.GetArray())
+			{
+				ape::FilamentWindowsRenderWindowConfig filamentWindowsRenderWindowConfig;
+				for (rapidjson::Value::MemberIterator renderWindowMemberIterator =
+					renderWindow.MemberBegin(); renderWindowMemberIterator != renderWindow.MemberEnd(); ++renderWindowMemberIterator)
+				{
+					if (renderWindowMemberIterator->name == "enable")
+						filamentWindowsRenderWindowConfig.enable = renderWindowMemberIterator->value.GetBool();
+					else if (renderWindowMemberIterator->name == "name")
+						filamentWindowsRenderWindowConfig.name = renderWindowMemberIterator->value.GetString();
+					else if (renderWindowMemberIterator->name == "monitorIndex")
+						filamentWindowsRenderWindowConfig.monitorIndex = renderWindowMemberIterator->value.GetInt();
+					else if (renderWindowMemberIterator->name == "hidden")
+						filamentWindowsRenderWindowConfig.hidden = renderWindowMemberIterator->value.GetBool();
+					else if (renderWindowMemberIterator->name == "resolution")
+					{
+						for (rapidjson::Value::MemberIterator resolutionMemberIterator =
+							renderWindow[renderWindowMemberIterator->name].MemberBegin();
+							resolutionMemberIterator != renderWindow[renderWindowMemberIterator->name].MemberEnd(); ++resolutionMemberIterator)
+						{
+							if (resolutionMemberIterator->name == "width")
+								filamentWindowsRenderWindowConfig.width = resolutionMemberIterator->value.GetInt();
+							else if (resolutionMemberIterator->name == "height")
+								filamentWindowsRenderWindowConfig.height = resolutionMemberIterator->value.GetInt();
+							else if (resolutionMemberIterator->name == "fullScreen")
+								filamentWindowsRenderWindowConfig.fullScreen = resolutionMemberIterator->value.GetBool();
+						}
+					}
+					else if (renderWindowMemberIterator->name == "miscParams")
+					{
+						for (rapidjson::Value::MemberIterator miscParamsMemberIterator =
+							renderWindow[renderWindowMemberIterator->name].MemberBegin();
+							miscParamsMemberIterator != renderWindow[renderWindowMemberIterator->name].MemberEnd(); ++miscParamsMemberIterator)
+						{
+							if (miscParamsMemberIterator->name == "vSync")
+								filamentWindowsRenderWindowConfig.vSync = miscParamsMemberIterator->value.GetBool();
+							else if (miscParamsMemberIterator->name == "vSyncInterval")
+								filamentWindowsRenderWindowConfig.vSyncInterval = miscParamsMemberIterator->value.GetInt();
+							else if (miscParamsMemberIterator->name == "colorDepth")
+								filamentWindowsRenderWindowConfig.colorDepth = miscParamsMemberIterator->value.GetInt();
+							else if (miscParamsMemberIterator->name == "FSAA")
+								filamentWindowsRenderWindowConfig.fsaa = miscParamsMemberIterator->value.GetInt();
+							else if (miscParamsMemberIterator->name == "FSAAHint")
+								filamentWindowsRenderWindowConfig.fsaaHint = miscParamsMemberIterator->value.GetString();
+						}
+					}
+					else if (renderWindowMemberIterator->name == "viewports")
+					{
+						rapidjson::Value& viewports = renderWindow[renderWindowMemberIterator->name];
+						for (auto& viewport : viewports.GetArray())
+						{
+							ape::FilamentWindowsViewPortConfig filamentViewPortConfig;
+							for (rapidjson::Value::MemberIterator viewportMemberIterator =
+								viewport.MemberBegin();
+								viewportMemberIterator != viewport.MemberEnd(); ++viewportMemberIterator)
+							{
+								if (viewportMemberIterator->name == "zOrder")
+									filamentViewPortConfig.zOrder = viewportMemberIterator->value.GetInt();
+								else if (viewportMemberIterator->name == "left")
+									filamentViewPortConfig.left = viewportMemberIterator->value.GetInt();
+								else if (viewportMemberIterator->name == "top")
+									filamentViewPortConfig.top = viewportMemberIterator->value.GetInt();
+								else if (viewportMemberIterator->name == "width")
+									filamentViewPortConfig.width = viewportMemberIterator->value.GetInt();
+								else if (viewportMemberIterator->name == "height")
+									filamentViewPortConfig.height = viewportMemberIterator->value.GetInt();
+								else if (viewportMemberIterator->name == "cameras")
+								{
+									rapidjson::Value& cameras = viewport[viewportMemberIterator->name];
+									for (auto& camera : cameras.GetArray())
+									{
+										ape::FilamentWindowsCameraConfig filamentCameraConfig;
+										for (rapidjson::Value::MemberIterator cameraMemberIterator =
+											camera.MemberBegin();
+											cameraMemberIterator != camera.MemberEnd(); ++cameraMemberIterator)
+										{
+											if (cameraMemberIterator->name == "name")
+												filamentCameraConfig.name = cameraMemberIterator->value.GetString() + mUniqueID;
+											else if (cameraMemberIterator->name == "nearClip")
+												filamentCameraConfig.nearClip = cameraMemberIterator->value.GetFloat();
+											else if (cameraMemberIterator->name == "farClip")
+												filamentCameraConfig.farClip = cameraMemberIterator->value.GetFloat();
+											else if (cameraMemberIterator->name == "fovY")
+												filamentCameraConfig.fovY = cameraMemberIterator->value.GetFloat();
+											else if (cameraMemberIterator->name == "positionOffset")
+											{
+												for (rapidjson::Value::MemberIterator elementMemberIterator =
+													viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberBegin();
+													elementMemberIterator != viewport[viewportMemberIterator->name][cameraMemberIterator->name].MemberEnd(); ++elementMemberIterator)
+												{
+													if (elementMemberIterator->name == "x")
+														filamentCameraConfig.positionOffset.x = elementMemberIterator->value.GetFloat();
+													else if (elementMemberIterator->name == "y")
+														filamentCameraConfig.positionOffset.y = elementMemberIterator->value.GetFloat();
+													else if (elementMemberIterator->name == "z")
+														filamentCameraConfig.positionOffset.z = elementMemberIterator->value.GetFloat();
+												}
+											}
+											else if (cameraMemberIterator->name == "orientationOffset")
+											{
+												;
+											}
+											else if (cameraMemberIterator->name == "parentNodeName")
+											{
+												filamentCameraConfig.parentNodeName = cameraMemberIterator->value.GetString();
+											}
+										}
+										filamentViewPortConfig.cameras.push_back(filamentCameraConfig);
+									}
+								}
+							}
+							filamentWindowsRenderWindowConfig.viewportList.push_back(filamentViewPortConfig);
+						}
+					}
+				}
+				mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList.push_back(filamentWindowsRenderWindowConfig);
+			}
+		}
+		fclose(apeFilamentWindowsRenderPluginConfigFile);
+	}
+
 	mpFilamentEngine = filament::Engine::create(filament::Engine::Backend::OPENGL);
 	mpFilamentSwapChain = mpFilamentEngine->createSwapChain(mpCoreConfig->getWindowConfig().handle);
 	mpFilamentRenderer = mpFilamentEngine->createRenderer();
-	mpFilamentCamera = mpFilamentEngine->createCamera(utils::EntityManager::get().create());
-	mpFilamentView = mpFilamentEngine->createView();
 	mpFilamentScene = mpFilamentEngine->createScene();
-	mpFilamentView->setViewport({ 0, 0, 1024, 768 });
-	mpFilamentView->setCamera(mpFilamentCamera);
-	mpFilamentView->setScene(mpFilamentScene);
 	mpFilamentMaterialProvider = gltfio::createMaterialGenerator(mpFilamentEngine);
 	mpFilamentNameComponentManager = new utils::NameComponentManager(utils::EntityManager::get());
 	mFilamentSunlight = utils::EntityManager::get().create();
@@ -446,9 +636,6 @@ void ape::FilamentWindowsRenderPlugin::Init()
 	mpFilamentLightManagerBuilder->sunHaloFalloff(80.0);
 	mpFilamentLightManagerBuilder->build(*mpFilamentEngine, mFilamentSunlight);
 	mpFilamentScene->addEntity(mFilamentSunlight);
-	filament::View::AmbientOcclusionOptions ambientOcclusionOptions;
-	ambientOcclusionOptions.upsampling = filament::View::QualityLevel::HIGH;
-	mpFilamentView->setAmbientOcclusionOptions(ambientOcclusionOptions);
 	mpGltfAssetLoader = gltfio::AssetLoader::create({ mpFilamentEngine, mpFilamentMaterialProvider, mpFilamentNameComponentManager });
 	APE_LOG_FUNC_LEAVE();
 }
@@ -460,13 +647,13 @@ void ape::FilamentWindowsRenderPlugin::Run()
 	{
 		while (true)
 		{
+			processEventDoubleQueue();
 			if (mpFilamentRenderer->beginFrame(mpFilamentSwapChain))
 			{
 				mpFilamentRenderer->render(mpFilamentView);
 				//APE_LOG_DEBUG("render");
 				mpFilamentRenderer->endFrame();
 			}
-			processEventDoubleQueue();
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 	}

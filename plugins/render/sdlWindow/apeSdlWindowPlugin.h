@@ -34,6 +34,7 @@ SOFTWARE.*/
 #include "apeILogManager.h"
 #include "apeISceneManager.h"
 #include "apeICoreConfig.h"
+#include "apeSdlWindowPluginConfigs.h"
 #include "SDL.h"
 #include "SDL_syswm.h"
 
@@ -66,6 +67,8 @@ namespace ape
 		ape::IEventManager* mpEventManager;
 
 		ape::ICoreConfig* mpCoreConfig;
+
+		ape::SdlWindowPluginConfig mSdlWindowPluginConfig;
 
 		void eventCallBack(const ape::Event& event);
 	};

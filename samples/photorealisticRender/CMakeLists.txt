@@ -21,6 +21,8 @@
 #SOFTWARE.
 
 set (CONFIGS
+        apeFilamentWindowsRenderPlugin.json
+		apeSdlWindowPlugin.json
 	apeOgre21RenderPlugin.json
 	apeViewPointManagerPlugin.json
 	apeCore.json

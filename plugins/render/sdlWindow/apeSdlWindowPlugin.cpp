@@ -1,3 +1,8 @@
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/filewritestream.h"
 #include "apeSdlWindowPlugin.h"
 
 ape::SdlWindowPlugin::SdlWindowPlugin( )
@@ -7,6 +12,7 @@ ape::SdlWindowPlugin::SdlWindowPlugin( )
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
+	mSdlWindowPluginConfig = ape::SdlWindowPluginConfig();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -25,23 +31,66 @@ void ape::SdlWindowPlugin::eventCallBack(const ape::Event& event)
 void ape::SdlWindowPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+	std::stringstream fileFullPath;
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeSdlWindowPlugin.json";
+	FILE* apeSdlWindowPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	char readBuffer[65536];
+	if (apeSdlWindowPluginConfigFile)
+	{
+		rapidjson::FileReadStream jsonFileReaderStream(apeSdlWindowPluginConfigFile, readBuffer, sizeof(readBuffer));
+		rapidjson::Document jsonDocument;
+		jsonDocument.ParseStream(jsonFileReaderStream);
+		if (jsonDocument.IsObject())
+		{
+			rapidjson::Value& windows = jsonDocument["windows"];
+			for (auto& window : windows.GetArray())
+			{
+				ape::SdlWindowPluginWindowConfig sdlWindowPluginWindowConfig;
+				for (rapidjson::Value::MemberIterator windowMemberIterator =
+					window.MemberBegin(); windowMemberIterator != window.MemberEnd(); ++windowMemberIterator)
+				{
+					if (windowMemberIterator->name == "resolution")
+					{
+						for (rapidjson::Value::MemberIterator resolutionMemberIterator =
+							window[windowMemberIterator->name].MemberBegin();
+							resolutionMemberIterator != window[windowMemberIterator->name].MemberEnd(); ++resolutionMemberIterator)
+						{
+							if (resolutionMemberIterator->name == "width")
+								sdlWindowPluginWindowConfig.width = resolutionMemberIterator->value.GetInt();
+							else if (resolutionMemberIterator->name == "height")
+								sdlWindowPluginWindowConfig.height = resolutionMemberIterator->value.GetInt();
+							else if (resolutionMemberIterator->name == "fullScreen")
+								sdlWindowPluginWindowConfig.fullScreen = resolutionMemberIterator->value.GetBool();
+						}
+					}
+				}
+				mSdlWindowPluginConfig.sdlWindowPluginWindowConfigList.push_back(sdlWindowPluginWindowConfig);
+			}
+		}
+		fclose(apeSdlWindowPluginConfigFile);
+	}
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		APE_LOG_DEBUG("SDL_Init OK");
-		auto window = SDL_CreateWindow("myWindow", 100, 100, 1024, 768, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE);
-		if (window)
+		for (int i = 0; i < mSdlWindowPluginConfig.sdlWindowPluginWindowConfigList.size(); i++)
 		{
-			APE_LOG_DEBUG("SDL_CreateWindow OK");
-			SDL_SysWMinfo wmi;
-			SDL_VERSION(&wmi.version);
-			SDL_GetWindowWMInfo(window, &wmi);
-			HWND win = (HWND)wmi.info.win.window;
-			ape::WindowConfig windowConfig("myWindow", "OGL", (void*)win, 0, 1024, 768);
-			mpCoreConfig->setWindowConfig(windowConfig);
-		}
-		else
-		{
-			APE_LOG_DEBUG("SDL_CreateWindow FAILED: " << SDL_GetError());
+			auto window = SDL_CreateWindow(mSdlWindowPluginConfig.sdlWindowPluginWindowConfigList[i].name.c_str(), 100, 100,
+				mSdlWindowPluginConfig.sdlWindowPluginWindowConfigList[i].width, mSdlWindowPluginConfig.sdlWindowPluginWindowConfigList[i].height,
+				SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE);
+			if (window)
+			{
+				APE_LOG_DEBUG("SDL_CreateWindow OK");
+				SDL_SysWMinfo wmi;
+				SDL_VERSION(&wmi.version);
+				SDL_GetWindowWMInfo(window, &wmi);
+				HWND win = (HWND)wmi.info.win.window;
+				ape::WindowConfig windowConfig("myWindow", "OGL", (void*)win, 0, 1024, 768);
+				mpCoreConfig->setWindowConfig(windowConfig);
+			}
+			else
+			{
+				APE_LOG_DEBUG("SDL_CreateWindow FAILED: " << SDL_GetError());
+			}
 		}
 	}
 	else
