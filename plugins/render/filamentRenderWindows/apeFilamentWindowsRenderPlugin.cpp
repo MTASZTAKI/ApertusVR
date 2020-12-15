@@ -429,6 +429,7 @@ void ape::FilamentWindowsRenderPlugin::Init()
 	mpFilamentCamera = mpFilamentEngine->createCamera(utils::EntityManager::get().create());
 	mpFilamentView = mpFilamentEngine->createView();
 	mpFilamentScene = mpFilamentEngine->createScene();
+	mpFilamentView->setViewport({ 0, 0, 1024, 768 });
 	mpFilamentView->setCamera(mpFilamentCamera);
 	mpFilamentView->setScene(mpFilamentScene);
 	mpFilamentMaterialProvider = gltfio::createMaterialGenerator(mpFilamentEngine);
