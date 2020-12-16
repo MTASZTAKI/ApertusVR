@@ -16,6 +16,7 @@ ape::apePhotoRealisticScenePlugin::apePhotoRealisticScenePlugin()
 ape::apePhotoRealisticScenePlugin::~apePhotoRealisticScenePlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mpEventManager->disconnectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(&apePhotoRealisticScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&apePhotoRealisticScenePlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&apePhotoRealisticScenePlugin::eventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
@@ -65,13 +66,13 @@ void ape::apePhotoRealisticScenePlugin::Run()
 	mNode = mpSceneManager->createNode("gltfNode", true, mpCoreConfig->getNetworkGUID());
 	if (auto node = mNode.lock())
 	{
-		node->setScale(ape::Vector3(10, 10, 10));
-		node->setOrientation(ape::Quaternion(0, 0, 1, 0));
-		node->setPosition(ape::Vector3(0, 0, -50));
+		//node->setScale(ape::Vector3(10, 10, 10));
+		//node->setOrientation(ape::Quaternion(0, 0, 1, 0));
+		//node->setPosition(ape::Vector3(0, 0, -50));
 		if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("helmet", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
-			gltfMeshFile->setParentNode(node);
 			gltfMeshFile->setFileName("/plugins/scene/photorealisticScene/resources/damagedHelmet.gltf");
+			gltfMeshFile->setParentNode(node);
 		}
 		/*if (auto glbMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("CesiumMan", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{

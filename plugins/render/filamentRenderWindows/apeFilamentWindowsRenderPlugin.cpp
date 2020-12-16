@@ -51,6 +51,9 @@ ape::FilamentWindowsRenderPlugin::FilamentWindowsRenderPlugin( )
 	mpFilamentLightManagerBuilder = nullptr;
 	mpFilamentNameComponentManager = nullptr;
 	mpFilamentMaterialProvider = nullptr;
+	mpFilamentTransformManager = nullptr;
+	mpFilamentLoadedAssets = std::map<std::string, gltfio::FilamentAsset*>();
+	mpFilamentTransforms = std::map<std::string, filament::TransformManager::Instance>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -80,7 +83,10 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 				std::string nodeName = node->getName();
 				if (event.type == ape::Event::Type::NODE_CREATE)
 				{
-					;
+					auto filamentEntity = mpFilamentEntityManager->create();
+					mpFilamentTransformManager->create(filamentEntity);
+					auto filamentTransform = mpFilamentTransformManager->getInstance(filamentEntity);
+					mpFilamentTransforms[nodeName] = filamentTransform;
 				}
 				else 
 				{
@@ -97,10 +103,26 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 					}
 						break;
 					case ape::Event::Type::NODE_POSITION:
-						;
+					{
+						auto nodeTransform = node->getModelMatrix().transpose();
+						auto filamentTransform = filament::math::mat4f(
+							nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
+							nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
+							nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
+							nodeTransform[3][0], nodeTransform[3][1], nodeTransform[3][2], nodeTransform[3][3]);
+						mpFilamentTransformManager->setTransform(mpFilamentTransforms[nodeName], filamentTransform);
+					}
 						break;
 					case ape::Event::Type::NODE_ORIENTATION:
-						;
+					{
+						auto nodeTransform = node->getModelMatrix().transpose();
+						auto filamentTransform = filament::math::mat4f(
+							nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
+							nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
+							nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
+							nodeTransform[3][0], nodeTransform[3][1], nodeTransform[3][2], nodeTransform[3][3]);
+						mpFilamentTransformManager->setTransform(mpFilamentTransforms[nodeName], filamentTransform);
+					}
 						break;
 					case ape::Event::Type::NODE_SCALE:
 						;
@@ -152,7 +174,9 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::GEOMETRY_FILE_PARENTNODE:
 				{
-					;
+					auto filamentAssetRootEntity = mpFilamentLoadedAssets[fileName]->getRoot();
+					auto filamentAssetRootTransform = mpFilamentTransformManager->getInstance(filamentAssetRootEntity);
+					mpFilamentTransformManager->setParent(filamentAssetRootTransform, mpFilamentTransforms[parentNodeName]);
 				}
 					break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
@@ -244,6 +268,7 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 								{
 									APE_LOG_DEBUG("resources load OK");
 									mpFilamentScene->addEntities(asset->getEntities(), asset->getEntityCount());
+									mpFilamentLoadedAssets[fileName] = asset;
 								}
 								else
 								{
@@ -326,7 +351,7 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 			{
 				if (event.type == ape::Event::Type::CAMERA_CREATE)
 				{
-					mpFilamentCamera = mpFilamentEngine->createCamera(utils::EntityManager::get().create());
+					mpFilamentCamera = mpFilamentEngine->createCamera(mpFilamentEntityManager->create());
 					for (int i = 0; i < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList.size(); i++)
 					{
 						for (int j = 0; j < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
@@ -622,9 +647,11 @@ void ape::FilamentWindowsRenderPlugin::Init()
 	mpFilamentSwapChain = mpFilamentEngine->createSwapChain(mpCoreConfig->getWindowConfig().handle);
 	mpFilamentRenderer = mpFilamentEngine->createRenderer();
 	mpFilamentScene = mpFilamentEngine->createScene();
+	mpFilamentEntityManager = &utils::EntityManager::get();
+	mpFilamentTransformManager = &mpFilamentEngine->getTransformManager();
 	mpFilamentMaterialProvider = gltfio::createMaterialGenerator(mpFilamentEngine);
-	mpFilamentNameComponentManager = new utils::NameComponentManager(utils::EntityManager::get());
-	mFilamentSunlight = utils::EntityManager::get().create();
+	mpFilamentNameComponentManager = new utils::NameComponentManager(*mpFilamentEntityManager);
+	mFilamentSunlight = mpFilamentEntityManager->create();
 	mpFilamentLightManagerBuilder = new filament::LightManager::Builder(filament::LightManager::Type::SUN);
 	mpFilamentLightManagerBuilder->color(filament::Color::toLinear<filament::ACCURATE>({ 0.98, 0.92, 0.89 }));
 	mpFilamentLightManagerBuilder->intensity(100000.0f);

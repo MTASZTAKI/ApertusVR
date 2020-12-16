@@ -65,6 +65,7 @@ SOFTWARE.*/
 #include "filameshio/MeshReader.h"
 #include "filament/FilamentAPI.h"
 #include "filament/RenderableManager.h"
+#include "filament/TransformManager.h"
 #include "filament/VertexBuffer.h"
 #include "filament/IndexBuffer.h"
 #include "filament/LightManager.h"
@@ -87,6 +88,7 @@ SOFTWARE.*/
 #include "utils/NameComponentManager.h"
 #include "math/mathfwd.h"
 #include "math/vec3.h"
+#include "math/mat4.h"
 #include "math/TVecHelpers.h"
 
 #define THIS_PLUGINNAME "apeFilamentWindowsRenderPlugin"
@@ -140,6 +142,14 @@ namespace ape
 		filament::View* mpFilamentView;
 
 		filament::Scene* mpFilamentScene;
+
+		filament::TransformManager* mpFilamentTransformManager;
+
+		utils::EntityManager* mpFilamentEntityManager;
+
+		std::map<std::string, gltfio::FilamentAsset*> mpFilamentLoadedAssets;
+
+		std::map<std::string, filament::TransformManager::Instance> mpFilamentTransforms;
 
 		filament::LightManager::Builder* mpFilamentLightManagerBuilder;
 
