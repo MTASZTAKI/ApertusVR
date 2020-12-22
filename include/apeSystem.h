@@ -39,7 +39,7 @@ namespace ape
 {
 	namespace System
 	{
-		APE_SYSTEM_DLL_EXPORT void Start(const char* configFolderPath, bool isBlocking, std::function<void()> userThreadFunction = std::function<void()>());
+		APE_SYSTEM_DLL_EXPORT void Start(const char* configFolderPath, bool isBlocking, std::function<void()> userThreadFunction = std::function<void()>(), int step_interval = 20);
 		APE_SYSTEM_DLL_EXPORT void Stop();
 	}
 }

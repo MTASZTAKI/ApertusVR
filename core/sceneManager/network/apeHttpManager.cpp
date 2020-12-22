@@ -25,6 +25,8 @@ SOFTWARE.*/
 #include <string>
 #include <fstream>
 #include <streambuf>
+#include <thread>
+#include <chrono>
 #include "apeHttpManager.h"
 #include "zip.h"
 #ifdef HTTPMANAGER_USE_CURL
@@ -82,7 +84,7 @@ int unzip(const char *filename, void *arg) {
 	static int i = 0;
 	int n = *(int *)arg;
 #ifndef ANDROID
-	APE_LOG_DEBUG("Extracted: "<< filename, << " " << ++i << " of " << n);
+	APE_LOG_DEBUG("Extracted: "<< filename << " " << ++i << " of " << n);
 #endif
 	gUnzipFinished = true;
 	return 0;
@@ -126,7 +128,7 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 			}
 			while (!gLoadRemoteMD5Finished)
 			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+                std::this_thread::sleep_for(std::chrono::milliseconds(20));
 			}
 			auto posLastFwdSlash = md5.find_last_of("/");
 			auto fileName = md5.substr(posLastFwdSlash + 1, md5.length());

@@ -20,21 +20,68 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-set(SDL2_DOWNLOAD_URL "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/sdl2Windows/sdl2.zip")
-set(SDL2_PREBUILD_DIR ${CMAKE_BINARY_DIR}/SDL2Windows/build)
-set(SDL2_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/SDL2Windows/sdl2.zip)
+
+set(CXX_STANDARD "-std=c++17")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(MIN_CLANG_VERSION "6.0")
+
+if (CMAKE_C_COMPILER_ID MATCHES "Clang")
+    if (CMAKE_C_COMPILER_VERSION VERSION_LESS MIN_CLANG_VERSION)
+        message(FATAL_ERROR "Detected C compiler Clang ${CMAKE_C_COMPILER_VERSION} < ${MIN_CLANG_VERSION}")
+    endif()
+elseif (NOT MSVC)
+    message(FATAL_ERROR "Detected C compiler ${CMAKE_C_COMPILER_ID} is unsupported")
+endif()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS MIN_CLANG_VERSION)
+        message(FATAL_ERROR "Detected CXX compiler Clang ${CMAKE_CXX_COMPILER_VERSION} < ${MIN_CLANG_VERSION}")
+    endif()
+elseif (NOT MSVC)
+    message(FATAL_ERROR "Detected CXX compiler ${CMAKE_CXX_COMPILER_ID} is unsupported")
+endif()
+
+if (MSVC)
+    set(CXX_STANDARD "/std:c++latest")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} /W0 /Zc:__cplusplus")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -fstrict-aliasing -Wno-unknown-pragmas -Wno-unused-function")
+endif()
+
+
+
+if(WIN32)
+	set(SDL2_DOWNLOAD_URL "https://www.libsdl.org/release/SDL2-devel-2.0.12-VC.zip")
+	set(SDL2_PREBUILD_DIR ${CMAKE_BINARY_DIR}/SDL2Windows/build)
+	set(SDL2_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/SDL2Windows/SDL2-devel-2.0.12-VC.zip)
+elseif(APPLE)
+	set(SDL2_DOWNLOAD_URL "https://www.libsdl.org/release/SDL2.zip")
+	set(SDL2_PREBUILD_DIR ${CMAKE_BINARY_DIR}/SDL2MacOS/build)
+	set(SDL2_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/SDL2MacOS/SDL2.zip)
+endif()
+
 if (NOT EXISTS ${SDL2_PREBUILD_DIR})
 		file(MAKE_DIRECTORY ${SDL2_PREBUILD_DIR})
 endif ()
 
 set(SDL2_READY FALSE)
-if(EXISTS ${SDL2_PREBUILD_DIR}/sdl2/lib/debug/sdl2.lib)
-	set(SDL2_READY TRUE)
-	message (STATUS "SDL2 is installed" )
-else ()
-	set(SDL2_READY FALSE)
-	message (STATUS "SDL2 is not installed" )
-endif ()
+if(WIN32)
+	if(EXISTS ${SDL2_PREBUILD_DIR}/sdl2/lib/sdl2.lib)
+		set(SDL2_READY TRUE)
+		message (STATUS "SDL2 is installed" )
+	else ()
+		set(SDL2_READY FALSE)
+		message (STATUS "SDL2 is not installed" )
+	endif ()
+elseif(APPLE)
+	if(EXISTS ${SDL2_PREBUILD_DIR}/SDL2/Debug/libsdl2.dylib)
+		set(SDL2_READY TRUE)
+		message (STATUS "SDL2 is installed" )
+	else ()
+		set(SDL2_READY FALSE)
+		message (STATUS "SDL2 is not installed" )
+	endif ()
+endif()
 if (NOT SDL2_READY)
 	if(NOT EXISTS "${SDL2_PREBUILD_ZIP}")
 		message(STATUS "Downloading ${SDL2_DOWNLOAD_URL}...")
@@ -51,26 +98,45 @@ if (NOT SDL2_READY)
 endif ()
 
 add_library(MY_SDL2 STATIC IMPORTED)
-set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_DEBUG ${SDL2_PREBUILD_DIR}/sdl2/lib/release/sdl2.lib)
-set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_RELEASE ${SDL2_PREBUILD_DIR}/sdl2/lib/debug/sdl2.lib)
+if(WIN32)
+	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_DEBUG ${SDL2_PREBUILD_DIR}/sdl2/lib/debug/sdl2.lib)
+	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_RELEASE ${SDL2_PREBUILD_DIR}/sdl2/release/sdl2.lib)
+
+elseif(APPLE)
+	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_DEBUG ${SDL2_PREBUILD_DIR}/SDL2/Debug/libsdl2.dylib)
+	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_RELEASE ${SDL2_PREBUILD_DIR}/SDL2/Release/libsdl2.dylib)
+endif()
 
 
 # apeSdlWindowPlugin
 set (HEADERS
-    apeSdlWindowPluginConfigs.h
+	apeSdlWindowPluginConfigs.h
 	apeSdlWindowPlugin.h
 	)
 set (SOURCES
 	apeSdlWindowPlugin.cpp
 	)
-include_directories(
-	${SDL2_PREBUILD_DIR}/sdl2/include
-	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
-	)
-add_library (apeSdlWindowPlugin SHARED ${SOURCES} ${HEADERS})
-target_link_libraries (apeSdlWindowPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_SDL2)
+if(WIN32)
+	include_directories(
+		${SDL2_PREBUILD_DIR}/sdl2/include
+		${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+		)
+elseif(APPLE)
+	include_directories(
+		${SDL2_PREBUILD_DIR}/SDL2/include
+		${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+		)
+endif()
 
+add_library (apeSdlWindowPlugin SHARED ${SOURCES} ${HEADERS})
+if(WIND32)
+	target_link_libraries (apeSdlWindowPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig 
+apeUserInputMacro MY_SDL2)
+elseif(APPLE)
+	target_link_libraries (apeSdlWindowPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro MY_SDL2 "-framework Cocoa -framework Metal -framework CoreVideo")
+endif()
 set_property (TARGET apeSdlWindowPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
 set_property (TARGET apeSdlWindowPlugin PROPERTY FOLDER "Plugins/Render")
+
 

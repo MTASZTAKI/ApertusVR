@@ -160,6 +160,11 @@ namespace ape
 		gltfio::MaterialProvider* mpFilamentMaterialProvider;
 
 		ape::FilamentWindowsRenderPluginConfig mFilamentWindowsRenderPluginConfig;
+        
+        void initFilament();
+        
+        void parseJson();
+        
 
 		void processEventDoubleQueue();
 

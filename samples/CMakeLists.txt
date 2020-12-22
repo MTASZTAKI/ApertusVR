@@ -20,6 +20,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+if(WIN32)
 add_subdirectory (ai)
 add_subdirectory (browser)
 add_subdirectory (collisionDetection)
@@ -39,5 +40,9 @@ add_subdirectory (e-Learning)
 add_subdirectory (userInterface)
 add_subdirectory (virtualLearningFactory)
 add_subdirectory (photorealisticRender)
+elseif(APPLE)
+add_subdirectory (photorealisticRender)
+add_subdirectory (launcher)
+endif()
 
 

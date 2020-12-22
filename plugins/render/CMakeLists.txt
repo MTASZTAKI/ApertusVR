@@ -20,9 +20,11 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (ogreRender)
+#add_subdirectory (ogreRender)
 #add_subdirectory (ogre21Render)
 add_subdirectory (sdlWindow)
 if (WIN32)
+add_subdirectory (filamentRenderWindows)
+elseif(APPLE)
 add_subdirectory (filamentRenderWindows)
 endif ()

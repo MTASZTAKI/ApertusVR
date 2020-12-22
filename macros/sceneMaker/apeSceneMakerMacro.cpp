@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include "apeSceneMakerMacro.h"
 
 ape::SceneMakerMacro::SceneMakerMacro()
@@ -374,7 +376,7 @@ void ape::SceneMakerMacro::interpolate(ape::NodeWeakPtr node, ape::Vector3 posit
 {
 	if (auto nodeSP = node.lock())
 	{
-#ifndef ANDROID
+#ifdef WIN
 		auto moveInterpolator = std::make_unique<ape::Interpolator>(false);
 #else
 		std::unique_ptr<ape::Interpolator> moveInterpolator(new ape::Interpolator(false));
@@ -386,7 +388,7 @@ void ape::SceneMakerMacro::interpolate(ape::NodeWeakPtr node, ape::Vector3 posit
 			[&](ape::Vector3 pos) { nodeSP->setPosition(pos); }
 		);
 
-#ifndef ANDROID
+#ifdef WIN
 		auto rotateInterpolator = std::make_unique<ape::Interpolator>(false);
 #else
 		std::unique_ptr<ape::Interpolator> rotateInterpolator(new ape::Interpolator(false));
