@@ -55,7 +55,7 @@ if(WIN32)
 	set(SDL2_PREBUILD_DIR ${CMAKE_BINARY_DIR}/SDL2Windows/build)
 	set(SDL2_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/SDL2Windows/SDL2-devel-2.0.12-VC.zip)
 elseif(APPLE)
-	set(SDL2_DOWNLOAD_URL "https://www.libsdl.org/release/SDL2.zip")
+	set(SDL2_DOWNLOAD_URL "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/sdl2OSX/SDL2.zip")
 	set(SDL2_PREBUILD_DIR ${CMAKE_BINARY_DIR}/SDL2MacOS/build)
 	set(SDL2_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/SDL2MacOS/SDL2.zip)
 endif()
@@ -81,6 +81,10 @@ elseif(APPLE)
 		set(SDL2_READY FALSE)
 		message (STATUS "SDL2 is not installed" )
 	endif ()
+	
+	file(COPY ${SDL2_PREBUILD_DIR}/SDL2/Debug/libsdl2.dylib
+        		DESTINATION ${CMAKE_BINARY_DIR}/lib/Debug
+	)
 endif()
 if (NOT SDL2_READY)
 	if(NOT EXISTS "${SDL2_PREBUILD_ZIP}")
@@ -95,6 +99,7 @@ if (NOT SDL2_READY)
 		COMMAND ${CMAKE_COMMAND} -E tar xzf "${SDL2_PREBUILD_ZIP}"
 		WORKING_DIRECTORY ${SDL2_PREBUILD_DIR}
 	)
+
 endif ()
 
 add_library(MY_SDL2 STATIC IMPORTED)

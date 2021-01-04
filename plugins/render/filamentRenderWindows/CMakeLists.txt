@@ -199,11 +199,11 @@ elseif(APPLE)
 	set (HEADERS
         		apeFilamentWindowsRenderPluginConfigs.h
         		apeFilamentWindowsRenderPlugin.h
-		NativeWindowHelper.h
+                NativeWindowHelper.h
 		)
 	set (SOURCES
 		apeFilamentWindowsRenderPlugin.cpp
-		NativeWindowHelper.mm
+        NativeWindowHelper.mm
 		)
     include_directories(
         ${FILAMENT_PREBUILD_DIR}/filament/include
