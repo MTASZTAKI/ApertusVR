@@ -82,6 +82,26 @@ void ape::PluginManagerImpl::CreatePlugins()
 	}
 }
 
+void ape::PluginManagerImpl::callStepFunc(){
+    for (auto const& plugin : mPluginVector)
+    {
+            plugin->Step();
+    }
+    
+}
+//callStepFunc
+//for plugin : step
+
+
+//delete
+//void ape::PluginManagerImpl::runMainThreadFunctions(){
+//    for (auto const& plugin : mPluginVector)
+//    {
+//        if(plugin->mMainThreadFunction)
+//            plugin->mMainThreadFunction();
+//    }
+//}
+
 void ape::PluginManagerImpl::InitAndRunPlugin(ape::IPlugin* plugin)
 {
 	plugin->Init();

@@ -27,21 +27,58 @@ include("prepare_cxx.cmake")
 include("prepare_cmake.cmake")
 include("prepare_ape.cmake")
 
+
+
+set(CXX_STANDARD "-std=c++17")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(MIN_CLANG_VERSION "6.0")
+
+if (CMAKE_C_COMPILER_ID MATCHES "Clang")
+    if (CMAKE_C_COMPILER_VERSION VERSION_LESS MIN_CLANG_VERSION)
+        message(FATAL_ERROR "Detected C compiler Clang ${CMAKE_C_COMPILER_VERSION} < ${MIN_CLANG_VERSION}")
+    endif()
+elseif (NOT MSVC)
+    message(FATAL_ERROR "Detected C compiler ${CMAKE_C_COMPILER_ID} is unsupported")
+endif()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS MIN_CLANG_VERSION)
+        message(FATAL_ERROR "Detected CXX compiler Clang ${CMAKE_CXX_COMPILER_VERSION} < ${MIN_CLANG_VERSION}")
+    endif()
+elseif (NOT MSVC)
+    message(FATAL_ERROR "Detected CXX compiler ${CMAKE_CXX_COMPILER_ID} is unsupported")
+endif()
+
+if (MSVC)
+    set(CXX_STANDARD "/std:c++latest")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} /W0 /Zc:__cplusplus")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -fstrict-aliasing -Wno-unknown-pragmas -Wno-unused-function")
+endif()
+
+
+
+
 if(ANDROID)
     include("prepare_android.cmake")
 endif()
 
 include_directories("include")
 
-if(NOT ANDROID)
+if(WIN32)
     add_subdirectory(core)
     add_subdirectory(plugins)
     add_subdirectory(include)
     add_subdirectory(samples)
     add_subdirectory(macros)
-else()
+elseif(ANDORID)
     add_subdirectory(core)
     add_subdirectory(plugins)
     add_subdirectory(include)
     add_subdirectory(macros)
+elseif(APPLE)
+    add_subdirectory(core)
+    add_subdirectory(plugins)
+    add_subdirectory(macros)
+    add_subdirectory(samples)
 endif()

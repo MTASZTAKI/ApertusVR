@@ -22,6 +22,7 @@ SOFTWARE.*/
 
 #include <chrono>
 #include <random>
+#include <thread>
 #include "apePlatform.h"
 #include "apeSystem.h"
 #include "apeEventManagerImpl.h"
@@ -36,7 +37,7 @@ ape::LogManagerImpl* gpLogManagerImpl;
 ape::SceneManagerImpl* gpSceneManagerImpl;
 ape::CoreConfigImpl* gpCoreConfigImpl;
 
-void ape::System::Start(const char* configFolderPath, bool isBlocking, std::function<void()> userThreadFunction)
+void ape::System::Start(const char* configFolderPath, bool isBlocking, std::function<void()> userThreadFunction, int step_interval)
 {
 	std::cout << "apertusVR - Your open source AR/VR engine for science, education and industry" << std::endl;
 	std::cout << "Build Target Platform: " << APE_PLATFORM_STRING << std::endl;
@@ -53,6 +54,19 @@ void ape::System::Start(const char* configFolderPath, bool isBlocking, std::func
 		gpPluginManagerImpl->joinThreads();
 	else
 		gpPluginManagerImpl->detachThreads();
+    
+    //nem kell
+    //gpPluginManagerImpl->runMainThreadFunctions();
+    
+    while(true){
+        std::this_thread::sleep_for(std::chrono::milliseconds(step_interval));
+        gpPluginManagerImpl->callStepFunc();
+        
+    }
+    //while true
+    //param step interval
+    //sleep_for(step_int)
+    //gpPluginManagerIMp->callStepFunc()
 }
 
 void ape::System::Stop()

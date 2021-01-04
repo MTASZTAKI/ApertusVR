@@ -172,7 +172,7 @@ void ape::ViewPointManagerPlugin::Init()
 	mpUserInputMacro->registerCallbackForControllerTouchpadPressedValue(std::bind(&ViewPointManagerPlugin::controllerTouchpadPressedValue, this, std::placeholders::_1));
 	mpUserInputMacro->registerCallbackForControllerTouchpadReleasedValue(std::bind(&ViewPointManagerPlugin::controllerTouchpadReleasedValue, this, std::placeholders::_1));
 	std::stringstream fileFullPath;
-	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeViewPointManagerPlugin.json";
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeViewPointManagerPlugin.json";
 	FILE* apeViewPointManagerPlugintConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	char readBuffer[65536];
 	if (apeViewPointManagerPlugintConfigFile)

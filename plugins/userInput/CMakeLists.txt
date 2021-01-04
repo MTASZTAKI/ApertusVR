@@ -20,6 +20,11 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-add_subdirectory (oisUserInput)
-add_subdirectory (viewPointManager)
-add_subdirectory (3dRudderController)
+if(WIN32)
+	add_subdirectory (oisUserInput)
+	add_subdirectory (viewPointManager)
+	add_subdirectory (3dRudderController)
+elseif(APPLE)
+	add_subdirectory (viewPointManager)
+endif()
+

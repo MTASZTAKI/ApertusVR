@@ -25,6 +25,8 @@ SOFTWARE.*/
 #include <stdlib.h>
 #include <stdio.h>
 #include "apeSystem.h"
+#include <thread>
+#import "dispatch/dispatch.h"
 
 void my_handler(int s) {
 	printf("Caught signal %d\n", s);
@@ -32,16 +34,34 @@ void my_handler(int s) {
 	exit(1);
 }
 
+void asd(){
+    std::cout << "asd";
+}
 int main(int argc, char** argv)
 {
+    
 	if (argc > 1)
 	{
 		signal(SIGINT, my_handler);
 		ape::System::Start(argv[1], true);
 	}
-	else
-	{
-		std::cout << "Usage example: apeSampleLauncher.exe c:/ApertusVR/samples/helloWorld" << std::endl;
-	}	
+    else{
+    std::string inPath;
+    std::cout << "path: ";
+    std::cin >> inPath;
+    if(inPath.length()>0)
+    {
+       
+        signal(SIGINT, my_handler);
+        ape::System::Start(inPath.c_str(), false);
+        while(true)
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
+    else
+    {
+        std::cout << "Usage example: apeSampleLauncher.exe c:/ApertusVR/samples/helloWorld" << std::endl;
+    }
+    }
+		
 	return 0;
 }

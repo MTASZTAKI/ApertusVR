@@ -1,10 +1,9 @@
 {
   "plugins": [
     "apeSdlWindowPlugin",
+    "apePhotorealisticScenePlugin",
     "apeFilamentWindowsRenderPlugin",
-    "apeOisUserInputPlugin",
-    "apeViewPointManagerPlugin",
-    "apePhotorealisticScenePlugin"
+    "apeViewPointManagerPlugin"
   ],
   "network": {
     "user": "",

@@ -84,6 +84,10 @@ namespace ape
 		void registerUserThreadFunction(std::function<void()> userThreadFunction);
 
 		void detachThreads();
+        
+        void callStepFunc();
+        
+        void runMainThreadFunctions();
 
 		unsigned int getPluginCount();
 	};

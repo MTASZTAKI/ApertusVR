@@ -31,6 +31,8 @@ namespace ape
 	class IPlugin
 	{
 	public:
+        std::function<void()> mMainThreadFunction;
+        
 		virtual void Init() = 0;
 
 		virtual void Run() = 0;
@@ -42,7 +44,9 @@ namespace ape
 		virtual void Suspend() = 0;
 
 		virtual void Restart() = 0;
-	};
+        
+        
+    };
 
 	typedef std::vector < IPlugin* > PluginVector;
 

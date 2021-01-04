@@ -71,6 +71,16 @@ namespace ape
 		ape::SdlWindowPluginConfig mSdlWindowPluginConfig;
 
 		void eventCallBack(const ape::Event& event);
+        
+        void initSDL();
+        
+        void runSDL();
+        
+        void initAndRunSDL();
+        
+        void parseConfigJSON();
+        
+        
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateOgre21RenderPlugin()

@@ -19,18 +19,20 @@
 #LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
-
-add_subdirectory (360ImageScene)
-add_subdirectory (360ImageGalleryScene)
-add_subdirectory (360StereoImageScene)
-add_subdirectory (360VideoScene)
-add_subdirectory (helloWorldScene)
-add_subdirectory (inGameBrowserScene)
-add_subdirectory (oceanAndSkySimulationScene)
-add_subdirectory (physicsSimulationScene)
-add_subdirectory (sampleScene)
-add_subdirectory (photorealisticScene)
-if(ANDROID)
-   add_subdirectory (androidSampleScene)
+if(WIN32)
+	add_subdirectory (360ImageScene)
+	add_subdirectory (360ImageGalleryScene)
+	add_subdirectory (360StereoImageScene)
+	add_subdirectory (360VideoScene)
+	add_subdirectory (helloWorldScene)
+	add_subdirectory (inGameBrowserScene)
+	add_subdirectory (oceanAndSkySimulationScene)
+	add_subdirectory (physicsSimulationScene)
+	add_subdirectory (sampleScene)
+	add_subdirectory (photorealisticScene)
+elseif(ANDROID)
+	add_subdirectory (androidSampleScene)
+elseif(APPLE)
+	add_subdirectory (photorealisticScene)
 endif()
 

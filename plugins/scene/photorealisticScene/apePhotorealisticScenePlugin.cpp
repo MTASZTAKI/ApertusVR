@@ -1,4 +1,4 @@
-#include "apePhotoRealisticScenePlugin.h"
+#include "apePhotorealisticScenePlugin.h"
 
 ape::apePhotoRealisticScenePlugin::apePhotoRealisticScenePlugin()
 {
