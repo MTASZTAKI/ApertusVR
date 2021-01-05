@@ -57,7 +57,6 @@ ape::FilamentWindowsRenderPlugin::FilamentWindowsRenderPlugin( )
 	mpFilamentTransformManager = nullptr;
 	mpFilamentLoadedAssets = std::map<std::string, gltfio::FilamentAsset*>();
 	mpFilamentTransforms = std::map<std::string, filament::TransformManager::Instance>();
-    
     parseJson();
     initFilament();
 	APE_LOG_FUNC_LEAVE();
@@ -525,10 +524,6 @@ void ape::FilamentWindowsRenderPlugin::initFilament(){
 
 void ape::FilamentWindowsRenderPlugin::parseJson(){
     APE_LOG_FUNC_ENTER();
-    APE_LOG_DEBUG("waiting for main window");
-//    while (mpCoreConfig->getWindowConfig().handle == nullptr)
-//        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    APE_LOG_DEBUG("main window was found");
     std::stringstream fileFullPath;
     fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeFilamentWindowsRenderPlugin.json";
     FILE* apeFilamentWindowsRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -717,7 +712,6 @@ void ape::FilamentWindowsRenderPlugin::Step()
 {
         try
         {
-           
                 processEventDoubleQueue();
                 if (mpFilamentRenderer->beginFrame(mpFilamentSwapChain))
                 {

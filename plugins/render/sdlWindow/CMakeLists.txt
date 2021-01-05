@@ -51,9 +51,9 @@ endif()
 
 
 if(WIN32)
-	set(SDL2_DOWNLOAD_URL "https://www.libsdl.org/release/SDL2-devel-2.0.12-VC.zip")
+	set(SDL2_DOWNLOAD_URL "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/sdl2Windows/sdl2.zip")
 	set(SDL2_PREBUILD_DIR ${CMAKE_BINARY_DIR}/SDL2Windows/build)
-	set(SDL2_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/SDL2Windows/SDL2-devel-2.0.12-VC.zip)
+	set(SDL2_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/SDL2Windows/sdl2.zip)
 elseif(APPLE)
 	set(SDL2_DOWNLOAD_URL "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/sdl2OSX/SDL2.zip")
 	set(SDL2_PREBUILD_DIR ${CMAKE_BINARY_DIR}/SDL2MacOS/build)
@@ -66,7 +66,7 @@ endif ()
 
 set(SDL2_READY FALSE)
 if(WIN32)
-	if(EXISTS ${SDL2_PREBUILD_DIR}/sdl2/lib/sdl2.lib)
+	if(EXISTS ${SDL2_PREBUILD_DIR}/sdl2/lib/debug/sdl2.lib)
 		set(SDL2_READY TRUE)
 		message (STATUS "SDL2 is installed" )
 	else ()
@@ -105,8 +105,7 @@ endif ()
 add_library(MY_SDL2 STATIC IMPORTED)
 if(WIN32)
 	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_DEBUG ${SDL2_PREBUILD_DIR}/sdl2/lib/debug/sdl2.lib)
-	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_RELEASE ${SDL2_PREBUILD_DIR}/sdl2/release/sdl2.lib)
-
+	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_RELEASE ${SDL2_PREBUILD_DIR}/sdl2/lib/release/sdl2.lib)
 elseif(APPLE)
 	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_DEBUG ${SDL2_PREBUILD_DIR}/SDL2/Debug/libsdl2.dylib)
 	set_property(TARGET MY_SDL2 PROPERTY IMPORTED_LOCATION_RELEASE ${SDL2_PREBUILD_DIR}/SDL2/Release/libsdl2.dylib)
@@ -134,7 +133,7 @@ elseif(APPLE)
 endif()
 
 add_library (apeSdlWindowPlugin SHARED ${SOURCES} ${HEADERS})
-if(WIND32)
+if(WIN32)
 	target_link_libraries (apeSdlWindowPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig 
 apeUserInputMacro MY_SDL2)
 elseif(APPLE)
@@ -143,5 +142,10 @@ endif()
 set_property (TARGET apeSdlWindowPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
 set_property (TARGET apeSdlWindowPlugin PROPERTY FOLDER "Plugins/Render")
+
+if (WIN32)
+	file(COPY ${SDL2_PREBUILD_DIR}/sdl2/bin/debug/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${SDL2_PREBUILD_DIR}/sdl2/bin/release/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+endif ()
 
 

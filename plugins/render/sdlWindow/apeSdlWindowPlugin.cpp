@@ -4,9 +4,6 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/filewritestream.h"
 #include "apeSdlWindowPlugin.h"
-#import "dispatch/dispatch.h"
-
-
 
 ape::SdlWindowPlugin::SdlWindowPlugin( )
 {
@@ -17,12 +14,7 @@ ape::SdlWindowPlugin::SdlWindowPlugin( )
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mSdlWindowPluginConfig = ape::SdlWindowPluginConfig();
     parseConfigJSON();
-    #ifndef _WIN32
-    //delete
-    //initSDL()
-    //mMainThreadFunction = std::bind(&SdlWindowPlugin::initAndRunSDL, this);
     initSDL();
-    #endif
 	APE_LOG_FUNC_LEAVE();
 }
 

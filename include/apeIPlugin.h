@@ -25,6 +25,7 @@ SOFTWARE.*/
 
 #include <string>
 #include <vector>
+#include <functional>
 
 namespace ape
 {
