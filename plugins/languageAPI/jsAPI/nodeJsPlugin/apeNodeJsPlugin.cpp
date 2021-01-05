@@ -89,7 +89,7 @@ void apeNodeJsPlugin::Run()
 	APE_LOG_FUNC_ENTER();
 	std::stringstream port;
 	port << mNodeJsPluginConfig.serverPort;
-	char *args[] = { "", "server.js", (char*)port.str().c_str() };
+	char *args[] = { (char*)"", (char*)"server.js", (char*)port.str().c_str() };
 	APE_LOG_DEBUG("Initializing Node...");
 
 	int res = -1;

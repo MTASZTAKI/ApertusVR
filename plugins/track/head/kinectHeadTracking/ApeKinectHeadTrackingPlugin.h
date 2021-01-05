@@ -50,10 +50,6 @@ SOFTWARE.*/
 #include "apeHeadTrackingConfigs.h"
 #include "apeEuler.h"
 #include "apeUserInputMacro.h"
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
-#include "rapidjson/filewritestream.h"
-#include "rapidjson/writer.h"
 
 #define THIS_PLUGINNAME "apeKinectHeadTrackingPlugin"
 

@@ -47,10 +47,6 @@ SOFTWARE.*/
 #include "apeITubeGeometry.h"
 #include "apeIRigidBody.h"
 #include "apeInterpolator.h"
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
-#include "rapidjson/filewritestream.h"
-#include "rapidjson/writer.h"
 #include "apeUserInputMacro.h"
 
 #define THIS_PLUGINNAME "apeKinectPlugin"
