@@ -34,6 +34,10 @@ SOFTWARE.*/
 #include <unordered_set>
 #include <vector>
 #include "crow.h"
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/writer.h"
 #include "apePluginAPI.h"
 #include "apeIEventManager.h"
 #include "apeILogManager.h"

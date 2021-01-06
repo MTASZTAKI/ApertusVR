@@ -48,8 +48,6 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -fstrict-aliasing -Wno-unknown-pragmas -Wno-unused-function")
 endif()
 
-
-
 if(WIN32)
 	set(SDL2_DOWNLOAD_URL "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/sdl2Windows/sdl2.zip")
 	set(SDL2_PREBUILD_DIR ${CMAKE_BINARY_DIR}/SDL2Windows/build)

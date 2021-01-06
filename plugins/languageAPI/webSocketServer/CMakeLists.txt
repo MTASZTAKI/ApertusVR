@@ -111,3 +111,6 @@ target_link_libraries (apeWebSocketServerPlugin apePluginManager apeSceneManager
 set_property (TARGET apeWebSocketServerPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
 set_property (TARGET apeWebSocketServerPlugin PROPERTY FOLDER "Plugins/LanguageAPI")
+
+set_property(TARGET apeWebSocketServerPlugin PROPERTY CXX_STANDARD 14)
+set_property(TARGET apeWebSocketServerPlugin PROPERTY CXX_STANDARD_REQUIRED ON)
