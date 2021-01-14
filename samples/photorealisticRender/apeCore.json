@@ -2,7 +2,7 @@
   "plugins": [
     "apeSdlWindowPlugin",
     "apePhotorealisticScenePlugin",
-    "apeFilamentWindowsRenderPlugin",
+    "apeFilamentRenderCppPlugin",
     "apeViewPointManagerPlugin"
   ],
   "network": {

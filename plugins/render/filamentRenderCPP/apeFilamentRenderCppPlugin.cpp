@@ -3,7 +3,7 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/filewritestream.h"
-#include "apeFilamentWindowsRenderPlugin.h"
+#include "apeFilamentRenderCppPlugin.h"
 #ifdef __APPLE__
 #include <sys/stat.h>
 #include "NativeWindowHelper.h"
@@ -11,39 +11,39 @@
 static const filament::math::float2 TRIANGLE_VERTICES[3] = { {1, 0}, {-0.5, 0.866}, {-0.5, -0.866} };
 static constexpr uint16_t TRIANGLE_INDICES[3] = { 0, 1, 2 };
 
-ape::FilamentWindowsRenderPlugin::FilamentWindowsRenderPlugin( )
+ape::FilamentRenderCppPlugin::FilamentRenderCppPlugin( )
 {
 	APE_LOG_FUNC_ENTER();
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mEventDoubleQueue = ape::DoubleQueue<Event>();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::LIGHT, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_BOX, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CYLINDER, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CONE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TUBE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_SPHERE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TORUS, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CLONE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_FILE, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_UNIT, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::SKY, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::WATER, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
-	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&FilamentWindowsRenderPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::LIGHT, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_BOX, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CYLINDER, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CONE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TUBE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_SPHERE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_TORUS, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_CLONE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_FILE, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::TEXTURE_UNIT, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::SKY, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::WATER, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&FilamentRenderCppPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
-	mFilamentWindowsRenderPluginConfig = ape::FilamentWindowsRenderPluginConfig();
+	mFilamentRenderCppPluginConfig = ape::FilamentRenderCppPluginConfig();
 	mpFilamentEngine = nullptr;
 	mpGltfAssetLoader = nullptr;
 	mpFilamentRenderer = nullptr;
@@ -62,18 +62,18 @@ ape::FilamentWindowsRenderPlugin::FilamentWindowsRenderPlugin( )
 	APE_LOG_FUNC_LEAVE();
 }
 
-ape::FilamentWindowsRenderPlugin::~FilamentWindowsRenderPlugin()
+ape::FilamentRenderCppPlugin::~FilamentRenderCppPlugin()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::FilamentWindowsRenderPlugin::eventCallBack(const ape::Event& event)
+void ape::FilamentRenderCppPlugin::eventCallBack(const ape::Event& event)
 {
 	mEventDoubleQueue.push(event);
 }
 
-void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
+void ape::FilamentRenderCppPlugin::processEventDoubleQueue()
 {
 	mEventDoubleQueue.swap();
 	while (!mEventDoubleQueue.emptyPop())
@@ -358,17 +358,17 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 				if (event.type == ape::Event::Type::CAMERA_CREATE)
 				{
 					mpFilamentCamera = mpFilamentEngine->createCamera(mpFilamentEntityManager->create());
-					for (int i = 0; i < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList.size(); i++)
+					for (int i = 0; i < mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList.size(); i++)
 					{
-						for (int j = 0; j < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
+						for (int j = 0; j < mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
 						{
-							for (int k = 0; k < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
+							for (int k = 0; k < mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
 							{
-								auto cameraSetting = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
+								auto cameraSetting = mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
 								if (cameraSetting.name == camera->getName())
 								{
-									float aspectRatio = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].width / mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].height;
-									camera->setWindow(mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].name);
+									float aspectRatio = mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].width / mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].height;
+									camera->setWindow(mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].name);
 									camera->setFocalLength(1.0f);
 									camera->setNearClipDistance(cameraSetting.nearClip);
 									camera->setFarClipDistance(cameraSetting.farClip);
@@ -385,15 +385,15 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 					{
 					case ape::Event::Type::CAMERA_WINDOW:
 					{
-						for (int i = 0; i < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList.size(); i++)
+						for (int i = 0; i < mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList.size(); i++)
 						{
-							for (int j = 0; j < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
+							for (int j = 0; j < mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
 							{
-								auto renderWindowSetting = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i];
-								auto viewportSetting = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j];
-								for (int k = 0; k < mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
+								auto renderWindowSetting = mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i];
+								auto viewportSetting = mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList[j];
+								for (int k = 0; k < mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
 								{
-									auto cameraSetting = mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
+									auto cameraSetting = mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
 									if (cameraSetting.name == camera->getName())
 									{
 										int zorder = viewportSetting.zOrder;
@@ -492,7 +492,7 @@ void ape::FilamentWindowsRenderPlugin::processEventDoubleQueue()
 		mEventDoubleQueue.pop();
 	}
 }
-void ape::FilamentWindowsRenderPlugin::initFilament(){
+void ape::FilamentRenderCppPlugin::initFilament(){
     mpFilamentEngine = filament::Engine::create(filament::Engine::Backend::OPENGL);
     #ifdef _WIN32
     mpFilamentSwapChain = mpFilamentEngine->createSwapChain(mpCoreConfig->getWindowConfig().handle);
@@ -522,50 +522,50 @@ void ape::FilamentWindowsRenderPlugin::initFilament(){
     mpFilamentView = mpFilamentEngine->createView();
 }
 
-void ape::FilamentWindowsRenderPlugin::parseJson(){
+void ape::FilamentRenderCppPlugin::parseJson(){
     APE_LOG_FUNC_ENTER();
     std::stringstream fileFullPath;
-    fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeFilamentWindowsRenderPlugin.json";
-    FILE* apeFilamentWindowsRenderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+    fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeFilamentRenderCppPlugin.json";
+    FILE* apeFilamentRenderCppPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
     char readBuffer[65536];
-    if (apeFilamentWindowsRenderPluginConfigFile)
+    if (apeFilamentRenderCppPluginConfigFile)
     {
-        rapidjson::FileReadStream jsonFileReaderStream(apeFilamentWindowsRenderPluginConfigFile, readBuffer, sizeof(readBuffer));
+        rapidjson::FileReadStream jsonFileReaderStream(apeFilamentRenderCppPluginConfigFile, readBuffer, sizeof(readBuffer));
         rapidjson::Document jsonDocument;
         jsonDocument.ParseStream(jsonFileReaderStream);
         if (jsonDocument.IsObject())
         {
             rapidjson::Value& renderSystem = jsonDocument["renderSystem"];
-            mFilamentWindowsRenderPluginConfig.renderSystem = renderSystem.GetString();
+            mFilamentRenderCppPluginConfig.renderSystem = renderSystem.GetString();
             rapidjson::Value& lodLevels = jsonDocument["lodLevels"];
             for (rapidjson::Value::MemberIterator lodLevelsMemberIterator =
                 lodLevels.MemberBegin(); lodLevelsMemberIterator != lodLevels.MemberEnd(); ++lodLevelsMemberIterator)
             {
                 if (lodLevelsMemberIterator->name == "autoGenerateAndSave")
-                    mFilamentWindowsRenderPluginConfig.filamentLodLevelsConfig.autoGenerateAndSave = lodLevelsMemberIterator->value.GetBool();
+                    mFilamentRenderCppPluginConfig.filamentLodLevelsConfig.autoGenerateAndSave = lodLevelsMemberIterator->value.GetBool();
                 else if (lodLevelsMemberIterator->name == "bias")
-                    mFilamentWindowsRenderPluginConfig.filamentLodLevelsConfig.bias = lodLevelsMemberIterator->value.GetFloat();
+                    mFilamentRenderCppPluginConfig.filamentLodLevelsConfig.bias = lodLevelsMemberIterator->value.GetFloat();
             }
             if (jsonDocument.HasMember("shading"))
             {
                 rapidjson::Value& shading = jsonDocument["shading"];
-                mFilamentWindowsRenderPluginConfig.shading = shading.GetString();
+                mFilamentRenderCppPluginConfig.shading = shading.GetString();
             }
             rapidjson::Value& renderWindows = jsonDocument["renderWindows"];
             for (auto& renderWindow : renderWindows.GetArray())
             {
-                ape::FilamentWindowsRenderWindowConfig filamentWindowsRenderWindowConfig;
+                ape::FilamentRenderCppWindowConfig filamentRenderCppWindowConfig;
                 for (rapidjson::Value::MemberIterator renderWindowMemberIterator =
                     renderWindow.MemberBegin(); renderWindowMemberIterator != renderWindow.MemberEnd(); ++renderWindowMemberIterator)
                 {
                     if (renderWindowMemberIterator->name == "enable")
-                        filamentWindowsRenderWindowConfig.enable = renderWindowMemberIterator->value.GetBool();
+                        filamentRenderCppWindowConfig.enable = renderWindowMemberIterator->value.GetBool();
                     else if (renderWindowMemberIterator->name == "name")
-                        filamentWindowsRenderWindowConfig.name = renderWindowMemberIterator->value.GetString();
+                        filamentRenderCppWindowConfig.name = renderWindowMemberIterator->value.GetString();
                     else if (renderWindowMemberIterator->name == "monitorIndex")
-                        filamentWindowsRenderWindowConfig.monitorIndex = renderWindowMemberIterator->value.GetInt();
+                        filamentRenderCppWindowConfig.monitorIndex = renderWindowMemberIterator->value.GetInt();
                     else if (renderWindowMemberIterator->name == "hidden")
-                        filamentWindowsRenderWindowConfig.hidden = renderWindowMemberIterator->value.GetBool();
+                        filamentRenderCppWindowConfig.hidden = renderWindowMemberIterator->value.GetBool();
                     else if (renderWindowMemberIterator->name == "resolution")
                     {
                         for (rapidjson::Value::MemberIterator resolutionMemberIterator =
@@ -573,11 +573,11 @@ void ape::FilamentWindowsRenderPlugin::parseJson(){
                             resolutionMemberIterator != renderWindow[renderWindowMemberIterator->name].MemberEnd(); ++resolutionMemberIterator)
                         {
                             if (resolutionMemberIterator->name == "width")
-                                filamentWindowsRenderWindowConfig.width = resolutionMemberIterator->value.GetInt();
+                                filamentRenderCppWindowConfig.width = resolutionMemberIterator->value.GetInt();
                             else if (resolutionMemberIterator->name == "height")
-                                filamentWindowsRenderWindowConfig.height = resolutionMemberIterator->value.GetInt();
+                                filamentRenderCppWindowConfig.height = resolutionMemberIterator->value.GetInt();
                             else if (resolutionMemberIterator->name == "fullScreen")
-                                filamentWindowsRenderWindowConfig.fullScreen = resolutionMemberIterator->value.GetBool();
+                                filamentRenderCppWindowConfig.fullScreen = resolutionMemberIterator->value.GetBool();
                         }
                     }
                     else if (renderWindowMemberIterator->name == "miscParams")
@@ -587,15 +587,15 @@ void ape::FilamentWindowsRenderPlugin::parseJson(){
                             miscParamsMemberIterator != renderWindow[renderWindowMemberIterator->name].MemberEnd(); ++miscParamsMemberIterator)
                         {
                             if (miscParamsMemberIterator->name == "vSync")
-                                filamentWindowsRenderWindowConfig.vSync = miscParamsMemberIterator->value.GetBool();
+                                filamentRenderCppWindowConfig.vSync = miscParamsMemberIterator->value.GetBool();
                             else if (miscParamsMemberIterator->name == "vSyncInterval")
-                                filamentWindowsRenderWindowConfig.vSyncInterval = miscParamsMemberIterator->value.GetInt();
+                                filamentRenderCppWindowConfig.vSyncInterval = miscParamsMemberIterator->value.GetInt();
                             else if (miscParamsMemberIterator->name == "colorDepth")
-                                filamentWindowsRenderWindowConfig.colorDepth = miscParamsMemberIterator->value.GetInt();
+                                filamentRenderCppWindowConfig.colorDepth = miscParamsMemberIterator->value.GetInt();
                             else if (miscParamsMemberIterator->name == "FSAA")
-                                filamentWindowsRenderWindowConfig.fsaa = miscParamsMemberIterator->value.GetInt();
+                                filamentRenderCppWindowConfig.fsaa = miscParamsMemberIterator->value.GetInt();
                             else if (miscParamsMemberIterator->name == "FSAAHint")
-                                filamentWindowsRenderWindowConfig.fsaaHint = miscParamsMemberIterator->value.GetString();
+                                filamentRenderCppWindowConfig.fsaaHint = miscParamsMemberIterator->value.GetString();
                         }
                     }
                     else if (renderWindowMemberIterator->name == "viewports")
@@ -603,7 +603,7 @@ void ape::FilamentWindowsRenderPlugin::parseJson(){
                         rapidjson::Value& viewports = renderWindow[renderWindowMemberIterator->name];
                         for (auto& viewport : viewports.GetArray())
                         {
-                            ape::FilamentWindowsViewPortConfig filamentViewPortConfig;
+                            ape::FilamentRenderCppViewPortConfig filamentViewPortConfig;
                             for (rapidjson::Value::MemberIterator viewportMemberIterator =
                                 viewport.MemberBegin();
                                 viewportMemberIterator != viewport.MemberEnd(); ++viewportMemberIterator)
@@ -623,7 +623,7 @@ void ape::FilamentWindowsRenderPlugin::parseJson(){
                                     rapidjson::Value& cameras = viewport[viewportMemberIterator->name];
                                     for (auto& camera : cameras.GetArray())
                                     {
-                                        ape::FilamentWindowsCameraConfig filamentCameraConfig;
+                                        ape::FilamentRenderCppCameraConfig filamentCameraConfig;
                                         for (rapidjson::Value::MemberIterator cameraMemberIterator =
                                             camera.MemberBegin();
                                             cameraMemberIterator != camera.MemberEnd(); ++cameraMemberIterator)
@@ -663,24 +663,24 @@ void ape::FilamentWindowsRenderPlugin::parseJson(){
                                     }
                                 }
                             }
-                            filamentWindowsRenderWindowConfig.viewportList.push_back(filamentViewPortConfig);
+                            filamentRenderCppWindowConfig.viewportList.push_back(filamentViewPortConfig);
                         }
                     }
                 }
-                mFilamentWindowsRenderPluginConfig.filamentRenderWindowConfigList.push_back(filamentWindowsRenderWindowConfig);
+                mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList.push_back(filamentRenderCppWindowConfig);
             }
         }
-        fclose(apeFilamentWindowsRenderPluginConfigFile);
+        fclose(apeFilamentRenderCppPluginConfigFile);
     }
     APE_LOG_FUNC_LEAVE();
 }
-void ape::FilamentWindowsRenderPlugin::Init()
+void ape::FilamentRenderCppPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::FilamentWindowsRenderPlugin::Run()
+void ape::FilamentRenderCppPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
 //	try
@@ -708,7 +708,7 @@ void ape::FilamentWindowsRenderPlugin::Run()
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::FilamentWindowsRenderPlugin::Step()
+void ape::FilamentRenderCppPlugin::Step()
 {
         try
         {
@@ -727,17 +727,17 @@ void ape::FilamentWindowsRenderPlugin::Step()
         }
 }
 
-void ape::FilamentWindowsRenderPlugin::Stop()
+void ape::FilamentRenderCppPlugin::Stop()
 {
 
 }
 
-void ape::FilamentWindowsRenderPlugin::Suspend()
+void ape::FilamentRenderCppPlugin::Suspend()
 {
 
 }
 
-void ape::FilamentWindowsRenderPlugin::Restart()
+void ape::FilamentRenderCppPlugin::Restart()
 {
 
 }

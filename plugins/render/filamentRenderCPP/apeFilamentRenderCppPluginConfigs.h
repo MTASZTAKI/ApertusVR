@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_FILAMENTWINDOWSRENDERPLUGINCONFIGS_H
-#define APE_FILAMENTWINDOWSRENDERPLUGINCONFIGS_H
+#ifndef APE_FILAMENTRENDERCPPPLUGINCONFIGS_H
+#define APE_FILAMENTRENDERCPPPLUGINCONFIGS_H
 
 #include <vector>
 #include <string>
@@ -32,7 +32,7 @@ SOFTWARE.*/
 
 namespace ape
 {
-	struct FilamentWindowsCameraConfig
+	struct FilamentRenderCppCameraConfig
 	{
 		std::string name;
 
@@ -48,7 +48,7 @@ namespace ape
 
 		std::string parentNodeName;
 
-		FilamentWindowsCameraConfig()
+		FilamentRenderCppCameraConfig()
 		{
 			this->name = std::string();
 			this->positionOffset = ape::Vector3();
@@ -59,7 +59,7 @@ namespace ape
 			this->parentNodeName = std::string();
 		}
 
-		FilamentWindowsCameraConfig(
+		FilamentRenderCppCameraConfig(
 			std::string name,
 			ape::Vector3 positionOffset,
 			ape::Quaternion orientationOffset,
@@ -78,19 +78,19 @@ namespace ape
 		}
 	};
 
-	struct FilamentWindowsLodLevelsConfig
+	struct FilamentRenderCppLodLevelsConfig
 	{
 		bool autoGenerateAndSave;
 
 		float bias;
 
-		FilamentWindowsLodLevelsConfig()
+		FilamentRenderCppLodLevelsConfig()
 		{
 			this->autoGenerateAndSave = false;
 			this->bias = 0.0f;
 		}
 
-		FilamentWindowsLodLevelsConfig(
+		FilamentRenderCppLodLevelsConfig(
 			bool autoGenerateAndSave,
 			float bias)
 		{
@@ -99,9 +99,9 @@ namespace ape
 		}
 	};
 
-	struct FilamentWindowsViewPortConfig
+	struct FilamentRenderCppViewPortConfig
 	{
-		std::vector<FilamentWindowsCameraConfig> cameras;
+		std::vector<FilamentRenderCppCameraConfig> cameras;
 
 		int zOrder;
 
@@ -113,9 +113,9 @@ namespace ape
 
 		int height;
 
-		FilamentWindowsViewPortConfig()
+		FilamentRenderCppViewPortConfig()
 		{
-			this->cameras = std::vector<FilamentWindowsCameraConfig>();
+			this->cameras = std::vector<FilamentRenderCppCameraConfig>();
 			this->zOrder = 0;
 			this->left = 0;
 			this->top = 0;
@@ -123,8 +123,8 @@ namespace ape
 			this->height = 0;
 		}
 
-		FilamentWindowsViewPortConfig(
-			std::vector<FilamentWindowsCameraConfig> cameras,
+		FilamentRenderCppViewPortConfig(
+			std::vector<FilamentRenderCppCameraConfig> cameras,
 		int zOrder,
 		int left,
 		int top,
@@ -140,9 +140,9 @@ namespace ape
 		}
 	};
 
-	typedef std::vector < ape::FilamentWindowsViewPortConfig > FilamentWindowsViewPortConfigList;
+	typedef std::vector < ape::FilamentRenderCppViewPortConfig > FilamentRenderCppViewPortConfigList;
 
-	struct FilamentWindowsRenderWindowConfig
+	struct FilamentRenderCppWindowConfig
 	{
 		bool enable;
 
@@ -168,11 +168,11 @@ namespace ape
 
 		int colorDepth;
 
-		ape::FilamentWindowsViewPortConfigList viewportList;
+		ape::FilamentRenderCppViewPortConfigList viewportList;
 
 		std::string windowHandler;
 
-		FilamentWindowsRenderWindowConfig()
+		FilamentRenderCppWindowConfig()
 		{
 			this->enable = true;
 			this->name = "";
@@ -186,11 +186,11 @@ namespace ape
 			this->fsaa = 0;
 			this->fsaaHint = "";
 			this->colorDepth = 0;
-			this->viewportList = ape::FilamentWindowsViewPortConfigList();
+			this->viewportList = ape::FilamentRenderCppViewPortConfigList();
 			this->windowHandler = "";
 		}
 
-		FilamentWindowsRenderWindowConfig(bool enable,
+		FilamentRenderCppWindowConfig(bool enable,
 		std::string name,
 		int monitorIndex,
 		bool hidden,
@@ -202,7 +202,7 @@ namespace ape
 		int fsaa,
 		int fsaaHint,
 		int colorDepth,
-		ape::FilamentWindowsViewPortConfigList viewportList,
+		ape::FilamentRenderCppViewPortConfigList viewportList,
 		std::string windowHandler = "")
 		{
 			this->enable = enable;
@@ -222,26 +222,26 @@ namespace ape
 		}
 	};
 
-	typedef std::vector < ape::FilamentWindowsRenderWindowConfig > FilamentWindowsRenderWindowConfigList;
+	typedef std::vector < ape::FilamentRenderCppWindowConfig > FilamentRenderCppWindowConfigList;
 
-	struct FilamentWindowsRenderPluginConfig
+	struct FilamentRenderCppPluginConfig
 	{
-		FilamentWindowsRenderWindowConfigList filamentRenderWindowConfigList;
-		FilamentWindowsLodLevelsConfig filamentLodLevelsConfig;
+		FilamentRenderCppWindowConfigList filamentRenderWindowConfigList;
+		FilamentRenderCppLodLevelsConfig filamentLodLevelsConfig;
 		std::string shading;
 		std::string renderSystem;
 
-		FilamentWindowsRenderPluginConfig()
+		FilamentRenderCppPluginConfig()
 		{
-			this->filamentRenderWindowConfigList = FilamentWindowsRenderWindowConfigList();
-			this->filamentLodLevelsConfig = FilamentWindowsLodLevelsConfig();
+			this->filamentRenderWindowConfigList = FilamentRenderCppWindowConfigList();
+			this->filamentLodLevelsConfig = FilamentRenderCppLodLevelsConfig();
 			this->shading = std::string();
 			this->renderSystem = std::string();
 		}
 
-		FilamentWindowsRenderPluginConfig(
-			FilamentWindowsRenderWindowConfigList filamentRenderWindowConfigList,
-			FilamentWindowsLodLevelsConfig filamentLodLevelsConfig,
+		FilamentRenderCppPluginConfig(
+			FilamentRenderCppWindowConfigList filamentRenderWindowConfigList,
+			FilamentRenderCppLodLevelsConfig filamentLodLevelsConfig,
 			std::string shading,
 			std::string renderSystem)
 		{

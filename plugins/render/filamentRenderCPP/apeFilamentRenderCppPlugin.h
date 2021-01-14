@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#ifndef APE_FILAMENTWINDOWSRENDERPLUGIN_H
-#define APE_FILAMENTWINDOWSRENDERPLUGIN_H
+#ifndef APE_FilamentRenderCppPlugin_H
+#define APE_FilamentRenderCppPlugin_H
 
 #include <chrono>
 #include <fstream>
@@ -61,7 +61,7 @@ SOFTWARE.*/
 #include "apeUserInputMacro.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
-#include "apeFilamentWindowsRenderPluginConfigs.h"
+#include "apeFilamentRenderCppPluginConfigs.h"
 #include "filameshio/MeshReader.h"
 #include "filament/FilamentAPI.h"
 #include "filament/RenderableManager.h"
@@ -91,16 +91,16 @@ SOFTWARE.*/
 #include "math/mat4.h"
 #include "math/TVecHelpers.h"
 
-#define THIS_PLUGINNAME "apeFilamentWindowsRenderPlugin"
+#define THIS_PLUGINNAME "apeFilamentRenderCppPlugin"
 
 namespace ape
 {
-	class FilamentWindowsRenderPlugin : public IPlugin
+	class FilamentRenderCppPlugin : public IPlugin
 	{
 	public:
-		FilamentWindowsRenderPlugin();
+		FilamentRenderCppPlugin();
 
-		~FilamentWindowsRenderPlugin();
+		~FilamentRenderCppPlugin();
 
 		void Init() override;
 
@@ -159,26 +159,25 @@ namespace ape
 
 		gltfio::MaterialProvider* mpFilamentMaterialProvider;
 
-		ape::FilamentWindowsRenderPluginConfig mFilamentWindowsRenderPluginConfig;
+		ape::FilamentRenderCppPluginConfig mFilamentRenderCppPluginConfig;
         
         void initFilament();
         
         void parseJson();
-        
 
 		void processEventDoubleQueue();
 
 		void eventCallBack(const ape::Event& event);
 	};
 	
-	APE_PLUGIN_FUNC ape::IPlugin* CreateFilamentWindowsRenderPlugin()
+	APE_PLUGIN_FUNC ape::IPlugin* CreateFilamentRenderCppPlugin()
 	{
-		return new ape::FilamentWindowsRenderPlugin;
+		return new ape::FilamentRenderCppPlugin;
 	}
 
-	APE_PLUGIN_FUNC void DestroyFilamentWindowsRenderPlugin(ape::IPlugin *plugin)
+	APE_PLUGIN_FUNC void DestroyFilamentRenderCppPlugin(ape::IPlugin *plugin)
 	{
-		delete (ape::FilamentWindowsRenderPlugin*)plugin;
+		delete (ape::FilamentRenderCppPlugin*)plugin;
 	}
 
 	APE_PLUGIN_DISPLAY_NAME(THIS_PLUGINNAME);
@@ -186,7 +185,7 @@ namespace ape
 	APE_PLUGIN_ALLOC()
 	{
 		APE_LOG_DEBUG(THIS_PLUGINNAME << "_CREATE");
-		apeRegisterPlugin(THIS_PLUGINNAME, CreateFilamentWindowsRenderPlugin, DestroyFilamentWindowsRenderPlugin);
+		apeRegisterPlugin(THIS_PLUGINNAME, CreateFilamentRenderCppPlugin, DestroyFilamentRenderCppPlugin);
 		return 0;
 	}
 }

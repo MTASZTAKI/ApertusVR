@@ -50,12 +50,12 @@ endif()
 find_package(OpenGL REQUIRED)
 if(WIN32)
 	set(FILAMENT_DOWNLOAD_URL "https://github.com/google/filament/releases/download/v1.9.9/filament-v1.9.9-windows.tgz")
-	set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentWindows/build)
-	set(FILAMENT_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/filamentWindows/filament-v1.9.9-windows.tgz)
+	set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentRenderCpp/build)
+	set(FILAMENT_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/filamentRenderCpp/filament-v1.9.9-windows.tgz)
 elseif(APPLE)
 	set(FILAMENT_DOWNLOAD_URL "https://github.com/google/filament/releases/download/v1.9.9/filament-v1.9.9-mac.tgz")
-	set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentOSX/build)
-	set(FILAMENT_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/filamentOSX/filament-v1.9.9-mac.tgz)
+	set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentRenderCpp/build)
+	set(FILAMENT_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/filamentRenderCpp/filament-v1.9.9-mac.tgz)
 endif()
 
 if (NOT EXISTS ${FILAMENT_PREBUILD_DIR})
@@ -184,11 +184,11 @@ endif ()
 
 if(WIN32)
 	set (HEADERS
-        		apeFilamentWindowsRenderPluginConfigs.h
-        		apeFilamentWindowsRenderPlugin.h
+        		apeFilamentRenderCppPluginConfigs.h
+        		apeFilamentRenderCppPlugin.h
 		)
 	set (SOURCES
-		apeFilamentWindowsRenderPlugin.cpp
+		apeFilamentRenderCppPlugin.cpp
 		)
     	include_directories(
         		${FILAMENT_PREBUILD_DIR}/include
@@ -197,12 +197,12 @@ if(WIN32)
 elseif(APPLE)
 
 	set (HEADERS
-        		apeFilamentWindowsRenderPluginConfigs.h
-        		apeFilamentWindowsRenderPlugin.h
+        		apeFilamentRenderCppPluginConfigs.h
+        		apeFilamentRenderCppPlugin.h
                 NativeWindowHelper.h
 		)
 	set (SOURCES
-		apeFilamentWindowsRenderPlugin.cpp
+		apeFilamentRenderCppPlugin.cpp
         NativeWindowHelper.mm
 		)
     include_directories(
@@ -210,10 +210,10 @@ elseif(APPLE)
         ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
         )
 endif()
-add_library (apeFilamentWindowsRenderPlugin SHARED ${SOURCES} ${HEADERS})
+add_library (apeFilamentRenderCppPlugin SHARED ${SOURCES} ${HEADERS})
 
 if(WIN32)
-	target_link_libraries (apeFilamentWindowsRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro ${OPENGL_LIBRARIES} 
+	target_link_libraries (apeFilamentRenderCppPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro ${OPENGL_LIBRARIES} 
 	MY_FILAMENT MY_FILAMENT_UTILS MY_FILAMENT_GLTFIO MY_FILAMENT_GLTFIO_CORE MY_FILAMENT_DRACODEC MY_FILAMENT_BACKEND MY_FILAMENT_SHADERS MY_FILAMENT_MATH MY_FILAMENT_GEOMETRY MY_FILAMENT_VIEWER
 MY_FILAMENT_IBL MY_FILAMENT_FLAT MY_FILAMENT_BRIDGE MY_FILAMENT_CAMUTILS MY_FILAMENT_BLUEGL MY_FILAMENT_BLUEVK MY_FILAMENT_IMAGE MY_FILAMENT_SMOL-V MY_FILAMENT_MESHOPT MY_FILAMENT_MATDBG
 Shlwapi.lib)
@@ -222,13 +222,13 @@ elseif(APPLE)
 	foreach(lib ${LIBS})
         		add_library(${lib} STATIC IMPORTED)
         		set_target_properties(${lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/filament/lib/x86_64/lib${lib}.a)
-		target_link_libraries (apeFilamentWindowsRenderPlugin ${lib})
+		target_link_libraries (apeFilamentRenderCppPlugin ${lib})
 	endforeach()
-	target_link_libraries (apeFilamentWindowsRenderPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro ${OPENGL_LIBRARIES} MY_FILAMENT "-framework Cocoa -framework Metal -framework CoreVideo")
+	target_link_libraries (apeFilamentRenderCppPlugin apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro ${OPENGL_LIBRARIES} MY_FILAMENT "-framework Cocoa -framework Metal -framework CoreVideo")
 endif()
 
-set_property (TARGET apeFilamentWindowsRenderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeFilamentRenderCppPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
-set_property (TARGET apeFilamentWindowsRenderPlugin PROPERTY FOLDER "Plugins/Render")
+set_property (TARGET apeFilamentRenderCppPlugin PROPERTY FOLDER "Plugins/Render")
 
 
