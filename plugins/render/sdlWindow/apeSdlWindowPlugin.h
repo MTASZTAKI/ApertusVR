@@ -80,7 +80,7 @@ namespace ape
         
         void parseConfigJSON();
         
-        
+        bool mSDLClosed;
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateOgre21RenderPlugin()

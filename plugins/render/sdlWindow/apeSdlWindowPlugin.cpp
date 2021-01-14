@@ -8,6 +8,7 @@
 ape::SdlWindowPlugin::SdlWindowPlugin( )
 {
 	APE_LOG_FUNC_ENTER();
+    mSDLClosed=false;
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
@@ -43,6 +44,7 @@ void ape::SdlWindowPlugin::initSDL(){
                 SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE);
             if (window)
             {
+                SDL_Window* ads;
                 APE_LOG_DEBUG("SDL_CreateWindow OK");
                 SDL_SysWMinfo wmi;
                 SDL_VERSION(&wmi.version);
@@ -177,37 +179,41 @@ void ape::SdlWindowPlugin::Step()
 {
     
 	APE_LOG_FUNC_ENTER();
-    bool closed = false;
-    constexpr int kMaxEvents = 16;
-    SDL_Event events[kMaxEvents];
-    int nevents = 0;
-    while (nevents < kMaxEvents && SDL_PollEvent(&events[nevents]) != 0) {
-        nevents++;
-    }
-    for (int i = 0; i < nevents; i++) {
-        const SDL_Event& event = events[i];
-        switch (event.type) {
-        case SDL_QUIT:
-            closed = true;
-            break;
-        case SDL_KEYDOWN:
-            if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
-                closed = true;
-            }
-            break;
-        case SDL_WINDOWEVENT:
-            switch (event.window.event) {
-            case SDL_WINDOWEVENT_RESIZED:
-                ;
+    if(!mSDLClosed)
+    {
+        constexpr int kMaxEvents = 16;
+        SDL_Event events[kMaxEvents];
+        int nevents = 0;
+        while (nevents < kMaxEvents && SDL_PollEvent(&events[nevents]) != 0) {
+            nevents++;
+        }
+        for (int i = 0; i < nevents; i++) {
+            const SDL_Event& event = events[i];
+            switch (event.type) {
+            case SDL_QUIT:
+                mSDLClosed = true;
+                
+                break;
+            case SDL_KEYDOWN:
+                if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                    mSDLClosed = true;
+                }
+                break;
+            case SDL_WINDOWEVENT:
+                switch (event.window.event) {
+                case SDL_WINDOWEVENT_RESIZED:
+                    ;
+                    break;
+                default:
+                    break;
+                }
                 break;
             default:
                 break;
             }
-            break;
-        default:
-            break;
         }
     }
+    
 	APE_LOG_FUNC_LEAVE();
 }
 
