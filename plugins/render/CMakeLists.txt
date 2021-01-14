@@ -25,6 +25,7 @@
 add_subdirectory (sdlWindow)
 if (WIN32)
 add_subdirectory (filamentRenderCPP)
+add_subdirectory (ogreRender)
 elseif(APPLE)
 add_subdirectory (filamentRenderCPP)
 elseif(ANDROID)

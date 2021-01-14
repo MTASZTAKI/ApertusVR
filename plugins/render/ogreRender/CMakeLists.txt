@@ -96,6 +96,7 @@ if (NOT OGRE_READY)
 				-DOGRE_DEPENDENCIES_DIR:PATH=${PATH_OGREDEPS_OUT}/ogredeps
 				-DOGRE_BUILD_SAMPLES:BOOL=FALSE
 				-DOGRE_INSTALL_SAMPLES=OFF
+				-DOGRE_BUILD_RENDERSYSTEM_D3D9=OFF
 				-G ${CMAKE_GENERATOR} 
 				${PATH_OGRE}
 				WORKING_DIRECTORY ${OGRE_BUILD_DIR}
@@ -331,6 +332,10 @@ target_link_libraries (apeOgreRenderPlugin apePluginManager apeSceneManager apeE
 #endif()
 
 set_property (TARGET apeOgreRenderPlugin PROPERTY FOLDER "Plugins/Render")
+
+set_property(TARGET apeOgreRenderPlugin PROPERTY CXX_STANDARD 14)
+set_property(TARGET apeOgreRenderPlugin PROPERTY CXX_STANDARD_REQUIRED ON)
+
 if (WIN32)
 	file(COPY ${OGRE_BUILD_DIR}/bin/debug/OgreMain_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${OGRE_BUILD_DIR}/bin/debug/OgreOverlay_d.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)

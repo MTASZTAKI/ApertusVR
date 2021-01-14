@@ -99,12 +99,15 @@ void ape::FilamentRenderCppPlugin::processEventDoubleQueue()
 					{
 					case ape::Event::Type::NODE_PARENTNODE:
 					{
-						;
+						if (auto parentNode = node->getParentNode().lock())
+						{
+							mpFilamentTransformManager->setParent(mpFilamentTransforms[nodeName], mpFilamentTransforms[parentNode->getName()]);
+						}
 					}
 						break;
 					case ape::Event::Type::NODE_DETACH:
 					{
-						;
+						mpFilamentTransformManager->setParent(mpFilamentTransforms[nodeName], filament::TransformManager::Instance());
 					}
 						break;
 					case ape::Event::Type::NODE_POSITION:
@@ -357,7 +360,11 @@ void ape::FilamentRenderCppPlugin::processEventDoubleQueue()
 			{
 				if (event.type == ape::Event::Type::CAMERA_CREATE)
 				{
-					mpFilamentCamera = mpFilamentEngine->createCamera(mpFilamentEntityManager->create());
+					auto filamentEntity = mpFilamentEntityManager->create();
+					mpFilamentTransformManager->create(filamentEntity);
+					auto filamentTransform = mpFilamentTransformManager->getInstance(filamentEntity);
+					mpFilamentTransforms[camera->getName()] = filamentTransform;
+					mpFilamentCamera = mpFilamentEngine->createCamera(filamentEntity);
 					for (int i = 0; i < mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList.size(); i++)
 					{
 						for (int j = 0; j < mFilamentRenderCppPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
@@ -419,7 +426,10 @@ void ape::FilamentRenderCppPlugin::processEventDoubleQueue()
 					break;
 					case ape::Event::Type::CAMERA_PARENTNODE:
 					{
-						;
+						if (auto parentNode = camera->getParentNode().lock())
+						{
+							mpFilamentTransformManager->setParent(mpFilamentTransforms[camera->getName()], mpFilamentTransforms[parentNode->getName()]);
+						}
 					}
 					break;
 					case ape::Event::Type::CAMERA_DELETE:
