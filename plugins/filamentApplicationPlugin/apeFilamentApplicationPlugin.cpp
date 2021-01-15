@@ -958,7 +958,7 @@ void ape::FilamentApplicationPlugin::Step()
     utils::Path filename;
     int num_args = 1;
     if (num_args >= 1) {
-        filename = "/Users/erik/Documents/ApertusVR/ApertusVR/plugins/scene/photorealisticScene/resources/damagedHelmet.gltf";
+        filename = "c:/ApertusVR/plugins/scene/photorealisticScene/resources/damagedHelmet.gltf";
         if (!filename.exists()) {
             std::cerr << "file " << filename << " not found!" << std::endl;
             //return 1;
