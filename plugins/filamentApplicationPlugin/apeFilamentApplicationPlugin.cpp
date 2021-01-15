@@ -961,7 +961,7 @@ void ape::FilamentApplicationPlugin::Step()
         filename = "/Users/erik/Documents/ApertusVR/ApertusVR/plugins/scene/photorealisticScene/resources/damagedHelmet.gltf";
         if (!filename.exists()) {
             std::cerr << "file " << filename << " not found!" << std::endl;
-            return 1;
+            //return 1;
         }
         if (filename.isDirectory()) {
             auto files = filename.listContents();
@@ -973,7 +973,7 @@ void ape::FilamentApplicationPlugin::Step()
             }
             if (filename.isDirectory()) {
                 std::cerr << "no glTF file found in " << filename << std::endl;
-                return 1;
+                //return 1;
             }
         }
     }
@@ -1372,7 +1372,7 @@ void ape::FilamentApplicationPlugin::Step()
 
     filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender);
 
-    return 0;
+    //return 0;
 }
 
 void ape::FilamentApplicationPlugin::Stop()
