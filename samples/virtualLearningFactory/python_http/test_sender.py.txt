@@ -1,0 +1,10 @@
+import requests
+import sys
+import json
+URL = "http://127.0.0.1:8888"
+if(sys.argv[1] == 'start'):
+	msg = {'command': 'startRoom/:vlftTestCase02'}
+else:
+	msg = {'command': 'stopRoom/:vlftTestCase04'}
+
+r = requests.post(url=URL, data= msg)

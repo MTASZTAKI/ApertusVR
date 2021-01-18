@@ -1,0 +1,11 @@
+To start up the server you simply need to run the http_server.py in python. 
+If you are using command line write: python http_server.py
+If you have everything installed, it will start and you will have nothing else to do.
+
+requirements:
+I used python 3.6.2, but is should work in 3.x and even with 2.x
+
+package			installation:
+http.server  		pip install httpserver
+requests		pip install requests
+BytesIO
