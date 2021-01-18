@@ -502,7 +502,7 @@ void ape::FilamentRenderCppPlugin::processEventDoubleQueue()
 		mEventDoubleQueue.pop();
 	}
 }
-void ape::FilamentRenderCppPlugin::initFilament(){
+void ape::FilamentRenderCppPlugin:: Filament(){
     mpFilamentEngine = filament::Engine::create(filament::Engine::Backend::OPENGL);
     #ifdef _WIN32
     mpFilamentSwapChain = mpFilamentEngine->createSwapChain(mpCoreConfig->getWindowConfig().handle);

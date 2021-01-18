@@ -104,16 +104,33 @@ using namespace filament::viewer;
 using namespace gltfio;
 using namespace utils;
 
+
+//Needs scene
+//swapshain
+//lightmanager
+//sunlight
+
 struct App {
     Engine* engine;
     SimpleViewer* viewer;
     Config config;
+    Scene* mpScene;
+    View* view;
     filament::Camera* mainCamera;
 
     AssetLoader* loader;
     FilamentAsset* asset = nullptr;
     NameComponentManager* names;
-
+    
+    LightManager* lightManager;
+    Entity sunLight;
+    
+    EntityManager* mpEntityManager;
+    TransformManager* mpTransformManager;
+    std::map<std::string, TransformManager::Instance> mpTransforms;
+    std::map<std::string, FilamentAsset*> mpLoadedAssets;
+    
+    
     MaterialProvider* materials;
     MaterialSource materialSource = GENERATE_SHADERS;
 
@@ -179,6 +196,7 @@ namespace ape
 		void Restart() override;
 
 	private:
+        
 		ape::ISceneManager* mpSceneManager;
 
 		ape::IEventManager* mpEventManager;
@@ -199,6 +217,7 @@ namespace ape
         
         void parseJson();
         
+        App app;
         
         std::ifstream::pos_type getFileSize(const char* filename);
         

@@ -68,433 +68,427 @@ void ape::FilamentApplicationPlugin::eventCallBack(const ape::Event& event)
 void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 {
 	mEventDoubleQueue.swap();
-//	while (!mEventDoubleQueue.emptyPop())
-//	{
-//		ape::Event event = mEventDoubleQueue.front();
-//		try
-//		{
-//		if (event.group == ape::Event::Group::NODE)
-//		{
-//			if (auto node = mpSceneManager->getNode(event.subjectName).lock())
-//			{
-//				std::string nodeName = node->getName();
-//				if (event.type == ape::Event::Type::NODE_CREATE)
-//				{
-////					auto filamentEntity = mpFilamentEntityManager->create();
-////					mpFilamentTransformManager->create(filamentEntity);
-////					auto filamentTransform = mpFilamentTransformManager->getInstance(filamentEntity);
-////					mpFilamentTransforms[nodeName] = filamentTransform;
-//				}
-//				else
-//				{
-//					switch (event.type)
+	while (!mEventDoubleQueue.emptyPop())
+	{
+		ape::Event event = mEventDoubleQueue.front();
+		try
+		{
+		if (event.group == ape::Event::Group::NODE)
+		{
+			if (auto node = mpSceneManager->getNode(event.subjectName).lock())
+			{
+				std::string nodeName = node->getName();
+				if (event.type == ape::Event::Type::NODE_CREATE)
+				{
+                
+					auto filamentEntity = app.mpEntityManager->create();
+					app.mpTransformManager->create(filamentEntity);
+					auto filamentTransform = app.mpTransformManager->getInstance(filamentEntity);
+                    app.mpTransforms[nodeName] = filamentTransform;
+				}
+				else
+				{
+					switch (event.type)
+					{
+					case ape::Event::Type::NODE_PARENTNODE:
+					{
+						;
+					}
+						break;
+					case ape::Event::Type::NODE_DETACH:
+					{
+						;
+					}
+						break;
+					case ape::Event::Type::NODE_POSITION:
+					{
+						auto nodeTransform = node->getModelMatrix().transpose();
+						auto filamentTransform = filament::math::mat4f(
+							nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
+							nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
+							nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
+							nodeTransform[3][0], nodeTransform[3][1], nodeTransform[3][2], nodeTransform[3][3]);
+                        app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+					}
+						break;
+					case ape::Event::Type::NODE_ORIENTATION:
+					{
+						auto nodeTransform = node->getModelMatrix().transpose();
+						auto filamentTransform = filament::math::mat4f(
+							nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
+							nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
+							nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
+							nodeTransform[3][0], nodeTransform[3][1], nodeTransform[3][2], nodeTransform[3][3]);
+                        app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+					}
+						break;
+					case ape::Event::Type::NODE_SCALE:
+						;
+						break;
+					case ape::Event::Type::NODE_CHILDVISIBILITY:
+						;
+						break;
+					case ape::Event::Type::NODE_VISIBILITY:
+					{
+						;
+					}
+						break;
+					case ape::Event::Type::NODE_FIXEDYAW:
+						;
+						break;
+					case ape::Event::Type::NODE_INHERITORIENTATION:
+						;
+						break;
+					case ape::Event::Type::NODE_INITIALSTATE:
+						;
+						break;
+					case ape::Event::Type::NODE_SHOWBOUNDINGBOX:
+						;
+						break;
+					case ape::Event::Type::NODE_HIDEBOUNDINGBOX:
+						;
+						break;
+					}
+				}
+			}
+			else if (event.type == ape::Event::Type::NODE_DELETE)
+			{
+				;
+			}
+		}
+		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
+		{
+			if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
+			{
+				std::string geometryName = geometryFile->getName();
+				std::string fileName = geometryFile->getFileName();
+				std::string parentNodeName = "";
+				if (auto parentNode = geometryFile->getParentNode().lock())
+					parentNodeName = parentNode->getName();
+				switch (event.type)
+				{
+				case ape::Event::Type::GEOMETRY_FILE_CREATE:
+					;
+					break;
+				case ape::Event::Type::GEOMETRY_FILE_PARENTNODE:
+				{
+					auto filamentAssetRootEntity = app.mpLoadedAssets[fileName]->getRoot();
+					auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
+					app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
+				}
+					break;
+				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
+				{
+
+					if (fileName.find_first_of(".") != std::string::npos)
+					{
+						std::string fileExtension = fileName.substr(fileName.find_last_of("."));
+						if (fileExtension == ".mesh")
+						{
+							;
+						}
+						if (fileExtension == ".glb")
+						{
+							;
+						}
+						if (fileExtension == ".gltf")
+						{
+							std::stringstream filePath;
+							std::size_t found = fileName.find(":");
+							if (found != std::string::npos)
+							{
+								filePath << fileName;
+							}
+							else
+							{
+								std::string separator = "../";
+								found = fileName.find(separator);
+								if (found != std::string::npos)
+								{
+									struct stat info;
+									if (stat(fileName.c_str(), &info) == -1)
+									{
+										auto found_it = std::find_end(fileName.begin(), fileName.end(), separator.begin(), separator.end());
+										size_t foundPos = found_it - fileName.begin();
+										std::stringstream resourceLocationPath;
+										resourceLocationPath << APE_SOURCE_DIR << fileName.substr(foundPos + 2);
+										filePath << resourceLocationPath.str();
+									}
+									else
+									{
+										filePath << fileName;
+									}
+								}
+								else
+								{
+									std::stringstream resourceLocationPath;
+									resourceLocationPath << APE_SOURCE_DIR << fileName;
+									filePath << resourceLocationPath.str();
+								}
+							}
+							std::ifstream in(filePath.str().c_str(), std::ifstream::ate | std::ifstream::binary);
+							long contentSize = static_cast<long>(in.tellg());
+							if (contentSize <= 0)
+							{
+								APE_LOG_DEBUG("Unable to open " << filePath.str());
+							}
+							else
+							{
+								APE_LOG_DEBUG(filePath.str() << " was opened");
+							}
+							std::ifstream inBin(filePath.str().c_str(), std::ifstream::binary | std::ifstream::in);
+							std::vector<uint8_t> buffer(static_cast<unsigned long>(contentSize));
+							if (!inBin.read((char*)buffer.data(), contentSize))
+							{
+								APE_LOG_DEBUG("Unable to read " << filePath.str());
+							}
+							else
+							{
+								APE_LOG_DEBUG(filePath.str() << " was read");
+							}
+                            auto asset = app.loader->createAssetFromJson(buffer.data(), buffer.size());
+ 							buffer.clear();
+							buffer.shrink_to_fit();
+							if (!asset)
+							{
+								APE_LOG_DEBUG("Unable to parse " << filePath.str());
+							}
+							else
+							{
+
+								APE_LOG_DEBUG(filePath.str() << " was parsed");
+                                gltfio::ResourceConfiguration resourceConfiguration;
+                                resourceConfiguration.engine = app.engine;
+								auto resourceLocation = filePath.str();
+								resourceConfiguration.gltfPath = resourceLocation.c_str();
+								resourceConfiguration.normalizeSkinningWeights = true;
+								resourceConfiguration.recomputeBoundingBoxes = false;
+								auto filamentResourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
+								if (filamentResourceLoader->loadResources(asset))
+								{
+									APE_LOG_DEBUG("resources load OK");
+                                    app.mpScene->addEntities(asset->getEntities(), asset->getEntityCount());
+									app.mpLoadedAssets[fileName] = asset;
+								}
+								else
+								{
+									APE_LOG_DEBUG("resources load FAILED");
+								}
+								delete filamentResourceLoader;
+							}
+						}
+					}
+				}
+					break;
+				case ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES:
+				{
+					;
+				}
+				break;
+				case ape::Event::Type::GEOMETRY_FILE_EXPORT:
+				{
+					;
+				}
+				break;
+				case ape::Event::Type::GEOMETRY_FILE_MATERIAL:
+				{
+					;
+				}
+				break;
+				case ape::Event::Type::GEOMETRY_FILE_VISIBILITY:
+				{
+					;
+				}
+				break;
+				}
+			}
+			else if (event.type == ape::Event::Type::GEOMETRY_FILE_DELETE)
+			{
+				;
+			}
+		}
+		else if (event.group == ape::Event::Group::LIGHT)
+		{
+			if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->getEntity(event.subjectName).lock()))
+			{
+				if (event.type == ape::Event::Type::LIGHT_CREATE)
+				{
+					;
+				}
+				else
+				{
+					switch (event.type)
+					{
+					case ape::Event::Type::LIGHT_ATTENUATION:
+						break;
+					case ape::Event::Type::LIGHT_DIFFUSE:
+						break;
+					case ape::Event::Type::LIGHT_DIRECTION:
+						break;
+					case ape::Event::Type::LIGHT_POWER:
+						break;
+					case ape::Event::Type::LIGHT_SPECULAR:
+						break;
+					case ape::Event::Type::LIGHT_SPOTRANGE:
+						break;
+					case ape::Event::Type::LIGHT_TYPE:
+						break;
+					case ape::Event::Type::LIGHT_PARENTNODE:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::LIGHT_DELETE:
+						;
+						break;
+					}
+				}
+			}
+		}
+		else if (event.group == ape::Event::Group::CAMERA)
+		{
+			if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
+			{
+				if (event.type == ape::Event::Type::CAMERA_CREATE)
+				{
+//					mpFilamentCamera = mpFilamentEngine->createCamera(mpFilamentEntityManager->create());
+//					for (int i = 0; i < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList.size(); i++)
 //					{
-//					case ape::Event::Type::NODE_PARENTNODE:
-//					{
-//						;
-//					}
-//						break;
-//					case ape::Event::Type::NODE_DETACH:
-//					{
-//						;
-//					}
-//						break;
-//					case ape::Event::Type::NODE_POSITION:
-//					{
-//						auto nodeTransform = node->getModelMatrix().transpose();
-//						auto filamentTransform = filament::math::mat4f(
-//							nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
-//							nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
-//							nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
-//							nodeTransform[3][0], nodeTransform[3][1], nodeTransform[3][2], nodeTransform[3][3]);
-////						mpFilamentTransformManager->setTransform(mpFilamentTransforms[nodeName], filamentTransform);
-//					}
-//						break;
-//					case ape::Event::Type::NODE_ORIENTATION:
-//					{
-//						auto nodeTransform = node->getModelMatrix().transpose();
-//						auto filamentTransform = filament::math::mat4f(
-//							nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
-//							nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
-//							nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
-//							nodeTransform[3][0], nodeTransform[3][1], nodeTransform[3][2], nodeTransform[3][3]);
-////						mpFilamentTransformManager->setTransform(mpFilamentTransforms[nodeName], filamentTransform);
-//					}
-//						break;
-//					case ape::Event::Type::NODE_SCALE:
-//						;
-//						break;
-//					case ape::Event::Type::NODE_CHILDVISIBILITY:
-//						;
-//						break;
-//					case ape::Event::Type::NODE_VISIBILITY:
-//					{
-//						;
-//					}
-//						break;
-//					case ape::Event::Type::NODE_FIXEDYAW:
-//						;
-//						break;
-//					case ape::Event::Type::NODE_INHERITORIENTATION:
-//						;
-//						break;
-//					case ape::Event::Type::NODE_INITIALSTATE:
-//						;
-//						break;
-//					case ape::Event::Type::NODE_SHOWBOUNDINGBOX:
-//						;
-//						break;
-//					case ape::Event::Type::NODE_HIDEBOUNDINGBOX:
-//						;
-//						break;
-//					}
-//				}
-//			}
-//			else if (event.type == ape::Event::Type::NODE_DELETE)
-//			{
-//				;
-//			}
-//		}
-//		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
-//		{
-//			if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
-//			{
-//				std::string geometryName = geometryFile->getName();
-//				std::string fileName = geometryFile->getFileName();
-//				std::string parentNodeName = "";
-//				if (auto parentNode = geometryFile->getParentNode().lock())
-//					parentNodeName = parentNode->getName();
-//				switch (event.type)
-//				{
-//				case ape::Event::Type::GEOMETRY_FILE_CREATE:
-//					;
-//					break;
-//				case ape::Event::Type::GEOMETRY_FILE_PARENTNODE:
-//				{
-////					auto filamentAssetRootEntity = mpFilamentLoadedAssets[fileName]->getRoot();
-////					auto filamentAssetRootTransform = mpFilamentTransformManager->getInstance(filamentAssetRootEntity);
-////					mpFilamentTransformManager->setParent(filamentAssetRootTransform, mpFilamentTransforms[parentNodeName]);
-//				}
-//					break;
-//				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
-//				{
-//
-//					if (fileName.find_first_of(".") != std::string::npos)
-//					{
-//						std::string fileExtension = fileName.substr(fileName.find_last_of("."));
-//						if (fileExtension == ".mesh")
+//						for (int j = 0; j < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
 //						{
-//							;
-//						}
-//						if (fileExtension == ".glb")
-//						{
-//							;
-//						}
-//						if (fileExtension == ".gltf")
-//						{
-//							std::stringstream filePath;
-//							std::size_t found = fileName.find(":");
-//							if (found != std::string::npos)
+//							for (int k = 0; k < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
 //							{
-//								filePath << fileName;
-//							}
-//							else
-//							{
-//								std::string separator = "../";
-//								found = fileName.find(separator);
-//								if (found != std::string::npos)
+//								auto cameraSetting = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
+//								if (cameraSetting.name == camera->getName())
 //								{
-//									struct stat info;
-//									if (stat(fileName.c_str(), &info) == -1)
+//									float aspectRatio = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].width / mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].height;
+//									camera->setWindow(mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].name);
+//									camera->setFocalLength(1.0f);
+//									camera->setNearClipDistance(cameraSetting.nearClip);
+//									camera->setFarClipDistance(cameraSetting.farClip);
+//									camera->setFOVy(cameraSetting.fovY.toRadian());
+//									//mpFilamentCamera->setProjection(cameraSetting.fovY.degree, aspectRatio, cameraSetting.nearClip, cameraSetting.farClip);
+//								}
+//							}
+//						}
+//					}
+				}
+				else
+				{
+					switch (event.type)
+					{
+					case ape::Event::Type::CAMERA_WINDOW:
+                    {
+//						for (int i = 0; i < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList.size(); i++)
+//						{
+//							for (int j = 0; j < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
+//							{
+//								auto renderWindowSetting = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i];
+//								auto viewportSetting = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j];
+//								for (int k = 0; k < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
+//								{
+//									auto cameraSetting = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
+//									if (cameraSetting.name == camera->getName())
 //									{
-//										auto found_it = std::find_end(fileName.begin(), fileName.end(), separator.begin(), separator.end());
-//										size_t foundPos = found_it - fileName.begin();
-//										std::stringstream resourceLocationPath;
-//										resourceLocationPath << APE_SOURCE_DIR << fileName.substr(foundPos + 2);
-//										filePath << resourceLocationPath.str();
-//									}
-//									else
-//									{
-//										filePath << fileName;
-//									}
-//								}
-//								else
-//								{
-//									std::stringstream resourceLocationPath;
-//									resourceLocationPath << APE_SOURCE_DIR << fileName;
-//									filePath << resourceLocationPath.str();
-//								}
-//							}
-//							std::ifstream in(filePath.str().c_str(), std::ifstream::ate | std::ifstream::binary);
-//							long contentSize = static_cast<long>(in.tellg());
-//							if (contentSize <= 0)
-//							{
-//								APE_LOG_DEBUG("Unable to open " << filePath.str());
-//							}
-//							else
-//							{
-//								APE_LOG_DEBUG(filePath.str() << " was opened");
-//							}
-//							std::ifstream inBin(filePath.str().c_str(), std::ifstream::binary | std::ifstream::in);
-//							std::vector<uint8_t> buffer(static_cast<unsigned long>(contentSize));
-//							if (!inBin.read((char*)buffer.data(), contentSize))
-//							{
-//								APE_LOG_DEBUG("Unable to read " << filePath.str());
-//							}
-//							else
-//							{
-//								APE_LOG_DEBUG(filePath.str() << " was read");
-//							}
-//                            app.asset = app.loader->createAssetFromJson(buffer.data(), buffer.size());
-// 							buffer.clear();
-//							buffer.shrink_to_fit();
-//							if (!app.asset)
-//							{
-//								APE_LOG_DEBUG("Unable to parse " << filePath.str());
-//							}
-//							else
-//							{
+//										int zorder = viewportSetting.zOrder;
+//										float width = (float)viewportSetting.width / (float)renderWindowSetting.width;
+//										float height = (float)viewportSetting.height / (float)renderWindowSetting.height;
+//										float left = (float)viewportSetting.left / (float)renderWindowSetting.width;
+//										float top = (float)viewportSetting.top / (float)renderWindowSetting.height;
 //
-//								APE_LOG_DEBUG(filePath.str() << " was parsed");
-//                                app.automationSpec = AutomationSpec::generateDefaultTestCases();
-//                                app.automationEngine = new AutomationEngine(app.automationSpec, &app.viewer->getSettings());
-//                                app.materials = (app.materialSource == GENERATE_SHADERS) ?
-//                                        createMaterialGenerator(engine) : createUbershaderLoader(engine);
-//                                app.loader = AssetLoader::create({engine, app.materials, app.names });
-//								gltfio::ResourceConfiguration resourceConfiguration;
-//								resourceConfiguration.engine = mpFilamentEngine;
-//								auto resourceLocation = filePath.str();
-//								resourceConfiguration.gltfPath = resourceLocation.c_str();
-//								resourceConfiguration.normalizeSkinningWeights = true;
-//								resourceConfiguration.recomputeBoundingBoxes = false;
-//								auto filamentResourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
-//								if (filamentResourceLoader->loadResources(asset))
-//								{
-//									APE_LOG_DEBUG("resources load OK");
-//									mpFilamentScene->addEntities(asset->getEntities(), asset->getEntityCount());
-//									mpFilamentLoadedAssets[fileName] = asset;
+//										if (mpFilamentView)
+//										{
+//											APE_LOG_DEBUG("filamentViewport: " << "zorder: " << zorder << " left: " << left << " top: " << top << " width: " << width << " height: " << height);
+//											mpFilamentView->setCamera(mpFilamentCamera);
+//											mpFilamentView->setViewport({ viewportSetting.left, viewportSetting.top, (unsigned int)viewportSetting.width, (unsigned int)viewportSetting.height });}
+//											mpFilamentView->setScene(mpFilamentScene);
+//											filament::View::AmbientOcclusionOptions ambientOcclusionOptions;
+//											ambientOcclusionOptions.upsampling = filament::View::QualityLevel::HIGH;
+//											mpFilamentView->setAmbientOcclusionOptions(ambientOcclusionOptions);
+//									}
 //								}
-//								else
-//								{
-//									APE_LOG_DEBUG("resources load FAILED");
-//								}
-//								delete filamentResourceLoader;
 //							}
 //						}
-//					}
-//				}
-//					break;
-//				case ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES:
-//				{
-//					;
-//				}
-//				break;
-//				case ape::Event::Type::GEOMETRY_FILE_EXPORT:
-//				{
-//					;
-//				}
-//				break;
-//				case ape::Event::Type::GEOMETRY_FILE_MATERIAL:
-//				{
-//					;
-//				}
-//				break;
-//				case ape::Event::Type::GEOMETRY_FILE_VISIBILITY:
-//				{
-//					;
-//				}
-//				break;
-//				}
-//			}
-//			else if (event.type == ape::Event::Type::GEOMETRY_FILE_DELETE)
-//			{
-//				;
-//			}
-//		}
-//		else if (event.group == ape::Event::Group::LIGHT)
-//		{
-//			if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->getEntity(event.subjectName).lock()))
-//			{
-//				if (event.type == ape::Event::Type::LIGHT_CREATE)
-//				{
-//					;
-//				}
-//				else
-//				{
-//					switch (event.type)
-//					{
-//					case ape::Event::Type::LIGHT_ATTENUATION:
-//						break;
-//					case ape::Event::Type::LIGHT_DIFFUSE:
-//						break;
-//					case ape::Event::Type::LIGHT_DIRECTION:
-//						break;
-//					case ape::Event::Type::LIGHT_POWER:
-//						break;
-//					case ape::Event::Type::LIGHT_SPECULAR:
-//						break;
-//					case ape::Event::Type::LIGHT_SPOTRANGE:
-//						break;
-//					case ape::Event::Type::LIGHT_TYPE:
-//						break;
-//					case ape::Event::Type::LIGHT_PARENTNODE:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::LIGHT_DELETE:
-//						;
-//						break;
-//					}
-//				}
-//			}
-//		}
-//		else if (event.group == ape::Event::Group::CAMERA)
-//		{
-//			if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
-//			{
-//				if (event.type == ape::Event::Type::CAMERA_CREATE)
-//				{
-////					mpFilamentCamera = mpFilamentEngine->createCamera(mpFilamentEntityManager->create());
-////					for (int i = 0; i < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList.size(); i++)
-////					{
-////						for (int j = 0; j < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
-////						{
-////							for (int k = 0; k < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
-////							{
-////								auto cameraSetting = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
-////								if (cameraSetting.name == camera->getName())
-////								{
-////									float aspectRatio = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].width / mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].height;
-////									camera->setWindow(mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].name);
-////									camera->setFocalLength(1.0f);
-////									camera->setNearClipDistance(cameraSetting.nearClip);
-////									camera->setFarClipDistance(cameraSetting.farClip);
-////									camera->setFOVy(cameraSetting.fovY.toRadian());
-////									//mpFilamentCamera->setProjection(cameraSetting.fovY.degree, aspectRatio, cameraSetting.nearClip, cameraSetting.farClip);
-////								}
-////							}
-////						}
-////					}
-//				}
-//				else
-//				{
-//					switch (event.type)
-//					{
-//					case ape::Event::Type::CAMERA_WINDOW:
-//                    {
-////						for (int i = 0; i < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList.size(); i++)
-////						{
-////							for (int j = 0; j < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList.size(); j++)
-////							{
-////								auto renderWindowSetting = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i];
-////								auto viewportSetting = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j];
-////								for (int k = 0; k < mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras.size(); k++)
-////								{
-////									auto cameraSetting = mFilamentApplicationPluginConfig.filamentRenderWindowConfigList[i].viewportList[j].cameras[k];
-////									if (cameraSetting.name == camera->getName())
-////									{
-////										int zorder = viewportSetting.zOrder;
-////										float width = (float)viewportSetting.width / (float)renderWindowSetting.width;
-////										float height = (float)viewportSetting.height / (float)renderWindowSetting.height;
-////										float left = (float)viewportSetting.left / (float)renderWindowSetting.width;
-////										float top = (float)viewportSetting.top / (float)renderWindowSetting.height;
-////
-////										if (mpFilamentView)
-////										{
-////											APE_LOG_DEBUG("filamentViewport: " << "zorder: " << zorder << " left: " << left << " top: " << top << " width: " << width << " height: " << height);
-////											mpFilamentView->setCamera(mpFilamentCamera);
-////											mpFilamentView->setViewport({ viewportSetting.left, viewportSetting.top, (unsigned int)viewportSetting.width, (unsigned int)viewportSetting.height });}
-////											mpFilamentView->setScene(mpFilamentScene);
-////											filament::View::AmbientOcclusionOptions ambientOcclusionOptions;
-////											ambientOcclusionOptions.upsampling = filament::View::QualityLevel::HIGH;
-////											mpFilamentView->setAmbientOcclusionOptions(ambientOcclusionOptions);
-////									}
-////								}
-////							}
-////						}
-//                        ;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_PARENTNODE:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_DELETE:
-//						;
-//						break;
-//					case ape::Event::Type::CAMERA_FOCALLENGTH:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_ASPECTRATIO:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_AUTOASPECTRATIO:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_FOVY:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_FRUSTUMOFFSET:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_FARCLIP:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_NEARCLIP:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_PROJECTION:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_PROJECTIONTYPE:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_ORTHOWINDOWSIZE:
-//					{
-//						;
-//					}
-//					break;
-//					case ape::Event::Type::CAMERA_VISIBILITY:
-//					{
-//						;
-//					}
-//					break;
-//					}
-//				}
-//			}
-//		}
-//		}
-//		catch (std::exception exp)
-//		{
-//			APE_LOG_DEBUG("");
-//		}
-//		mEventDoubleQueue.pop();
-//	}
+                        ;
+					}
+					break;
+					case ape::Event::Type::CAMERA_PARENTNODE:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_DELETE:
+						;
+						break;
+					case ape::Event::Type::CAMERA_FOCALLENGTH:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_ASPECTRATIO:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_AUTOASPECTRATIO:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_FOVY:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_FRUSTUMOFFSET:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_FARCLIP:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_NEARCLIP:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_PROJECTION:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_PROJECTIONTYPE:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_ORTHOWINDOWSIZE:
+					{
+						;
+					}
+					break;
+					case ape::Event::Type::CAMERA_VISIBILITY:
+					{
+						;
+					}
+					break;
+					}
+				}
+			}
+		}
+		}
+		catch (std::exception exp)
+		{
+			APE_LOG_DEBUG("");
+		}
+		mEventDoubleQueue.pop();
+	}
 }
 void ape::FilamentApplicationPlugin::initFilament(){
-    App app;
-    app.config.title = "Filament";
-    app.config.iblDirectory = FilamentApp::getRootAssetsPath() + "default_env";
+    
     
 }
 
@@ -950,7 +944,8 @@ LinearColor ape::FilamentApplicationPlugin::inverseTonemapSRGB(sRGBColor x) {
 
 void ape::FilamentApplicationPlugin::Step()
 {
-    App app;
+    
+
 
     app.config.title = "Filament";
     app.config.iblDirectory = FilamentApp::getRootAssetsPath() + DEFAULT_IBL;
@@ -958,7 +953,7 @@ void ape::FilamentApplicationPlugin::Step()
     utils::Path filename;
     int num_args = 1;
     if (num_args >= 1) {
-        filename = "c:/ApertusVR/plugins/scene/photorealisticScene/resources/damagedHelmet.gltf";
+        filename = "/Users/erik/Documents/ApertusVR/ApertusVR/plugins/scene/photorealisticScene/resources/Conveyor.gltf";
         if (!filename.exists()) {
             std::cerr << "file " << filename << " not found!" << std::endl;
             //return 1;
@@ -978,7 +973,7 @@ void ape::FilamentApplicationPlugin::Step()
         }
     }
 
-    auto loadAsset = [&app, this](utils::Path filename) {
+    auto loadAsset = [this](utils::Path filename) {
         // Peek at the file size to allow pre-allocation.
         long contentSize = static_cast<long>(getFileSize(filename.c_str()));
         if (contentSize <= 0) {
@@ -1009,7 +1004,7 @@ void ape::FilamentApplicationPlugin::Step()
         }
     };
 
-    auto loadResources = [&app] (utils::Path filename) {
+    auto loadResources = [this] (utils::Path filename) {
         // Load external textures and buffers.
         std::string gltfPath = filename.getAbsolutePath();
         ResourceConfiguration configuration = {};
@@ -1020,11 +1015,11 @@ void ape::FilamentApplicationPlugin::Step()
         if (!app.resourceLoader) {
             app.resourceLoader = new gltfio::ResourceLoader(configuration);
         }
-        app.resourceLoader->asyncBeginLoad(app.asset);
-
-        // Load animation data then free the source hierarchy.
-        app.asset->getAnimator();
-        app.asset->releaseSourceData();
+//        app.resourceLoader->asyncBeginLoad(app.asset);
+//
+//        // Load animation data then free the source hierarchy.
+//        app.asset->getAnimator();
+//        app.asset->releaseSourceData();
 
         auto ibl = FilamentApp::get().getIBL();
         if (ibl) {
@@ -1032,11 +1027,21 @@ void ape::FilamentApplicationPlugin::Step()
         }
     };
 
+    
+    //rewrite it with filament::view instead of simpleviewer
+    // use app.scene, app.view...
+    //modify the othe function this way too
     auto setup = [&](Engine* engine, View* view, Scene* scene) {
         app.engine = engine;
-        app.names = new NameComponentManager(EntityManager::get());
         app.viewer = new SimpleViewer(engine, scene, view, 410);
-
+        app.view = view;
+        app.mpScene = scene;
+        app.config.title = "Filament";
+        app.config.iblDirectory = FilamentApp::getRootAssetsPath() + "default_env";
+        app.mpEntityManager = &utils::EntityManager::get();
+        app.mpTransformManager = &app.engine->getTransformManager();
+        app.names = new NameComponentManager(EntityManager::get());
+        
         const bool batchMode = !app.batchFile.empty();
 
         // First check if a custom automation spec has been provided. If it fails to load, the app
@@ -1088,11 +1093,11 @@ void ape::FilamentApplicationPlugin::Step()
                 createMaterialGenerator(engine) : createUbershaderLoader(engine);
         app.loader = AssetLoader::create({engine, app.materials, app.names });
         app.mainCamera = &view->getCamera();
-        loadAsset(filename);
+        //loadAsset(filename);
 
         loadResources(filename);
 
-        app.viewer->setUiCallback([&app, scene, view, engine, this] () {
+        app.viewer->setUiCallback([scene, view, engine, this] () {
             auto& automation = *app.automationEngine;
 
             float progress = app.resourceLoader->asyncGetLoadProgress();
@@ -1238,7 +1243,7 @@ void ape::FilamentApplicationPlugin::Step()
         });
     };
 
-    auto cleanup = [&app](Engine* engine, View*, Scene*) {
+    auto cleanup = [this](Engine* engine, View*, Scene*) {
         app.automationEngine->terminate();
         app.loader->destroyAsset(app.asset);
         app.materials->destroyMaterials();
@@ -1256,16 +1261,17 @@ void ape::FilamentApplicationPlugin::Step()
         AssetLoader::destroy(&app.loader);
     };
 
-    auto animate = [&app](Engine* engine, View* view, double now) {
-        app.resourceLoader->asyncUpdateLoad();
-
-        // Add renderables to the scene as they become ready.
-        app.viewer->populateScene(app.asset, !app.actualSize);
-
-        app.viewer->applyAnimation(now);
+    auto animate = [this](Engine* engine, View* view, double now) {
+//        app.resourceLoader->asyncUpdateLoad();
+//
+//        // Add renderables to the scene as they become ready.
+//        app.viewer->populateScene(app.asset, !app.actualSize);
+//
+//        app.viewer->applyAnimation(now);
+        ;
     };
 
-    auto resize = [&app](Engine* engine, View* view) {
+    auto resize = [this](Engine* engine, View* view) {
         filament::Camera& camera = view->getCamera();
         if (&camera == app.mainCamera) {
             // Don't adjut the aspect ratio of the main camera, this is done inside of
@@ -1277,39 +1283,39 @@ void ape::FilamentApplicationPlugin::Step()
         camera.setScaling(double4 {1.0 / aspectRatio, 1.0, 1.0, 1.0});
     };
 
-    auto gui = [&app](Engine* engine, View* view) {
+    auto gui = [this](Engine* engine, View* view) {
         app.viewer->updateUserInterface();
 
         FilamentApp::get().setSidebarWidth(app.viewer->getSidebarWidth());
     };
 
-    auto preRender = [&app,this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
+    auto preRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
         auto& rcm = engine->getRenderableManager();
         auto instance = rcm.getInstance(app.scene.groundPlane);
         rcm.setLayerMask(instance,
                 0xff, app.viewOptions.groundPlaneEnabled ? 0xff : 0x00);
 
-        const size_t cameraCount = app.asset->getCameraEntityCount();
-        view->setCamera(app.mainCamera);
-        if (app.currentCamera > 0) {
-            const int gltfCamera = app.currentCamera - 1;
-            if (gltfCamera < cameraCount) {
-                const utils::Entity* cameras = app.asset->getCameraEntities();
-                filament::Camera* c = engine->getCameraComponent(cameras[gltfCamera]);
-                assert(c);
-                view->setCamera(c);
-
-                // Override the aspect ratio in the glTF file and adjust the aspect ratio of this
-                // camera to the viewport.
-                const Viewport& vp = view->getViewport();
-                double aspectRatio = (double) vp.width / vp.height;
-                c->setScaling(double4 {1.0 / aspectRatio, 1.0, 1.0, 1.0});
-            } else {
-                // gltfCamera is out of bounds. Reset camera selection to main camera.
-                app.currentCamera = 0;
-            }
-        }
-
+//        const size_t cameraCount = app.asset->getCameraEntityCount();
+//        view->setCamera(app.mainCamera);
+//        if (app.currentCamera > 0) {
+//            const int gltfCamera = app.currentCamera - 1;
+//            if (gltfCamera < cameraCount) {
+//                const utils::Entity* cameras = app.asset->getCameraEntities();
+//                filament::Camera* c = engine->getCameraComponent(cameras[gltfCamera]);
+//                assert(c);
+//                view->setCamera(c);
+//
+//                // Override the aspect ratio in the glTF file and adjust the aspect ratio of this
+//                // camera to the viewport.
+//                const Viewport& vp = view->getViewport();
+//                double aspectRatio = (double) vp.width / vp.height;
+//                c->setScaling(double4 {1.0 / aspectRatio, 1.0, 1.0, 1.0});
+//            } else {
+//                // gltfCamera is out of bounds. Reset camera selection to main camera.
+//                app.currentCamera = 0;
+//            }
+//        }
+        app.currentCamera = 0;
         filament::Camera& camera = view->getCamera();
         camera.setExposure(
                 app.viewOptions.cameraAperture,
@@ -1345,27 +1351,27 @@ void ape::FilamentApplicationPlugin::Step()
         } else {
             view->setColorGrading(nullptr);
         }
+        processEventDoubleQueue();
     };
 
-    auto postRender = [&app](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
+    auto postRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
+        
         if (app.automationEngine->shouldClose()) {
             FilamentApp::get().close();
             return;
         }
         Settings* settings = &app.viewer->getSettings();
-        MaterialInstance* const* materials = app.asset->getMaterialInstances();
-        size_t materialCount = app.asset->getMaterialInstanceCount();
-        app.automationEngine->tick(view, materials, materialCount, renderer,
-                ImGui::GetIO().DeltaTime);
+//        MaterialInstance* const* materials = app.asset->getMaterialInstances();
+//        size_t materialCount = app.asset->getMaterialInstanceCount();
+//        app.automationEngine->tick(view, materials, materialCount, renderer,
+//                ImGui::GetIO().DeltaTime);
     };
 
     FilamentApp& filamentApp = FilamentApp::get();
-    filamentApp.animate(animate);
+    //filamentApp.animate(animate);
     filamentApp.resize(resize);
 
     filamentApp.setDropHandler([&] (std::string path) {
-        app.viewer->removeAsset();
-        app.loader->destroyAsset(app.asset);
         loadAsset(path);
         loadResources(path);
     });

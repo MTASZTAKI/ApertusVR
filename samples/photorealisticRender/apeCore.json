@@ -1,6 +1,7 @@
 {
   "plugins": [
-     "apeFilamentApplicationPlugin"
+     "apeFilamentApplicationPlugin",
+     "apePhotorealisticScenePlugin"
   ],
   "network": {
     "user": "",

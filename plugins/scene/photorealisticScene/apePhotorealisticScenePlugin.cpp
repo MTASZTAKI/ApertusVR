@@ -39,10 +39,6 @@ void ape::apePhotoRealisticScenePlugin::Init()
 void ape::apePhotoRealisticScenePlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-	APE_LOG_DEBUG("waiting for renderer is ready");
-	while (!mIsRenderReady)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("renderer is ready");
 	if (auto node = mpSceneManager->createNode("lightNode1", true, mpCoreConfig->getNetworkGUID()).lock())
 	{
 		if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->createEntity("light1", ape::Entity::LIGHT, true, mpCoreConfig->getNetworkGUID()).lock()))
