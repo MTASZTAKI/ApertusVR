@@ -66,6 +66,8 @@ namespace ape
 
 		ape::UserInputMacro* mpApeUserInputMacro;
 
+		int mViveSrPassThroughID;
+
 		void eventCallBack(const ape::Event& event);
 
 	public:
