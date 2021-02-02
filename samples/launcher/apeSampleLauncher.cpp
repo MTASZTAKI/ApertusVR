@@ -38,9 +38,9 @@ int main(int argc, char** argv)
 	if (argc > 1)
 	{
 		signal(SIGINT, my_handler);
-		ape::System::Start(argv[1], false);
-        while (true)
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		ape::System::Start(argv[1], true);
+        /*while (true)
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));*/
 	}
     else{
     std::string inPath;
