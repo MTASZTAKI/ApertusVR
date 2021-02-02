@@ -22,4 +22,5 @@
 
 add_subdirectory (openVR)
 add_subdirectory (openXR)
+add_subdirectory (viveSR)
 
