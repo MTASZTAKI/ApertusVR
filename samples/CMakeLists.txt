@@ -44,5 +44,3 @@ elseif(APPLE)
 add_subdirectory (photorealisticRender)
 add_subdirectory (launcher)
 endif()
-
-

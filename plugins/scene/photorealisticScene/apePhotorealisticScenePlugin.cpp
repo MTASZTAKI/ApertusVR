@@ -67,8 +67,13 @@ void ape::apePhotoRealisticScenePlugin::Run()
 		//node->setPosition(ape::Vector3(0, 0, -50));
 		if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("helmet", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
-			gltfMeshFile->setFileName("/plugins/scene/photorealisticScene/resources/damagedHelmet.gltf");
+			gltfMeshFile->setFileName("/plugins/scene/photorealisticScene/resources/VLTF_3Dlogo.gltf");
 			gltfMeshFile->setParentNode(node);
+            node->rotate(1.5708f, ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+           
+            node->setPosition(ape::Vector3(0.05,0.005, 0.86));
+            node->rotate(3.5f, ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::LOCAL);
+            node->setPosition(ape::Vector3(0,0.005, 0.86));
 		}
 		/*if (auto glbMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("CesiumMan", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
@@ -79,8 +84,8 @@ void ape::apePhotoRealisticScenePlugin::Run()
 	while (true)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
-		if (auto node = mNode.lock())
-			node->rotate(0.0017f, ape::Vector3(0, 1, 0), ape::Node::TransformationSpace::LOCAL);
+    //		if (auto node = mNode.lock())
+    //			node->rotate(-0.0034f, ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::LOCAL);
 	}
 	APE_LOG_FUNC_LEAVE();
 }

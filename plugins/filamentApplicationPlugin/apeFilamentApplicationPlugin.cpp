@@ -23,6 +23,7 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mEventDoubleQueue = ape::DoubleQueue<Event>();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
+    mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
 	mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&FilamentApplicationPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::LIGHT, std::bind(&FilamentApplicationPlugin::eventCallBack, this, std::placeholders::_1));
 	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&FilamentApplicationPlugin::eventCallBack, this, std::placeholders::_1));
@@ -49,6 +50,9 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
 	mpEventManager->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(&FilamentApplicationPlugin::eventCallBack, this, std::placeholders::_1));
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mFilamentApplicationPluginConfig = ape::FilamentApplicationPluginConfig();
+    mpVlftImgui = new VLFTImgui();
+    mpVlftImgui->init(true);
+    app.instances.resize(1);
     parseJson();
     initFilament();
 	APE_LOG_FUNC_LEAVE();
@@ -62,6 +66,12 @@ ape::FilamentApplicationPlugin::~FilamentApplicationPlugin()
 
 void ape::FilamentApplicationPlugin::eventCallBack(const ape::Event& event)
 {
+    if(event.type == ape::Event::Type::GEOMETRY_FILE_FILENAME)
+        std::cout << "geometry file " << event.type  << std::endl;
+    else if((event.type == ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY))
+        std::cout << "geometry clone source" << event.type<< std::endl;
+    else if((event.type == ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME))
+        std::cout << "geometry clone group" << event.type<< std::endl;
 	mEventDoubleQueue.push(event);
 }
 
@@ -102,24 +112,26 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_POSITION:
 					{
-						auto nodeTransform = node->getModelMatrix().transpose();
-						auto filamentTransform = filament::math::mat4f(
-							nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
-							nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
-							nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
-							nodeTransform[3][0], nodeTransform[3][1], nodeTransform[3][2], nodeTransform[3][3]);
-                        app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+                            auto nodeTransform = node->getModelMatrix().transpose();
+                            auto filamentTransform = filament::math::mat4f(
+                                nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
+                                nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
+                                nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
+                                nodeTransform[3][0]/100, nodeTransform[3][1]/100, nodeTransform[3][2]/100, nodeTransform[3][3]);
+                            app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+                        
+                       
 					}
 						break;
 					case ape::Event::Type::NODE_ORIENTATION:
 					{
-						auto nodeTransform = node->getModelMatrix().transpose();
-						auto filamentTransform = filament::math::mat4f(
-							nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
-							nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
-							nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
-							nodeTransform[3][0], nodeTransform[3][1], nodeTransform[3][2], nodeTransform[3][3]);
-                        app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+                            auto nodeTransform = node->getModelMatrix().transpose();
+                            auto filamentTransform = filament::math::mat4f(
+                                nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
+                                nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
+                                nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
+                                nodeTransform[3][0]/100, nodeTransform[3][1]/100, nodeTransform[3][2]/100, nodeTransform[3][3]);
+                            app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
 					}
 						break;
 					case ape::Event::Type::NODE_SCALE:
@@ -158,6 +170,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
 		{
+            
 			if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				std::string geometryName = geometryFile->getName();
@@ -179,7 +192,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
 				{
-
 					if (fileName.find_first_of(".") != std::string::npos)
 					{
 						std::string fileExtension = fileName.substr(fileName.find_last_of("."));
@@ -246,10 +258,15 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 							{
 								APE_LOG_DEBUG(filePath.str() << " was read");
 							}
-                            auto asset = app.loader->createAssetFromJson(buffer.data(), buffer.size());
+                            if (app.asset.find(geometryName) != app.asset.end())
+                            {
+                                app.mpScene->removeEntities(app.asset[geometryName]->getEntities(), app.asset[geometryName]->getEntityCount());
+                            }
+                            app.instances.resize(1);
+                            app.asset[geometryName] = app.loader->createInstancedAsset(buffer.data(), buffer.size(), app.instances.data(), 1);
  							buffer.clear();
 							buffer.shrink_to_fit();
-							if (!asset)
+							if (!app.asset[geometryName])
 							{
 								APE_LOG_DEBUG("Unable to parse " << filePath.str());
 							}
@@ -257,24 +274,25 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 							{
 
 								APE_LOG_DEBUG(filePath.str() << " was parsed");
+                                
                                 gltfio::ResourceConfiguration resourceConfiguration;
                                 resourceConfiguration.engine = app.engine;
 								auto resourceLocation = filePath.str();
 								resourceConfiguration.gltfPath = resourceLocation.c_str();
 								resourceConfiguration.normalizeSkinningWeights = true;
 								resourceConfiguration.recomputeBoundingBoxes = false;
-								auto filamentResourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
-								if (filamentResourceLoader->loadResources(asset))
+                                if(app.resourceLoader)
+                                    delete app.resourceLoader;
+								app.resourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
+								if (app.resourceLoader->loadResources(app.asset[geometryName]))
 								{
 									APE_LOG_DEBUG("resources load OK");
-                                    app.mpScene->addEntities(asset->getEntities(), asset->getEntityCount());
-									app.mpLoadedAssets[fileName] = asset;
+                                    app.mpLoadedAssets[fileName] = app.asset[geometryName];
 								}
 								else
 								{
 									APE_LOG_DEBUG("resources load FAILED");
 								}
-								delete filamentResourceLoader;
 							}
 						}
 					}
@@ -307,6 +325,54 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 				;
 			}
 		}
+        else if(event.group == ape::Event::Group::GEOMETRY_CLONE)
+        {
+            if (auto cloneGeometry = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
+            {
+                std::string sourceFileName = cloneGeometry->getSourceGeometryGroupName();
+                std::string parentNodeName = "";
+                if (auto parentNode = cloneGeometry->getParentNode().lock())
+                    parentNodeName = parentNode->getName();
+                switch (event.type)
+                {
+                    case ape::Event::Type::GEOMETRY_CLONE_CREATE:
+                    {
+                        ;
+                    }
+                    break;
+                    case ape::Event::Type::GEOMETRY_CLONE_PARENTNODE:
+                    {
+                        app.mpScene->removeEntities(app.asset[sourceFileName]->getEntities(), app.asset[sourceFileName]->getEntityCount());
+                        auto filamentAssetRootEntity = app.instancesMap[event.subjectName]->getRoot();
+                        auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
+                        app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
+                        app.mpScene->addEntities(app.asset[sourceFileName]->getEntities(), app.asset[sourceFileName]->getEntityCount());
+                    }
+                    break;
+                    case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY:
+                    {
+                        ;
+                    }
+                    break;
+                    case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME:
+                    {
+                        if(app.instancesMap.size() == 0){
+                            app.instancesMap[event.subjectName] = app.instances[0];
+                        }
+                        else{
+                              FilamentInstance* instance = app.loader->createInstance(app.asset[sourceFileName]);
+                              app.instancesMap[event.subjectName] = instance;
+                        }
+                    }
+                    break;
+                    case ape::Event::Type::GEOMETRY_CLONE_DELETE:
+                    {
+                        ;
+                    }
+                    break;
+                }
+            }
+        }
 		else if (event.group == ape::Event::Group::LIGHT)
 		{
 			if (auto light = std::static_pointer_cast<ape::ILight>(mpSceneManager->getEntity(event.subjectName).lock()))
@@ -653,28 +719,6 @@ void ape::FilamentApplicationPlugin::Init()
 void ape::FilamentApplicationPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-//	try
-//	{
-//
-//		while (true)
-//		{
-//			processEventDoubleQueue();
-//			if (mpFilamentRenderer->beginFrame(mpFilamentSwapChain))
-//			{
-//				mpFilamentRenderer->render(mpFilamentView);
-//				//APE_LOG_DEBUG("render");
-//				mpFilamentRenderer->endFrame();
-//			}
-//			std::this_thread::sleep_for(std::chrono::milliseconds(20));
-//		}
-//
-//	}
-//	catch (std::exception exp)
-//	{
-//		APE_LOG_DEBUG("");
-//	}
-//    while(true)
-//        std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -683,273 +727,11 @@ std::ifstream::pos_type ape::FilamentApplicationPlugin::getFileSize(const char* 
     return in.tellg();
 }
 
-bool ape::FilamentApplicationPlugin::loadSettings(const char* filename, Settings* out) {
-    auto contentSize = getFileSize(filename);
-    if (contentSize <= 0) {
-        return false;
-    }
-    std::ifstream in(filename, std::ifstream::binary | std::ifstream::in);
-    std::vector<char> json(static_cast<unsigned long>(contentSize));
-    if (!in.read(json.data(), contentSize)) {
-        return false;
-    }
-    return readJson(json.data(), contentSize, out);
-}
-
-void ape::FilamentApplicationPlugin::computeRangePlot(App& app, float* rangePlot) {
-    float4& ranges = app.viewer->getSettings().view.colorGrading.ranges;
-    ranges.y = clamp(ranges.y, ranges.x + 1e-5f, ranges.w - 1e-5f); // darks
-    ranges.z = clamp(ranges.z, ranges.x + 1e-5f, ranges.w - 1e-5f); // lights
-
-    for (size_t i = 0; i < 1024; i++) {
-        float x = i / 1024.0f;
-        float s = 1.0f - smoothstep(ranges.x, ranges.y, x);
-        float h = smoothstep(ranges.z, ranges.w, x);
-        rangePlot[i]        = s;
-        rangePlot[1024 + i] = 1.0f - s - h;
-        rangePlot[2048 + i] = h;
-    }
-}
-
-void ape::FilamentApplicationPlugin::rangePlotSeriesStart(int series) {
-    switch (series) {
-        case 0:
-            ImGui::PushStyleColor(ImGuiCol_PlotLines, (ImVec4) ImColor::HSV(0.4f, 0.25f, 1.0f));
-            break;
-        case 1:
-            ImGui::PushStyleColor(ImGuiCol_PlotLines, (ImVec4) ImColor::HSV(0.8f, 0.25f, 1.0f));
-            break;
-        case 2:
-            ImGui::PushStyleColor(ImGuiCol_PlotLines, (ImVec4) ImColor::HSV(0.17f, 0.21f, 1.0f));
-            break;
-    }
-}
-
-
-void ape::FilamentApplicationPlugin::rangePlotSeriesEnd(int series) {
-    if (series < 3) {
-        ImGui::PopStyleColor();
-    }
-}
-
-float ape::FilamentApplicationPlugin::getRangePlotValue(int series, void *data, int index)
-{
-    return ((float*) data)[series * 1024 + index];
-}
-
-float3 ape::FilamentApplicationPlugin::curves(float3 v, float3 shadowGamma, float3 midPoint, float3 highlightScale){
-    float3 d = 1.0f / (pow(midPoint, shadowGamma - 1.0f));
-    float3 dark = pow(v, shadowGamma) * d;
-    float3 light = highlightScale * (v - midPoint) + midPoint;
-    return float3{
-            v.r <= midPoint.r ? dark.r : light.r,
-            v.g <= midPoint.g ? dark.g : light.g,
-            v.b <= midPoint.b ? dark.b : light.b,
-    };
-}
-
-void ape::FilamentApplicationPlugin::computeCurvePlot(App& app, float* curvePlot){
-    const auto& colorGradingOptions = app.viewer->getSettings().view.colorGrading;
-    for (size_t i = 0; i < 1024; i++) {
-        float3 x{i / 1024.0f * 2.0f};
-        float3 y = curves(x,
-                colorGradingOptions.gamma,
-                colorGradingOptions.midPoint,
-                colorGradingOptions.scale);
-        curvePlot[i]        = y.r;
-        curvePlot[1024 + i] = y.g;
-        curvePlot[2048 + i] = y.b;
-    }
-}
-
-void ape::FilamentApplicationPlugin::tooltipFloat(float value){
-    if (ImGui::IsItemActive() || ImGui::IsItemHovered()) {
-        ImGui::SetTooltip("%.2f", value);
-    }
-}
-
-void ape::FilamentApplicationPlugin::pushSliderColors(float hue){
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4) ImColor::HSV(hue, 0.5f, 0.5f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4) ImColor::HSV(hue, 0.6f, 0.5f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4) ImColor::HSV(hue, 0.7f, 0.5f));
-    ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4) ImColor::HSV(hue, 0.9f, 0.9f));
-}
-
-void ape::FilamentApplicationPlugin::colorGradingUI(App& app){
-    const static ImVec2 verticalSliderSize(18.0f, 160.0f);
-    const static ImVec2 plotLinesSize(260.0f, 160.0f);
-    const static ImVec2 plotLinesWideSize(350.0f, 120.0f);
-
-    if (ImGui::CollapsingHeader("Color grading")) {
-        ColorGradingSettings& colorGrading = app.viewer->getSettings().view.colorGrading;
-
-        ImGui::Indent();
-        ImGui::Checkbox("Enabled##colorGrading", &colorGrading.enabled);
-
-        int quality = (int) colorGrading.quality;
-        ImGui::Combo("Quality##colorGradingQuality", &quality, "Low\0Medium\0High\0Ultra\0\0");
-        colorGrading.quality = (decltype(colorGrading.quality)) quality;
-
-        int toneMapping = (int) colorGrading.toneMapping;
-        ImGui::Combo("Tone-mapping", &toneMapping,
-                "Linear\0ACES (legacy)\0ACES\0Filmic\0Uchimura\0Reinhard\0Display Range\0\0");
-        colorGrading.toneMapping = (decltype(colorGrading.toneMapping)) toneMapping;
-
-        if (ImGui::CollapsingHeader("White balance")) {
-            int temperature = colorGrading.temperature * 100.0f;
-            int tint = colorGrading.tint * 100.0f;
-            ImGui::SliderInt("Temperature", &temperature, -100, 100);
-            ImGui::SliderInt("Tint", &tint, -100, 100);
-            colorGrading.temperature = temperature / 100.0f;
-            colorGrading.tint = tint / 100.0f;
-        }
-
-        if (ImGui::CollapsingHeader("Channel mixer")) {
-            pushSliderColors(0.0f / 7.0f);
-            ImGui::VSliderFloat("##outRed.r", verticalSliderSize, &colorGrading.outRed.r, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outRed.r);
-            ImGui::SameLine();
-            ImGui::VSliderFloat("##outRed.g", verticalSliderSize, &colorGrading.outRed.g, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outRed.g);
-            ImGui::SameLine();
-            ImGui::VSliderFloat("##outRed.b", verticalSliderSize, &colorGrading.outRed.b, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outRed.b);
-            ImGui::SameLine(0.0f, 18.0f);
-            popSliderColors();
-
-            pushSliderColors(2.0f / 7.0f);
-            ImGui::VSliderFloat("##outGreen.r", verticalSliderSize, &colorGrading.outGreen.r, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outGreen.r);
-            ImGui::SameLine();
-            ImGui::VSliderFloat("##outGreen.g", verticalSliderSize, &colorGrading.outGreen.g, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outGreen.g);
-            ImGui::SameLine();
-            ImGui::VSliderFloat("##outGreen.b", verticalSliderSize, &colorGrading.outGreen.b, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outGreen.b);
-            ImGui::SameLine(0.0f, 18.0f);
-            popSliderColors();
-
-            pushSliderColors(4.0f / 7.0f);
-            ImGui::VSliderFloat("##outBlue.r", verticalSliderSize, &colorGrading.outBlue.r, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outBlue.r);
-            ImGui::SameLine();
-            ImGui::VSliderFloat("##outBlue.g", verticalSliderSize, &colorGrading.outBlue.g, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outBlue.g);
-            ImGui::SameLine();
-            ImGui::VSliderFloat("##outBlue.b", verticalSliderSize, &colorGrading.outBlue.b, -2.0f, 2.0f, "");
-            tooltipFloat(colorGrading.outBlue.b);
-            popSliderColors();
-        }
-        if (ImGui::CollapsingHeader("Tonal ranges")) {
-            ImGui::ColorEdit3("Shadows", &colorGrading.shadows.x);
-            ImGui::SliderFloat("Weight##shadowsWeight", &colorGrading.shadows.w, -2.0f, 2.0f);
-            ImGui::ColorEdit3("Mid-tones", &colorGrading.midtones.x);
-            ImGui::SliderFloat("Weight##midTonesWeight", &colorGrading.midtones.w, -2.0f, 2.0f);
-            ImGui::ColorEdit3("Highlights", &colorGrading.highlights.x);
-            ImGui::SliderFloat("Weight##highlightsWeight", &colorGrading.highlights.w, -2.0f, 2.0f);
-            ImGui::SliderFloat4("Ranges", &colorGrading.ranges.x, 0.0f, 1.0f);
-            computeRangePlot(app, app.rangePlot);
-        }
-        if (ImGui::CollapsingHeader("Color decision list")) {
-            ImGui::SliderFloat3("Slope", &colorGrading.slope.x, 0.0f, 2.0f);
-            ImGui::SliderFloat3("Offset", &colorGrading.offset.x, -0.5f, 0.5f);
-            ImGui::SliderFloat3("Power", &colorGrading.power.x, 0.0f, 2.0f);
-        }
-        if (ImGui::CollapsingHeader("Adjustments")) {
-            ImGui::SliderFloat("Contrast", &colorGrading.contrast, 0.0f, 2.0f);
-            ImGui::SliderFloat("Vibrance", &colorGrading.vibrance, 0.0f, 2.0f);
-            ImGui::SliderFloat("Saturation", &colorGrading.saturation, 0.0f, 2.0f);
-        }
-        if (ImGui::CollapsingHeader("Curves")) {
-            ImGui::Checkbox("Linked curves", &colorGrading.linkedCurves);
-
-            computeCurvePlot(app, app.curvePlot);
-
-            if (!colorGrading.linkedCurves) {
-                pushSliderColors(0.0f / 7.0f);
-                ImGui::VSliderFloat("##curveGamma.r", verticalSliderSize, &colorGrading.gamma.r, 0.0f, 4.0f, "");
-                tooltipFloat(colorGrading.gamma.r);
-                ImGui::SameLine();
-                ImGui::VSliderFloat("##curveMid.r", verticalSliderSize, &colorGrading.midPoint.r, 0.0f, 2.0f, "");
-                tooltipFloat(colorGrading.midPoint.r);
-                ImGui::SameLine();
-                ImGui::VSliderFloat("##curveScale.r", verticalSliderSize, &colorGrading.scale.r, 0.0f, 4.0f, "");
-                tooltipFloat(colorGrading.scale.r);
-                ImGui::SameLine(0.0f, 18.0f);
-                popSliderColors();
-
-                ImGui::PushStyleColor(ImGuiCol_PlotLines, (ImVec4) ImColor::HSV(0.0f, 0.7f, 0.8f));
-                ImGui::PlotLines("", app.curvePlot, 1024, 0, "Red", 0.0f, 2.0f, plotLinesSize);
-                ImGui::PopStyleColor();
-
-                pushSliderColors(2.0f / 7.0f);
-                ImGui::VSliderFloat("##curveGamma.g", verticalSliderSize, &colorGrading.gamma.g, 0.0f, 4.0f, "");
-                tooltipFloat(colorGrading.gamma.g);
-                ImGui::SameLine();
-                ImGui::VSliderFloat("##curveMid.g", verticalSliderSize, &colorGrading.midPoint.g, 0.0f, 2.0f, "");
-                tooltipFloat(colorGrading.midPoint.g);
-                ImGui::SameLine();
-                ImGui::VSliderFloat("##curveScale.g", verticalSliderSize, &colorGrading.scale.g, 0.0f, 4.0f, "");
-                tooltipFloat(colorGrading.scale.g);
-                ImGui::SameLine(0.0f, 18.0f);
-                popSliderColors();
-
-                ImGui::PushStyleColor(ImGuiCol_PlotLines, (ImVec4) ImColor::HSV(0.3f, 0.7f, 0.8f));
-                ImGui::PlotLines("", app.curvePlot + 1024, 1024, 0, "Green", 0.0f, 2.0f, plotLinesSize);
-                ImGui::PopStyleColor();
-
-                pushSliderColors(4.0f / 7.0f);
-                ImGui::VSliderFloat("##curveGamma.b", verticalSliderSize, &colorGrading.gamma.b, 0.0f, 4.0f, "");
-                tooltipFloat(colorGrading.gamma.b);
-                ImGui::SameLine();
-                ImGui::VSliderFloat("##curveMid.b", verticalSliderSize, &colorGrading.midPoint.b, 0.0f, 2.0f, "");
-                tooltipFloat(colorGrading.midPoint.b);
-                ImGui::SameLine();
-                ImGui::VSliderFloat("##curveScale.b", verticalSliderSize, &colorGrading.scale.b, 0.0f, 4.0f, "");
-                tooltipFloat(colorGrading.scale.b);
-                ImGui::SameLine(0.0f, 18.0f);
-                popSliderColors();
-
-                ImGui::PushStyleColor(ImGuiCol_PlotLines, (ImVec4) ImColor::HSV(0.6f, 0.7f, 0.8f));
-                ImGui::PlotLines("", app.curvePlot + 2048, 1024, 0, "Blue", 0.0f, 2.0f, plotLinesSize);
-                ImGui::PopStyleColor();
-            } else {
-                ImGui::VSliderFloat("##curveGamma", verticalSliderSize, &colorGrading.gamma.r, 0.0f, 4.0f, "");
-                tooltipFloat(colorGrading.gamma.r);
-                ImGui::SameLine();
-                ImGui::VSliderFloat("##curveMid", verticalSliderSize, &colorGrading.midPoint.r, 0.0f, 2.0f, "");
-                tooltipFloat(colorGrading.midPoint.r);
-                ImGui::SameLine();
-                ImGui::VSliderFloat("##curveScale", verticalSliderSize, &colorGrading.scale.r, 0.0f, 4.0f, "");
-                tooltipFloat(colorGrading.scale.r);
-                ImGui::SameLine(0.0f, 18.0f);
-
-                colorGrading.gamma = float3{colorGrading.gamma.r};
-                colorGrading.midPoint = float3{colorGrading.midPoint.r};
-                colorGrading.scale = float3{colorGrading.scale.r};
-
-                ImGui::PushStyleColor(ImGuiCol_PlotLines, (ImVec4) ImColor::HSV(0.17f, 0.21f, 0.9f));
-                ImGui::PlotLines("", app.curvePlot, 1024, 0, "RGB", 0.0f, 2.0f, plotLinesSize);
-                ImGui::PopStyleColor();
-            }
-        }
-        ImGui::Unindent();
-    }
-}
-
-
-LinearColor ape::FilamentApplicationPlugin::inverseTonemapSRGB(sRGBColor x) {
-    return (x * -0.155) / (x - 1.019);
-}
-
 void ape::FilamentApplicationPlugin::Step()
 {
-    
-
 
     app.config.title = "Filament";
     app.config.iblDirectory = FilamentApp::getRootAssetsPath() + DEFAULT_IBL;
-
     utils::Path filename;
     int num_args = 1;
     if (num_args >= 1) {
@@ -990,15 +772,16 @@ void ape::FilamentApplicationPlugin::Step()
         }
 
         // Parse the glTF file and create Filament entities.
+        app.instances.resize(3);
         if (filename.getExtension() == "glb") {
-            app.asset = app.loader->createAssetFromBinary(buffer.data(), buffer.size());
+            app.asset[filename] = app.loader->createAssetFromBinary(buffer.data(), buffer.size());
         } else {
-            app.asset = app.loader->createAssetFromJson(buffer.data(), buffer.size());
+            app.asset[filename] = app.loader->createInstancedAsset(buffer.data(), buffer.size(), app.instances.data(), app.instances.size());
         }
         buffer.clear();
         buffer.shrink_to_fit();
 
-        if (!app.asset) {
+        if (app.asset.find(filename) == app.asset.end()) {
             std::cerr << "Unable to parse " << filename << std::endl;
             exit(1);
         }
@@ -1015,25 +798,37 @@ void ape::FilamentApplicationPlugin::Step()
         if (!app.resourceLoader) {
             app.resourceLoader = new gltfio::ResourceLoader(configuration);
         }
-//        app.resourceLoader->asyncBeginLoad(app.asset);
-//
-//        // Load animation data then free the source hierarchy.
-//        app.asset->getAnimator();
-//        app.asset->releaseSourceData();
-
+        if ( app.resourceLoader->asyncBeginLoad(app.asset[filename]))
+        {
+            APE_LOG_DEBUG("resources load OK");
+            app.mpScene->addEntities(app.asset[filename]->getEntities(), app.asset[filename]->getEntityCount());
+        }
+       
+        
         auto ibl = FilamentApp::get().getIBL();
         if (ibl) {
-            app.viewer->setIndirectLight(ibl->getIndirectLight(), ibl->getSphericalHarmonics());
+            using namespace filament::math;
+            filament::math::float3 const* sh3 = ibl->getSphericalHarmonics();
+            filament::IndirectLight* ibl_light;
+            app.settings.view.fog.color = sh3[0];
+            app.indirectLight = ibl->getIndirectLight();
+            if (ibl) {
+                float3 d = filament::IndirectLight::getDirectionEstimate(sh3);
+                float4 c = filament::IndirectLight::getColorEstimate(sh3, d);
+                app.sunlightDirection = d;
+                app.sunlightColor = c.rgb;
+                app.sunlightIntensity = c[3] * app.indirectLight->getIntensity();
+                using namespace filament::math;
+                if (app.indirectLight) {
+                    app.indirectLight->setIntensity(app.IblIntensity);
+                    app.indirectLight->setRotation(mat3f::rotation(app.IblRotation, float3{ 0, 1, 0 }));
+                }
+            }
         }
     };
 
-    
-    //rewrite it with filament::view instead of simpleviewer
-    // use app.scene, app.view...
-    //modify the othe function this way too
     auto setup = [&](Engine* engine, View* view, Scene* scene) {
         app.engine = engine;
-        app.viewer = new SimpleViewer(engine, scene, view, 410);
         app.view = view;
         app.mpScene = scene;
         app.config.title = "Filament";
@@ -1042,222 +837,23 @@ void ape::FilamentApplicationPlugin::Step()
         app.mpTransformManager = &app.engine->getTransformManager();
         app.names = new NameComponentManager(EntityManager::get());
         
-        const bool batchMode = !app.batchFile.empty();
-
-        // First check if a custom automation spec has been provided. If it fails to load, the app
-        // must be closed since it could be invoked from a script.
-        if (batchMode && app.batchFile != "default") {
-            auto size = getFileSize(app.batchFile.c_str());
-            if (size > 0) {
-                std::ifstream in(app.batchFile, std::ifstream::binary | std::ifstream::in);
-                std::vector<char> json(static_cast<unsigned long>(size));
-                in.read(json.data(), size);
-                app.automationSpec = AutomationSpec::generate(json.data(), size);
-                if (!app.automationSpec) {
-                    std::cerr << "Unable to parse automation spec: " << app.batchFile << std::endl;
-                    exit(1);
-                }
-            } else {
-                std::cerr << "Unable to load automation spec: " << app.batchFile << std::endl;
-                exit(1);
-            }
-        }
-
-        // If no custom spec has been provided, or if in interactive mode, load the default spec.
-        if (!app.automationSpec) {
-            app.automationSpec = AutomationSpec::generateDefaultTestCases();
-        }
-
-        app.automationEngine = new AutomationEngine(app.automationSpec, &app.viewer->getSettings());
-
-        if (batchMode) {
-            app.automationEngine->startBatchMode();
-            auto options = app.automationEngine->getOptions();
-            options.sleepDuration = 0.0;
-            options.exportScreenshots = true;
-            options.exportSettings = true;
-            app.automationEngine->setOptions(options);
-            app.viewer->stopAnimation();
-        }
-
-        if (app.settingsFile.size() > 0) {
-            bool success = loadSettings(app.settingsFile.c_str(), &app.viewer->getSettings());
-            if (success) {
-                std::cout << "Loaded settings from " << app.settingsFile << std::endl;
-            } else {
-                std::cerr << "Failed to load settings from " << app.settingsFile << std::endl;
-            }
-        }
 
         app.materials = (app.materialSource == GENERATE_SHADERS) ?
                 createMaterialGenerator(engine) : createUbershaderLoader(engine);
         app.loader = AssetLoader::create({engine, app.materials, app.names });
         app.mainCamera = &view->getCamera();
-        //loadAsset(filename);
-
-        loadResources(filename);
-
-        app.viewer->setUiCallback([scene, view, engine, this] () {
-            auto& automation = *app.automationEngine;
-
-            float progress = app.resourceLoader->asyncGetLoadProgress();
-            if (progress < 1.0) {
-                ImGui::ProgressBar(progress);
-            } else {
-                // The model is now fully loaded, so let automation know.
-                automation.signalBatchMode();
-            }
-
-            // The screenshots do not include the UI, but we auto-open the Automation UI group
-            // when in batch mode. This is useful when a human is observing progress.
-            const int flags = automation.isBatchModeEnabled() ? ImGuiTreeNodeFlags_DefaultOpen : 0;
-
-            if (ImGui::CollapsingHeader("Automation", flags)) {
-                ImGui::Indent();
-
-                const ImVec4 yellow(1.0f,1.0f,0.0f,1.0f);
-                if (automation.isRunning()) {
-                    ImGui::TextColored(yellow, "Test case %zu / %zu",
-                            automation.currentTest(), automation.testCount());
-                } else {
-                    ImGui::TextColored(yellow, "%zu test cases", automation.testCount());
-                }
-
-                auto options = automation.getOptions();
-
-                ImGui::PushItemWidth(150);
-                ImGui::SliderFloat("Sleep (seconds)", &options.sleepDuration, 0.0, 5.0);
-                ImGui::PopItemWidth();
-
-                // Hide the tooltip during automation to avoid photobombing the screenshot.
-                if (ImGui::IsItemHovered() && !automation.isRunning()) {
-                    ImGui::SetTooltip("Specifies the amount of time to sleep between test cases.");
-                }
-
-                ImGui::Checkbox("Export screenshot for each test", &options.exportScreenshots);
-                ImGui::Checkbox("Export settings JSON for each test", &options.exportSettings);
-
-                automation.setOptions(options);
-
-                if (automation.isRunning()) {
-                    if (ImGui::Button("Stop batch test")) {
-                        automation.stopRunning();
-                    }
-                } else if (ImGui::Button("Run batch test")) {
-                    automation.startRunning();
-                }
-
-                if (ImGui::Button("Export view settings")) {
-                    automation.exportSettings(app.viewer->getSettings(), "settings.json");
-                    app.messageBoxText = automation.getStatusMessage();
-                    ImGui::OpenPopup("MessageBox");
-                }
-                ImGui::Unindent();
-            }
-
-            if (ImGui::CollapsingHeader("Stats")) {
-                ImGui::Indent();
-                ImGui::Text("%zu entities in the asset", app.asset->getEntityCount());
-                ImGui::Text("%zu renderables (excluding UI)", scene->getRenderableCount());
-                ImGui::Text("%zu skipped frames", FilamentApp::get().getSkippedFrameCount());
-                ImGui::Unindent();
-            }
-
-            if (ImGui::CollapsingHeader("Scene")) {
-                ImGui::Indent();
-                ImGui::Checkbox("Show skybox", &app.viewOptions.skyboxEnabled);
-                ImGui::ColorEdit3("Background color", &app.viewOptions.backgroundColor.r);
-                ImGui::Checkbox("Ground shadow", &app.viewOptions.groundPlaneEnabled);
-                ImGui::Indent();
-                ImGui::SliderFloat("Strength", &app.viewOptions.groundShadowStrength, 0.0f, 1.0f);
-                ImGui::Unindent();
-                ImGui::Unindent();
-            }
-
-            if (ImGui::CollapsingHeader("Camera")) {
-                ViewSettings& settings = app.viewer->getSettings().view;
-
-                ImGui::Indent();
-                ImGui::SliderFloat("Focal length (mm)", &FilamentApp::get().getCameraFocalLength(), 16.0f, 90.0f);
-                ImGui::SliderFloat("Aperture", &app.viewOptions.cameraAperture, 1.0f, 32.0f);
-                ImGui::SliderFloat("Speed (1/s)", &app.viewOptions.cameraSpeed, 1000.0f, 1.0f);
-                ImGui::SliderFloat("ISO", &app.viewOptions.cameraISO, 25.0f, 6400.0f);
-                ImGui::Checkbox("DoF", &settings.dof.enabled);
-                ImGui::SliderFloat("Focus distance", &settings.dof.focusDistance, 0.0f, 30.0f);
-                ImGui::SliderFloat("Blur scale", &settings.dof.cocScale, 0.1f, 10.0f);
-
-                if (ImGui::CollapsingHeader("Vignette")) {
-                    ImGui::Checkbox("Enabled##vignetteEnabled", &settings.vignette.enabled);
-                    ImGui::SliderFloat("Mid point", &settings.vignette.midPoint, 0.0f, 1.0f);
-                    ImGui::SliderFloat("Roundness", &settings.vignette.roundness, 0.0f, 1.0f);
-                    ImGui::SliderFloat("Feather", &settings.vignette.feather, 0.0f, 1.0f);
-                    ImGui::ColorEdit3("Color##vignetteColor", &settings.vignette.color.r);
-                }
-
-                const utils::Entity* cameras = app.asset->getCameraEntities();
-                const size_t cameraCount = app.asset->getCameraEntityCount();
-
-                std::vector<std::string> names;
-                names.reserve(cameraCount + 1);
-                names.push_back("Free camera");
-                int c = 0;
-                for (size_t i = 0; i < cameraCount; i++) {
-                    const char* n = app.asset->getName(cameras[i]);
-                    if (n) {
-                        names.emplace_back(n);
-                    } else {
-                        char buf[32];
-                        sprintf(buf, "Unnamed camera %d", c++);
-                        names.emplace_back(buf);
-                    }
-                }
-
-                std::vector<const char*> cstrings;
-                cstrings.reserve(names.size());
-                for (size_t i = 0; i < names.size(); i++) {
-                    cstrings.push_back(names[i].c_str());
-                }
-
-                ImGui::ListBox("Cameras", &app.currentCamera, cstrings.data(), cstrings.size());
-                ImGui::Unindent();
-            }
-
-            colorGradingUI(app);
-
-            if (ImGui::CollapsingHeader("Debug")) {
-                if (ImGui::Button("Capture frame")) {
-                    auto& debug = engine->getDebugRegistry();
-                    bool* captureFrame =
-                        debug.getPropertyAddress<bool>("d.renderer.doFrameCapture");
-                    *captureFrame = true;
-                }
-            }
-
-            if (ImGui::BeginPopupModal("MessageBox", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("%s", app.messageBoxText.c_str());
-                if (ImGui::Button("OK", ImVec2(120, 0))) {
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
-        });
+        app.mainCamera->lookAt(math::float3(0,-0.025,-0.05), math::float3(0,0,0));
     };
 
     auto cleanup = [this](Engine* engine, View*, Scene*) {
-        app.automationEngine->terminate();
-        app.loader->destroyAsset(app.asset);
-        app.materials->destroyMaterials();
+        for(auto const& x : app.asset)
+            app.loader->destroyAsset(x.second);
 
         engine->destroy(app.scene.groundPlane);
-        engine->destroy(app.scene.groundVertexBuffer);
-        engine->destroy(app.scene.groundIndexBuffer);
-        engine->destroy(app.scene.groundMaterial);
         engine->destroy(app.colorGrading);
 
-        delete app.viewer;
         delete app.materials;
         delete app.names;
-
         AssetLoader::destroy(&app.loader);
     };
 
@@ -1284,9 +880,9 @@ void ape::FilamentApplicationPlugin::Step()
     };
 
     auto gui = [this](Engine* engine, View* view) {
-        app.viewer->updateUserInterface();
-
-        FilamentApp::get().setSidebarWidth(app.viewer->getSidebarWidth());
+        //copy and edit apecoreJson to vfgame2
+        mpVlftImgui->update();
+        FilamentApp::get().setSidebarWidth(0);
     };
 
     auto preRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
@@ -1294,77 +890,33 @@ void ape::FilamentApplicationPlugin::Step()
         auto instance = rcm.getInstance(app.scene.groundPlane);
         rcm.setLayerMask(instance,
                 0xff, app.viewOptions.groundPlaneEnabled ? 0xff : 0x00);
-
-//        const size_t cameraCount = app.asset->getCameraEntityCount();
-//        view->setCamera(app.mainCamera);
-//        if (app.currentCamera > 0) {
-//            const int gltfCamera = app.currentCamera - 1;
-//            if (gltfCamera < cameraCount) {
-//                const utils::Entity* cameras = app.asset->getCameraEntities();
-//                filament::Camera* c = engine->getCameraComponent(cameras[gltfCamera]);
-//                assert(c);
-//                view->setCamera(c);
-//
-//                // Override the aspect ratio in the glTF file and adjust the aspect ratio of this
-//                // camera to the viewport.
-//                const Viewport& vp = view->getViewport();
-//                double aspectRatio = (double) vp.width / vp.height;
-//                c->setScaling(double4 {1.0 / aspectRatio, 1.0, 1.0, 1.0});
-//            } else {
-//                // gltfCamera is out of bounds. Reset camera selection to main camera.
-//                app.currentCamera = 0;
-//            }
-//        }
-        app.currentCamera = 0;
+        
+       app.currentCamera = 0;
         filament::Camera& camera = view->getCamera();
+        
         camera.setExposure(
                 app.viewOptions.cameraAperture,
                 1.0f / app.viewOptions.cameraSpeed,
                 app.viewOptions.cameraISO);
-
-//        app.scene.groundMaterial->setDefaultParameter(
-//                "strength", app.viewOptions.groundShadowStrength);
-
         auto ibl = FilamentApp::get().getIBL();
         if (ibl) {
             ibl->getSkybox()->setLayerMask(0xff, app.viewOptions.skyboxEnabled ? 0xff : 0x00);
         }
+//        if(app.asset)
+//            app.mpScene->addEntities(app.asset->getEntities(), app.asset->getEntityCount());
 
         // we have to clear because the side-bar doesn't have a background, we cannot use
         // a skybox on the ui scene, because the ui view is always full screen.
-        renderer->setClearOptions({
-                .clearColor = { inverseTonemapSRGB(app.viewOptions.backgroundColor), 1.0f },
-                .clear = true
-        });
-
-        ColorGradingSettings& options = app.viewer->getSettings().view.colorGrading;
-        if (options.enabled) {
-            // An inefficient but simple way of detecting change is to serialize to JSON, then
-            // do a string comparison.
-            if (writeJson(options) != writeJson(app.lastColorGradingOptions)) {
-                ColorGrading *colorGrading = createColorGrading(options, engine);
-                engine->destroy(app.colorGrading);
-                app.colorGrading = colorGrading;
-                app.lastColorGradingOptions = options;
-            }
-            view->setColorGrading(app.colorGrading);
-        } else {
-            view->setColorGrading(nullptr);
-        }
+//        renderer->setClearOptions({
+//                .clearColor = { inverseTonemapSRGB(app.viewOptions.backgroundColor), 1.0f },
+//                .clear = true
+//        });
+        view->setColorGrading(nullptr);
         processEventDoubleQueue();
     };
 
     auto postRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
-        
-        if (app.automationEngine->shouldClose()) {
-            FilamentApp::get().close();
-            return;
-        }
-        Settings* settings = &app.viewer->getSettings();
-//        MaterialInstance* const* materials = app.asset->getMaterialInstances();
-//        size_t materialCount = app.asset->getMaterialInstanceCount();
-//        app.automationEngine->tick(view, materials, materialCount, renderer,
-//                ImGui::GetIO().DeltaTime);
+        ;
     };
 
     FilamentApp& filamentApp = FilamentApp::get();
@@ -1375,7 +927,7 @@ void ape::FilamentApplicationPlugin::Step()
         loadAsset(path);
         loadResources(path);
     });
-
+    app.config.cameraMode = filament::camutils::Mode::FREE_FLIGHT;
     filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender);
 
     //return 0;

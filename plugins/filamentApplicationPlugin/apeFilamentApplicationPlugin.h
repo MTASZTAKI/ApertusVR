@@ -82,6 +82,7 @@ SOFTWARE.*/
 #include <viewer/AutomationEngine.h>
 #include <viewer/AutomationSpec.h>
 #include <viewer/SimpleViewer.h>
+#include <viewer/Settings.h>
 #include <camutils/Manipulator.h>
 #include <getopt/getopt.h>
 #include "utils/EntityManager.h"
@@ -91,8 +92,8 @@ SOFTWARE.*/
 #include "math/mat4.h"
 #include <math/vec4.h>
 #include <math/norm.h>
-#include <imgui.h>
 #include <filagui/ImGuiExtensions.h>
+#include "apeVLFTImgui.h"
 //#include "generated/resources/gltf_viewer.h"
 #include "math/TVecHelpers.h"
 
@@ -110,6 +111,7 @@ using namespace utils;
 //lightmanager
 //sunlight
 
+
 struct App {
     Engine* engine;
     SimpleViewer* viewer;
@@ -118,12 +120,23 @@ struct App {
     View* view;
     filament::Camera* mainCamera;
 
+    
+    Settings settings;
     AssetLoader* loader;
-    FilamentAsset* asset = nullptr;
+    std::map<std::string, FilamentAsset*> asset;
     NameComponentManager* names;
+    std::vector<FilamentInstance*> instances;
+    std::map<std::string, FilamentInstance*> instancesMap;
     
     LightManager* lightManager;
     Entity sunLight;
+    IndirectLight* indirectLight;
+    
+    filament::math::float3 sunlightColor = filament::Color::toLinear<filament::ACCURATE>({ 0.98, 0.92, 0.89});
+    filament::math::float3 sunlightDirection = {0.6, -1.0, -0.8};
+    float sunlightIntensity = 100000.0f;
+    float IblIntensity = 30000.0f;
+    float IblRotation = 0.0f;
     
     EntityManager* mpEntityManager;
     TransformManager* mpTransformManager;
@@ -163,7 +176,7 @@ struct App {
 
     float rangePlot[1024 * 3];
     float curvePlot[1024 * 3];
-
+    bool firstRun= true;
     // 0 is the default "free camera". Additional cameras come from the gltf file.
     int currentCamera = 0;
 
@@ -198,6 +211,8 @@ namespace ape
 	private:
         
 		ape::ISceneManager* mpSceneManager;
+        
+        ape::ISceneNetwork* mpSceneNetwork;
 
 		ape::IEventManager* mpEventManager;
 
@@ -206,12 +221,16 @@ namespace ape
 		std::string mUniqueID;
 
 		ape::DoubleQueue<Event> mEventDoubleQueue;
+        
+        ape::DoubleQueue<Event> mTmpEventDoubleQueue;
 
 		std::vector<ape::ManualTextureWeakPtr> mRttList;
 
 		ape::UserInputMacro* mpUserInputMacro;
         
         ape::FilamentApplicationPluginConfig mFilamentApplicationPluginConfig;
+        
+        ape::VLFTImgui* mpVlftImgui;
         
         void initFilament();
         
@@ -222,34 +241,16 @@ namespace ape
         std::ifstream::pos_type getFileSize(const char* filename);
         
         bool loadSettings(const char* filename, Settings* out);
+
+        static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
         
-        void computeRangePlot(App& app, float* rangePlot);
-        
-        void rangePlotSeriesStart(int series);
-        
-        void rangePlotSeriesEnd(int series);
-        
-        float getRangePlotValue(int series, void* data, int index);
-        
-        float3 curves(float3 v, float3 shadowGamma, float3 midPoint, float3 highlightScale);
-        
-        void computeCurvePlot(App& app, float* curvePlot);
-        
-        LinearColor inverseTonemapSRGB(sRGBColor x);
-        
-        void colorGradingUI(App& app);
-        
-        void pushSliderColors(float hue);
-        
-        void popSliderColors() { ImGui::PopStyleColor(4); }
 
         const char* DEFAULT_IBL = "default_env";
-        
-        void tooltipFloat(float value);
         
 		void processEventDoubleQueue();
 
 		void eventCallBack(const ape::Event& event);
+
 	};
 	
 	APE_PLUGIN_FUNC ape::IPlugin* CreateFilamentApplicationPlugin()

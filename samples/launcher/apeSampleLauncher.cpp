@@ -43,16 +43,16 @@ int main(int argc, char** argv)
             std::this_thread::sleep_for(std::chrono::milliseconds(20));*/
 	}
     else{
-    std::string inPath;
-    std::cout << "path: ";
-    std::cin >> inPath;
+    std::string inPath ="/Users/erik/Documents/ApertusVR/ApertusVR/samples/photorealisticRender";
+//    std::cout << "path: ";
+//    std::cin >> inPath;
     if(inPath.length()>0)
     {
        
         signal(SIGINT, my_handler);
         ape::System::Start(inPath.c_str(), false);
-        while(true)
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+//        while(true)
+//            std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
     else
     {

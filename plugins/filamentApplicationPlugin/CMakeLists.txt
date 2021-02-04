@@ -23,8 +23,10 @@ set(CXX_STANDARD "-std=c++17")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(MIN_CLANG_VERSION "6.0")
 
+if(WIN32)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+endif()
 
 if (CMAKE_C_COMPILER_ID MATCHES "Clang")
     if (CMAKE_C_COMPILER_VERSION VERSION_LESS MIN_CLANG_VERSION)
@@ -51,6 +53,8 @@ endif()
 
 set(PLUGIN_NAME "apeFilamentApplicationPlugin")
 
+include("network/prepare_curl.cmake")
+
 find_package(OpenGL REQUIRED)
 if(WIN32)
 	set(FILAMENT_DOWNLOAD_URL "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/filament/windows/filament-1.9.9-build.zip")
@@ -59,9 +63,11 @@ if(WIN32)
 	set(FILAMENT_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/filamentApp/filament-1.9.9-build.zip)
 	set(FILAMENT_SOURCE_ZIP ${CMAKE_BINARY_DIR}/filamentApp/filament-1.9.9.zip)
 elseif(APPLE)
-	set(FILAMENT_DOWNLOAD_URL "https://github.com/google/filament/releases/download/v1.9.9/filament-v1.9.9-mac.tgz")
-	set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentApp/build)
-	set(FILAMENT_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/filamentApp/filament-v1.9.9-mac.tgz)
+	set(FILAMENT_DOWNLOAD_URL "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/filament/osx/filament-v1.9.9-build.zip")
+    set(FILAMENT_DOWNLOAD_URL_SOURCE "http://srv.mvv.sztaki.hu/Ape/3rdPartiesBin/filament/windows/filament-1.9.9.zip")
+	set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentApp)
+	set(FILAMENT_PREBUILD_ZIP ${CMAKE_BINARY_DIR}/filamentApp/filament-v1.9.9-mac.zip)
+    set(FILAMENT_SOURCE_ZIP ${CMAKE_BINARY_DIR}/filamentApp/filament-1.9.9.zip)
 endif()
 
 if (NOT EXISTS ${FILAMENT_PREBUILD_DIR})
@@ -78,7 +84,7 @@ if(WIN32)
 		message (STATUS "Filament is not installed" )
 	endif ()
 elseif(APPLE)
-	if(EXISTS ${FILAMENT_PREBUILD_DIR}/filament/Debug/libfilament.a)
+	if(EXISTS ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/filament/Debug/libfilament.a)
 		set(FILAMENT_READY TRUE)
 		message (STATUS "Filament is installed" )
 	else ()
@@ -138,29 +144,42 @@ if(WIN32)
 				${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/getopt/include
 				${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/libsdl2/include
 				${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/robin-map
-                ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+                			${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+				${CURL_INCLUDE_DIRS}
         )
 elseif(APPLE)
-
     set (HEADERS
                 apeFilamentApplicationPluginConfigs.h
                 apeFilamentApplicationPlugin.h
+	        apeVLFTImgui.h
         )
     set (SOURCES
-                apeFilamentApplicationPlugin.cpp
+		apeFilamentApplicationPlugin.cpp
+		apeVLFTImgui.cpp
         )
     include_directories(
-        ${FILAMENT_PREBUILD_DIR}/include
-        ${FILAMENT_PREBUILD_DIR}/include/imgui
-	${FILAMENT_PREBUILD_DIR}/include/image
-	${FILAMENT_PREBUILD_DIR}/include/imageio
-	${FILAMENT_PREBUILD_DIR}/include/gltfio
-        ${FILAMENT_PREBUILD_DIR}/include/getopt
-        ${FILAMENT_PREBUILD_DIR}/include/libsdl2
-        ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/filament/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/filament/backend/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/imgui
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/gltfio/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/imageio/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/image/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/filamentapp/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/viewer/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/utils/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/math/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/camutils/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/filagui/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/filabridge/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/getopt/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/libsdl2/include
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/robin-map
+                ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+       	        ${CURL_INCLUDE_DIRS}
         )
 endif()
 add_library (${PLUGIN_NAME} SHARED ${SOURCES} ${HEADERS})
+
 
 if (WIN32)
     add_library(MY_FILAMENT STATIC IMPORTED)
@@ -325,32 +344,32 @@ if (WIN32)
 
 elseif(APPLE)
     set(LIBS bluegl bluevk camutils filabridge filaflat filamat filamentapp filameshio filagui geometry gltfio ibl image imageio matdbg math mathio utils viewer )
-
-    set(THIRD_PARTY_LIBS imgui smol-v)
+    set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentApp/filament-1.9.9-build)
+    set(THIRD_PARTY_LIBS imgui smol-v tinyexr z sdl2 assimp png)
     set(LIB_LOCATIONS
         ${FILAMENT_PREBUILD_DIR}/shaders/Debug/libshaders.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/getopt/Debug/libgetopt.a
+        
         ${FILAMENT_PREBUILD_DIR}/third_party/spirv-cross/tnt/Debug/libspirv-cross-core.a
         ${FILAMENT_PREBUILD_DIR}/third_party/spirv-cross/tnt/Debug/libspirv-cross-glsl.a
         ${FILAMENT_PREBUILD_DIR}/third_party/spirv-cross/tnt/Debug/libspirv-cross-msl.a
         ${FILAMENT_PREBUILD_DIR}/third_party/spirv-tools/source/opt/Debug/libSPIRV-Tools-opt.a
         ${FILAMENT_PREBUILD_DIR}/third_party/spirv-tools/source/Debug/libSPIRV-Tools.a
-        ${FILAMENT_PREBUILD_DIR}/third_party/libz/tnt/Debug/libz.a
-        ${FILAMENT_PREBUILD_DIR}/third_party/libsdl2/tnt/Debug/libsdl2.dylib
+        
+        
         ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/glslang/Debug/libglslang.a
         ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/SPIRV/Debug/libSPIRV.a
         ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/SPIRV/Debug/libSPVRemapper.a
         ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/OGLCompilersDLL/Debug/libOGLCompiler.a
         ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/glslang/OSDependent/Unix/Debug/libOSDependent.a
-        ${FILAMENT_PREBUILD_DIR}/third_party/libassimp/tnt/Debug/libassimp.a
+        
         ${FILAMENT_PREBUILD_DIR}/libs/filamentapp/Debug/libfilamentapp-resources.a
         ${FILAMENT_PREBUILD_DIR}/libs/ibl/Debug/libibl-lite.a
         ${FILAMENT_PREBUILD_DIR}/libs/gltfio/Debug/libgltfio_core.a
         ${FILAMENT_PREBUILD_DIR}/libs/gltfio/Debug/libgltfio_resources.a
         ${FILAMENT_PREBUILD_DIR}/filament/backend/Debug/libbackend.a
         ${FILAMENT_PREBUILD_DIR}/third_party/draco/tnt/Debug/libdracodec.a
-        ${FILAMENT_PREBUILD_DIR}/third_party/getopt/Debug/libgetopt.a
-        ${FILAMENT_PREBUILD_DIR}/third_party/libpng/tnt/Debug/libpng.a
-        ${FILAMENT_PREBUILD_DIR}/third_party/tinyexr/tnt/Debug/libtinyexr.a
+        
     )
     foreach(LIB_LOC ${LIB_LOCATIONS})
     
@@ -386,13 +405,26 @@ elseif(APPLE)
 	endforeach()
 
 	foreach(third_party_lib ${THIRD_PARTY_LIBS})
-		add_library(${third_party_lib} STATIC IMPORTED)
-		set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/third_party/${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
-		target_link_libraries (${PLUGIN_NAME} ${third_party_lib})
+        add_library(${third_party_lib} STATIC IMPORTED)
+        if(EXISTS ${FILAMENT_PREBUILD_DIR}/third_party/${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
+		     set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/third_party/${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
+        elseif(EXISTS ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
+             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
+        else()
+             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.dylib)
+        endif()
+        target_link_libraries (${PLUGIN_NAME} ${third_party_lib})
 	endforeach()
 		
 	target_link_libraries (${PLUGIN_NAME} apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro ${OPENGL_LIBRARIES} MY_FILAMENT "-framework Cocoa -framework Metal -framework CoreVideo -framework QuartzCore")
+    set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentApp)
 endif()
+if (${CURL_READY})
+	target_link_libraries (${PLUGIN_NAME} MY_CURL)
+	set_property (TARGET ${PLUGIN_NAME} PROPERTY COMPILE_DEFINITIONS HTTPMANAGER_USE_CURL) 
+endif ()
+
+
 
 set_property (TARGET ${PLUGIN_NAME} PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

@@ -21,6 +21,9 @@
 #SOFTWARE.
 
 # Add all header and cpp files in the directory to the project
+if(APPLE)
+	find_package(nlohmann_json REQUIRED)
+endif()
 set (HEADERS
 	apeVLFTSceneLoaderPlugin.h
 	apeVLFTSceneLoaderPluginConfig.h
@@ -39,13 +42,18 @@ include_directories(
 add_library (apeVLFTSceneLoaderPlugin SHARED ${SOURCES} ${HEADERS})
 
 # Link with dependency libraries
-target_link_libraries (apeVLFTSceneLoaderPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro)
+if(WIN32)
+target_link_libraries (apeVLFTSceneLoaderPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro )
+elseif(APPLE)
+target_link_libraries (apeVLFTSceneLoaderPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro apeSceneMakerMacro nlohmann_json::nlohmann_json)
+endif()
+
 
 set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
 set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY FOLDER "Plugins/VirtualLearningFactory")
 
-set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY CXX_STANDARD 17)
+set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY CXX_STANDARD 14)
 
 set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 

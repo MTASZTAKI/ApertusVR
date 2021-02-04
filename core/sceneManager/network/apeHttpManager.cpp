@@ -329,7 +329,9 @@ bool ape::HttpManager::downloadConfig(const std::string& url, const std::string&
 std::string ape::HttpManager::download(const std::string& url)
 {
 	std::stringstream out;
+
 #ifdef HTTPMANAGER_USE_CURL
+#ifdef WIN32
     curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(mpCurl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(mpCurl, CURLOPT_NOSIGNAL, 1); 
@@ -344,6 +346,22 @@ std::string ape::HttpManager::download(const std::string& url)
 	{
         APE_LOG_ERROR("curl_easy_perform() failed: " << curl_easy_strerror(res));
 	}
+#else
+    curl_easy_setopt(mpCurl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(mpCurl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(mpCurl, CURLOPT_NOSIGNAL, 1);
+    curl_easy_setopt(mpCurl, CURLOPT_ACCEPT_ENCODING, "deflate");
+    
+    curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, write_data);
+    curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, &out);
+
+    CURLcode res = curl_easy_perform(mpCurl);
+
+    if (res != CURLE_OK)
+    {
+        APE_LOG_ERROR("curl_easy_perform() failed: " << curl_easy_strerror(res));
+    }
+#endif
 #endif
     return out.str();
 }
