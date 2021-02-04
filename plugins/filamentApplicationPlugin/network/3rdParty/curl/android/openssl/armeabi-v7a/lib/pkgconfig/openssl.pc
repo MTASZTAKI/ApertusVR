@@ -1,0 +1,9 @@
+prefix=/c/OpenSSL/build/armeabi-v7a
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: OpenSSL
+Description: Secure Sockets Layer and cryptography libraries and tools
+Version: 1.1.1a
+Requires: libssl libcrypto
