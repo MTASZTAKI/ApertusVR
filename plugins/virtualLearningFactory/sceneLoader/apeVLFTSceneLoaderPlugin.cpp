@@ -3,6 +3,9 @@
 #include "apeVLFTSceneLoaderPlugin.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
+#include "nlohmann/json.hpp"
+
+
 
 ape::VLFTSceneLoaderPlugin::VLFTSceneLoaderPlugin()
 {
@@ -28,6 +31,40 @@ void ape::VLFTSceneLoaderPlugin::eventCallBack(const ape::Event & event)
 	
 }
 
+void ape::VLFTSceneLoaderPlugin::parseGltfModel(std::string filePath)
+{
+	tinygltf::TinyGLTF gltf_ctx;
+	std::string err;
+	std::string warn;
+	std::string fileExtension = filePath.substr(filePath.find_last_of("."));
+
+	bool ret = false;
+	if (fileExtension.compare("glb") == 0) {
+		std::cout << "Reading binary glTF" << std::endl;
+		// assume binary glTF.
+		ret = gltf_ctx.LoadBinaryFromFile(&mGltfModel, &err, &warn,
+			filePath.c_str());
+	}
+	else {
+		std::cout << "Reading ASCII glTF" << std::endl;
+		// assume ascii glTF.
+		ret =
+			gltf_ctx.LoadASCIIFromFile(&mGltfModel, &err, &warn, filePath.c_str());
+	}
+
+	if (!warn.empty()) {
+		APE_LOG_DEBUG("warning: " << warn << " filename: " << filePath);
+	}
+
+	if (!err.empty()) {
+		APE_LOG_DEBUG("Err: " << err << " filename: " << filePath);
+	}
+
+	if (!ret) {
+		APE_LOG_DEBUG("Failed to parse glTF: " << filePath);
+	}
+}
+
 void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 {
 	for (auto asset : mScene.get_assets())
@@ -39,6 +76,8 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 			{
 				std::string filePath = representation.get_file();
 				std::string fileExtension = filePath.substr(filePath.find_last_of("."));
+				parseGltfModel(filePath);
+
 				if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".JPG" && fileExtension != ".PNG")
 				{
 					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
@@ -106,8 +145,33 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 {
 	for (auto asset : mScene.get_assets())
 	{
+		bool exists = false;
+		size_t ind = 0;
+		while (!exists && ind < mGltfModel.nodes.size()) {
+			if (mGltfModel.nodes[ind++].name == asset.get_id())
+				exists = true;
+		}
+		
 		if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 		{
+			if (exists) {
+				std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
+				if (positionWP.lock())
+				{
+					std::vector<double> position = *asset.get_position();
+					ape::Vector3 apePosition(position[0], position[1], position[2]);
+					//APE_LOG_DEBUG("apePosition: " << apePosition.toString());
+					node->setPosition(apePosition);
+				}
+				std::weak_ptr<std::vector<double>> orientationWP = asset.get_rotation();
+				if (orientationWP.lock())
+				{
+					std::vector<double> orientation = *asset.get_rotation();
+					ape::Quaternion apeOrientation(orientation[0], orientation[1], orientation[2], orientation[3]);
+					//APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
+					node->setOrientation(apeOrientation);
+				}
+			}
 			//APE_LOG_DEBUG("createNode: " << asset.get_id());
 			std::weak_ptr<std::string> model = asset.get_model();
 			if (model.lock())

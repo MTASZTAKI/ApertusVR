@@ -37,6 +37,7 @@ include_directories(
 	${RAPIDJSON_INCLUDE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty
 	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+	${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/tinygltf
 	)
 
 add_library (apeVLFTSceneLoaderPlugin SHARED ${SOURCES} ${HEADERS})

@@ -670,7 +670,7 @@ public:
 
 private:
 	ape::ISceneManager* mpSceneManager;
-	ape::ISceneNetwork* mpSceneNetwork;
+	ape::ISceneNetwork* mpSceneNetworket;
 	ape::ICoreConfig* mpCoreConfig;
 	ape::IEventManager* mpEventManager;
 	ape::UserInputMacro* mpUserInputMacro;

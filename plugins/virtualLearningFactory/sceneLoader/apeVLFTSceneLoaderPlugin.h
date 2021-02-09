@@ -50,7 +50,10 @@ SOFTWARE.*/
 #include "apeSceneMakerMacro.h"
 #include "apeEuler.h"
 #include "apeVLFTSceneLoaderPluginConfig.h"
-
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "tiny_gltf.h"
 #define THIS_PLUGINNAME "apeVLFTSceneLoaderPlugin"
 
 namespace ape
@@ -71,6 +74,10 @@ namespace ape
 		quicktype::Scene mScene;
 
 		FILE* mApeVLFTSceneLoaderPluginConfigFile;
+
+		tinygltf::Model mGltfModel;
+
+		void parseGltfModel(std::string filePath);
 
 		void parseRepresentations();
 
