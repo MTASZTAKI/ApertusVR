@@ -126,5 +126,8 @@ endif()
 # Place target xxx into the specified folder in IDEs supporting it
 set_property( TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/LanguageAPI/JsAPI" )
 
+set_property(TARGET ${MY_TARGET_NAME} PROPERTY CXX_STANDARD 14)
+set_property(TARGET ${MY_TARGET_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
+
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/package.json DESTINATION ${TARGET_MODULE_PATH_DEBUG})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/package.json DESTINATION ${TARGET_MODULE_PATH_RELEASE})

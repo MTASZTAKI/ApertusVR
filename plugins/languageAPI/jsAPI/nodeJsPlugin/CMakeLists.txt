@@ -72,6 +72,9 @@ set_property(TARGET ${MY_TARGET_NAME} PROPERTY COMPILE_DEFINITIONS)
 # Place target xxx into the specified folder in IDEs supporting it
 set_property(TARGET ${MY_TARGET_NAME} PROPERTY FOLDER "Plugins/LanguageAPI/JsAPI")
 
+set_property(TARGET ${MY_TARGET_NAME} PROPERTY CXX_STANDARD 14)
+set_property(TARGET ${MY_TARGET_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
+
 # write and copy configuration files
 set(APEJS_FILE_PATH_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/js/)
 set(CONFIG_FILE_PATH_SOURCE ${APEJS_FILE_PATH_SOURCE}/modules/module_manager/config.json)
@@ -103,3 +106,5 @@ foreach (CONF ${CMAKE_CONFIGURATION_TYPES})
 endforeach ()
 
 add_subdirectory (js)
+
+
