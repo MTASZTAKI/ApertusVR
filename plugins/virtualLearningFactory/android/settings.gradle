@@ -1,2 +1,0 @@
-include ':vlftsample'
-rootProject.name = "VLFT"
