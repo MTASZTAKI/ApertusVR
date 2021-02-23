@@ -1,7 +1,7 @@
 #MIT License
 #
 #Copyright (c) 2018 MTA SZTAKI
-#
+#/Users/erik/Documents/ApertusVR/ApertusVR/plugins/filamentApplicationPlugin/CMakeLists.txt
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
 #in the Software without restriction, including without limitation the rights
@@ -53,7 +53,9 @@ endif()
 
 set(PLUGIN_NAME "apeFilamentApplicationPlugin")
 
+
 include("network/prepare_curl.cmake")
+
 
 find_package(OpenGL REQUIRED)
 if(WIN32)
@@ -123,9 +125,11 @@ if(WIN32)
     set (HEADERS
                 apeFilamentApplicationPluginConfigs.h
                 apeFilamentApplicationPlugin.h
+ 	        apeVLFTImgui.h
         )
     set (SOURCES
                 apeFilamentApplicationPlugin.cpp
+		apeVLFTImgui.cpp
         )
         include_directories(
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/filament/include
@@ -175,6 +179,7 @@ elseif(APPLE)
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/libsdl2/include
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/robin-map
                 ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+	        ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nativefiledialog
        	        ${CURL_INCLUDE_DIRS}
         )
 endif()
@@ -386,6 +391,11 @@ elseif(APPLE)
     add_library(MY_FILAMENT STATIC IMPORTED)
 	set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/filament/Debug/libfilament.a)
 	set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/filament/Debug/libfilament.a)
+
+	add_library(NFD STATIC IMPORTED)
+	set_property(TARGET NFD PROPERTY IMPORTED_LOCATION_DEBUG /Users/erik/Documents/ApertusVR/ApertusVR/plugins/filamentApplicationPlugin/3rdParty/nativefiledialog/libnfd.a)
+        target_link_libraries (${PLUGIN_NAME} NFD)
+	
 endif ()
 
 

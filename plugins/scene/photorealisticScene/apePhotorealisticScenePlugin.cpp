@@ -65,7 +65,7 @@ void ape::apePhotoRealisticScenePlugin::Run()
 		//node->setScale(ape::Vector3(10, 10, 10));
 		//node->setOrientation(ape::Quaternion(0, 0, 1, 0));
 		//node->setPosition(ape::Vector3(0, 0, -50));
-		if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("helmet", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+		if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("VLTF_3Dlogo", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 		{
 			gltfMeshFile->setFileName("/plugins/scene/photorealisticScene/resources/VLTF_3Dlogo.gltf");
 			gltfMeshFile->setParentNode(node);

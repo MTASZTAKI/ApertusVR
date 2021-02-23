@@ -4,6 +4,7 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/filewritestream.h"
 #include "apeFilamentApplicationPlugin.h"
+
 #ifdef __APPLE__
 #include <sys/stat.h>
 #include "NativeWindowHelper.h"
@@ -51,8 +52,10 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mFilamentApplicationPluginConfig = ape::FilamentApplicationPluginConfig();
     mpVlftImgui = new VLFTImgui();
-    mpVlftImgui->init(true);
+    app.updateinfo.isAdmin = true;
+    mpVlftImgui->init(app.updateinfo);
     app.instances.resize(1);
+    mIsStudent = false;
     parseJson();
     initFilament();
 	APE_LOG_FUNC_LEAVE();
@@ -92,17 +95,45 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 				{
                 
 					auto filamentEntity = app.mpEntityManager->create();
+                    app.names->addComponent(filamentEntity);
+                    auto nameInstance = app.names->getInstance(filamentEntity);
+                    if(nameInstance)
+                        app.names->setName(nameInstance, nodeName.c_str());
 					app.mpTransformManager->create(filamentEntity);
 					auto filamentTransform = app.mpTransformManager->getInstance(filamentEntity);
                     app.mpTransforms[nodeName] = filamentTransform;
-				}
+                    APE_LOG_DEBUG("nodeName "<<nodeName);
+                    app.mpScene->addEntity(filamentEntity);
+                }
 				else
 				{
 					switch (event.type)
 					{
 					case ape::Event::Type::NODE_PARENTNODE:
 					{
-						;
+                        std::string parentNodeName = "";
+                        if (auto parentNode = node->getParentNode().lock())
+                            parentNodeName = parentNode->getName();
+                        if (parentNodeName.find_first_of(".") != std::string::npos)
+                            {
+                                std::string cloneName = parentNodeName.substr(0,parentNodeName.find_last_of("."));
+                                std::string subNodeName = parentNodeName.substr(parentNodeName.find_last_of(".")+1);
+                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
+                                    int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
+                                    std::vector<utils::Entity> entities;
+                                    entities.resize(app.mpInstancesMap.size());
+                                    int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.mpInstancesMap.size());
+                                    if(cnt > 0 ){
+                                        auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
+                                        if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
+                                            auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
+                                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], entityTransform);
+                                        }
+
+                                    }
+                                }
+                            }
+                        
 					}
 						break;
 					case ape::Event::Type::NODE_DETACH:
@@ -112,30 +143,58 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_POSITION:
 					{
-                            auto nodeTransform = node->getModelMatrix().transpose();
+                        if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+                            auto nodePosition = node->getPosition();
+                            auto nodeScale = node->getScale();
+                            auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
+                            float divider = 1.0;
+//                            if(abs(nodePosition.getX()) >= 10 || abs(nodePosition.getY()) >= 10 || abs(nodePosition.getX()) >= 10 )
+//                                divider = 100.0;
                             auto filamentTransform = filament::math::mat4f(
-                                nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
-                                nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
-                                nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
-                                nodeTransform[3][0]/100, nodeTransform[3][1]/100, nodeTransform[3][2]/100, nodeTransform[3][3]);
+                                nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
+                                nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
+                                nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
+                                nodePosition.getX()/divider, nodePosition.getY()/divider, nodePosition.getZ()/divider, nodeTransforms[3][3]);
                             app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
-                        
+                                if (nodeName.find_first_of(".") != std::string::npos)
+                                {
+                                    std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
+                                    std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
+                                    if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
+                                        int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
+                                        std::vector<utils::Entity> entities;
+                                        entities.resize(app.mpInstancesMap.size());
+                                        int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.mpInstancesMap.size());
+                                        if(cnt > 0 ){
+                                            if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
+                                                auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
+                                                app.mpTransformManager->setTransform(entityTransform,filamentTransform);
+                                            }
+
+                                        }
+                                    }
+                                }
+                            
+                        }
                        
 					}
 						break;
 					case ape::Event::Type::NODE_ORIENTATION:
 					{
-                            auto nodeTransform = node->getModelMatrix().transpose();
+                            auto nodeOrientation= node->getModelMatrix().transpose();
+                            auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                             auto filamentTransform = filament::math::mat4f(
-                                nodeTransform[0][0], nodeTransform[0][1], nodeTransform[0][2], nodeTransform[0][3],
-                                nodeTransform[1][0], nodeTransform[1][1], nodeTransform[1][2], nodeTransform[1][3],
-                                nodeTransform[2][0], nodeTransform[2][1], nodeTransform[2][2], nodeTransform[2][3],
-                                nodeTransform[3][0]/100, nodeTransform[3][1]/100, nodeTransform[3][2]/100, nodeTransform[3][3]);
+                                nodeOrientation[0][0]*nodeTransforms[0][0], nodeOrientation[0][1], nodeOrientation[0][2], nodeTransforms[0][3],
+                                nodeOrientation[1][0], nodeOrientation[1][1]*nodeTransforms[1][1], nodeOrientation[1][2], nodeTransforms[1][3],
+                                nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2]*nodeTransforms[2][2], nodeTransforms[2][3],
+                                nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
                             app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
 					}
 						break;
 					case ape::Event::Type::NODE_SCALE:
-						;
+                        {
+                            ;
+                        }
 						break;
 					case ape::Event::Type::NODE_CHILDVISIBILITY:
 						;
@@ -175,6 +234,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			{
 				std::string geometryName = geometryFile->getName();
 				std::string fileName = geometryFile->getFileName();
+                float unitScale = geometryFile->getUnitScale();
 				std::string parentNodeName = "";
 				if (auto parentNode = geometryFile->getParentNode().lock())
 					parentNodeName = parentNode->getName();
@@ -185,9 +245,15 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::GEOMETRY_FILE_PARENTNODE:
 				{
-					auto filamentAssetRootEntity = app.mpLoadedAssets[fileName]->getRoot();
-					auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
-					app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
+                    if(app.mpLoadedAssets.find(fileName) == app.mpLoadedAssets.end())
+                    {
+                            APE_LOG_DEBUG("The asset connected to the parent nocde has not been loaded yet: " << fileName);
+                    }
+                    else{
+                        auto filamentAssetRootEntity = app.mpLoadedAssets[fileName]->getRoot();
+                        auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
+                        app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
+                    }
 				}
 					break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
@@ -203,7 +269,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						{
 							;
 						}
-						if (fileExtension == ".gltf")
+						if (fileExtension == ".gltf" || fileExtension == ".glb")
 						{
 							std::stringstream filePath;
 							std::size_t found = fileName.find(":");
@@ -233,9 +299,17 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 								}
 								else
 								{
-									std::stringstream resourceLocationPath;
-									resourceLocationPath << APE_SOURCE_DIR << fileName;
-									filePath << resourceLocationPath.str();
+                                    std::string absolutePath = "/Users";
+                                    found = fileName.find(absolutePath);
+                                    if(found != std::string::npos)
+                                    {
+                                        filePath << fileName;
+                                    }
+                                    else{
+                                        std::stringstream resourceLocationPath;
+                                        resourceLocationPath << APE_SOURCE_DIR << fileName;
+                                        filePath << resourceLocationPath.str();
+                                    }
 								}
 							}
 							std::ifstream in(filePath.str().c_str(), std::ifstream::ate | std::ifstream::binary);
@@ -280,13 +354,19 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 								auto resourceLocation = filePath.str();
 								resourceConfiguration.gltfPath = resourceLocation.c_str();
 								resourceConfiguration.normalizeSkinningWeights = true;
-								resourceConfiguration.recomputeBoundingBoxes = false;
+								resourceConfiguration.recomputeBoundingBoxes = true;
                                 if(app.resourceLoader)
                                     delete app.resourceLoader;
 								app.resourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
 								if (app.resourceLoader->loadResources(app.asset[geometryName]))
 								{
 									APE_LOG_DEBUG("resources load OK");
+//                                    auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[geometryName]);
+//                                    auto filamentTransform = filament::math::mat4f(
+//                                       1/1000,0,0,0,
+//                                       0,1/1000,0,0,
+//                                       0,0,1/1000,0,
+//                                       0,0,0,1);
                                     app.mpLoadedAssets[fileName] = app.asset[geometryName];
 								}
 								else
@@ -330,9 +410,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
             if (auto cloneGeometry = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
             {
                 std::string sourceFileName = cloneGeometry->getSourceGeometryGroupName();
+                
                 std::string parentNodeName = "";
                 if (auto parentNode = cloneGeometry->getParentNode().lock())
                     parentNodeName = parentNode->getName();
+                
                 switch (event.type)
                 {
                     case ape::Event::Type::GEOMETRY_CLONE_CREATE:
@@ -342,10 +424,43 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_PARENTNODE:
                     {
+                        //app.mpScene->remove(app.asset[sourceFileName]->getWireframe());
                         app.mpScene->removeEntities(app.asset[sourceFileName]->getEntities(), app.asset[sourceFileName]->getEntityCount());
-                        auto filamentAssetRootEntity = app.instancesMap[event.subjectName]->getRoot();
+                        auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].second->getRoot();
                         auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
                         app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
+                        auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[parentNodeName]);
+                        auto filamentTransform = filament::math::mat4f(
+                                 nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
+                                 nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
+                                 nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
+                                 nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
+                        app.mpTransformManager->setTransform(app.mpTransforms[parentNodeName], filamentTransform);
+                        for(auto  const& x: app.mpTransforms){
+                            std::string nodeName = x.first;
+                            if (nodeName.find_first_of(".") != std::string::npos)
+                            {
+                                std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
+                                std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
+                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
+                                    int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
+                                    std::vector<utils::Entity> entities;
+                                    entities.resize(app.mpInstancesMap.size());
+                                    int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.mpInstancesMap.size());
+                                    if(cnt > 0 ){
+                                        auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
+                                        
+                                        
+                                        if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
+                                            auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
+                                            app.mpTransformManager->setTransform(entityTransform,app.mpTransformManager->getTransform(x.second));
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                        
                         app.mpScene->addEntities(app.asset[sourceFileName]->getEntities(), app.asset[sourceFileName]->getEntityCount());
                     }
                     break;
@@ -356,12 +471,24 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME:
                     {
-                        if(app.instancesMap.size() == 0){
-                            app.instancesMap[event.subjectName] = app.instances[0];
+                        if(app.instances.size() == 1){
+                            app.mpInstancesMap[event.subjectName] = std::pair(std::pair(0, sourceFileName),app.instances[0]);
+                            auto root = app.instances[0]->getRoot();
+                            app.names->addComponent(root);
+                            auto nameInstance = app.names->getInstance(root);
+                            if(nameInstance)
+                              app.names->setName(nameInstance, event.subjectName.c_str());
+                            app.instances.resize(2);
                         }
                         else{
                               FilamentInstance* instance = app.loader->createInstance(app.asset[sourceFileName]);
-                              app.instancesMap[event.subjectName] = instance;
+                              auto root = instance->getRoot();
+                              app.names->addComponent(root);
+                              auto nameInstance = app.names->getInstance(root);
+                              if(nameInstance)
+                                app.names->setName(nameInstance, event.subjectName.c_str());
+                              app.mpInstancesMap[event.subjectName] = std::pair(std::pair(app.mpInstancesMap.size(),sourceFileName),instance);
+
                         }
                     }
                     break;
@@ -793,7 +920,7 @@ void ape::FilamentApplicationPlugin::Step()
         ResourceConfiguration configuration = {};
         configuration.engine = app.engine;
         configuration.gltfPath = gltfPath.c_str();
-        configuration.recomputeBoundingBoxes = app.recomputeAabb;
+        configuration.recomputeBoundingBoxes = true;
         configuration.normalizeSkinningWeights = true;
         if (!app.resourceLoader) {
             app.resourceLoader = new gltfio::ResourceLoader(configuration);
@@ -827,6 +954,7 @@ void ape::FilamentApplicationPlugin::Step()
         }
     };
 
+   
     auto setup = [&](Engine* engine, View* view, Scene* scene) {
         app.engine = engine;
         app.view = view;
@@ -835,14 +963,59 @@ void ape::FilamentApplicationPlugin::Step()
         app.config.iblDirectory = FilamentApp::getRootAssetsPath() + "default_env";
         app.mpEntityManager = &utils::EntityManager::get();
         app.mpTransformManager = &app.engine->getTransformManager();
+        app.mpRenderableManager = &app.engine->getRenderableManager();
         app.names = new NameComponentManager(EntityManager::get());
-        
 
         app.materials = (app.materialSource == GENERATE_SHADERS) ?
                 createMaterialGenerator(engine) : createUbershaderLoader(engine);
         app.loader = AssetLoader::create({engine, app.materials, app.names });
         app.mainCamera = &view->getCamera();
-        app.mainCamera->lookAt(math::float3(0,-0.025,-0.05), math::float3(0,0,0));
+        
+        app.currentCamera = 0;
+//        size_t vertCount = 4;
+//        size_t indCount = 6;
+//        float3* verts = (float3*) malloc(sizeof(float3) * vertCount);
+//        std::vector<float3> vertsVec;
+//        uint32_t* inds = (uint32_t*) malloc(sizeof(uint32_t) * indCount);
+//        verts[0] = float3(0, 0, 0);
+//        verts[1] = float3(10, 0, 0);
+//        verts[2] = float3(0, 10, 0);
+//        verts[3] = float3(0, 0, 10);
+//
+//        vertsVec.push_back(verts[0]);
+//        vertsVec.push_back(verts[1]);
+//        inds[0] = 1;
+//        inds[1] = 0;
+//        inds[2] = 2;
+//        inds[3] = 0;
+//        inds[4] = 3;
+//        inds[5] = 0;
+//        filament::VertexBuffer* mVertexBuffer = VertexBuffer::Builder()
+//            .bufferCount(1)
+//            .vertexCount(vertCount)
+//            .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
+//            .build(*engine);
+//
+//        filament::IndexBuffer* mIndexBuffer = IndexBuffer::Builder()
+//            .indexCount(indCount)
+//            .bufferType(IndexBuffer::IndexType::UINT)
+//            .build(*engine);
+//
+//        mVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
+//                        verts, mVertexBuffer->getVertexCount() * sizeof(float3), nullptr));
+//
+//        mIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
+//                        inds, mIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
+//
+//        auto lineEntity = EntityManager::get().create();
+//        RenderableManager::Builder(1)
+//            .culling(false)
+//            .castShadows(false)
+//            .receiveShadows(false)
+//            .geometry(0, RenderableManager::PrimitiveType::LINES, mVertexBuffer, mIndexBuffer)
+//            .build(*engine, lineEntity);
+//        app.mpScene->addEntity(lineEntity);
+        
     };
 
     auto cleanup = [this](Engine* engine, View*, Scene*) {
@@ -881,6 +1054,113 @@ void ape::FilamentApplicationPlugin::Step()
 
     auto gui = [this](Engine* engine, View* view) {
         //copy and edit apecoreJson to vfgame2
+        auto& tm = engine->getTransformManager();
+        auto& rm = engine->getRenderableManager();
+        auto& lm = engine->getLightManager();
+        
+        auto renderableTreeItem = [this, &rm](utils::Entity entity) {
+//            bool rvis = app.mpScene->hasEntity(entity);
+//            ImGui::Checkbox("visible", &rvis);
+//            if (rvis) {
+//                app.mpScene->addEntity(entity);
+//            } else {
+//                app.mpScene->remove(entity);
+//            }
+            auto instance = rm.getInstance(entity);
+            bool scaster = rm.isShadowCaster(instance);
+            ImGui::Checkbox("casts shadows", &scaster);
+            rm.setCastShadows(instance, scaster);
+            size_t numPrims = rm.getPrimitiveCount(instance);
+            for (size_t prim = 0; prim < numPrims; ++prim) {
+                const char* mname = rm.getMaterialInstanceAt(instance, prim)->getName();
+                if (mname) {
+                    ImGui::Text("prim %zu: material %s", prim, mname);
+                } else {
+                    ImGui::Text("prim %zu: (unnamed material)", prim);
+                }
+            }
+        };
+
+        auto lightTreeItem = [this, &lm](utils::Entity entity) {
+//            bool lvis =  app.mpScene->hasEntity(entity);
+//            ImGui::Checkbox("visible", &lvis);
+//
+//            if (lvis) {
+//                app.mpScene->addEntity(entity);
+//            } else {
+//                app.mpScene->remove(entity);
+//            }
+
+            auto instance = lm.getInstance(entity);
+            bool lcaster = lm.isShadowCaster(instance);
+            ImGui::Checkbox("shadow caster", &lcaster);
+            lm.setShadowCaster(instance, lcaster);
+        };
+        
+        std::function<void(utils::Entity)> treeNode;
+        FilamentAsset* mAsset;
+        treeNode = [&](utils::Entity entity) {
+            auto tinstance = tm.getInstance(entity);
+            auto rinstance = rm.getInstance(entity);
+            auto linstance = lm.getInstance(entity);
+            intptr_t treeNodeId = 1 + entity.getId();
+            
+            const char* name = mAsset->getName(entity);
+            auto getLabel = [&name, &rinstance, &linstance]() {
+                if (name) {
+                    return name;
+                }
+                if (rinstance) {
+                    return "Mesh";
+                }
+                if (linstance) {
+                    return "Light";
+                }
+                return "Node";
+            };
+            const char* label = getLabel();
+
+            ImGuiTreeNodeFlags flags = 0; // rinstance ? 0 : ImGuiTreeNodeFlags_DefaultOpen;
+            std::vector<utils::Entity> children(tm.getChildCount(tinstance));
+            if (ImGui::TreeNodeEx((const void*) treeNodeId, flags, "%s", label)) {
+                if (rinstance) {
+                    renderableTreeItem(entity);
+                }
+                if (linstance) {
+                    lightTreeItem(entity);
+                }
+                tm.getChildren(tinstance, children.data(), children.size());
+                for (auto ce : children) {
+                    treeNode(ce);
+                }
+                ImGui::TreePop();
+            }
+        };
+        
+        const float width = ImGui::GetIO().DisplaySize.x;
+        const float height = ImGui::GetIO().DisplaySize.y;
+        
+        ImGui::SetNextWindowPos(ImVec2(width-320, height-320),ImGuiCond_Once);
+        ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Once);
+        ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
+        
+        ImGui::Begin("Hierarchy", nullptr);
+        for(auto  const& x: app.asset){
+            auto instances = x.second->getAssetInstances();
+            size_t cnt = x.second->getAssetInstanceCount();
+            mAsset = x.second;
+            if (ImGui::CollapsingHeader(x.first.c_str())) {
+                for(size_t i = 0; i < cnt; i++){
+                        ImGui::Indent();
+                        treeNode(instances[i]->getRoot());
+                        ImGui::Unindent();
+                }
+            }
+        }
+       
+        ImGui::End();
+        app.updateinfo.selectedItem = app.selectedNode.second;
+        app.updateinfo.rootOfSelected = app.rootOfSelected.second;
         mpVlftImgui->update();
         FilamentApp::get().setSidebarWidth(0);
     };
@@ -890,9 +1170,41 @@ void ape::FilamentApplicationPlugin::Step()
         auto instance = rcm.getInstance(app.scene.groundPlane);
         rcm.setLayerMask(instance,
                 0xff, app.viewOptions.groundPlaneEnabled ? 0xff : 0x00);
-        
-       app.currentCamera = 0;
+        if(app.updateinfo.deleteSelected){
+            scene->remove(app.selectedNode.first);
+            scene->remove(app.boxEntity.first);
+            app.updateinfo.selectedItem = "";
+            app.updateinfo.rootOfSelected = "";
+            app.updateinfo.deleteSelected = false;
+        }
+        else if(app.updateinfo.pickUp){
+            scene->remove(app.selectedNode.first);
+            app.updateinfo.pickedItem = app.updateinfo.selectedItem;
+            app.updateinfo.selectedItem = "";
+            app.updateinfo.rootOfSelected = "";
+            app.updateinfo.pickUp = false;
+        }
         filament::Camera& camera = view->getCamera();
+        auto viewMatrix =  camera.getModelMatrix();
+//        if(mIsStudent){
+//            camera.setModelMatrix(filament::math::mat4f(
+//                                viewMatrix[0][0],viewMatrix[0][1],viewMatrix[0][2],viewMatrix[0][3],
+//                                viewMatrix[1][0],viewMatrix[1][1],viewMatrix[1][2],viewMatrix[1][3],
+//                                viewMatrix[2][0],viewMatrix[2][1],viewMatrix[2][2],viewMatrix[2][3],
+//                                viewMatrix[3][0]+0.2, 1.5,viewMatrix[3][2]+3.0,viewMatrix[3][3]
+//                                             ));
+//        }
+//        else{
+//            camera.setModelMatrix(filament::math::mat4f(
+//                                viewMatrix[0][0],viewMatrix[0][1],viewMatrix[0][2],viewMatrix[0][3],
+//                                viewMatrix[1][0],viewMatrix[1][1],viewMatrix[1][2],viewMatrix[1][3],
+//                                viewMatrix[2][0],viewMatrix[2][1],viewMatrix[2][2],viewMatrix[2][3],
+//                                viewMatrix[3][0]+0.2,  viewMatrix[3][1]+1.5, viewMatrix[3][2]+3.0,viewMatrix[3][3]
+//                                             ));
+//        }
+        
+        //view->setCamera(app.mainCamera);
+        
         
         camera.setExposure(
                 app.viewOptions.cameraAperture,
@@ -911,6 +1223,7 @@ void ape::FilamentApplicationPlugin::Step()
 //                .clearColor = { inverseTonemapSRGB(app.viewOptions.backgroundColor), 1.0f },
 //                .clear = true
 //        });
+        
         view->setColorGrading(nullptr);
         processEventDoubleQueue();
     };
@@ -918,17 +1231,292 @@ void ape::FilamentApplicationPlugin::Step()
     auto postRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
         ;
     };
+    auto rayQuery = [&](Engine* engine, View* view, Scene* scene, filament::camutils::Manipulator<float>* manipulator,ssize_t x, ssize_t y, bool mouseDown, int width, int height){
+        
+        filament::math::vec3<float> origin;
+        filament::math::vec3<float> dir;
+        filament::math::vec3<float> mtarget;
+        filament::math::vec3<float> upward;
+        auto* camera = &view->getCamera();
+        float tnear = camera->getNear()/2;
+        float tfar = camera->getCullingFar()/10;
+        float fov = camera->getFieldOfViewInDegrees(filament::Camera::Fov::VERTICAL);
+//        auto frustum = camera->getFrustum();
+        //app.mpRenderableManager->getAxisAlignedBoundingBox(<#Instance instance#>)
+        if(mouseDown){
+            auto viewport = view->getViewport();
+            width = viewport.width;
+            height = viewport.height;
+            //manipulator->getRay(x, y, &origin, &dir);
+//            if(!mIsStudent)
+//                origin = math::vec3<float>(origin.x+0.2, origin.y+1.5, origin.z+3.0);
+//            else
+//                origin = math::vec3<float>(origin.x+0.2, 1.5, origin.z+3.0);
+            manipulator->getLookAt(&origin, &mtarget, &upward);
+            math::vec3<float>  gaze = normalize(mtarget - origin);
+            math::vec3<float> right = normalize(cross(gaze, math::vec3<float>(0,1,0)));
+            upward = cross(right, gaze);
+            fov = fov * F_PI / 180.0;
+
+            // Remap the grid coordinate into [-1, +1] and shift it to the pixel center.
+            float u = 2.0 * (0.5+x) / width - 1.0;
+            float v = 1.0-2.0 * (0.5+y) / height;
+            // Compute the tangent of the field-of-view angle as well as the aspect ratio.
+            float tangent = tan(fov/2.0);
+            float aspectRatio = (float)width / height;
+
+            // Adjust the gaze so it goes through the pixel of interest rather than the grid center.
+            dir = gaze;
+            dir += right * (tangent * u * aspectRatio);
+            dir += upward * (tangent * v);
+            dir = normalize(dir);
+            origin += dir*tnear;
+            
+//            size_t vertCount = 2;
+//            size_t indCount = 2;
+//            float3* verts = (float3*) malloc(sizeof(float3) * vertCount);
+//            std::vector<float3> vertsVec;
+//            uint32_t* inds = (uint32_t*) malloc(sizeof(uint32_t) * indCount);
+//            verts[0] = float3(origin.x+dir.x*tnear, origin.y+dir.y*tnear, origin.z+dir.z*tnear);
+//            verts[1] = float3(origin.x+dir.x*tfar, origin.y+dir.y*tfar, origin.z+dir.z*tfar);
+//            vertsVec.push_back(verts[0]);
+//            vertsVec.push_back(verts[1]);
+//            inds[0] = 0;
+//            inds[1] = 1;
+//            filament::VertexBuffer* mVertexBuffer = VertexBuffer::Builder()
+//                .bufferCount(1)
+//                .vertexCount(vertCount)
+//                .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
+//                .build(*engine);
+//
+//            filament::IndexBuffer* mIndexBuffer = IndexBuffer::Builder()
+//                .indexCount(indCount)
+//                .bufferType(IndexBuffer::IndexType::UINT)
+//                .build(*engine);
+//
+//            mVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
+//                            verts, mVertexBuffer->getVertexCount() * sizeof(float3), nullptr));
+//
+//            mIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
+//                            inds, mIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
+//
+//            if(app.mpScene->hasEntity(app.lineEntity)){
+//                app.mpScene->remove(app.lineEntity);
+//            }
+//            app.lineEntity = EntityManager::get().create();
+//            RenderableManager::Builder(1)
+//                .culling(false)
+//                .castShadows(false)
+//                .receiveShadows(false)
+//                .geometry(0, RenderableManager::PrimitiveType::LINES, mVertexBuffer, mIndexBuffer)
+//                .build(*engine, app.lineEntity);
+//            app.mpScene->addEntity(app.lineEntity);
+            app.rayIntersectedEntities.clear();
+            // app.selectedEntity = hit entity
+            app.boxEntity.second = 1000000.0;
+            if(app.mpScene->hasEntity(app.boxEntity.first))
+                app.mpScene->remove(app.boxEntity.first);
+            if(app.mpEntityManager->isAlive(app.boxEntity.first)){
+                app.mpEntityManager->destroy(app.boxEntity.first);
+            }
+            for(auto  const& asset: app.asset){
+                auto* entities = asset.second->getEntities();
+                size_t cnt = asset.second->getEntityCount();
+                for(size_t i = 0; i < cnt; i++){
+                    if(app.mpRenderableManager->hasComponent(entities[i]) && scene->hasEntity(entities[i])){
+                        auto instance = app.mpRenderableManager->getInstance(entities[i]);
+                        auto tmInstance = app.mpTransformManager->getInstance(entities[i]);
+                        auto worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
+                        auto localTm = app.mpTransformManager->getTransform(tmInstance);
+                        auto box = app.mpRenderableManager->getAxisAlignedBoundingBox(instance);
+                        math::vec3<float> T_1;
+                        math::vec3<float> T_2;
+                        float t_near = -FLT_MIN;
+                        float t_far = FLT_MAX;
+                        math::float3 boxMin = box.getMin();
+                        math::float3 boxMax = box.getMax();
+                        if(boxMax.x != boxMin.x && boxMax.y != boxMin.y && boxMax.z != boxMin.z){
+                            boxMin = (worldTm*float4(boxMin.x, boxMin.y, boxMin.z,1.0)).xyz;
+                            boxMax = (worldTm*float4(boxMax.x, boxMax.y, boxMax.z,1.0)).xyz;
+                            boxMin = (localTm*float4(boxMin.x, boxMin.y, boxMin.z,1.0)).xyz;
+                            boxMax = (localTm*float4(boxMax.x, boxMax.y, boxMax.z,1.0)).xyz;
+                            float t[9];
+                            t[1] = (boxMin.x - origin.x)/dir.x;
+                            t[2] = (boxMax.x - origin.x)/dir.x;
+                            t[3] = (boxMin.y - origin.y)/dir.y;
+                            t[4] = (boxMax.y - origin.y)/dir.y;
+                            t[5] = (boxMin.z - origin.z)/dir.z;
+                            t[6] = (boxMax.z - origin.z)/dir.z;
+                            t[7] = fmax(fmax(fmin(t[1], t[2]), fmin(t[3], t[4])), fmin(t[5], t[6]));
+                            t[8] = fmin(fmin(fmax(t[1], t[2]), fmax(t[3], t[4])), fmax(t[5], t[6]));
+                            if(t[8] >= 0 && t[7] <= t[8]){
+                                app.rayIntersectedEntities.push_back(std::pair(entities[i], t[7]));
+                                if(t[7] < app.boxEntity.second){
+                                    if(app.mpScene->hasEntity(app.boxEntity.first)){
+                                        app.mpScene->remove(app.boxEntity.first);
+                                        
+                                        if(app.mpEntityManager->isAlive(app.boxEntity.first)){
+                                            app.engine->destroy(app.boxEntity.first);
+                                            app.mpEntityManager->destroy( app.boxEntity.first);
+                                        }
+                                        
+                                    }
+                                    size_t boxVertCount = 8;
+                                    size_t boxIndCount = 24;
+                                    float3* boxVerts = (float3*) malloc(sizeof(float3) * boxVertCount);
+                                    uint32_t* boxInds = (uint32_t*) malloc(sizeof(uint32_t) * boxIndCount);
+                                    boxVerts[0] = math::float3(boxMin.x, boxMin.y, boxMin.z);
+                                    boxVerts[1] = math::float3(boxMin.x, boxMin.y, boxMax.z);
+                                    boxVerts[2] = math::float3(boxMin.x, boxMax.y, boxMin.z);
+                                    boxVerts[3] = math::float3(boxMin.x, boxMax.y, boxMax.z);
+                                    boxVerts[4] = math::float3(boxMax.x, boxMin.y, boxMin.z);
+                                    boxVerts[5] = math::float3(boxMax.x, boxMin.y, boxMax.z);
+                                    boxVerts[6] = math::float3(boxMax.x, boxMax.y, boxMin.z);
+                                    boxVerts[7] = math::float3(boxMax.x, boxMax.y, boxMax.z);
+                                   
+                                    boxInds[0] = 0;
+                                    boxInds[1] = 1;
+                                    boxInds[2] = 1;
+                                    boxInds[3] = 3;
+                                    boxInds[4] = 3;
+                                    boxInds[5] = 2;
+                                    boxInds[6] = 2;
+                                    boxInds[7] = 0;
+                                    // Generate 4 lines around face at +X.
+                                    boxInds[ 8] = 4;
+                                    boxInds[ 9] = 5;
+                                    boxInds[10] = 5;
+                                    boxInds[11] = 7;
+                                    boxInds[12] = 7;
+                                    boxInds[13] = 6;
+                                    boxInds[14] = 6;
+                                    boxInds[15] = 4;
+                                    // Generate 2 horizontal lines at -Z.
+                                    boxInds[16] = 0;
+                                    boxInds[17] = 4;
+                                    boxInds[18] = 2;
+                                    boxInds[19] = 6;
+                                    // Generate 2 horizontal lines at +Z.
+                                    boxInds[20] = 1;
+                                    boxInds[21] = 5;
+                                    boxInds[22] = 3;
+                                    boxInds[23] = 7;
+                                    
+                                    
+                                    filament::VertexBuffer* boxVertexBuffer = VertexBuffer::Builder()
+                                        .bufferCount(1)
+                                        .vertexCount(boxVertCount)
+                                        .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
+                                        .build(*engine);
+
+                                    filament::IndexBuffer* boxIndexBuffer = IndexBuffer::Builder()
+                                        .indexCount(boxIndCount)
+                                        .bufferType(IndexBuffer::IndexType::UINT)
+                                        .build(*engine);
+
+                                    boxVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
+                                                    boxVerts, boxVertexBuffer->getVertexCount() * sizeof(float3), nullptr));
+
+                                    boxIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
+                                                    boxInds, boxIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
+
+                                    app.boxEntity = std::pair(EntityManager::get().create(), t[7]);
+                                    RenderableManager::Builder(1)
+                                        .culling(false)
+                                        .castShadows(false)
+                                        .receiveShadows(false)
+                                        .geometry(0, RenderableManager::PrimitiveType::LINES, boxVertexBuffer, boxIndexBuffer)
+                                        .build(*engine, app.boxEntity.first);
+                                    if(!app.mpScene->hasEntity(app.boxEntity.first)){
+                                        app.mpScene->addEntity(app.boxEntity.first);
+                                        app.selectedNode =std::pair(entities[i], asset.first);
+                                    }
+                                       
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(app.boxEntity.second < 1000000.0){
+                auto tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
+                auto parent = app.mpTransformManager->getParent(tmInstance);
+                bool found = false;
+                auto sceneNodes = mpSceneManager->getNodes();
+                std::string parentName = "";
+                std::string rootName = "";
+                while(app.mpInstancesMap.find(rootName) == app.mpInstancesMap.end()){
+                    tmInstance = app.mpTransformManager->getInstance(parent);
+                    parent = app.mpTransformManager->getParent(tmInstance);
+                    rootName = app.asset[app.selectedNode.second]->getName(parent);
+                }
+                app.rootOfSelected.first = parent;
+                app.rootOfSelected.second = rootName;
+                tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
+                parent = app.mpTransformManager->getParent(tmInstance);
+                while(parent && !found){
+                    if(app.asset[app.selectedNode.second]->getName(parent)){
+                        parentName = app.asset[app.selectedNode.second]->getName(parent);
+                        for(auto  const& x: sceneNodes){
+                            std::string sceneNodeName = x.first;
+                            if(sceneNodeName == parentName){
+                                std::cout << parentName<<std::endl;
+                                app.selectedNode.first = parent;
+                                app.selectedNode.second = parentName;
+                                found = true;
+                                break;
+                            }
+                            else if (sceneNodeName.find_first_of(".") != std::string::npos)
+                            {
+                                std::string cloneName = sceneNodeName.substr(0,sceneNodeName.find_last_of("."));
+                                std::string nodeName = sceneNodeName.substr(sceneNodeName.find_last_of(".")+1);
+                                if(parentName == nodeName && rootName == cloneName){
+                                    
+                                    std::cout <<cloneName << " "<< parentName<<std::endl;
+                                    app.selectedNode.first = parent;
+                                    app.selectedNode.second = parentName;
+                                    
+                                    if(auto node = x.second.lock()){
+                                        auto owner = node->getOwner();
+                                        auto parent = node->getParentNode();
+                                        auto position = node->getPosition();
+                                        auto orientation = node->getOrientation();
+                                        auto creator = node->getCreator();
+                                        auto scale = node->getScale();
+                                        
+                                    }
+                                    
+                                    found = true;
+                                    break;
+                                }
+                                    
+                            }
+                        }
+                    }
+                    if(!found){
+                        tmInstance = app.mpTransformManager->getInstance(parent);
+                        parent = app.mpTransformManager->getParent(tmInstance);
+                    }
+                }
+            }
+            isSelected = true;
+        }
+        else{
+            //if(selectedEntity == hit entity
+            isSelected = true;
+        }
+    };
+
 
     FilamentApp& filamentApp = FilamentApp::get();
     //filamentApp.animate(animate);
     filamentApp.resize(resize);
-
     filamentApp.setDropHandler([&] (std::string path) {
         loadAsset(path);
         loadResources(path);
     });
     app.config.cameraMode = filament::camutils::Mode::FREE_FLIGHT;
-    filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender);
+    filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, rayQuery);
 
     //return 0;
 }

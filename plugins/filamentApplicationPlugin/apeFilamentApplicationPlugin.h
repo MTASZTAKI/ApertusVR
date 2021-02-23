@@ -75,7 +75,10 @@ SOFTWARE.*/
 #include <filament/Skybox.h>
 #include <filament/TransformManager.h>
 #include <filament/VertexBuffer.h>
+#include <filament/LightManager.h>
 #include <filament/View.h>
+#include <filament/Frustum.h>
+#include <filament/Box.h>
 #include "gltfio/AssetLoader.h"
 #include "gltfio/FilamentAsset.h"
 #include "gltfio/ResourceLoader.h"
@@ -96,6 +99,7 @@ SOFTWARE.*/
 #include "apeVLFTImgui.h"
 //#include "generated/resources/gltf_viewer.h"
 #include "math/TVecHelpers.h"
+
 
 #define THIS_PLUGINNAME "apeFilamentApplicationPlugin"
 using namespace filament;
@@ -119,18 +123,25 @@ struct App {
     Scene* mpScene;
     View* view;
     filament::Camera* mainCamera;
-
     
     Settings settings;
     AssetLoader* loader;
     std::map<std::string, FilamentAsset*> asset;
     NameComponentManager* names;
     std::vector<FilamentInstance*> instances;
-    std::map<std::string, FilamentInstance*> instancesMap;
+    std::map<std::string, std::pair<std::pair<int, std::string>,FilamentInstance*>> mpInstancesMap;
+    std::vector<std::string> instanceOrder;
     
     LightManager* lightManager;
     Entity sunLight;
+    Entity lineEntity;
+    
+    std::pair<Entity, float> boxEntity;
+    std::pair<Entity, std::string> selectedNode;
+    std::pair<Entity, std::string> rootOfSelected;
     IndirectLight* indirectLight;
+    std::vector<std::pair<Entity, float>> rayIntersectedEntities;
+    updateInfo updateinfo;
     
     filament::math::float3 sunlightColor = filament::Color::toLinear<filament::ACCURATE>({ 0.98, 0.92, 0.89});
     filament::math::float3 sunlightDirection = {0.6, -1.0, -0.8};
@@ -140,6 +151,7 @@ struct App {
     
     EntityManager* mpEntityManager;
     TransformManager* mpTransformManager;
+    RenderableManager * mpRenderableManager;
     std::map<std::string, TransformManager::Instance> mpTransforms;
     std::map<std::string, FilamentAsset*> mpLoadedAssets;
     
@@ -176,7 +188,6 @@ struct App {
 
     float rangePlot[1024 * 3];
     float curvePlot[1024 * 3];
-    bool firstRun= true;
     // 0 is the default "free camera". Additional cameras come from the gltf file.
     int currentCamera = 0;
 
@@ -232,11 +243,15 @@ namespace ape
         
         ape::VLFTImgui* mpVlftImgui;
         
+        App app;
+        
+        bool mIsStudent;
+        
+        bool isSelected;
+        
         void initFilament();
         
         void parseJson();
-        
-        App app;
         
         std::ifstream::pos_type getFileSize(const char* filename);
         

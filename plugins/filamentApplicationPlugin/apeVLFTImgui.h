@@ -63,6 +63,8 @@ SOFTWARE.*/
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
 #include <imgui.h>
+#include "nfd.h"
+
 //#include "generated/resources/gltf_viewer.h"
 
 //Needs scene
@@ -84,10 +86,24 @@ struct VLFTMainMenuInfo{
     bool multiPlayer = false;
     bool namesLoaded = false;
     bool inRoomGui = false;
+    float cameraSpeed = 1.0f;
+};
+struct updateInfo{
+    std::string selectedItem = "";
+    std::string rootOfSelected = "";
+    std::vector<float> position[3];
+    std::vector<float> orientation[3];
+    bool deleteSelected = false;
+    bool pickUp = false;
+    std::string pickedItem = "";
+    bool isAdmin = false;
+    
 };
 
 namespace ape
 {
+
+
 	class VLFTImgui
 	{
 	public:
@@ -95,7 +111,7 @@ namespace ape
 
 		~VLFTImgui();
         
-        void init(bool isAdmin);
+        void init(updateInfo &updateinfo);
         
         void update();
 
@@ -107,12 +123,13 @@ namespace ape
         ape::UserInputMacro* mpUserInputMacro;
         ape::ICoreConfig* mpCoreConfig;
         ape::IPluginManager* mpPluginManager;
+        ape::ISceneManager* mpSceneManager;
         
         
         static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
         
         void tooltipFloat(std::string tooltipText);
-        
+        updateInfo* mpUpdateInfo;
         void inRoomGUI();
         void adminRoomGUI();
         void studentRoomGUI();
@@ -121,10 +138,13 @@ namespace ape
         void singlePlayerRoomGUI();
         bool curlData();
         void uploadGUI();
-        void createStartButton();
-        void createStopButton();
-        void createJoinButton(std::string userType);
+        void createStartButton(int width, int height);
+        void createStopButton(int width, int height);
+        void createJoinButton(std::string userType,int width, int height);
         void listRoomNames(bool withState);
+        void connectToRoom();
+        void openFileBrowser();
+        void getInfoAboutObject();
 	};
 }
 

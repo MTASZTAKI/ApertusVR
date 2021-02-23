@@ -281,7 +281,7 @@ void ape::VLFTSceneLoaderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
 	std::stringstream fileFullPath;
-	fileFullPath << mpCoreConfig->getConfigFolderPath() << "\\apeVLFTSceneLoaderPlugin.json";
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeVLFTSceneLoaderPlugin.json";
 	mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 	mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
 	APE_LOG_FUNC_LEAVE();

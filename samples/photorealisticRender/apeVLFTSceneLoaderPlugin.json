@@ -1,0 +1,226 @@
+{
+    "context": {
+        "UnitOfMeasureScale": 0.01,
+        "Zup": false,
+        "RepoPath": "/samples/"
+    },
+    "scene": [
+        "WS02.CBS_root",
+        "WS02.CBS_group",
+        "WS03.CBS_root",
+        "WS01.CBS_root",
+        "WS01.CBS_group",
+        "WS03.CBS_group",
+        "http://www.ontoeng.com/VLFT_lib23#default_building",
+        "WS01",
+        "WS03",
+        "WS01.Conveyor_Main_CB",
+        "WS01.PalletPosition_CB",
+        "WS03.Conveyor_Main_CB",
+        "WS03.PalletPosition_CB",
+        "WS02",
+        "WS02.Conveyor_Main_CB",
+        "WS02.PalletPosition_CB"
+    ],
+    "assets": [
+        {
+            "id": "WS02.CBS_root",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#node0",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS02",
+            "parentObject": "WS02"
+        },
+        {
+            "id": "WS02.CBS_group",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#Collection_Box_Station",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS02.CBS_root",
+            "parentObject": "WS02.CBS_root"
+        },
+        {
+            "id": "WS03.CBS_root",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#node0",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS03",
+            "parentObject": "WS03"
+        },
+        {
+            "id": "WS01.CBS_root",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#node0",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS01",
+            "parentObject": "WS01"
+        },
+        {
+            "id": "WS01.CBS_group",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#Collection_Box_Station",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS01.CBS_root",
+            "parentObject": "WS01.CBS_root"
+        },
+        {
+            "id": "WS03.CBS_group",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#Collection_Box_Station",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS03.CBS_root",
+            "parentObject": "WS03.CBS_root"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib23#default_building",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcBuilding",
+            "descr": "Plant building. This is the building hosting a factory and the related facilities."
+        },
+        {
+            "id": "WS01",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "descr": "Workstation 01",
+            "model": "http://www.ontoeng.com/VLFT_lib23#CollectionBox_Station",
+            "position": [
+                0.20,
+                0.0,
+                1.50
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib23#default_building",
+            "connectedTo": [
+                "WS02"
+            ]
+        },
+        {
+            "id": "WS03",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "descr": "Workstation 03",
+            "model": "http://www.ontoeng.com/VLFT_lib23#CollectionBox_Station",
+            "position": [
+                0.20,
+                0.0,
+                -0.50
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib23#default_building"
+        },
+        {
+            "id": "WS01.Conveyor_Main_CB",
+            "type": "http://www.ontoeng.com/factory#Conveyor",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#Conveyor_Main_CB",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS01.CBS_group",
+            "parentObject": "WS01.CBS_group"
+        },
+        {
+            "id": "WS01.PalletPosition_CB",
+            "type": "http://www.ontoeng.com/factory#BufferRestingPosition",
+            "position": [
+                -0.05,
+                0.23,
+                -0.0
+            ],
+            "placementRelTo": "WS01.Conveyor_Main_CB",
+            "parentObject": "WS01.Conveyor_Main_CB"
+        },
+        {
+            "id": "WS03.Conveyor_Main_CB",
+            "type": "http://www.ontoeng.com/factory#Conveyor",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#Conveyor_Main_CB",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS03.CBS_group",
+            "parentObject": "WS03.CBS_group"
+        },
+        {
+            "id": "WS03.PalletPosition_CB",
+            "type": "http://www.ontoeng.com/factory#BufferRestingPosition",
+            "position": [
+                -0.050,
+                0.23,
+                -0.0
+            ],
+            "placementRelTo": "WS03.Conveyor_Main_CB",
+            "parentObject": "WS03.Conveyor_Main_CB"
+        },
+        {
+            "id": "WS02",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "descr": "Workstation 02",
+            "model": "http://www.ontoeng.com/VLFT_lib23#CollectionBox_Station",
+            "position": [
+                0.20,
+                0.0,
+                0.50
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib23#default_building",
+            "connectedTo": [
+                "WS03"
+            ]
+        },
+        {
+            "id": "WS02.Conveyor_Main_CB",
+            "type": "http://www.ontoeng.com/factory#Conveyor",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb#Conveyor_Main_CB",
+                    "unit": 0.001
+                }
+            ],
+            "placementRelTo": "WS02.CBS_group",
+            "parentObject": "WS02.CBS_group"
+        },
+        {
+            "id": "WS02.PalletPosition_CB",
+            "type": "http://www.ontoeng.com/factory#BufferRestingPosition",
+            "position": [
+                -0.05,
+                0.23,
+                -0.0
+            ],
+            "placementRelTo": "WS02.Conveyor_Main_CB",
+            "parentObject": "WS02.Conveyor_Main_CB"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib23#CollectionBox_Station",
+            "type": "http://www.ontoeng.com/factory#MachineToolType",
+            "descr": "CollectionBox station type",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Workstation.glb",
+                    "unit": 0.001
+                }
+            ]
+        }
+    ]
+}
