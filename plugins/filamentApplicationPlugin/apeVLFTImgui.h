@@ -60,10 +60,12 @@ SOFTWARE.*/
 #include "apeIUnitTexture.h"
 #include "apeIWater.h"
 #include "apeUserInputMacro.h"
+#include "apeVLFTSceneLoaderPluginConfig.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
 #include <imgui.h>
 #include "nfd.h"
+
 
 //#include "generated/resources/gltf_viewer.h"
 

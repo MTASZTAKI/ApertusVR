@@ -128,7 +128,8 @@ struct App {
     AssetLoader* loader;
     std::map<std::string, FilamentAsset*> asset;
     NameComponentManager* names;
-    std::vector<FilamentInstance*> instances;
+    std::map<std::string,std::vector<FilamentInstance*>> instances;
+    std::map<std::string, int> instanceCount;
     std::map<std::string, std::pair<std::pair<int, std::string>,FilamentInstance*>> mpInstancesMap;
     std::vector<std::string> instanceOrder;
     
