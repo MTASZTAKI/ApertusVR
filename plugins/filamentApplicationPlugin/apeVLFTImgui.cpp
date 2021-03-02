@@ -24,9 +24,13 @@ ape::VLFTImgui::~VLFTImgui()
 {
 }
 
-void ape::VLFTImgui::init(updateInfo &updateinfo)
+void ape::VLFTImgui::init(updateInfo *updateinfo)
 {
-    mpUpdateInfo = &updateinfo;
+    std::stringstream fileFullPath;
+    fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeVLFTSceneLoaderPlugin.json";
+    mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+    mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
+    mpUpdateInfo = updateinfo;
     if(mpUpdateInfo->isAdmin)
         mpMainMenuInfo.admin = true;
     else
@@ -405,21 +409,11 @@ void ape::VLFTImgui::leftPanelGUI() {
 void ape::VLFTImgui::rightPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-201, 0),ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImVec2(150, 250), ImGuiCond_Once);
+    ImGui::SetNextWindowPos(ImVec2(width-251, 0),ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(250, 300), ImGuiCond_Once);
     ImGui::Begin("Right panel", nullptr);
     
-    if(ImGui::Button("Leave room",ImVec2(100,30)))
-    {
-       //TODO delete all object;
-        mpMainMenuInfo.inRoomGui = false;
-        mpMainMenuInfo.adminMenu = true;
-        
-    }
-    if(ImGui::Button("Selected object info",ImVec2(100,30)))
-    {
-        getInfoAboutObject();
-    }
+    getInfoAboutObject(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
     ImGui::End();
     
     
@@ -486,6 +480,70 @@ void ape::VLFTImgui::openFileBrowser() {
     }
 }
 
-void ape::VLFTImgui::getInfoAboutObject(){
-    ;
+static std::string convertVecToString(std::vector<double> vec,int  precision){
+    std::string convertedVec ="(";
+    std::stringstream posStream;
+    posStream << std::fixed << std::setprecision(precision) << vec[0] << ", " << vec[1] << ", " << vec[2] << ")";
+    convertedVec += posStream.str();
+    return convertedVec;
+    
+}
+
+void ape::VLFTImgui::getInfoAboutObject(float width, float height){
+    std::string IDText = "ID: ";
+    std::string positionText = "Position: ";
+    std::string rotationText = "Rotation: ";
+    std::string rootIDText = "ID: ";
+    std::string typeText = "Type: ";
+    std::string desrcText = "Desription: ";
+    std::string rootPosText = "Position: ";
+    std::string stateText = "State: ";
+    std::string logText = "Log: ";
+    bool foundSelected = false;
+    bool foundRoot = false;
+    if(mpUpdateInfo->selectedItem != "")
+    {
+
+        for(auto asset : mScene.get_assets()){
+            if(asset.get_id() == mpUpdateInfo->selectedItem){
+                auto position = asset.get_position();
+                auto rotation = asset.get_rotation();
+                
+                IDText += mpUpdateInfo->selectedItem;
+                if(position)
+                    positionText += convertVecToString(*position, 2);
+                if(rotation)
+                    rotationText += convertVecToString(*rotation, 2);
+                typeText += asset.get_type();
+                if(asset.get_descr())
+                    desrcText += *asset.get_descr();
+                foundSelected = true;
+            }
+            else if(asset.get_id() == mpUpdateInfo->rootOfSelected){
+                auto rootPos = asset.get_position();
+                rootIDText += mpUpdateInfo->rootOfSelected;
+                if(rootPos)
+                    rootPosText += convertVecToString(*rootPos, 2);
+                foundRoot = true;
+            }
+            if(foundSelected && foundRoot)
+                break;
+        }
+    }
+    ImGui::BeginChild("InfoboxSelected", ImVec2(width-25,height/3-10));
+    ImGui::TextWrapped("%s", IDText.c_str());
+    ImGui::Text("%s", positionText.c_str());
+    ImGui::Text("%s", rotationText.c_str());
+    ImGui::EndChild();
+    ImGui::BeginChild("InfoboxRoot", ImVec2(width-25, height/3*2-40));
+    const float textWidth = ImGui::CalcTextSize("Group Information").x;
+    ImGui::SetCursorPosX((width-25-textWidth)/2);
+    ImGui::Text("Group Information");
+    ImGui::Text("%s", rootIDText.c_str());
+    ImGui::Text("%s", rootPosText.c_str());
+    ImGui::TextWrapped("%s", desrcText.c_str());
+    ImGui::Text("%s", stateText.c_str());
+    ImGui::Text("%s", logText.c_str());
+    ImGui::EndChild();
+    
 }

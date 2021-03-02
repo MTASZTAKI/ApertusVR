@@ -181,6 +181,18 @@ struct App {
         IndexBuffer* groundIndexBuffer;
         Material* groundMaterial;
     } scene;
+    
+    struct AnimationData{
+        bool animatedClick;
+        bool mouseDown;
+        double mouseStartTime;
+        
+        bool animatedKey;
+        std::map<SDL_Scancode,bool> keyDown;
+        bool keysDown;
+        double keyStartTime;
+        int keyCurrentAnimation;
+    } animationData;
 
     // zero-initialized so that the first time through is always dirty.
     ColorGradingSettings lastColorGradingOptions = { 0 };

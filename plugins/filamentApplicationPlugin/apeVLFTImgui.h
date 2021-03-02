@@ -113,7 +113,7 @@ namespace ape
 
 		~VLFTImgui();
         
-        void init(updateInfo &updateinfo);
+        void init(updateInfo *updateinfo);
         
         void update();
 
@@ -127,6 +127,8 @@ namespace ape
         ape::IPluginManager* mpPluginManager;
         ape::ISceneManager* mpSceneManager;
         
+        quicktype::Scene mScene;
+        FILE* mApeVLFTSceneLoaderPluginConfigFile;
         
         static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
         
@@ -146,7 +148,7 @@ namespace ape
         void listRoomNames(bool withState);
         void connectToRoom();
         void openFileBrowser();
-        void getInfoAboutObject();
+        void getInfoAboutObject(float width, float height);
 	};
 }
 
