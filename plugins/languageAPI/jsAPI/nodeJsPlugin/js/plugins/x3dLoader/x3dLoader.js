@@ -523,11 +523,6 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				var matItem = currentItem.siblings('Appearance').first().children('Material').first();
 				var materialObj = self.parseMaterial(matItem, indexedFaceSetObj);
 
-				/// RigidBody
-				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body', true);
-				rigidBodyObj.setIndexedFaceSetGeometryJsPtr(indexedFaceSetObj);
-				rigidBodyObj.setToStatic();
-
 				log('INDEXEDFACESET: ' + groupNodeObjName + ' - ' + itemName);
 				itemNamesMap.set(groupNodeObjName,itemName);
 
@@ -538,6 +533,12 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 					log('setParameters is called');
 					indexedFaceSetObj.setParameters(groupNodeObjName, coordinatePointsArr, coordIndexArr, normals, colors);
 				}
+
+				/// RigidBody
+				var rigidBodyObj = ape.nbind.JsBindManager().createRigidBody(itemName + 'Body', true);
+				rigidBodyObj.setIndexedFaceSetGeometryJsPtr(indexedFaceSetObj);
+				rigidBodyObj.setToStatic();
+
 				if (lastGroupNodeObjName != groupNodeObjName) {
 					if (groupNodeObj) {
 						indexedFaceSetObj.setParentNodeJsPtr(groupNodeObj);
