@@ -1,6 +1,7 @@
 {
   "plugins": [
     "apeOgreRenderPlugin",
+    "apeOpenVRPlugin",
     "apeViveSRPlugin",
     "apeViewPointManagerPlugin",
     "apeHelloWorldScenePlugin"

@@ -68,6 +68,12 @@ namespace ape
 
 		int mViveSrPassThroughID;
 
+		int mViveSrDepthID;
+
+		bool mIsViveSrInit;
+
+		double mViveSrCameraParameters[ViveSR::PassThrough::CAMERA_Param::CAMERA_PARAMS_MAX];
+
 		void eventCallBack(const ape::Event& event);
 
 	public:
