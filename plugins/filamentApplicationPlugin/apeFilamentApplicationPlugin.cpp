@@ -112,7 +112,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					{
                         std::string parentNodeName = "";
                         std::vector<utils::Entity> entities;
-                        entities.resize(app.mpInstancesMap.size());
+                        entities.resize(10);
                         if (auto parentNode = node->getParentNode().lock())
                             parentNodeName = parentNode->getName();
                         if (parentNodeName.find_first_of(".") != std::string::npos)
@@ -132,7 +132,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     }
                                     if(foundAsset && app.instanceCount[assetItaretor->first] < 10){
                                         int cnt = app.instanceCount[assetItaretor->first]++;
-                                        app.mpInstancesMap[event.subjectName] = std::pair(std::pair(cnt, assetItaretor->first),app.instances[assetItaretor->first][cnt]);
+                                        app.mpInstancesMap[event.subjectName] = InstanceData(cnt, assetItaretor->first, app.instances[assetItaretor->first][cnt]);
                                         auto root = app.instances[assetItaretor->first][cnt]->getRoot();
                                         app.names->addComponent(root);
                                         auto nameInstance = app.names->getInstance(root);
@@ -147,9 +147,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     }
                                 }
                                 if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
-                                    int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
+                                    int entitiyIndex = app.mpInstancesMap[cloneName].index;
                                    
-                                    int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.instanceCount[app.mpInstancesMap[cloneName].first.second]);
+                                    int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.instanceCount[app.mpInstancesMap[cloneName].assetName]);
                                     if(cnt > 0 ){
                                         auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
                                         if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
@@ -159,7 +159,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 
                                     }
                                     else{
-                                        cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(parentNodeName.c_str(), entities.data(), app.instanceCount[app.mpInstancesMap[cloneName].first.second]);
+                                        cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(parentNodeName.c_str(), entities.data(), app.instanceCount[app.mpInstancesMap[cloneName].assetName]);
                                         if(cnt > 0 ){
                                             auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
                                             if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
@@ -200,10 +200,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
                                     std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
                                     if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
-                                        int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
+                                        int entitiyIndex = app.mpInstancesMap[cloneName].index;
                                         std::vector<utils::Entity> entities;
-                                        entities.resize(app.mpInstancesMap.size());
-                                        int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.mpInstancesMap.size());
+                                        entities.resize(10);
+                                        int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
                                         if(cnt > 0 ){
                                             if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
                                                 auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
@@ -466,7 +466,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     {
                         //app.mpScene->remove(app.asset[sourceFileName]->getWireframe());
                         //app.mpScene->removeEntities(app.asset[sourceFileName]->getEntities(), app.asset[sourceFileName]->getEntityCount());
-                        auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].second->getRoot();
+                        auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                         auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
                         app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
                         auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[parentNodeName]);
@@ -483,10 +483,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
                                 std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
                                 if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
-                                    int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
+                                    int entitiyIndex = app.mpInstancesMap[cloneName].index;
                                     std::vector<utils::Entity> entities;
-                                    entities.resize(app.mpInstancesMap.size());
-                                    int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.mpInstancesMap.size());
+                                    entities.resize(10);
+                                    int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
                                     if(cnt > 0 ){
                                         auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
                                         
@@ -500,7 +500,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                         }
-                        app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].second->getEntities(), app.mpInstancesMap[event.subjectName].second->getEntityCount());
+                        app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                     }
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY:
@@ -513,7 +513,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if(app.instances.find(sourceFileName) != app.instances.end()){
                             if(app.instanceCount[sourceFileName] < 10 ){
                                 int cnt = app.instanceCount[sourceFileName]++;
-                                app.mpInstancesMap[event.subjectName] = std::pair(std::pair(cnt, sourceFileName),app.instances[sourceFileName][cnt]);
+                                app.mpInstancesMap[event.subjectName] =  InstanceData(cnt, sourceFileName, app.instances[sourceFileName][cnt]);
                                 auto root = app.instances[sourceFileName][cnt]->getRoot();
                                 app.names->addComponent(root);
                                 auto nameInstance = app.names->getInstance(root);
@@ -1029,7 +1029,7 @@ void ape::FilamentApplicationPlugin::Step()
             {
                 gltfNode->setFileName("/plugins/filamentApplicationPlugin/resources/MC_Char_1.glb");
                 gltfNode->setParentNode(node);
-                node->setPosition(ape::Vector3(0.0, 0.25, -1.3));
+                node->setPosition(ape::Vector3(0.0, 0.25, 0.2));
                 
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity("characterModel1", ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                 {
@@ -1185,18 +1185,53 @@ void ape::FilamentApplicationPlugin::Step()
         rcm.setLayerMask(instance,
                 0xff, app.viewOptions.groundPlaneEnabled ? 0xff : 0x00);
         if(app.updateinfo.deleteSelected){
-            scene->remove(app.selectedNode.first);
+            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
+            scene->removeEntities(instance->getEntities(), instance->getEntityCount());
             scene->remove(app.boxEntity.first);
             app.updateinfo.selectedItem = "";
             app.updateinfo.rootOfSelected = "";
             app.updateinfo.deleteSelected = false;
         }
-        else if(app.updateinfo.pickUp){
-            scene->remove(app.selectedNode.first);
-            app.updateinfo.pickedItem = app.updateinfo.selectedItem;
-            app.updateinfo.selectedItem = "";
-            app.updateinfo.rootOfSelected = "";
-            app.updateinfo.pickUp = false;
+        else if(app.updateinfo.pickUp ||app.updateinfo.pickedItem != "" ){
+            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
+            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
+            auto camInstance = app.mpTransformManager->getInstance(view->getCamera().getEntity());
+            auto parentWorldMatrix = app.mpTransformManager->getTransform(tmInstance);
+            auto worldTransform = app.mpTransformManager->getWorldTransform(tmInstance);
+            //auto parent = app.mpTransformManager->getParent(tmInstance);
+            //auto tmParent =app.mpTransformManager->getInstance(parent);
+            
+            if(app.updateinfo.pickedItem == ""){
+                app.parentOfPicked = app.mpTransformManager->getParent(tmInstance);
+                auto name = app.asset[app.mpInstancesMap[app.rootOfSelected.second].assetName]->getName(app.parentOfPicked);
+                app.mpTransformManager->setParent(tmInstance, camInstance);
+                parentWorldMatrix = mat4f(1);
+                parentWorldMatrix[3][1] = -0.4;
+                parentWorldMatrix[3][2] = -2.0;
+                auto rotationM = math::mat4f::rotation(0.0, math::vec3<float>(0,1,0));
+                auto transfromM = parentWorldMatrix*rotationM;
+                app.mpTransformManager->setTransform(tmInstance, transfromM);
+                app.updateinfo.pickedItem = app.updateinfo.selectedItem;
+                app.updateinfo.pickUp = false;
+            }else if(app.updateinfo.pickUp){
+                auto parentTm = app.mpTransformManager->getInstance(app.parentOfPicked);
+                parentWorldMatrix = app.mpTransformManager->getWorldTransform(parentTm);
+                
+                auto camWorldMatrix = app.mpTransformManager->getWorldTransform(tmInstance);
+                auto palletWorldMatrix = app.mpTransformManager->getWorldTransform(tmInstance);
+                app.mpTransformManager->setParent(tmInstance,parentTm);
+                auto orientation = inverse(parentWorldMatrix.toQuaternion());
+                auto invTrans = orientation*(camWorldMatrix[3].xyz-parentWorldMatrix[3].xyz);
+                auto invertedOri = orientation* camWorldMatrix.toQuaternion();
+                math::mat4f newLocal(invertedOri);
+                
+                newLocal[3].xyz = invTrans;
+                
+                app.mpTransformManager->setTransform(tmInstance, newLocal);
+                app.updateinfo.pickedItem = "";
+                app.updateinfo.pickUp = false;
+            }
+           
         }
         filament::Camera& camera = view->getCamera();
         auto viewMatrix =  camera.getModelMatrix();
@@ -1337,6 +1372,8 @@ void ape::FilamentApplicationPlugin::Step()
                     if(app.mpEntityManager->isAlive(app.boxEntity.first)){
                         app.mpEntityManager->destroy(app.boxEntity.first);
                     }
+                    math::mat4f worldTm, localTm;
+                    
                     for(auto  const& asset: app.asset){
                         auto* entities = asset.second->getEntities();
                         size_t cnt = asset.second->getEntityCount();
@@ -1344,9 +1381,11 @@ void ape::FilamentApplicationPlugin::Step()
                             if(app.mpRenderableManager->hasComponent(entities[i]) && scene->hasEntity(entities[i])){
                                 auto instance = app.mpRenderableManager->getInstance(entities[i]);
                                 auto tmInstance = app.mpTransformManager->getInstance(entities[i]);
-                                auto worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
-                                auto localTm = app.mpTransformManager->getTransform(tmInstance);
+                                worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
+                                
+                                localTm = app.mpTransformManager->getTransform(tmInstance);
                                 auto box = app.mpRenderableManager->getAxisAlignedBoundingBox(instance);
+                                
                                 math::vec3<float> T_1;
                                 math::vec3<float> T_2;
                                 float t_near = -FLT_MIN;
@@ -1354,10 +1393,15 @@ void ape::FilamentApplicationPlugin::Step()
                                 math::float3 boxMin = box.getMin();
                                 math::float3 boxMax = box.getMax();
                                 if(boxMax.x != boxMin.x && boxMax.y != boxMin.y && boxMax.z != boxMin.z){
-                                    boxMin = (worldTm*float4(boxMin.x, boxMin.y, boxMin.z,1.0)).xyz;
-                                    boxMax = (worldTm*float4(boxMax.x, boxMax.y, boxMax.z,1.0)).xyz;
-                                    boxMin = (localTm*float4(boxMin.x, boxMin.y, boxMin.z,1.0)).xyz;
-                                    boxMax = (localTm*float4(boxMax.x, boxMax.y, boxMax.z,1.0)).xyz;
+//                                    boxMin = (localTm*float4(boxMin.x, boxMin.y, boxMin.z,1.0)).xyz;
+//                                    boxMax = (localTm*float4(boxMax.x, boxMax.y, boxMax.z,1.0)).xyz;
+                                   
+//                                    boxMin = (float4(boxMin.x, boxMin.y, boxMin.z,1.0)).xyz;
+//                                    boxMax = (float4(boxMax.x, boxMax.y, boxMax.z,1.0)).xyz;
+                                    
+                                    box = rigidTransform(box, worldTm);
+                                    boxMin = box.getMin();
+                                    boxMax = box.getMax();
                                     float t[9];
                                     t[1] = (boxMin.x - origin.x)/dir.x;
                                     t[2] = (boxMax.x - origin.x)/dir.x;

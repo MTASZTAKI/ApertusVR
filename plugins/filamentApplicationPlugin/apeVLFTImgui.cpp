@@ -531,6 +531,9 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
         }
     }
     ImGui::BeginChild("InfoboxSelected", ImVec2(width-25,height/3-10));
+    if(mpUpdateInfo->pickedItem != ""){
+        ImGui::Text("This item is in your hand");
+    }
     ImGui::TextWrapped("%s", IDText.c_str());
     ImGui::Text("%s", positionText.c_str());
     ImGui::Text("%s", rotationText.c_str());

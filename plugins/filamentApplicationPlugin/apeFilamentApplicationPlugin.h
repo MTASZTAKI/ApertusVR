@@ -114,7 +114,22 @@ using namespace utils;
 //swapshain
 //lightmanager
 //sunlight
-
+struct InstanceData{
+    int index;
+    std::string assetName;
+    FilamentInstance* mpInstance;
+    InstanceData(){
+        index = 0;
+        assetName = "";
+        mpInstance = nullptr;
+    }
+    InstanceData(int index_, std::string assetName_, FilamentInstance* instance_){
+        index = index_;
+        assetName = assetName_;
+        mpInstance = instance_;
+    }
+    
+};
 
 struct App {
     Engine* engine;
@@ -130,7 +145,8 @@ struct App {
     NameComponentManager* names;
     std::map<std::string,std::vector<FilamentInstance*>> instances;
     std::map<std::string, int> instanceCount;
-    std::map<std::string, std::pair<std::pair<int, std::string>,FilamentInstance*>> mpInstancesMap;
+    
+    std::map<std::string, InstanceData> mpInstancesMap;
     std::vector<std::string> instanceOrder;
     
     LightManager* lightManager;
@@ -143,6 +159,7 @@ struct App {
     IndirectLight* indirectLight;
     std::vector<std::pair<Entity, float>> rayIntersectedEntities;
     updateInfo updateinfo;
+    Entity parentOfPicked;
     
     filament::math::float3 sunlightColor = filament::Color::toLinear<filament::ACCURATE>({ 0.98, 0.92, 0.89});
     filament::math::float3 sunlightDirection = {0.6, -1.0, -0.8};
@@ -274,7 +291,6 @@ namespace ape
         
 
         const char* DEFAULT_IBL = "default_env";
-        
 		void processEventDoubleQueue();
 
 		void eventCallBack(const ape::Event& event);
