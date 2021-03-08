@@ -74,7 +74,27 @@ namespace ape
 
 		double mViveSrCameraParameters[ViveSR::PassThrough::CAMERA_Param::CAMERA_PARAMS_MAX];
 
-		void eventCallBack(const ape::Event& event);
+		int mDistortedWidth;
+
+		int mDistortedHeight;
+
+		int mDistortedChannel;
+
+		unsigned char* mDistortedFrameLeft;
+
+		unsigned char* mDistortedFrameRight;
+
+		ViveSR::MemoryElement* mDistortedFrameLeftData;
+
+		ViveSR::MemoryElement* mDistortedFrameRightData;
+
+		ape::ManualTextureWeakPtr mApeManualTextureLeft;
+
+		ape::ManualTextureWeakPtr mApeManualTextureRight;
+
+		void EventCallBack(const ape::Event& event);
+
+		void CreateSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility);
 
 	public:
 		ViveSRPlugin();

@@ -3,8 +3,7 @@
     "apeOgreRenderPlugin",
     "apeOpenVRPlugin",
     "apeViveSRPlugin",
-    "apeViewPointManagerPlugin",
-    "apeHelloWorldScenePlugin"
+    "apeViewPointManagerPlugin"
   ],
   "network": {
     "user": "ViveSR",
@@ -38,7 +37,7 @@
       "/plugins/render/ogreRender/resources/rtss/materials",
       "/plugins/render/ogreRender/resources/hydrax",
       "/plugins/render/ogreRender/resources/skyx",
-      "/plugins/scene/helloWorldScene/resources"
+      "/plugins/hmd/viveSR/resources"
     ]
   }
 }

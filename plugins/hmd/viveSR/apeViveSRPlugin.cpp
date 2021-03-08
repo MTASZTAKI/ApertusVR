@@ -5,7 +5,7 @@ ape::ViveSRPlugin::ViveSRPlugin()
 	APE_LOG_FUNC_ENTER();
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mpEventManager = ape::IEventManager::getSingletonPtr();
-	//mpEventManager->connectEvent(ape::Event::Group::NODE, std::bind(&ViveSRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->connectEvent(ape::Event::Group::CAMERA, std::bind(&ViveSRPlugin::EventCallBack, this, std::placeholders::_1));
 	mpSceneManager = ape::ISceneManager::getSingletonPtr();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -13,13 +13,70 @@ ape::ViveSRPlugin::ViveSRPlugin()
 ape::ViveSRPlugin::~ViveSRPlugin()
 {
 	APE_LOG_FUNC_ENTER();
-	//mpEventManager->disconnectEvent(ape::Event::Group::NODE, std::bind(&ViveSRPlugin::eventCallBack, this, std::placeholders::_1));
+	mpEventManager->disconnectEvent(ape::Event::Group::CAMERA, std::bind(&ViveSRPlugin::EventCallBack, this, std::placeholders::_1));
 	APE_LOG_FUNC_LEAVE();
 }
 
-void ape::ViveSRPlugin::eventCallBack(const ape::Event& event)
+void ape::ViveSRPlugin::CreateSphere(std::string cameraName, std::string sphereNodeName, std::string meshName, unsigned int visibility)
 {
-	
+	if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(cameraName).lock()))
+	{
+		if (auto sphereNode = mpSceneManager->createNode(sphereNodeName, true, mpCoreConfig->getNetworkGUID()).lock())
+		{
+			sphereNode->setParentNode(mpApeUserInputMacro->getHeadNode());
+			if (auto sphereMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(meshName, ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+			{
+				sphereMeshFile->setFileName(meshName);
+				sphereMeshFile->setParentNode(sphereNode);
+				sphereMeshFile->setVisibilityFlag(visibility);
+				camera->setVisibilityMask(visibility);
+				if (auto material = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity(meshName + "_Material", ape::Entity::MATERIAL_MANUAL, false, "").lock()))
+				{
+					material->setAmbientColor(ape::Color(1.0f, 1.0f, 1.0f));
+					material->setDiffuseColor(ape::Color(1.0f, 1.0f, 1.0f));
+					material->setEmissiveColor(ape::Color(1.0f, 1.0f, 1.0f));
+					if (auto texture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity(meshName + "_Texture", ape::Entity::TEXTURE_MANUAL, false, "").lock()))
+					{
+						//TODO somehow wait the init for mDistortedWidth & mDistortedHeight & PixelFormat
+						texture->setParameters(640, 480, ape::Texture::PixelFormat::A8R8G8B8, ape::Texture::Usage::DYNAMIC_WRITE_ONLY, false, false, false);
+						material->setTexture(texture);
+						material->setSceneBlending(ape::Material::SceneBlendingType::TRANSPARENT_ALPHA);
+						sphereMeshFile->setMaterial(material);
+						material->setCullingMode(ape::Material::CullingMode::CLOCKWISE);
+						if (sphereNodeName == "sphereNodeLeft")
+						{
+							mApeManualTextureLeft = texture;
+						}
+						else if (sphereNodeName == "sphereNodeRight")
+						{
+							mApeManualTextureRight = texture;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void ape::ViveSRPlugin::EventCallBack(const ape::Event& event)
+{
+	if (event.type == ape::Event::Type::CAMERA_CREATE)
+	{
+		if (auto camera = std::static_pointer_cast<ape::ICamera>(mpSceneManager->getEntity(event.subjectName).lock()))
+		{
+			std::string cameraName = camera->getName();
+			std::size_t found = cameraName.find("Left");
+			if (found != std::string::npos)
+			{
+				CreateSphere(cameraName, "sphereNodeLeft", "sphere_left.mesh", 1);
+			}
+			found = cameraName.find("Right");
+			if (found != std::string::npos)
+			{
+				CreateSphere(cameraName, "sphereNodeRight", "sphere_right.mesh", 2);
+			}
+		}
+	}
 }
 
 void ape::ViveSRPlugin::Init()
@@ -102,6 +159,18 @@ void ape::ViveSRPlugin::Init()
 		else
 		{
 			APE_LOG_DEBUG("ViveSR_LinkModule(" << mViveSrPassThroughID << " and " << mViveSrDepthID << "): " << res << " success");
+			ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_DISTORTED_WIDTH, &mDistortedWidth);
+			ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_DISTORTED_HEIGHT, &mDistortedHeight);
+			ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_DISTORTED_CHANNEL, &mDistortedChannel);
+			APE_LOG_DEBUG("ViveSR passthrough size: " << mDistortedWidth << "x" << mDistortedHeight << "x" << mDistortedChannel);
+			mDistortedFrameLeft = new unsigned char[mDistortedWidth * mDistortedHeight * mDistortedChannel];
+			mDistortedFrameRight = new unsigned char[mDistortedWidth * mDistortedHeight * mDistortedChannel];
+			mDistortedFrameLeftData = new ViveSR::MemoryElement();
+			mDistortedFrameLeftData->mask = 0;
+			mDistortedFrameLeftData->ptr = mDistortedFrameLeft;
+			mDistortedFrameRightData = new ViveSR::MemoryElement();
+			mDistortedFrameRightData->mask = 0;
+			mDistortedFrameRightData->ptr = mDistortedFrameRight;
 			mIsViveSrInit = true;
 		}
 	}
@@ -114,30 +183,26 @@ void ape::ViveSRPlugin::Run()
 	if (mIsViveSrInit)
 	{
 		APE_LOG_DEBUG("ViveSR init success");
-		//TODO opt
-		const unsigned int distorted_width = 640;
-		const unsigned int distorted_height = 480;
-		const unsigned int distorted_channel = 4;
-		unsigned char* distorted_frame_left = new unsigned char[distorted_width * distorted_height * distorted_channel];
-		unsigned char* distorted_frame_right = new unsigned char[distorted_width * distorted_height * distorted_channel];
-		ViveSR::MemoryElement* distorted_frame_left_data = new ViveSR::MemoryElement();
-		distorted_frame_left_data->mask = 0;
-		distorted_frame_left_data->ptr = distorted_frame_left;
-		ViveSR::MemoryElement* distorted_frame_right_data = new ViveSR::MemoryElement();
-		distorted_frame_right_data->mask = 0;
-		distorted_frame_right_data->ptr = distorted_frame_right;
 		while (true)
 		{
 			int res = ViveSR::FAILED;
-			res = ViveSR_GetModuleData(mViveSrPassThroughID, distorted_frame_left_data, 1);
+			res = ViveSR_GetModuleData(mViveSrPassThroughID, mDistortedFrameLeftData, 1);
 			if (res == ViveSR::WORK)
 			{
-				APE_LOG_DEBUG("distorted_frame_left_data ok");
+				//APE_LOG_DEBUG("mDistortedFrameLeftData ok");
+				if (auto apeManualTextureLeft = mApeManualTextureLeft.lock())
+				{
+					apeManualTextureLeft->setBuffer(mDistortedFrameLeft);
+				}
 			}
-			res = ViveSR_GetModuleData(mViveSrPassThroughID, distorted_frame_right_data, 1);
+			res = ViveSR_GetModuleData(mViveSrPassThroughID, mDistortedFrameRightData, 1);
 			if (res == ViveSR::WORK)
 			{
-				APE_LOG_DEBUG("distorted_frame_right_data ok");
+				//APE_LOG_DEBUG("mDistortedFrameRightData ok");
+				if (auto apeManualTextureRight = mApeManualTextureRight.lock())
+				{
+					apeManualTextureRight->setBuffer(mDistortedFrameRight);
+				}
 			}
 			//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
