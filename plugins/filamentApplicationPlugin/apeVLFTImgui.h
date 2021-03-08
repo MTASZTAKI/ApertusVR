@@ -95,11 +95,22 @@ struct updateInfo{
     std::string rootOfSelected = "";
     std::vector<float> position[3];
     std::vector<float> orientation[3];
+    std::vector<bool> playedAnimation;
     bool deleteSelected = false;
     bool pickUp = false;
     std::string pickedItem = "";
     bool isAdmin = false;
-    
+    double now = 0;
+    bool isPlayRunning = false;
+    double StartTime = -1.0;
+    double pauseTime = 0.0;
+    int ChoosedBookmarkedAnimationID = 0;
+    unsigned long long ClickedBookmarkTime = 0;
+    int BookmarkID = -1;
+    float TimeToSleepFactor = 1.0f;
+    bool IsPauseClicked = false;
+    bool IsStopClicked = false;
+    bool IsPlayClicked = false;
 };
 
 namespace ape
@@ -109,6 +120,7 @@ namespace ape
 	class VLFTImgui
 	{
 	public:
+
         VLFTImgui();
 
 		~VLFTImgui();
@@ -122,33 +134,55 @@ namespace ape
         VLFTMainMenuInfo mpMainMenuInfo;
         
         ape::ISceneNetwork* mpSceneNetwork;
+        
         ape::UserInputMacro* mpUserInputMacro;
+        
         ape::ICoreConfig* mpCoreConfig;
+        
         ape::IPluginManager* mpPluginManager;
+        
         ape::ISceneManager* mpSceneManager;
         
         quicktype::Scene mScene;
+        
         FILE* mApeVLFTSceneLoaderPluginConfigFile;
+        
+        updateInfo* mpUpdateInfo;
         
         static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
         
         void tooltipFloat(std::string tooltipText);
-        updateInfo* mpUpdateInfo;
+        
         void inRoomGUI();
+        
         void adminRoomGUI();
+        
         void studentRoomGUI();
+        
         void leftPanelGUI();
+        
         void rightPanelGUI();
+        
         void singlePlayerRoomGUI();
+        
         bool curlData();
+        
         void uploadGUI();
+        
         void createStartButton(int width, int height);
+        
         void createStopButton(int width, int height);
+        
         void createJoinButton(std::string userType,int width, int height);
+        
         void listRoomNames(bool withState);
+        
         void connectToRoom();
+        
         void openFileBrowser();
+        
         void getInfoAboutObject(float width, float height);
+        
 	};
 }
 

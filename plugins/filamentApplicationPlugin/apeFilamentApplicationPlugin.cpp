@@ -57,6 +57,17 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mIsStudent = false;
     parseJson();
     initFilament();
+    mParsedAnimations = std::vector<Animation>();
+    mParsedBookmarkTimes = std::vector<unsigned long long>();
+    mIsPauseClicked = false;
+    mIsStopClicked = false;
+    mIsPlayRunning = false;
+    mAnimatedNodeNames = std::vector<std::string>();
+    mAttachedUsers = std::vector<ape::NodeWeakPtr>();
+    mIsStudentsMovementLogging = false;
+    mSpaghettiNodeNames = std::vector<std::string>();
+    mIsAllSpaghettiVisible = false;
+    initAnimations();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -66,14 +77,9 @@ ape::FilamentApplicationPlugin::~FilamentApplicationPlugin()
 	APE_LOG_FUNC_LEAVE();
 }
 
+
 void ape::FilamentApplicationPlugin::eventCallBack(const ape::Event& event)
 {
-    if(event.type == ape::Event::Type::GEOMETRY_FILE_FILENAME)
-        std::cout << "geometry file " << event.type  << std::endl;
-    else if((event.type == ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY))
-        std::cout << "geometry clone source" << event.type<< std::endl;
-    else if((event.type == ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME))
-        std::cout << "geometry clone group" << event.type<< std::endl;
 	mEventDoubleQueue.push(event);
 }
 
@@ -90,6 +96,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			if (auto node = mpSceneManager->getNode(event.subjectName).lock())
 			{
 				std::string nodeName = node->getName();
+                if(nodeName == "Pallet.2")
+                    bool stop;
 				if (event.type == ape::Event::Type::NODE_CREATE)
 				{
                 
@@ -187,8 +195,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto nodeScale = node->getScale();
                             auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                             float divider = 1.0;
-//                            if(abs(nodePosition.getX()) >= 10 || abs(nodePosition.getY()) >= 10 || abs(nodePosition.getX()) >= 10 )
-//                                divider = 100.0;
                             auto filamentTransform = filament::math::mat4f(
                                 nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
                                 nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
@@ -221,11 +227,16 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					case ape::Event::Type::NODE_ORIENTATION:
 					{
                             auto nodeOrientation= node->getModelMatrix().transpose();
+                            if(nodeName == "Pallet.2"){
+                                auto ori = node->getOrientation();
+                                bool stop=false;
+                            }
                             auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
-                            auto filamentTransform = filament::math::mat4f(
-                                nodeOrientation[0][0]*nodeTransforms[0][0], nodeOrientation[0][1], nodeOrientation[0][2], nodeTransforms[0][3],
-                                nodeOrientation[1][0], nodeOrientation[1][1]*nodeTransforms[1][1], nodeOrientation[1][2], nodeTransforms[1][3],
-                                nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2]*nodeTransforms[2][2], nodeTransforms[2][3],
+                            math::mat4f transform;
+                            auto filamentTransform = math::mat4f(
+                                nodeOrientation[0][0], nodeOrientation[0][1], nodeOrientation[0][2], nodeTransforms[0][3],
+                                nodeOrientation[1][0], nodeOrientation[1][1], nodeOrientation[1][2], nodeTransforms[1][3],
+                                nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2], nodeTransforms[2][3],
                                 nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
                             app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
 					}
@@ -236,12 +247,32 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
 						break;
 					case ape::Event::Type::NODE_CHILDVISIBILITY:
-						;
+                        {
+                            if(node->getChildrenVisibility()){
+                                if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end()){
+                                    auto instance = app.mpInstancesMap[nodeName].mpInstance;
+                                    if(!app.mpScene->hasEntity(instance->getEntities()[0])){
+                                        app.mpScene->addEntities(instance->getEntities(), instance->getEntityCount());
+                                    }
+                                    
+                                }
+                                
+                            }
+                            else{
+                                if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end()){
+                                    auto instance = app.mpInstancesMap[nodeName].mpInstance;
+                                    if(app.mpScene->hasEntity(instance->getEntities()[0])){
+                                        app.mpScene->removeEntities(instance->getEntities(), instance->getEntityCount());
+                                    }
+                                    
+                                }
+                            }
+                        }
 						break;
 					case ape::Event::Type::NODE_VISIBILITY:
-					{
-						;
-					}
+                        {
+                            APE_LOG_DEBUG("Node visibility")
+                        }
 						break;
 					case ape::Event::Type::NODE_FIXEDYAW:
 						;
@@ -902,6 +933,272 @@ std::ifstream::pos_type ape::FilamentApplicationPlugin::getFileSize(const char* 
     return in.tellg();
 }
 
+bool compareAnimationTime(ape::FilamentApplicationPlugin::Animation animation1, ape::FilamentApplicationPlugin::Animation animation2)
+{
+    return (animation1.time < animation2.time);
+}
+
+bool ape::FilamentApplicationPlugin::attach2NewAnimationNode(const std::string& parentNodeName, const ape::NodeSharedPtr& node)
+{
+    if (auto newParentNode = mpSceneManager->getNode(parentNodeName).lock())
+    {
+        if (auto currentParentNode = node->getParentNode().lock())
+        {
+            if (newParentNode != currentParentNode)
+            {
+                node->setParentNode(newParentNode);
+                return true;
+            }
+        }
+        else
+        {
+            node->setParentNode(newParentNode);
+            return true;
+        }
+    }
+    return false;
+}
+
+void ape::FilamentApplicationPlugin::initAnimations(){
+    APE_LOG_FUNC_ENTER();
+    mStartTime = -1.0;
+    mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+    std::stringstream fileFullPath;
+    fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeVLFTAnimationPlayerPlugin.json";
+    FILE* apeVLFTAnimationPlayerPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+    mAnimations = nlohmann::json::parse(apeVLFTAnimationPlayerPluginConfigFile);
+    animationQuicktype::Context* context = &mAnimations.get_mutable_context();
+    if (context)
+        mIsAllSpaghettiVisible = mAnimations.get_context().get_asset_trail();
+    for (const auto& node : mAnimations.get_nodes())
+    {
+        mAnimatedNodeNames.push_back(node.get_name());
+        for (const auto& action : node.get_actions())
+        {
+            if (action.get_trigger().get_type() == animationQuicktype::TriggerType::TIMESTAMP)
+            {
+                if (action.get_event().get_type() == animationQuicktype::EventType::SHOW)
+                {
+                    Animation animation;
+                    animation.type = action.get_event().get_type();
+                    animation.nodeName = node.get_name();
+                    if (action.get_event().get_placement_rel_to())
+                    {
+                        animation.parentNodeName = *action.get_event().get_placement_rel_to();
+                    }
+                    if (action.get_event().get_position())
+                    {
+                        auto position = *action.get_event().get_position();
+                        animation.position = ape::Vector3(position[0], position[1], position[2]);
+                    }
+                    if (action.get_event().get_rotation())
+                    {
+                        auto orientation = *action.get_event().get_rotation();
+                        animation.orientation = ape::Quaternion(orientation[0], orientation[1], orientation[2], orientation[3]);
+                    }
+                    animation.time = atoi(action.get_trigger().get_data().c_str());
+                    mParsedAnimations.push_back(animation);
+                }
+                if (action.get_event().get_type() == animationQuicktype::EventType::HIDE)
+                {
+                    Animation animation;
+                    animation.type = action.get_event().get_type();
+                    animation.nodeName = node.get_name();
+                    animation.parentNodeName = "";
+                    animation.time = atoi(action.get_trigger().get_data().c_str());
+                    mParsedAnimations.push_back(animation);
+                }
+                if (action.get_event().get_type() == animationQuicktype::EventType::STATE)
+                {
+                    Animation animation;
+                    animation.type = action.get_event().get_type();
+                    animation.nodeName = node.get_name();
+                    animation.parentNodeName = "";
+                    animation.time = atoi(action.get_trigger().get_data().c_str());
+                    if (action.get_event().get_data())
+                        animation.modelName = *action.get_event().get_data();
+                    mParsedAnimations.push_back(animation);
+                }
+                if (action.get_event().get_type() == animationQuicktype::EventType::LINK)
+                {
+                    Animation animation;
+                    animation.type = action.get_event().get_type();
+                    animation.nodeName = node.get_name();
+                    animation.parentNodeName = "";
+                    animation.time = atoi(action.get_trigger().get_data().c_str());
+                    if (action.get_event().get_data())
+                        animation.fileName = *action.get_event().get_data();
+                    if (action.get_event().get_url())
+                        animation.url = *action.get_event().get_data();
+                    if (action.get_event().get_descr())
+                        animation.descr = *action.get_event().get_data();
+                    mParsedAnimations.push_back(animation);
+                }
+                if (action.get_event().get_type() == animationQuicktype::EventType::TRAIL)
+                {
+                    Animation animation;
+                    animation.type = action.get_event().get_type();
+                    animation.nodeName = node.get_name();
+                    if (action.get_event().get_value())
+                        animation.trail = *action.get_event().get_value();
+                    mParsedAnimations.push_back(animation);
+                }
+                if (action.get_event().get_type() == animationQuicktype::EventType::ANIMATION)
+                {
+                    std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + *action.get_event().get_data();
+                    std::ifstream file(fileNamePath);
+                    std::string dataCount;
+                    std::getline(file, dataCount);
+                    std::string fps;
+                    std::getline(file, fps);
+                    std::vector<Animation> currentAnimations;
+                    for (int i = 0; i < atoi(dataCount.c_str()); i++)
+                    {
+                        std::string postionData;
+                        std::getline(file, postionData);
+                        auto posX = postionData.find_first_of(",");
+                        float x = atof(postionData.substr(1, posX).c_str());
+                        postionData = postionData.substr(posX + 1, postionData.length());
+                        auto posY = postionData.find_first_of(",");
+                        float y = atof(postionData.substr(0, posY).c_str());
+                        postionData = postionData.substr(posY + 1, postionData.length());
+                        auto posZ = postionData.find_first_of("]");
+                        float z = atof(postionData.substr(0, posZ).c_str());
+                        Animation animation;
+                        animation.type = action.get_event().get_type();
+                        animation.nodeName = node.get_name();
+                        if (action.get_event().get_placement_rel_to())
+                            animation.parentNodeName = *action.get_event().get_placement_rel_to();
+                        else
+                            animation.parentNodeName = "";
+                        animation.time = atoi(action.get_trigger().get_data().c_str()) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
+                        animation.position = ape::Vector3(x, y, z);
+                        currentAnimations.push_back(animation);
+                    }
+                    for (auto currentAnimation : currentAnimations)
+                    {
+                        std::string orientationData;
+                        std::getline(file, orientationData);
+                        auto posW = orientationData.find_first_of(",");
+                        float w = atof(orientationData.substr(1, posW).c_str());
+                        orientationData = orientationData.substr(posW + 1, orientationData.length());
+                        auto posX = orientationData.find_first_of(",");
+                        float x = atof(orientationData.substr(0, posX).c_str());
+                        orientationData = orientationData.substr(posX + 1, orientationData.length());
+                        auto posY = orientationData.find_first_of(",");
+                        float y = atof(orientationData.substr(0, posY).c_str());
+                        orientationData = orientationData.substr(posY + 1, orientationData.length());
+                        auto posZ = orientationData.find_first_of("]");
+                        float z = atof(orientationData.substr(0, posZ).c_str());
+                        currentAnimation.orientation = ape::Quaternion(w, x, y, z);
+                        mParsedAnimations.push_back(currentAnimation);
+                    }
+                }
+                if (action.get_event().get_type() == animationQuicktype::EventType::ANIMATION_ADDITIVE)
+                {
+                    std::string fileNamePath = mpCoreConfig->getConfigFolderPath().substr(0, mpCoreConfig->getConfigFolderPath().find("virtualLearningFactory") + 23) + *action.get_event().get_data();
+                    std::ifstream file(fileNamePath);
+                    std::string dataCount;
+                    std::getline(file, dataCount);
+                    std::string fps;
+                    std::getline(file, fps);
+                    std::vector<Animation> currentAnimations;
+                    for (int i = 0; i < atoi(dataCount.c_str()); i++)
+                    {
+                        std::string translateData;
+                        std::getline(file, translateData);
+                        auto posX = translateData.find_first_of(",");
+                        float x = atof(translateData.substr(1, posX).c_str());
+                        translateData = translateData.substr(posX + 1, translateData.length());
+                        auto posY = translateData.find_first_of(",");
+                        float y = atof(translateData.substr(0, posY).c_str());
+                        translateData = translateData.substr(posY + 1, translateData.length());
+                        auto posZ = translateData.find_first_of("]");
+                        float z = atof(translateData.substr(0, posZ).c_str());
+                        Animation animation;
+                        animation.type = action.get_event().get_type();
+                        animation.nodeName = node.get_name();
+                        if (action.get_event().get_placement_rel_to())
+                            animation.parentNodeName = *action.get_event().get_placement_rel_to();
+                        else
+                            animation.parentNodeName = "";
+                        animation.time = atoi(action.get_trigger().get_data().c_str()) + ((1.0f / atoi(fps.c_str()) * 1000) * i);
+                        animation.translate = ape::Vector3(x, y, z);
+                        currentAnimations.push_back(animation);
+                    }
+                    for (auto currentAnimation : currentAnimations)
+                    {
+                        std::string rotationData;
+                        std::getline(file, rotationData);
+                        auto posW = rotationData.find_first_of(",");
+                        float angle = atof(rotationData.substr(1, posW).c_str());
+                        rotationData = rotationData.substr(posW + 1, rotationData.length());
+                        auto posX = rotationData.find_first_of(",");
+                        float x = atof(rotationData.substr(0, posX).c_str());
+                        rotationData = rotationData.substr(posX + 1, rotationData.length());
+                        auto posY = rotationData.find_first_of(",");
+                        float y = atof(rotationData.substr(0, posY).c_str());
+                        rotationData = rotationData.substr(posY + 1, rotationData.length());
+                        auto posZ = rotationData.find_first_of("]");
+                        float z = atof(rotationData.substr(0, posZ).c_str());
+                        currentAnimation.rotationAngle = angle;
+                        currentAnimation.rotationAxis = ape::Vector3(x, y, z);
+                        mParsedAnimations.push_back(currentAnimation);
+                    }
+                }
+            }
+        }
+    }
+    for (const auto& bookmark : mAnimations.get_bookmarks())
+    {
+        mParsedBookmarkTimes.push_back(atoi(bookmark.get_time().c_str()));
+    }
+    std::sort(mParsedBookmarkTimes.begin(), mParsedBookmarkTimes.end());
+    std::sort(mParsedAnimations.begin(), mParsedAnimations.end(), compareAnimationTime);
+    /*for (auto parsedAnimations : mParsedAnimations)
+    {
+        APE_LOG_DEBUG("animation: " << parsedAnimations.time);
+    }*/
+    APE_LOG_FUNC_LEAVE();
+}
+
+void ape::FilamentApplicationPlugin::playAnimations(double now){
+    app.updateinfo.isPlayRunning = true;
+    if(app.updateinfo.StartTime >= 0){
+        app.updateinfo.pauseTime = (now-app.updateinfo.StartTime)*1000.0;
+        for (int i = 0; i < mParsedAnimations.size(); i++)
+        {
+            if(!(app.updateinfo.playedAnimation[i]) && app.updateinfo.pauseTime >= mParsedAnimations[i].time){
+                if (auto node = mpSceneManager->getNode(mParsedAnimations[i].nodeName).lock())
+                {
+                    if (mParsedAnimations[i].type == animationQuicktype::EventType::SHOW)
+                    {
+                        attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node);
+                        node->setChildrenVisibility(true);
+                        auto ori = mParsedAnimations[i].orientation;
+                       
+                        if(mParsedAnimations[i].parentNodeName == ""){
+                            auto derived = node->getDerivedPosition();
+                            auto pos = mParsedAnimations[i].position;
+                            auto newPos = Vector3(pos.getX()-derived.getX(),pos.getY()-derived.getY(), pos.getZ()-derived.getZ());
+                            node->setPosition(newPos);
+                        }
+                        else
+                            node->setPosition(mParsedAnimations[i].position);
+                        node->setOrientation(mParsedAnimations[i].orientation);
+                    }
+                    else if (mParsedAnimations[i].type == animationQuicktype::EventType::HIDE)
+                    {
+                        node->setChildrenVisibility(false);
+                    }
+                }
+                app.updateinfo.playedAnimation[i] = true;
+            }
+        }
+    }
+}
+
+
 void ape::FilamentApplicationPlugin::Step()
 {
 
@@ -1175,8 +1472,8 @@ void ape::FilamentApplicationPlugin::Step()
         }
        
         ImGui::End();
-        mpVlftImgui->update();
         FilamentApp::get().setSidebarWidth(0);
+        mpVlftImgui->update();
     };
 
     auto preRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
@@ -1184,6 +1481,7 @@ void ape::FilamentApplicationPlugin::Step()
         auto instance = rcm.getInstance(app.scene.groundPlane);
         rcm.setLayerMask(instance,
                 0xff, app.viewOptions.groundPlaneEnabled ? 0xff : 0x00);
+        
         if(app.updateinfo.deleteSelected){
             auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
             scene->removeEntities(instance->getEntities(), instance->getEntityCount());
@@ -1192,46 +1490,48 @@ void ape::FilamentApplicationPlugin::Step()
             app.updateinfo.rootOfSelected = "";
             app.updateinfo.deleteSelected = false;
         }
-        else if(app.updateinfo.pickUp ||app.updateinfo.pickedItem != "" ){
-            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
-            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
-            auto camInstance = app.mpTransformManager->getInstance(view->getCamera().getEntity());
-            auto parentWorldMatrix = app.mpTransformManager->getTransform(tmInstance);
-            auto worldTransform = app.mpTransformManager->getWorldTransform(tmInstance);
-            //auto parent = app.mpTransformManager->getParent(tmInstance);
-            //auto tmParent =app.mpTransformManager->getInstance(parent);
-            
-            if(app.updateinfo.pickedItem == ""){
-                app.parentOfPicked = app.mpTransformManager->getParent(tmInstance);
-                auto name = app.asset[app.mpInstancesMap[app.rootOfSelected.second].assetName]->getName(app.parentOfPicked);
-                app.mpTransformManager->setParent(tmInstance, camInstance);
-                parentWorldMatrix = mat4f(1);
-                parentWorldMatrix[3][1] = -0.4;
-                parentWorldMatrix[3][2] = -2.0;
-                auto rotationM = math::mat4f::rotation(0.0, math::vec3<float>(0,1,0));
-                auto transfromM = parentWorldMatrix*rotationM;
-                app.mpTransformManager->setTransform(tmInstance, transfromM);
-                app.updateinfo.pickedItem = app.updateinfo.selectedItem;
-                app.updateinfo.pickUp = false;
-            }else if(app.updateinfo.pickUp){
-                auto parentTm = app.mpTransformManager->getInstance(app.parentOfPicked);
-                parentWorldMatrix = app.mpTransformManager->getWorldTransform(parentTm);
+        else if(app.updateinfo.pickUp || app.updateinfo.pickedItem != "" ){
+            if(app.updateinfo.selectedItem != ""){
                 
-                auto camWorldMatrix = app.mpTransformManager->getWorldTransform(tmInstance);
-                auto palletWorldMatrix = app.mpTransformManager->getWorldTransform(tmInstance);
-                app.mpTransformManager->setParent(tmInstance,parentTm);
-                auto orientation = inverse(parentWorldMatrix.toQuaternion());
-                auto invTrans = orientation*(camWorldMatrix[3].xyz-parentWorldMatrix[3].xyz);
-                auto invertedOri = orientation* camWorldMatrix.toQuaternion();
-                math::mat4f newLocal(invertedOri);
+                auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
+                auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
+                auto camInstance = app.mpTransformManager->getInstance(view->getCamera().getEntity());
+                auto parentWorldMatrix = app.mpTransformManager->getTransform(tmInstance);
+                auto worldTransform = app.mpTransformManager->getWorldTransform(tmInstance);
+                //auto parent = app.mpTransformManager->getParent(tmInstance);
+                //auto tmParent =app.mpTransformManager->getInstance(parent);
                 
-                newLocal[3].xyz = invTrans;
-                
-                app.mpTransformManager->setTransform(tmInstance, newLocal);
-                app.updateinfo.pickedItem = "";
-                app.updateinfo.pickUp = false;
+                if(app.updateinfo.pickedItem == ""){
+                    app.parentOfPicked = app.mpTransformManager->getParent(tmInstance);
+                    auto name = app.asset[app.mpInstancesMap[app.rootOfSelected.second].assetName]->getName(app.parentOfPicked);
+                    app.mpTransformManager->setParent(tmInstance, camInstance);
+                    parentWorldMatrix = mat4f(1);
+                    parentWorldMatrix[3][1] = -0.4;
+                    parentWorldMatrix[3][2] = -2.0;
+                    auto rotationM = math::mat4f::rotation(0.0, math::vec3<float>(0,1,0));
+                    auto transfromM = parentWorldMatrix*rotationM;
+                    app.mpTransformManager->setTransform(tmInstance, transfromM);
+                    app.updateinfo.pickedItem = app.updateinfo.selectedItem;
+                    app.updateinfo.pickUp = false;
+                }else if(app.updateinfo.pickUp){
+                    auto parentTm = app.mpTransformManager->getInstance(app.parentOfPicked);
+                    parentWorldMatrix = app.mpTransformManager->getWorldTransform(parentTm);
+                    
+                    auto camWorldMatrix = app.mpTransformManager->getWorldTransform(tmInstance);
+                    auto palletWorldMatrix = app.mpTransformManager->getWorldTransform(tmInstance);
+                    app.mpTransformManager->setParent(tmInstance,parentTm);
+                    auto orientation = inverse(parentWorldMatrix.toQuaternion());
+                    auto invTrans = orientation*(camWorldMatrix[3].xyz-parentWorldMatrix[3].xyz);
+                    auto invertedOri = orientation* camWorldMatrix.toQuaternion();
+                    math::mat4f newLocal(invertedOri);
+                    
+                    newLocal[3].xyz = invTrans;
+                    
+                    app.mpTransformManager->setTransform(tmInstance, newLocal);
+                    app.updateinfo.pickedItem = "";
+                    app.updateinfo.pickUp = false;
+                }
             }
-           
         }
         filament::Camera& camera = view->getCamera();
         auto viewMatrix =  camera.getModelMatrix();
@@ -1263,15 +1563,6 @@ void ape::FilamentApplicationPlugin::Step()
         if (ibl) {
             ibl->getSkybox()->setLayerMask(0xff, app.viewOptions.skyboxEnabled ? 0xff : 0x00);
         }
-//        if(app.asset)
-//            app.mpScene->addEntities(app.asset->getEntities(), app.asset->getEntityCount());
-
-        // we have to clear because the side-bar doesn't have a background, we cannot use
-        // a skybox on the ui scene, because the ui view is always full screen.
-//        renderer->setClearOptions({
-//                .clearColor = { inverseTonemapSRGB(app.viewOptions.backgroundColor), 1.0f },
-//                .clear = true
-//        });
         
         view->setColorGrading(nullptr);
         processEventDoubleQueue();
@@ -1282,6 +1573,7 @@ void ape::FilamentApplicationPlugin::Step()
     };
     auto userInput = [&](Engine* engine, View* view, Scene* scene, filament::camutils::Manipulator<float>* manipulator,int x, int y, SDL_Event event, int width, int height, double now){
         
+        app.updateinfo.now = now;
         filament::math::vec3<float> origin;
         filament::math::vec3<float> dir;
         filament::math::vec3<float> mtarget;
@@ -1300,11 +1592,7 @@ void ape::FilamentApplicationPlugin::Step()
                     auto viewport = view->getViewport();
                     width = viewport.width;
                     height = viewport.height;
-                    //manipulator->getRay(x, y, &origin, &dir);
-        //            if(!mIsStudent)
-        //                origin = math::vec3<float>(origin.x+0.2, origin.y+1.5, origin.z+3.0);
-        //            else
-        //                origin = math::vec3<float>(origin.x+0.2, 1.5, origin.z+3.0);
+                    
                     manipulator->getLookAt(&origin, &mtarget, &upward);
                     math::vec3<float>  gaze = normalize(mtarget - origin);
                     math::vec3<float> right = normalize(cross(gaze, math::vec3<float>(0,1,0)));
@@ -1325,52 +1613,20 @@ void ape::FilamentApplicationPlugin::Step()
                     dir = normalize(dir);
                     origin += dir*tnear;
                     
-        //            size_t vertCount = 2;
-        //            size_t indCount = 2;
-        //            float3* verts = (float3*) malloc(sizeof(float3) * vertCount);
-        //            std::vector<float3> vertsVec;
-        //            uint32_t* inds = (uint32_t*) malloc(sizeof(uint32_t) * indCount);
-        //            verts[0] = float3(origin.x+dir.x*tnear, origin.y+dir.y*tnear, origin.z+dir.z*tnear);
-        //            verts[1] = float3(origin.x+dir.x*tfar, origin.y+dir.y*tfar, origin.z+dir.z*tfar);
-        //            vertsVec.push_back(verts[0]);
-        //            vertsVec.push_back(verts[1]);
-        //            inds[0] = 0;
-        //            inds[1] = 1;
-        //            filament::VertexBuffer* mVertexBuffer = VertexBuffer::Builder()
-        //                .bufferCount(1)
-        //                .vertexCount(vertCount)
-        //                .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
-        //                .build(*engine);
-        //
-        //            filament::IndexBuffer* mIndexBuffer = IndexBuffer::Builder()
-        //                .indexCount(indCount)
-        //                .bufferType(IndexBuffer::IndexType::UINT)
-        //                .build(*engine);
-        //
-        //            mVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
-        //                            verts, mVertexBuffer->getVertexCount() * sizeof(float3), nullptr));
-        //
-        //            mIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
-        //                            inds, mIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
-        //
-        //            if(app.mpScene->hasEntity(app.lineEntity)){
-        //                app.mpScene->remove(app.lineEntity);
-        //            }
-        //            app.lineEntity = EntityManager::get().create();
-        //            RenderableManager::Builder(1)
-        //                .culling(false)
-        //                .castShadows(false)
-        //                .receiveShadows(false)
-        //                .geometry(0, RenderableManager::PrimitiveType::LINES, mVertexBuffer, mIndexBuffer)
-        //                .build(*engine, app.lineEntity);
-        //            app.mpScene->addEntity(app.lineEntity);
                     app.rayIntersectedEntities.clear();
                     // app.selectedEntity = hit entity
                     app.boxEntity.second = 1000000.0;
-                    if(app.mpScene->hasEntity(app.boxEntity.first))
+                    if(app.mpScene->hasEntity(app.boxEntity.first)){
                         app.mpScene->remove(app.boxEntity.first);
+                        app.engine->destroy(app.boxVertexBuffer);
+                        app.engine->destroy(app.boxIndexBuffer);
+                    }
+                    if(app.mpTransformManager->hasComponent(app.boxEntity.first))
+                        app.mpTransformManager->destroy(app.boxEntity.first);
+                    
                     if(app.mpEntityManager->isAlive(app.boxEntity.first)){
                         app.mpEntityManager->destroy(app.boxEntity.first);
+                        app.engine->destroy(app.boxEntity.first);
                     }
                     math::mat4f worldTm, localTm;
                     
@@ -1413,81 +1669,86 @@ void ape::FilamentApplicationPlugin::Step()
                                     t[8] = fmin(fmin(fmax(t[1], t[2]), fmax(t[3], t[4])), fmax(t[5], t[6]));
                                     if(t[8] >= 0 && t[7] <= t[8]){
                                         app.rayIntersectedEntities.push_back(std::pair(entities[i], t[7]));
-                                        if(t[7] < app.boxEntity.second){
+                                        if(abs(t[7]) < app.boxEntity.second){
                                             if(app.mpScene->hasEntity(app.boxEntity.first)){
                                                 app.mpScene->remove(app.boxEntity.first);
                                                 
                                                 if(app.mpEntityManager->isAlive(app.boxEntity.first)){
                                                     app.engine->destroy(app.boxEntity.first);
-                                                    app.mpEntityManager->destroy( app.boxEntity.first);
+                                                    app.mpEntityManager->destroy(app.boxEntity.first);
+                                                    if(app.mpTransformManager->hasComponent(app.boxEntity.first))
+                                                        app.mpTransformManager->destroy(app.boxEntity.first);
+                                                    app.engine->destroy(app.boxVertexBuffer);
+                                                    app.engine->destroy(app.boxIndexBuffer);
+                                                    app.engine->destroy(app.boxEntity.first);
+                                                    
                                                 }
                                                 
                                             }
                                             size_t boxVertCount = 8;
                                             size_t boxIndCount = 24;
-                                            float3* boxVerts = (float3*) malloc(sizeof(float3) * boxVertCount);
-                                            uint32_t* boxInds = (uint32_t*) malloc(sizeof(uint32_t) * boxIndCount);
-                                            boxVerts[0] = math::float3(boxMin.x, boxMin.y, boxMin.z);
-                                            boxVerts[1] = math::float3(boxMin.x, boxMin.y, boxMax.z);
-                                            boxVerts[2] = math::float3(boxMin.x, boxMax.y, boxMin.z);
-                                            boxVerts[3] = math::float3(boxMin.x, boxMax.y, boxMax.z);
-                                            boxVerts[4] = math::float3(boxMax.x, boxMin.y, boxMin.z);
-                                            boxVerts[5] = math::float3(boxMax.x, boxMin.y, boxMax.z);
-                                            boxVerts[6] = math::float3(boxMax.x, boxMax.y, boxMin.z);
-                                            boxVerts[7] = math::float3(boxMax.x, boxMax.y, boxMax.z);
+                                            
+                                            app.boxVerts[0] = math::float3(boxMin.x, boxMin.y, boxMin.z);
+                                            app.boxVerts[1] = math::float3(boxMin.x, boxMin.y, boxMax.z);
+                                            app.boxVerts[2] = math::float3(boxMin.x, boxMax.y, boxMin.z);
+                                            app.boxVerts[3] = math::float3(boxMin.x, boxMax.y, boxMax.z);
+                                            app.boxVerts[4] = math::float3(boxMax.x, boxMin.y, boxMin.z);
+                                            app.boxVerts[5] = math::float3(boxMax.x, boxMin.y, boxMax.z);
+                                            app.boxVerts[6] = math::float3(boxMax.x, boxMax.y, boxMin.z);
+                                            app.boxVerts[7] = math::float3(boxMax.x, boxMax.y, boxMax.z);
                                            
-                                            boxInds[0] = 0;
-                                            boxInds[1] = 1;
-                                            boxInds[2] = 1;
-                                            boxInds[3] = 3;
-                                            boxInds[4] = 3;
-                                            boxInds[5] = 2;
-                                            boxInds[6] = 2;
-                                            boxInds[7] = 0;
+                                            app.boxInds[0] = 0;
+                                            app.boxInds[1] = 1;
+                                            app.boxInds[2] = 1;
+                                            app.boxInds[3] = 3;
+                                            app.boxInds[4] = 3;
+                                            app.boxInds[5] = 2;
+                                            app.boxInds[6] = 2;
+                                            app.boxInds[7] = 0;
                                             // Generate 4 lines around face at +X.
-                                            boxInds[ 8] = 4;
-                                            boxInds[ 9] = 5;
-                                            boxInds[10] = 5;
-                                            boxInds[11] = 7;
-                                            boxInds[12] = 7;
-                                            boxInds[13] = 6;
-                                            boxInds[14] = 6;
-                                            boxInds[15] = 4;
+                                            app.boxInds[ 8] = 4;
+                                            app.boxInds[ 9] = 5;
+                                            app.boxInds[10] = 5;
+                                            app.boxInds[11] = 7;
+                                            app.boxInds[12] = 7;
+                                            app.boxInds[13] = 6;
+                                            app.boxInds[14] = 6;
+                                            app.boxInds[15] = 4;
                                             // Generate 2 horizontal lines at -Z.
-                                            boxInds[16] = 0;
-                                            boxInds[17] = 4;
-                                            boxInds[18] = 2;
-                                            boxInds[19] = 6;
+                                            app.boxInds[16] = 0;
+                                            app.boxInds[17] = 4;
+                                            app.boxInds[18] = 2;
+                                            app.boxInds[19] = 6;
                                             // Generate 2 horizontal lines at +Z.
-                                            boxInds[20] = 1;
-                                            boxInds[21] = 5;
-                                            boxInds[22] = 3;
-                                            boxInds[23] = 7;
+                                            app.boxInds[20] = 1;
+                                            app.boxInds[21] = 5;
+                                            app.boxInds[22] = 3;
+                                            app.boxInds[23] = 7;
                                             
                                             
-                                            filament::VertexBuffer* boxVertexBuffer = VertexBuffer::Builder()
+                                            app.boxVertexBuffer = VertexBuffer::Builder()
                                                 .bufferCount(1)
                                                 .vertexCount(boxVertCount)
                                                 .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
                                                 .build(*engine);
 
-                                            filament::IndexBuffer* boxIndexBuffer = IndexBuffer::Builder()
+                                            app.boxIndexBuffer = IndexBuffer::Builder()
                                                 .indexCount(boxIndCount)
                                                 .bufferType(IndexBuffer::IndexType::UINT)
                                                 .build(*engine);
 
-                                            boxVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
-                                                            boxVerts, boxVertexBuffer->getVertexCount() * sizeof(float3), nullptr));
+                                            app.boxVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
+                                                                app.boxVerts, app.boxVertexBuffer->getVertexCount() * sizeof(float3), nullptr));
 
-                                            boxIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
-                                                            boxInds, boxIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
-
+                                            app.boxIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
+                                                    app.boxInds, app.boxIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
+                                            
                                             app.boxEntity = std::pair(EntityManager::get().create(), t[7]);
                                             RenderableManager::Builder(1)
                                                 .culling(false)
                                                 .castShadows(false)
                                                 .receiveShadows(false)
-                                                .geometry(0, RenderableManager::PrimitiveType::LINES, boxVertexBuffer, boxIndexBuffer)
+                                                .geometry(0, RenderableManager::PrimitiveType::LINES, app.boxVertexBuffer, app.boxIndexBuffer)
                                                 .build(*engine, app.boxEntity.first);
                                             if(!app.mpScene->hasEntity(app.boxEntity.first)){
                                                 app.mpScene->addEntity(app.boxEntity.first);
@@ -1524,7 +1785,6 @@ void ape::FilamentApplicationPlugin::Step()
                                 for(auto  const& x: sceneNodes){
                                     sceneNodeName = x.first;
                                     if(sceneNodeName == parentName){
-                                        std::cout << parentName<<std::endl;
                                         app.selectedNode.first = parent;
                                         app.selectedNode.second = parentName;
                                         app.updateinfo.selectedItem = parentName;
@@ -1538,7 +1798,6 @@ void ape::FilamentApplicationPlugin::Step()
                                         if(parentName == nodeName && rootName == cloneName){
                                             app.updateinfo.selectedItem = sceneNodeName;
                                             app.updateinfo.rootOfSelected = cloneName;
-                                            std::cout <<cloneName << " "<< parentName<<std::endl;
                                             app.selectedNode.first = parent;
                                             found = true;
                                             break;
@@ -1606,6 +1865,14 @@ void ape::FilamentApplicationPlugin::Step()
     };
 
     auto animate = [this](Engine* engine, View* view, double now) {
+        app.updateinfo.now = now;
+        if(!app.updateinfo.isPlayRunning && app.updateinfo.IsPlayClicked){
+            app.updateinfo.StartTime = now-app.updateinfo.pauseTime/1000;
+            playAnimations(now);
+        }
+        else if(app.updateinfo.IsPlayClicked){
+            playAnimations(now);
+        }
         if(app.instances.find("characterModel") != app.instances.end()){
             auto animator = app.instances["characterModel"][0]->getAnimator();
             double timeDiff;
@@ -1642,6 +1909,7 @@ void ape::FilamentApplicationPlugin::Step()
             }
             animator->updateBoneMatrices();
         }
+       
     };
     
     FilamentApp& filamentApp = FilamentApp::get();
@@ -1653,7 +1921,7 @@ void ape::FilamentApplicationPlugin::Step()
     });
     app.config.cameraMode = filament::camutils::Mode::FREE_FLIGHT;
     filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput);
-
+    
     //return 0;
 }
 

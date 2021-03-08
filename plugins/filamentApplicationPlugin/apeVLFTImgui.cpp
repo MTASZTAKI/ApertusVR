@@ -31,6 +31,9 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
     mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
     mpUpdateInfo = updateinfo;
+    for(int i = 0; i < 500; i++){
+        mpUpdateInfo->playedAnimation.push_back(false);
+    }
     if(mpUpdateInfo->isAdmin)
         mpMainMenuInfo.admin = true;
     else
@@ -403,6 +406,24 @@ void ape::VLFTImgui::leftPanelGUI() {
         mpMainMenuInfo.adminMenu = true;
         
     }
+    if(ImGui::Button("Play",ImVec2(100,30)))
+    {
+        if (!mpUpdateInfo->isPlayRunning)
+        {
+            mpUpdateInfo->IsPlayClicked = true;
+            mpUpdateInfo->ChoosedBookmarkedAnimationID = 0;
+            mpUpdateInfo->ClickedBookmarkTime = 0;
+            mpUpdateInfo->BookmarkID = -1;
+            mpUpdateInfo->TimeToSleepFactor = 1.0f;
+            mpUpdateInfo->IsPauseClicked = false;
+            mpUpdateInfo->IsStopClicked = false;
+        }else{
+            mpUpdateInfo->IsPauseClicked = true;
+            mpUpdateInfo->IsPlayClicked = false;
+            mpUpdateInfo->isPlayRunning = false;
+            
+        }
+    }
     ImGui::End();
 }
 
@@ -438,7 +459,6 @@ void ape::VLFTImgui::rightPanelGUI() {
     ImGui::End();
 
 }
-
 
 void ape::VLFTImgui::openFileBrowser() {
     char* filePath;

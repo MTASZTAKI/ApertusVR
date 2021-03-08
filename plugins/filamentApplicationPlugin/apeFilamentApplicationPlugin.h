@@ -97,6 +97,7 @@ SOFTWARE.*/
 #include <math/norm.h>
 #include <filagui/ImGuiExtensions.h>
 #include "apeVLFTImgui.h"
+#include "apeVLFTAnimationPlayerPluginConfig.h"
 //#include "generated/resources/gltf_viewer.h"
 #include "math/TVecHelpers.h"
 
@@ -211,6 +212,12 @@ struct App {
         int keyCurrentAnimation;
     } animationData;
 
+    
+    filament::VertexBuffer* boxVertexBuffer;
+    filament::IndexBuffer* boxIndexBuffer;
+    float3* boxVerts = (float3*) malloc(sizeof(float3) * 8);
+    uint32_t* boxInds = (uint32_t*) malloc(sizeof(uint32_t) * 24);
+    
     // zero-initialized so that the first time through is always dirty.
     ColorGradingSettings lastColorGradingOptions = { 0 };
 
@@ -248,7 +255,26 @@ namespace ape
 		void Suspend() override;
 
 		void Restart() override;
-
+        
+        struct Animation
+        {
+            animationQuicktype::EventType type;
+            std::string nodeName;
+            std::string parentNodeName;
+            unsigned long long time;
+            ape::Vector3 position;
+            ape::Quaternion orientation;
+            std::string modelName;
+            ape::Vector3 translate;
+            ape::Degree rotationAngle;
+            ape::Vector3 rotationAxis;
+            std::string url;
+            std::string descr;
+            std::string fileName;
+            bool trail;
+        };
+        
+       
 	private:
         
 		ape::ISceneManager* mpSceneManager;
@@ -275,6 +301,40 @@ namespace ape
         
         App app;
         
+        animationQuicktype::Animations mAnimations;
+        
+        std::thread mAnimationThread;
+        
+        std::vector<Animation> mParsedAnimations;
+
+        std::vector<std::string> mAnimatedNodeNames;
+
+        std::vector<std::string> mSpaghettiNodeNames;
+
+        std::vector<ape::NodeWeakPtr> mAttachedUsers;
+        
+        double mStartTime;
+
+        float mTimeToSleepFactor;
+        
+        int mBookmarkID;
+        
+        std::vector<unsigned long long> mParsedBookmarkTimes;
+        
+        unsigned long long mClickedBookmarkTime;
+        
+        int mChoosedBookmarkedAnimationID;
+        
+        bool mIsPauseClicked;
+
+        bool mIsStopClicked;
+
+        bool mIsPlayRunning;
+
+        bool mIsStudentsMovementLogging;
+
+        bool mIsAllSpaghettiVisible;
+        
         bool mIsStudent;
         
         bool isSelected;
@@ -283,17 +343,25 @@ namespace ape
         
         void parseJson();
         
+        void initAnimations();
+        
+        void playAnimations(double now);
+        
+        bool attach2NewAnimationNode(const std::string& parentNodeName, const ape::NodeSharedPtr& node);
+        
         std::ifstream::pos_type getFileSize(const char* filename);
         
         bool loadSettings(const char* filename, Settings* out);
 
         static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
         
-
         const char* DEFAULT_IBL = "default_env";
+        
 		void processEventDoubleQueue();
 
 		void eventCallBack(const ape::Event& event);
+        
+       
 
 	};
 	
