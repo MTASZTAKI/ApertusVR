@@ -115,116 +115,29 @@ void ape::ViveSRPlugin::Run()
 	{
 		APE_LOG_DEBUG("ViveSR init success");
 		//TODO opt
-		int distorted_width, distorted_height, distorted_channel;
-		ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_DISTORTED_WIDTH, &distorted_width);
-		ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_DISTORTED_HEIGHT, &distorted_height);
-		ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_DISTORTED_CHANNEL, &distorted_channel);
-		int undistorted_width, undistorted_height, undistorted_channel;
-		ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_UNDISTORTED_WIDTH, &undistorted_width);
-		ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_UNDISTORTED_HEIGHT, &undistorted_height);
-		ViveSR_GetParameterInt(mViveSrPassThroughID, ViveSR::PassThrough::OUTPUT_UNDISTORTED_CHANNEL, &undistorted_channel);
-		std::unique_ptr<char[]> distorted_frame_left = std::make_unique<char[]>(distorted_width * distorted_height * distorted_channel);
-		std::unique_ptr<char[]> distorted_frame_right = std::make_unique<char[]>(distorted_width * distorted_height * distorted_channel);
-		std::unique_ptr<char[]> undistorted_frame_left = std::make_unique<char[]>(undistorted_width * undistorted_height * undistorted_channel);
-		std::unique_ptr<char[]> undistorted_frame_right = std::make_unique<char[]>(undistorted_width * undistorted_height * undistorted_channel);
-		float pose_left[16];
-		float pose_right[16];
-		std::unique_ptr<char[]> camera_params_see_through = std::make_unique<char[]>(1032);
-		unsigned int frameSeq;
-		unsigned int timeStp;
-		int lux_left;
-		int lux_right;
-		int color_temperature_left;
-		int color_temperature_right;
-		int exposure_time_left;
-		int exposure_time_right;
-		int analog_gain_left;
-		int analog_gain_right;
-		int digital_gain_left;
-		int digital_gain_right;
-		const int see_throught_length = ViveSR::PassThrough::OutputMask::MAX;
-		static std::vector<ViveSR::MemoryElement> see_through_element(see_throught_length);
-		void* see_through_ptrs[ViveSR::PassThrough::OutputMask::MAX]{
-			distorted_frame_left.get(),
-			distorted_frame_right.get(),
-			undistorted_frame_left.get(),
-			undistorted_frame_right.get(),
-			&frameSeq,
-			&timeStp,
-			pose_left,
-			pose_right,
-			&lux_left,
-			&lux_right,
-			&color_temperature_left,
-			&color_temperature_right,
-			&exposure_time_left,
-			&exposure_time_right,
-			&analog_gain_left,
-			&analog_gain_right,
-			&digital_gain_left,
-			&digital_gain_right,
-			camera_params_see_through.get()
-		};
-		int see_through_count = 0;
-		for (int i = 0; i < see_throught_length; ++i)
-		{
-			if (see_through_ptrs[i])
-			{
-				see_through_element[see_through_count].mask = i;
-				see_through_element[see_through_count].ptr = see_through_ptrs[i];
-				see_through_count++;
-			}
-		}
-		const static int DEPTH_ELEM_LENGTH = ViveSR::Depth::OutputMask::OUTPUT_MASK_MAX;
-		int depth_img_width, depth_img_height, depth_img_channel, depth_color_img_channel;
-		ViveSR_GetParameterInt(mViveSrDepthID, ViveSR::Depth::OUTPUT_WIDTH, &depth_img_width);
-		ViveSR_GetParameterInt(mViveSrDepthID, ViveSR::Depth::OUTPUT_HEIGHT, &depth_img_height);
-		ViveSR_GetParameterInt(mViveSrDepthID, ViveSR::Depth::OUTPUT_CHAANEL_1, &depth_img_channel);
-		ViveSR_GetParameterInt(mViveSrDepthID, ViveSR::Depth::OUTPUT_CHAANEL_0, &depth_color_img_channel);
-		static std::vector<ViveSR::MemoryElement> depth_element(DEPTH_ELEM_LENGTH);
-		auto left_frame = std::make_unique<char[]>(depth_img_height * depth_img_width * depth_color_img_channel);
-		auto depth_map = std::make_unique<float[]>(depth_img_height * depth_img_width * depth_img_channel);
-		unsigned int frame_seq;
-		unsigned int time_stp;
-		float pose[16];
-		auto camera_params = std::make_unique<char[]>(1032);
-		void* depth_ptrs[ViveSR::Depth::OutputMask::OUTPUT_MASK_MAX]{
-			left_frame.get(),
-			depth_map.get(),
-			&frame_seq,
-			&time_stp,
-			pose,
-			&lux_left,
-			&color_temperature_left,
-			&exposure_time_left,
-			&analog_gain_left,
-			&digital_gain_left,
-			camera_params.get(),
-		};
-		int depth_count = 0;
-		for (int i = 0; i < DEPTH_ELEM_LENGTH; ++i)
-		{
-			if (depth_ptrs[i])
-			{
-				depth_element[depth_count].mask = i;
-				depth_element[depth_count].ptr = depth_ptrs[i];
-				depth_count++;
-			}
-		}
+		const unsigned int distorted_width = 640;
+		const unsigned int distorted_height = 480;
+		const unsigned int distorted_channel = 4;
+		unsigned char* distorted_frame_left = new unsigned char[distorted_width * distorted_height * distorted_channel];
+		unsigned char* distorted_frame_right = new unsigned char[distorted_width * distorted_height * distorted_channel];
+		ViveSR::MemoryElement* distorted_frame_left_data = new ViveSR::MemoryElement();
+		distorted_frame_left_data->mask = 0;
+		distorted_frame_left_data->ptr = distorted_frame_left;
+		ViveSR::MemoryElement* distorted_frame_right_data = new ViveSR::MemoryElement();
+		distorted_frame_right_data->mask = 0;
+		distorted_frame_right_data->ptr = distorted_frame_right;
 		while (true)
 		{
-			APE_LOG_DEBUG("passthrough data require started, count: " << see_through_count);
 			int res = ViveSR::FAILED;
-			res = ViveSR_GetModuleData(mViveSrPassThroughID, see_through_element.data(), see_through_count);
+			res = ViveSR_GetModuleData(mViveSrPassThroughID, distorted_frame_left_data, 1);
 			if (res == ViveSR::WORK)
 			{
-				//auto leftImage = distorted_frame_left.get();
-				//auto rightImage = distorted_frame_right.get();
-				APE_LOG_DEBUG("passthrough data ok");
+				APE_LOG_DEBUG("distorted_frame_left_data ok");
 			}
-			else
+			res = ViveSR_GetModuleData(mViveSrPassThroughID, distorted_frame_right_data, 1);
+			if (res == ViveSR::WORK)
 			{
-				APE_LOG_DEBUG("no passthrough data");
+				APE_LOG_DEBUG("distorted_frame_right_data ok");
 			}
 			//std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
