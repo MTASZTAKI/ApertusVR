@@ -85,6 +85,7 @@ struct VLFTMainMenuInfo{
     bool singlePlayer = false;
     bool inMainMenu = true;
     bool adminMenu = false;
+    bool settingsMenu = false;
     bool multiPlayer = false;
     bool namesLoaded = false;
     bool inRoomGui = false;
@@ -93,11 +94,12 @@ struct VLFTMainMenuInfo{
 struct updateInfo{
     std::string selectedItem = "";
     std::string rootOfSelected = "";
-    std::vector<float> position[3];
-    std::vector<float> orientation[3];
+    ape::Vector3 position;
+    ape::Quaternion orientation;
     std::vector<bool> playedAnimation;
     bool deleteSelected = false;
     bool pickUp = false;
+    bool drop = false;
     std::string pickedItem = "";
     bool isAdmin = false;
     double now = 0;
@@ -111,6 +113,14 @@ struct updateInfo{
     bool IsPauseClicked = false;
     bool IsStopClicked = false;
     bool IsPlayClicked = false;
+    bool setPosition = false;
+    bool setRotation = false;
+    bool inRoom = false;
+    bool inSettings = false;
+    bool newChatMessage = false;
+    std::string changeKeyCode = "";
+    bool changedKey = 0;
+    std::map<std::string, std::string> keyLabel;
 };
 
 namespace ape
@@ -149,6 +159,10 @@ namespace ape
         
         updateInfo* mpUpdateInfo;
         
+        double posX=0, posY=0, posZ = 0, rotAngle = 0, upX = 0, upY = 0, upZ = 0;
+        
+        std::vector<std::string> chatMessages;
+        
         static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
         
         void tooltipFloat(std::string tooltipText);
@@ -173,6 +187,8 @@ namespace ape
         
         void createStopButton(int width, int height);
         
+        bool createSettingsMenu(int width, int height);
+        
         void createJoinButton(std::string userType,int width, int height);
         
         void listRoomNames(bool withState);
@@ -182,6 +198,7 @@ namespace ape
         void openFileBrowser();
         
         void getInfoAboutObject(float width, float height);
+        
         
 	};
 }

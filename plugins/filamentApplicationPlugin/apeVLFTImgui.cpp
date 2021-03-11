@@ -31,6 +31,12 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
     mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
     mpUpdateInfo = updateinfo;
+    mpUpdateInfo->keyLabel["w"] = "w";
+    mpUpdateInfo->keyLabel["s"] = "s";
+    mpUpdateInfo->keyLabel["a"] = "a";
+    mpUpdateInfo->keyLabel["d"] = "d";
+    mpUpdateInfo->keyLabel["e"] = "e";
+    mpUpdateInfo->keyLabel["q"] = "q";
     for(int i = 0; i < 500; i++){
         mpUpdateInfo->playedAnimation.push_back(false);
     }
@@ -38,12 +44,19 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
         mpMainMenuInfo.admin = true;
     else
         mpMainMenuInfo.student = true;
+    chatMessages.push_back(u8"Elso uzenet bla bla");
+    chatMessages.push_back(u8"Masodik uzenet bla bla");
+    chatMessages.push_back(u8"Harmadik uzenet bla bla");
+    chatMessages.push_back(u8"Makosteszte krumplipürével");
+    chatMessages.push_back(u8"A hangya lassú sakkban");
+    chatMessages.push_back(u8"Ha van 5 almád és nekem van 12 székem akkor hány palacsinta fér el a teton?");
+    chatMessages.push_back(u8"Egyse mert az űrlények nem hordanak kalapot!");
 }
 
 
 void ape::VLFTImgui::tooltipFloat(std::string tooltipText){
     if (ImGui::IsItemActive() || ImGui::IsItemHovered()) {
-        ImGui::SetTooltip(tooltipText.c_str());
+        ImGui::SetTooltip("%s", tooltipText.c_str());
     }
 }
 size_t ape::VLFTImgui::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
@@ -108,6 +121,7 @@ void ape::VLFTImgui::connectToRoom(){
         locations.push_back(locationAnimationConfig);
         mpSceneNetwork->connectToRoom(roomName, urls, locations);
         mpMainMenuInfo.inRoomGui = true;
+        mpUpdateInfo->inRoom = true;
     }
     else if(mpMainMenuInfo.singlePlayer){
         std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
@@ -120,7 +134,7 @@ void ape::VLFTImgui::connectToRoom(){
         mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
         
         mpMainMenuInfo.inRoomGui = true;
-        
+        mpUpdateInfo->inRoom = true;
     }
 }
 
@@ -277,6 +291,54 @@ void ape::VLFTImgui::studentRoomGUI(){
     ImGui::End();
 }
 
+bool ape::VLFTImgui::createSettingsMenu(int width, int height){
+    mpUpdateInfo->inSettings = true;
+    ImGui::SetCursorPos(ImVec2(8,40));
+    ImGui::Text("Forward");
+    ImGui::SameLine(width/3*2);
+    if(ImGui::Button(mpUpdateInfo->keyLabel["w"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
+        mpUpdateInfo->changeKeyCode = "w";
+        mpUpdateInfo->changedKey = true;
+    }
+    ImGui::Text("Backward");
+    ImGui::SameLine(width/3*2);
+    if(ImGui::Button(mpUpdateInfo->keyLabel["s"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
+        mpUpdateInfo->changeKeyCode = "s";
+        mpUpdateInfo->changedKey = true;
+    }
+    ImGui::Text("Left");
+    ImGui::SameLine(width/3*2);
+    if(ImGui::Button(mpUpdateInfo->keyLabel["a"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
+        mpUpdateInfo->changeKeyCode = "a";
+        mpUpdateInfo->changedKey = true;
+    }
+    ImGui::Text("Right");
+    ImGui::SameLine(width/3*2);
+    if(ImGui::Button(mpUpdateInfo->keyLabel["d"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
+        mpUpdateInfo->changeKeyCode = "d";
+        mpUpdateInfo->changedKey = true;
+    }
+    ImGui::Text("Up");
+    ImGui::SameLine(width/3*2);
+    if(ImGui::Button(mpUpdateInfo->keyLabel["e"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
+        mpUpdateInfo->changeKeyCode = "e";
+        mpUpdateInfo->changedKey = true;
+    }
+    ImGui::Text("Down");
+    ImGui::SameLine(width/3*2);
+    if(ImGui::Button(mpUpdateInfo->keyLabel["q"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
+        mpUpdateInfo->changeKeyCode = "q";
+        mpUpdateInfo->changedKey = true;
+    }
+    ImGui::SetCursorPos(ImVec2(width-(width/8+48),height-(height/15+50)));
+    if (ImGui::Button("Back",ImVec2(width/8, height/15))){
+        mpMainMenuInfo.settingsMenu = false;
+        mpUpdateInfo->inSettings = false;
+        return true;
+    }
+    return false;
+}
+
 void ape::VLFTImgui::adminRoomGUI(){
     
     ImGui::SetNextWindowPos(ImVec2(20, 20));
@@ -304,6 +366,13 @@ void ape::VLFTImgui::adminRoomGUI(){
             mpMainMenuInfo.adminMenu = true;
             mpMainMenuInfo.inMainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
+        }
+        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/4+36));
+        if (ImGui::Button("Settings",ImVec2(width/5, height/12))){
+            mpMainMenuInfo.adminMenu = false;
+            mpMainMenuInfo.inMainMenu = false;
+            mpMainMenuInfo.namesLoaded = false;
+            mpMainMenuInfo.settingsMenu = true;
         }
     }
     else if(mpMainMenuInfo.singlePlayer){
@@ -340,7 +409,7 @@ void ape::VLFTImgui::adminRoomGUI(){
             mpMainMenuInfo.multiPlayer = false;
         }
     }
-    else{
+    else if(mpMainMenuInfo.adminMenu){
         if(!mpMainMenuInfo.namesLoaded){
             curlData();
             mpMainMenuInfo.namesLoaded = true;
@@ -365,6 +434,19 @@ void ape::VLFTImgui::adminRoomGUI(){
             mpMainMenuInfo.adminMenu = false;
         }
     }
+    else if(mpMainMenuInfo.settingsMenu){
+        mpMainMenuInfo.inMainMenu = createSettingsMenu(width, height);
+        
+    }
+    if(mpUpdateInfo->changedKey){
+        const float width = ImGui::GetIO().DisplaySize.x;
+        const float height = ImGui::GetIO().DisplaySize.y;
+        ImGui::SetNextWindowSize(ImVec2(200, 50));
+        ImGui::SetNextWindowPos(ImVec2(width/2-100, height/2-25));
+        ImGui::Begin("Press a key");
+        ImGui::Text("Press a key to set the conrtol");
+        ImGui::End();
+    }
     mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
     ImGui::End();
 }
@@ -384,29 +466,41 @@ void ape::VLFTImgui::leftPanelGUI() {
     ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Once);
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowSize(ImVec2(150, 250), ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(116, 250), ImGuiCond_Once);
     ImGui::Begin("Left panel", nullptr);
-    if(ImGui::Button("Delete",ImVec2(100,30)))
+    if(ImGui::Button("Delete",ImVec2(100,25)) && mpUpdateInfo->pickedItem == "")
     {
         mpUpdateInfo->deleteSelected = true;
     }
-    if(ImGui::Button("Pick up",ImVec2(100,30)))
-    {
-        mpUpdateInfo->pickUp = true;
+    if(mpUpdateInfo->pickedItem == ""){
+        if(ImGui::Button("Pick up",ImVec2(100,25)))
+        {
+            mpUpdateInfo->pickUp = true;
+        }
     }
-    if(ImGui::Button("Browse files",ImVec2(100,30)))
+    else{
+        if(ImGui::Button("Put down",ImVec2(100,25)))
+        {
+            mpUpdateInfo->pickUp = true;
+        }
+    }
+    if(ImGui::Button("Drop", ImVec2(100,30)) && mpUpdateInfo->pickedItem != ""){
+        mpUpdateInfo->drop = true;
+    }
+    if(ImGui::Button("Browse files",ImVec2(100,25)))
     {
         openFileBrowser();
         
     }
-    if(ImGui::Button("Leave room",ImVec2(100,30)))
+    if(ImGui::Button("Leave room",ImVec2(100,25)))
     {
        //TODO delete all object;
         mpMainMenuInfo.inRoomGui = false;
+        mpUpdateInfo->inRoom = false;
         mpMainMenuInfo.adminMenu = true;
         
     }
-    if(ImGui::Button("Play",ImVec2(100,30)))
+    if(ImGui::Button("Play",ImVec2(100,25)))
     {
         if (!mpUpdateInfo->isPlayRunning)
         {
@@ -423,6 +517,26 @@ void ape::VLFTImgui::leftPanelGUI() {
             mpUpdateInfo->isPlayRunning = false;
             
         }
+    }
+    if(ImGui::Button("Setting",ImVec2(100,25))){
+        mpMainMenuInfo.settingsMenu = true;
+    }
+    if(mpMainMenuInfo.settingsMenu){
+        ImGui::SetNextWindowPos(ImVec2(5, 5));
+        ImGui::SetNextWindowSize(ImVec2(width-10, height-10));
+        void  SetNextWindowFocus();
+        ImGui::Begin("SettingsWindow", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+        createSettingsMenu(width, height);
+        ImGui::End();
+    }
+    if(mpUpdateInfo->changedKey){
+        const float width = ImGui::GetIO().DisplaySize.x;
+        const float height = ImGui::GetIO().DisplaySize.y;
+        ImGui::SetNextWindowSize(ImVec2(200, 50));
+        ImGui::SetNextWindowPos(ImVec2(width/2-100, height/2-25));
+        ImGui::Begin("Press a key");
+        ImGui::Text("Press a key to set the conrtol");
+        ImGui::End();
     }
     ImGui::End();
 }
@@ -442,20 +556,31 @@ void ape::VLFTImgui::rightPanelGUI() {
     ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Once);
     ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
     ImGui::Begin("Chat panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
-    
-//    ImGui::TextWrapped(
-//        "This text should automatically wrap on the edge of the window. The current implementation\n"
-//        "for text wrapping follows simple rules suitable for English and possibly other languages.");
-    ImGui::BeginChild("Chat region", ImVec2(ImGui::GetWindowWidth()-10, ImGui::GetWindowHeight()-45),ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::BeginChild("Chat region", ImVec2(ImGui::GetWindowWidth()-18, ImGui::GetWindowHeight()-45),ImGuiWindowFlags_HorizontalScrollbar);
     ImGui::PushTextWrapPos(0.0f);
-    ImGui::TextUnformatted("This text should automatically wrap on the edge of the window. The current/Users/erik/Downloads/glm-0.9.9.8 implementation\n"
-        "for text wrapping follows simple rules suitable for English and possibly other languages.");
+    if(mpUpdateInfo->newChatMessage){
+        ImGui::SetScrollHere(1.0f);
+    }
+    std::string chatText = u8"";
+    for(size_t i = 0; i < chatMessages.size()-1; ++i){
+        chatText += chatMessages[i] + "\n";
+    }
+    chatText += chatMessages[chatMessages.size()-1];
+    ImGui::TextWrapped(chatText.c_str());
+    if(mpUpdateInfo->newChatMessage){
+        ImGui::SetScrollHere(1.0f);
+        mpUpdateInfo->newChatMessage = false;
+    }
     ImGui::PopTextWrapPos();
     ImGui::EndChild();
-    static char str0[128] = "";
-    ImGui::SetCursorPos(ImVec2(0,ImGui::GetWindowHeight()-30));
-    ImGui::PushItemWidth(ImGui::GetWindowWidth()-10);
-    ImGui::InputText("", str0, IM_ARRAYSIZE(str0));
+    static char str0[255] = u8"";
+    ImGui::SetCursorPos(ImVec2(8,ImGui::GetWindowHeight()-30));
+    ImGui::PushItemWidth(ImGui::GetWindowWidth()-18);
+    if(ImGui::InputText(u8"", str0, IM_ARRAYSIZE(str0), ImGuiInputTextFlags_EnterReturnsTrue)){
+        chatMessages.push_back(str0);
+        mpUpdateInfo->newChatMessage = true;
+        str0[0] = 0;
+    }
     ImGui::End();
 
 }
@@ -550,7 +675,7 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
                 break;
         }
     }
-    ImGui::BeginChild("InfoboxSelected", ImVec2(width-25,height/3-10));
+    ImGui::BeginChild("InfoboxSelected", ImVec2(width-25,height/3-30));
     if(mpUpdateInfo->pickedItem != ""){
         ImGui::Text("This item is in your hand");
     }
@@ -564,6 +689,29 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
     ImGui::Text("Group Information");
     ImGui::Text("%s", rootIDText.c_str());
     ImGui::Text("%s", rootPosText.c_str());
+    ImGui::PushItemWidth((width-90)/3);
+    ImGui::InputDouble("x", &posX);
+    ImGui::SameLine();
+    ImGui::InputDouble("y", &posY);
+    ImGui::SameLine();
+    ImGui::InputDouble("z", &posZ);
+    ImGui::PopItemWidth();
+    if(ImGui::Button("Set position") && mpUpdateInfo->selectedItem != ""){
+        mpUpdateInfo->position = Vector3(posX, posY, posZ);
+        mpUpdateInfo->setPosition = true;
+    }
+    ImGui::PushItemWidth((width)/3);
+    ImGui::InputDouble("Radian", &rotAngle);
+    ImGui::InputDouble("upX", &upX);
+    //ImGui::SameLine();
+    ImGui::InputDouble("upY", &upY);
+    // ImGui::SameLine();
+    ImGui::InputDouble("upZ", &upZ);
+    ImGui::PopItemWidth();
+    if(ImGui::Button("Set rotation") && mpUpdateInfo->selectedItem != ""){
+        mpUpdateInfo->orientation = ape::Quaternion(ape::Radian(rotAngle), Vector3(upX, upY, upZ));
+        mpUpdateInfo->setRotation = true;
+    }
     ImGui::TextWrapped("%s", desrcText.c_str());
     ImGui::Text("%s", stateText.c_str());
     ImGui::Text("%s", logText.c_str());

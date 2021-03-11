@@ -301,6 +301,10 @@ namespace ape
         
         App app;
         
+        std::map<std::string, SDL_EventType> mEventMap;
+        
+        std::map<std::string, SDL_Scancode> mKeyMap;
+        
         animationQuicktype::Animations mAnimations;
         
         std::thread mAnimationThread;
@@ -344,6 +348,8 @@ namespace ape
         void parseJson();
         
         void initAnimations();
+        
+        void initKeyMap();
         
         void playAnimations(double now);
         
