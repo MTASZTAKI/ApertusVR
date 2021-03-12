@@ -182,6 +182,7 @@ struct App {
     bool recomputeAabb = false;
 
     bool actualSize = false;
+    bool firstRun = true;
 
     struct ViewOptions {
         float cameraAperture = 16.0f;
@@ -304,6 +305,10 @@ namespace ape
         std::map<std::string, SDL_EventType> mEventMap;
         
         std::map<std::string, SDL_Scancode> mKeyMap;
+        
+        filament::camutils::Bookmark<float> mCameraBookmark;
+        
+        filament::camutils::Manipulator<float>* mCamManipulator;
         
         animationQuicktype::Animations mAnimations;
         

@@ -54,7 +54,7 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mpVlftImgui = new VLFTImgui();
     app.updateinfo.isAdmin = true;
     mpVlftImgui->init(&app.updateinfo);
-    mIsStudent = false;
+    mIsStudent = true;
     parseJson();
     initFilament();
     mParsedAnimations = std::vector<Animation>();
@@ -68,6 +68,10 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mSpaghettiNodeNames = std::vector<std::string>();
     mIsAllSpaghettiVisible = false;
     mKeyMap = std::map<std::string, SDL_Scancode>();
+    mCamManipulator =  filament::camutils::Manipulator<float>::Builder()
+    .flightStartPosition(2.5, 1.5, 1)
+    .build(filament::camutils::Mode::FREE_FLIGHT);
+    mCameraBookmark = mCamManipulator->getCurrentBookmark();
     initKeyMap();
     initAnimations();
 	APE_LOG_FUNC_LEAVE();
@@ -1346,7 +1350,6 @@ void ape::FilamentApplicationPlugin::Step()
             }
             
         }
-        
     };
 
     auto cleanup = [this](Engine* engine, View*, Scene*) {
@@ -1487,6 +1490,18 @@ void ape::FilamentApplicationPlugin::Step()
         auto instance = rcm.getInstance(app.scene.groundPlane);
         rcm.setLayerMask(instance,
                 0xff, app.viewOptions.groundPlaneEnabled ? 0xff : 0x00);
+        filament::Camera& camera = view->getCamera();
+        auto viewMatrix =  camera.getModelMatrix();
+        if(mIsStudent){
+            camera.setModelMatrix(filament::math::mat4f(
+                                viewMatrix[0][0],viewMatrix[0][1],viewMatrix[0][2],viewMatrix[0][3],
+                                viewMatrix[1][0],viewMatrix[1][1],viewMatrix[1][2],viewMatrix[1][3],
+                                viewMatrix[2][0],viewMatrix[2][1],viewMatrix[2][2],viewMatrix[2][3],
+                                viewMatrix[3][0], 1.5, viewMatrix[3][2],viewMatrix[3][3]
+                                             ));
+        }
+        
+        view->setCamera(app.mainCamera);
         if(app.updateinfo.setPosition){
             auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
             auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
@@ -1568,9 +1583,8 @@ void ape::FilamentApplicationPlugin::Step()
                     auto invTrans = orientation*(camWorldMatrix[3].xyz-parentWorldMatrix[3].xyz);
                     auto invertedOri = orientation* camWorldMatrix.toQuaternion();
                     math::mat4f newLocal(invertedOri);
-                    
+                    //auto cam = &view->getCamera();
                     newLocal[3].xyz = invTrans;
-                    
                     app.mpTransformManager->setTransform(tmInstance, newLocal);
                     app.updateinfo.pickedItem = "";
                     app.updateinfo.pickUp = false;
@@ -1578,26 +1592,7 @@ void ape::FilamentApplicationPlugin::Step()
                 }
             }
         }
-        filament::Camera& camera = view->getCamera();
-        auto viewMatrix =  camera.getModelMatrix();
-//        if(mIsStudent){
-//            camera.setModelMatrix(filament::math::mat4f(
-//                                viewMatrix[0][0],viewMatrix[0][1],viewMatrix[0][2],viewMatrix[0][3],
-//                                viewMatrix[1][0],viewMatrix[1][1],viewMatrix[1][2],viewMatrix[1][3],
-//                                viewMatrix[2][0],viewMatrix[2][1],viewMatrix[2][2],viewMatrix[2][3],
-//                                viewMatrix[3][0]+0.2, 1.5,viewMatrix[3][2]+3.0,viewMatrix[3][3]
-//                                             ));
-//        }
-//        else{
-//            camera.setModelMatrix(filament::math::mat4f(
-//                                viewMatrix[0][0],viewMatrix[0][1],viewMatrix[0][2],viewMatrix[0][3],
-//                                viewMatrix[1][0],viewMatrix[1][1],viewMatrix[1][2],viewMatrix[1][3],
-//                                viewMatrix[2][0],viewMatrix[2][1],viewMatrix[2][2],viewMatrix[2][3],
-//                                viewMatrix[3][0]+0.2,  viewMatrix[3][1]+1.5, viewMatrix[3][2]+3.0,viewMatrix[3][3]
-//                                             ));
-//        }
-        
-        //view->setCamera(app.mainCamera);
+       
         
         
         camera.setExposure(
@@ -1617,7 +1612,10 @@ void ape::FilamentApplicationPlugin::Step()
         ;
     };
     auto userInput = [&](Engine* engine, View* view, Scene* scene, filament::camutils::Manipulator<float>* manipulator,int x, int y, SDL_Event event, int width, int height, double now){
-        
+        if(app.firstRun){
+            manipulator->jumpToBookmark(mCameraBookmark);
+            app.firstRun = false;
+        }
         app.updateinfo.now = now;
         filament::math::vec3<float> origin;
         filament::math::vec3<float> dir;
@@ -1632,6 +1630,11 @@ void ape::FilamentApplicationPlugin::Step()
         auto keyCode = event.key.keysym.scancode;
         auto a = event.key.keysym.sym;
         auto keyState = SDL_GetModState();
+        if(mIsStudent){
+            math::vec3<float> eyePos, targetPos, upVec;
+            manipulator->getLookAt(&eyePos, &targetPos, &upVec);
+            
+        }
         if(!app.updateinfo.inSettings || app.updateinfo.changedKey){
             switch(event.type){
                 case SDL_MOUSEBUTTONDOWN:{
@@ -1642,6 +1645,11 @@ void ape::FilamentApplicationPlugin::Step()
                             height = viewport.height;
                             
                             manipulator->getLookAt(&origin, &mtarget, &upward);
+                            if(mIsStudent){
+                                float diff = origin.y - 1.5;
+                                origin = math::vec3<float>(origin.x, 1.5, origin.z);
+                                mtarget = math::vec3<float>(mtarget.x, mtarget.y-diff, mtarget.z);
+                            }
                             math::vec3<float>  gaze = normalize(mtarget - origin);
                             math::vec3<float> right = normalize(cross(gaze, math::vec3<float>(0,1,0)));
                             upward = cross(right, gaze);
