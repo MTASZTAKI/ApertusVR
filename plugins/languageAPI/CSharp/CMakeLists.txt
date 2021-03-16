@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,27 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-if(NOT ANDROID)
-    add_subdirectory (jsAPI)
-    add_subdirectory (webSocketServer)
-	add_subdirectory (CSharp)
-else()
-    add_subdirectory (jni)
-endif()
+add_subdirectory(starter)
+
+set (SOURCES
+        apeCSharpPlugin.cpp
+		wrappers/apeCSharpNode.cpp
+        )
+
+set (HEADERS
+        apeCSharpPlugin.h)
+
+add_library(apeCSharpPlugin SHARED ${SOURCES} ${HEADERS})
+
+target_link_libraries(apeCSharpPlugin
+        apeCoreConfig
+        apePluginManager
+        apeSceneManager
+        apeEventManager
+        apeLogManager
+        )
+
+set_property (TARGET apeCSharpPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
+set_property (TARGET apeCSharpPlugin PROPERTY FOLDER "Plugins/LanguageAPI/CSharp")
+
+include_directories (${CMAKE_CURRENT_SOURCE_DIR})

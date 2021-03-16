@@ -1,6 +1,6 @@
 #MIT License
 #
-#Copyright (c) 2016 MTA SZTAKI
+#Copyright (c) 2018 MTA SZTAKI
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,17 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-if(NOT ANDROID)
-    add_subdirectory (jsAPI)
-    add_subdirectory (webSocketServer)
-	add_subdirectory (CSharp)
-else()
-    add_subdirectory (jni)
-endif()
+add_library(apeCSharpStarter SHARED apeCSharpStarter.cpp)
+
+set (APERTUSCORE_LIBS
+    apeEventManager
+    apeLogManager
+    apePluginManager
+    apeSceneManager
+    apeSystem
+    apeCoreConfig
+)
+
+target_link_libraries(apeCSharpStarter
+                        ${APERTUSCORE_LIBS}
+                        )
