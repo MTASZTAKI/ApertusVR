@@ -551,14 +551,18 @@ void ape::VLFTImgui::rightPanelGUI() {
     getInfoAboutObject(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
     ImGui::End();
     
-    
+    if(mpUpdateInfo->newChatMessage){
+        chatMessages.insert(chatMessages.end(), mpUpdateInfo->newMessage.begin(), mpUpdateInfo->newMessage.end());
+        mpUpdateInfo->newMessage.clear();
+        mpUpdateInfo->newChatMessage = false;
+    }
     ImGui::SetNextWindowPos(ImVec2(0, 320),ImGuiCond_Once);
     ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Once);
     ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
     ImGui::Begin("Chat panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
     ImGui::BeginChild("Chat region", ImVec2(ImGui::GetWindowWidth()-18, ImGui::GetWindowHeight()-45),ImGuiWindowFlags_HorizontalScrollbar);
     ImGui::PushTextWrapPos(0.0f);
-    if(mpUpdateInfo->newChatMessage){
+    if(mpUpdateInfo->sendMessage){
         ImGui::SetScrollHere(1.0f);
     }
     std::string chatText = u8"";
@@ -567,9 +571,9 @@ void ape::VLFTImgui::rightPanelGUI() {
     }
     chatText += chatMessages[chatMessages.size()-1];
     ImGui::TextWrapped(chatText.c_str());
-    if(mpUpdateInfo->newChatMessage){
+    if(messageInBuffer){
         ImGui::SetScrollHere(1.0f);
-        mpUpdateInfo->newChatMessage = false;
+        messageInBuffer= false;
     }
     ImGui::PopTextWrapPos();
     ImGui::EndChild();
@@ -577,8 +581,13 @@ void ape::VLFTImgui::rightPanelGUI() {
     ImGui::SetCursorPos(ImVec2(8,ImGui::GetWindowHeight()-30));
     ImGui::PushItemWidth(ImGui::GetWindowWidth()-18);
     if(ImGui::InputText(u8"", str0, IM_ARRAYSIZE(str0), ImGuiInputTextFlags_EnterReturnsTrue)){
-        chatMessages.push_back(str0);
-        mpUpdateInfo->newChatMessage = true;
+        
+        if(strlen(str0)!=0){
+            chatMessages.push_back(str0);
+            mpUpdateInfo->messageToSend = str0;
+            mpUpdateInfo->sendMessage = true;
+            messageInBuffer = true;
+        }
         str0[0] = 0;
     }
     ImGui::End();

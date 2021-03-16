@@ -328,6 +328,8 @@ namespace ape
         
         int mBookmarkID;
         
+        std::string mUserName;
+        
         std::vector<unsigned long long> mParsedBookmarkTimes;
         
         unsigned long long mClickedBookmarkTime;

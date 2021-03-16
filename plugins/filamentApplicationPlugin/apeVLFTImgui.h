@@ -117,7 +117,10 @@ struct updateInfo{
     bool setRotation = false;
     bool inRoom = false;
     bool inSettings = false;
+    bool sendMessage = false;
     bool newChatMessage = false;
+    std::vector<std::string> newMessage;
+    std::string messageToSend ="";
     std::string changeKeyCode = "";
     bool changedKey = 0;
     std::map<std::string, std::string> keyLabel;
@@ -162,6 +165,8 @@ namespace ape
         double posX=0, posY=0, posZ = 0, rotAngle = 0, upX = 0, upY = 0, upZ = 0;
         
         std::vector<std::string> chatMessages;
+        
+        bool messageInBuffer = false;
         
         static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
         
