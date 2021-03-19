@@ -35,9 +35,9 @@ namespace ape
 		virtual ~IFileMaterial() {};
 
 	public:
-		virtual void setFileName (std::string fileName) = 0;
+		virtual void setFileName(std::string fileName) = 0;
 
-		virtual std::string getfFileName () = 0;
+		virtual std::string getfFileName() = 0;
 
 		virtual void setAsSkyBox() = 0;
 

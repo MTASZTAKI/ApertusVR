@@ -26,7 +26,7 @@ SOFTWARE.*/
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_org_apertusvr_ApertusJNI_setFileMaterialFileName (JNIEnv *env, jclass clazz, jstring native_file_material, jstring file_name)
+Java_org_apertusvr_ApertusJNI_setFileMaterialFileName(JNIEnv *env, jclass clazz, jstring native_file_material, jstring file_name)
 {
     ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
     const char* name = env->GetStringUTFChars(native_file_material, NULL);
@@ -41,7 +41,7 @@ Java_org_apertusvr_ApertusJNI_setFileMaterialFileName (JNIEnv *env, jclass clazz
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_org_apertusvr_ApertusJNI_getFileMaterialfFileName (JNIEnv *env, jclass clazz, jstring native_file_material)
+Java_org_apertusvr_ApertusJNI_getFileMaterialfFileName(JNIEnv *env, jclass clazz, jstring native_file_material)
 {
     ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
     const char* name = env->GetStringUTFChars(native_file_material, NULL);

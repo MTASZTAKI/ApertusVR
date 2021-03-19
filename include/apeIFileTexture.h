@@ -47,13 +47,13 @@ namespace ape
 		virtual ~IFileTexture() {};
 
 	public:
-		virtual void setFileName (std::string fileName) = 0;
+		virtual void setFileName(std::string fileName) = 0;
 
-		virtual std::string getFileName () = 0;
+		virtual std::string getFileName() = 0;
 		
-		virtual void setMapType (MapType mapType) = 0;
+		virtual void setMapType(MapType mapType) = 0;
 
-		virtual MapType getMapType () = 0;
+		virtual MapType getMapType() = 0;
 
 		virtual void setOwner(std::string ownerID) = 0;
 
