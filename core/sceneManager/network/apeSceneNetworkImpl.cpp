@@ -378,28 +378,28 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 		switch (packet->data[0])
 		{
 			case ID_NEW_INCOMING_CONNECTION:
-			{
-				if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 				{
-					APE_LOG_DEBUG("ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString());
-				}
-				else if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN)
-				{
-					if (mParticipantType == ape::SceneNetwork::HOST)
+					if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::INTERNET)
 					{
-						RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
-						if (mpReplicaManager3->PushConnection(connection))
+						APE_LOG_DEBUG("ID_NEW_INCOMING_CONNECTION from " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString());
+					}
+					else if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN)
+					{
+						if (mParticipantType == ape::SceneNetwork::HOST)
 						{
-							APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
-						}
-						else
-						{
-							mpReplicaManager3->DeallocConnection(connection);
-							APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+							RakNet::Connection_RM3 *connection = mpReplicaManager3->AllocConnection(packet->systemAddress, packet->guid);
+							if (mpReplicaManager3->PushConnection(connection))
+							{
+								APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was successful");
+							}
+							else
+							{
+								mpReplicaManager3->DeallocConnection(connection);
+								APE_LOG_DEBUG("Alloc connection to: " << packet->systemAddress.ToString() << " guid: " << packet->guid.ToString() << " was not successful thus this was deallocated");
+							}
 						}
 					}
 				}
-			}
 				break;
 			case ID_DISCONNECTION_NOTIFICATION:
 				APE_LOG_DEBUG("ID_DISCONNECTION_NOTIFICATION");
@@ -552,9 +552,9 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 					break;
 				}
 			default:
-			{
-				//APE_LOG_DEBUG("Unknown message type" << packet->data[0]);
-			}
+				{
+					//APE_LOG_DEBUG("Unknown message type" << packet->data[0]);
+				}
 		}
 	}
 }
