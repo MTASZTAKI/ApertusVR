@@ -24,11 +24,13 @@ SOFTWARE.*/
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "apeSystem.h"
 #include <thread>
+#include "apeSystem.h"
+
+bool blockingMode = true;
 
 void my_handler(int s) {
-	printf("Caught signal %d\n", s);
+	std::cout << "Caught signal " << s << ", quitting..." << std::endl;
 	ape::System::Stop();
 	exit(1);
 }
@@ -38,27 +40,16 @@ int main(int argc, char** argv)
 	if (argc > 1)
 	{
 		signal(SIGINT, my_handler);
-		ape::System::Start(argv[1], true);
-        /*while (true)
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));*/
+		ape::System::Start(argv[1], blockingMode);
+		if (!blockingMode)
+		{
+			while (true)
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		}
 	}
-    else{
-    std::string inPath ="/Users/erik/Documents/ApertusVR/ApertusVR/samples/photorealisticRender";
-//    std::cout << "path: ";
-//    std::cin >> inPath;
-    if(inPath.length()>0)
-    {
-       
-        signal(SIGINT, my_handler);
-        ape::System::Start(inPath.c_str(), false);
-//        while(true)
-//            std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    }
-    else
-    {
-        std::cout << "Usage example: apeSampleLauncher.exe c:/ApertusVR/samples/helloWorld" << std::endl;
-    }
-    }
-		
+	else
+	{
+		std::cout << "Usage example: apeSampleLauncher configFilePath" << std::endl;
+	}
 	return 0;
 }
