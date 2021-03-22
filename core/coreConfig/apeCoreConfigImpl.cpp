@@ -122,7 +122,6 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						else if (lobbyMemberIterator->name == "room")
 							mNetworkConfig.lobbyConfig.roomName = lobbyMemberIterator->value.GetString();
 					}
-
 				}
 				else if (networkMemberIterator->name == "resourceZipUrl")
 				{
@@ -199,7 +198,6 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						else if (lanMemberIterator->name == "hostStreamPort")
 							mNetworkConfig.lanConfig.hostStreamPort = lanMemberIterator->value.GetString();
 					}
-
 				}
 				else if (networkMemberIterator->name == "selected")
 				{
@@ -267,9 +265,3 @@ std::string ape::CoreConfigImpl::getConfigFolderPath()
 {
 	return mConfigFolderPath;
 }
-
-
-
-
-
-
