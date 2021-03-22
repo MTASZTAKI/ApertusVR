@@ -40,9 +40,24 @@ namespace ape
 	namespace System
 	{
 		APE_SYSTEM_DLL_EXPORT void Start(const char* configFolderPath, bool isBlocking, std::function<void()> userThreadFunction = std::function<void()>(), int step_interval = 20);
+
 		APE_SYSTEM_DLL_EXPORT void Stop();
 	}
 }
+
+extern "C" APE_SYSTEM_DLL_EXPORT void ApeSystemStart();
+
+extern "C" APE_SYSTEM_DLL_EXPORT void ApeSystemStop();
+
+extern "C" APE_SYSTEM_DLL_EXPORT int ApeSceneManager_GetIndexedFaceSet_GetSize(char name[]);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char name[], float vertices[]);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetIndices(char name[], int indices[]);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetColor(char name[], float color[]);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetOrientation(char name[], float orientation[]);
 
 #endif
 
