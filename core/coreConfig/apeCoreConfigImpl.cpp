@@ -221,6 +221,10 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 				mPluginNames.push_back(plugin.GetString());
 			}
 		}
+		else
+		{
+			std::cout << "Error: syntax error in json document " << fileFullPath.str() << std::endl;
+		}
 		fclose(apeCoreConfigFile);
 	}
 }
