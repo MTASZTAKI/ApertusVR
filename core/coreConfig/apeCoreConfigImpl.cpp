@@ -61,7 +61,7 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 	std::stringstream fileFullPath; 
 	fileFullPath << mConfigFolderPath << "/apeCore.json";
 
-#ifndef __ANDROID__
+#ifndef ANDROID
 	FILE* apeCoreConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 #else
 	FILE* apeCoreConfigFile = ape::AndroidAssetOpen::open(fileFullPath.str().c_str(), "r");
