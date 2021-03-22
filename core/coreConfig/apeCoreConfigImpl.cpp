@@ -185,8 +185,7 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 				else if (networkMemberIterator->name == "lan")
 				{
 					rapidjson::Value& lan = jsonDocument["network"]["lan"];
-					for (rapidjson::Value::MemberIterator lanMemberIterator =
-						lan.MemberBegin();
+					for (rapidjson::Value::MemberIterator lanMemberIterator = lan.MemberBegin();
 						lanMemberIterator != lan.MemberEnd(); ++lanMemberIterator)
 					{
 						if (lanMemberIterator->name == "hostReplicaIP")
