@@ -90,6 +90,7 @@ struct VLFTMainMenuInfo{
     bool namesLoaded = false;
     bool inRoomGui = false;
     float cameraSpeed = 1.0f;
+    bool showStates = false;
 };
 struct updateInfo{
     std::string selectedItem = "";
@@ -124,6 +125,9 @@ struct updateInfo{
     std::string changeKeyCode = "";
     bool changedKey = 0;
     std::map<std::string, std::string> keyLabel;
+    std::vector<std::string> stateOfObjects;
+    std::vector<std::string> nameOfState;
+    std::vector<float> timeOfState;
 };
 
 namespace ape
@@ -181,6 +185,8 @@ namespace ape
         void leftPanelGUI();
         
         void rightPanelGUI();
+        
+        void statePanelGUI();
         
         void singlePlayerRoomGUI();
         

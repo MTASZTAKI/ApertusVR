@@ -1,32 +1,31 @@
 {
   "plugins": [
-      "apeVLFTSceneLoaderPlugin"
+     "apeFilamentApplicationPlugin"
   ],
   "network": {
-    "user": "vlft_server",
-    "participant": "host",
+    "user": "",
+    "participant": "",
     "internet": {
-      "natPunchThrough": {
-        "ip": "195.111.2.95",
-        "port": "61666"
-      },
-      "lobby": {
-        "ip": "195.111.2.95",
-        "port": "8888",
-        "room": "31"
-      }
-    },
-    "lan": {
-      "ip": "",
-      "port": ""
-    },
-    "selected": "internet",
-    "resourceZipUrl": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/virtualLearningFactory.zip",
-    "resourceMd5Url": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/virtualLearningFactory.md5",
-    "resourceDownloadLocation": "../../samples/virtualLearningFactory",
+          "natPunchThrough": {
+            "ip": "195.111.2.95",
+            "port": "61666"
+          },
+          "lobby": {
+            "ip": "195.111.2.95",
+            "port": "8888",
+            "room": ""
+          }
+        },
+        "lan": {
+          "ip": "",
+          "port": ""
+        },
+        "selected": "internet",
+        "resourceZipUrl": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/virtualLearningFactory.zip",
+        "resourceMd5Url": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/virtualLearningFactory.md5",
+        "resourceDownloadLocation": "../../samples/virtualLearningFactory",
     "resourceLocations": [
+      "/plugins/scene/photorealisticScene/resources"
     ]
   }
 }
-
-

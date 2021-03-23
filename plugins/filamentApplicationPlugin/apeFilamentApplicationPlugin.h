@@ -120,7 +120,7 @@ struct InstanceData{
     std::string assetName;
     FilamentInstance* mpInstance;
     InstanceData(){
-        index = 0;
+        index = -1;
         assetName = "";
         mpInstance = nullptr;
     }
@@ -146,9 +146,9 @@ struct App {
     NameComponentManager* names;
     std::map<std::string,std::vector<FilamentInstance*>> instances;
     std::map<std::string, int> instanceCount;
+    std::map<std::string, std::vector<std::string>> geometryNameMap;
     
     std::map<std::string, InstanceData> mpInstancesMap;
-    std::vector<std::string> instanceOrder;
     
     LightManager* lightManager;
     Entity sunLight;
@@ -359,6 +359,8 @@ namespace ape
         void initKeyMap();
         
         void playAnimations(double now);
+        
+        void showSpaghetti(std::string name, bool show);
         
         bool attach2NewAnimationNode(const std::string& parentNodeName, const ape::NodeSharedPtr& node);
         

@@ -4,8 +4,86 @@
     },
     "nodes": [
         {
-            "name": "Pallet.3",
-            "id": "Pallet.3",
+            "name": "WS02",
+            "id": "WS02",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "4300"
+                    },
+                    "event": {
+                        "type": "state",
+                        "descr": "working"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "12300"
+                    },
+                    "event": {
+                        "type": "state",
+                        "descr": "working"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS03",
+            "id": "WS03",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "7000"
+                    },
+                    "event": {
+                        "type": "state",
+                        "descr": "working"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "15000"
+                    },
+                    "event": {
+                        "type": "state",
+                        "descr": "working"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS01",
+            "id": "WS01",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "700"
+                    },
+                    "event": {
+                        "type": "state",
+                        "descr": "working"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "8700"
+                    },
+                    "event": {
+                        "type": "state",
+                        "descr": "working"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Pallet.2",
+            "id": "Pallet.2",
             "actions": [
                 {
                     "trigger": {
@@ -15,26 +93,95 @@
                     "event": {
                         "type": "show",
                         "position": [
-                            -0.40,
+                            -0.2,
                             0.0,
-                            2.00
+                            2.0
+                        ],
+                        "rotation": [
+                            0.7071067690849304,
+                            0.0,
+                            0.7071067690849302,
+                            0.0
                         ]
                     }
                 },
                 {
                     "trigger": {
                         "type": "timestamp",
-                        "data": "4300"
+                        "data": "8700"
                     },
                     "event": {
                         "type": "show",
+                        "placementRelTo": "WS01.PalletPosition_CB"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "9000"
+                    },
+                    "event": {
+                        "type": "state",
+                        "data": "models/GLTF/Guide_Main.glb",
+                        "descr": "replace"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "9200"
+                    },
+                    "event": {
+                        "type": "animationAdditive",
+                        "data": "animations/TestCase36/[Pallet.2][Pallet.2][rotate]_animAdd_predef.txt"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "9200"
+                    },
+                    "event": {
+                        "type": "state",
+                        "descr": "rotate"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "11500"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/tr[0][0][1000]-[0][0][-0]rot[0][1.5708][0]-[0][-0][-0]t(2)_rel3.txt",
+                        "placementRelTo": "WS02.PalletPosition_CB"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "13500"
+                    },
+                    "event": {
+                        "type": "state",
+                        "data": "models/GLTF/Pallet.glb"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "14000"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/tr[0][0][1000]-[0][0][-0]rot[0][-0][-0]-[0][-0][-0]t(2)_rel3.txt",
                         "placementRelTo": "WS03.PalletPosition_CB"
                     }
                 },
                 {
                     "trigger": {
                         "type": "timestamp",
-                        "data": "8000"
+                        "data": "17000"
                     },
                     "event": {
                         "type": "hide"
@@ -56,7 +203,7 @@
                         "position": [
                             0.0,
                             0.0,
-                            2.00
+                            2.0
                         ],
                         "rotation": [
                             0.9238795042037964,
@@ -69,17 +216,73 @@
                 {
                     "trigger": {
                         "type": "timestamp",
-                        "data": "2100"
+                        "data": "500"
+                    },
+                    "event": {
+                        "type": "link",
+                        "URL": "logs/PP1_log.txt",
+                        "data": ""
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "700"
                     },
                     "event": {
                         "type": "show",
-                        "placementRelTo": "WS01.PalletPosition_CB",
-                        "rotation": [
-                            0.9238795042037964,
-                            0.0,
-                            -0.382683413561515,
-                            0.0
-                        ]
+                        "placementRelTo": "WS01.PalletPosition_CB"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "1000"
+                    },
+                    "event": {
+                        "type": "trail",
+                        "value": true
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "1200"
+                    },
+                    "event": {
+                        "type": "animationAdditive",
+                        "data": "animations/TestCase36/[Pallet.1][Pallet.1][rotate]_animAdd_predef.txt"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "1200"
+                    },
+                    "event": {
+                        "type": "state",
+                        "descr": "rotate"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "3500"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/tr[0][0][1000]-[0][0][-0]rot[0][1.5708][0]-[0][-0][-0]t(2)_rel3.txt",
+                        "placementRelTo": "WS02.PalletPosition_CB"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "5500"
+                    },
+                    "event": {
+                        "type": "trail",
+                        "value": false
                     }
                 },
                 {
@@ -88,57 +291,374 @@
                         "data": "6000"
                     },
                     "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/tr[0][0][1000]-[0][0][-0]rot[0][-0][-0]-[0][-0][-0]t(2)_rel3.txt",
+                        "placementRelTo": "WS03.PalletPosition_CB"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "9000"
+                    },
+                    "event": {
                         "type": "hide"
                     }
                 }
             ]
         },
         {
-            "name": "Pallet.2",
-            "id": "Pallet.2",
+            "name": "Pallet.3",
+            "id": "Pallet.3",
             "actions": [
                 {
                     "trigger": {
                         "type": "timestamp",
-                        "data": "100"
+                        "data": "400"
                     },
                     "event": {
                         "type": "show",
                         "position": [
-                            -0.20,
+                            -0.4,
                             0.0,
-                            2.00
-                        ],
-                        "rotation": [
-                            0.7071067690849304,
-                            0.0,
-                            0.7071067690849302,
-                            0.0
+                            2.0
                         ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS01.Robotic_Arm_Floating_Y",
+            "id": "WS01.Robotic_Arm_Floating_Y",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "700"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS01][WS01.Robotic_Arm_Floating_Y][working]_anim_predef.txt",
+                        "placementRelTo": "WS01.Robotic_Arm_Static"
                     }
                 },
                 {
                     "trigger": {
                         "type": "timestamp",
-                        "data": "3200"
+                        "data": "8700"
                     },
                     "event": {
-                        "type": "show",
-                        "placementRelTo": "WS02.PalletPosition_CB",
-                        "position": [
-                            0.40,
-                            0.0,
-                            0.0
-                        ]
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS01][WS01.Robotic_Arm_Floating_Y][working]_anim_predef.txt",
+                        "placementRelTo": "WS01.Robotic_Arm_Static"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS01.Robotic_Arm_Floating_X",
+            "id": "WS01.Robotic_Arm_Floating_X",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "700"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS01][WS01.Robotic_Arm_Floating_X][working]_anim_predef.txt",
+                        "placementRelTo": "WS01.Robotic_Arm_Floating_Y"
                     }
                 },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "8700"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS01][WS01.Robotic_Arm_Floating_X][working]_anim_predef.txt",
+                        "placementRelTo": "WS01.Robotic_Arm_Floating_Y"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS01.RA_Gripper_2",
+            "id": "WS01.RA_Gripper_2",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "700"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS01][WS01.RA_Gripper_2][working]_anim_predef.txt",
+                        "placementRelTo": "WS01.Robotic_Arm_Floating_X"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "8700"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS01][WS01.RA_Gripper_2][working]_anim_predef.txt",
+                        "placementRelTo": "WS01.Robotic_Arm_Floating_X"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS01.RA_Gripper_1",
+            "id": "WS01.RA_Gripper_1",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "700"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS01][WS01.RA_Gripper_1][working]_anim_predef.txt",
+                        "placementRelTo": "WS01.Robotic_Arm_Floating_X"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "8700"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS01][WS01.RA_Gripper_1][working]_anim_predef.txt",
+                        "placementRelTo": "WS01.Robotic_Arm_Floating_X"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS02.Robotic_Arm_Floating_X",
+            "id": "WS02.Robotic_Arm_Floating_X",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "4300"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS02][WS02.Robotic_Arm_Floating_X][working]_anim_predef.txt",
+                        "placementRelTo": "WS02.Robotic_Arm_Floating_Y"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "12300"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS02][WS02.Robotic_Arm_Floating_X][working]_anim_predef.txt",
+                        "placementRelTo": "WS02.Robotic_Arm_Floating_Y"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS02.RA_Gripper_1",
+            "id": "WS02.RA_Gripper_1",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "4300"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS02][WS02.RA_Gripper_1][working]_anim_predef.txt",
+                        "placementRelTo": "WS02.Robotic_Arm_Floating_X"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "12300"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS02][WS02.RA_Gripper_1][working]_anim_predef.txt",
+                        "placementRelTo": "WS02.Robotic_Arm_Floating_X"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS02.RA_Gripper_2",
+            "id": "WS02.RA_Gripper_2",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "4300"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS02][WS02.RA_Gripper_2][working]_anim_predef.txt",
+                        "placementRelTo": "WS02.Robotic_Arm_Floating_X"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "12300"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS02][WS02.RA_Gripper_2][working]_anim_predef.txt",
+                        "placementRelTo": "WS02.Robotic_Arm_Floating_X"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS02.Robotic_Arm_Floating_Y",
+            "id": "WS02.Robotic_Arm_Floating_Y",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "4300"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS02][WS02.Robotic_Arm_Floating_Y][working]_anim_predef.txt",
+                        "placementRelTo": "WS02.Robotic_Arm_Static"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "12300"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS02][WS02.Robotic_Arm_Floating_Y][working]_anim_predef.txt",
+                        "placementRelTo": "WS02.Robotic_Arm_Static"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS03.Robotic_Arm_Floating_Y",
+            "id": "WS03.Robotic_Arm_Floating_Y",
+            "actions": [
                 {
                     "trigger": {
                         "type": "timestamp",
                         "data": "7000"
                     },
                     "event": {
-                        "type": "hide"
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS03][WS03.Robotic_Arm_Floating_Y][working]_anim_predef.txt",
+                        "placementRelTo": "WS03.Robotic_Arm_Static"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "15000"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS03][WS03.Robotic_Arm_Floating_Y][working]_anim_predef.txt",
+                        "placementRelTo": "WS03.Robotic_Arm_Static"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS03.RA_Gripper_1",
+            "id": "WS03.RA_Gripper_1",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "7000"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS03][WS03.RA_Gripper_1][working]_anim_predef.txt",
+                        "placementRelTo": "WS03.Robotic_Arm_Floating_X"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "15000"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS03][WS03.RA_Gripper_1][working]_anim_predef.txt",
+                        "placementRelTo": "WS03.Robotic_Arm_Floating_X"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS03.Robotic_Arm_Floating_X",
+            "id": "WS03.Robotic_Arm_Floating_X",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "7000"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS03][WS03.Robotic_Arm_Floating_X][working]_anim_predef.txt",
+                        "placementRelTo": "WS03.Robotic_Arm_Floating_Y"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "15000"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS03][WS03.Robotic_Arm_Floating_X][working]_anim_predef.txt",
+                        "placementRelTo": "WS03.Robotic_Arm_Floating_Y"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "WS03.RA_Gripper_2",
+            "id": "WS03.RA_Gripper_2",
+            "actions": [
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "7000"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS03][WS03.RA_Gripper_2][working]_anim_predef.txt",
+                        "placementRelTo": "WS03.Robotic_Arm_Floating_X"
+                    }
+                },
+                {
+                    "trigger": {
+                        "type": "timestamp",
+                        "data": "15000"
+                    },
+                    "event": {
+                        "type": "animation",
+                        "data": "animations/TestCase36/[WS03][WS03.RA_Gripper_2][working]_anim_predef.txt",
+                        "placementRelTo": "WS03.Robotic_Arm_Floating_X"
                     }
                 }
             ]

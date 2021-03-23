@@ -459,9 +459,41 @@ void ape::VLFTImgui::update(){
         studentRoomGUI();
     else if(mpMainMenuInfo.inRoomGui){
         leftPanelGUI();
+        if(mpMainMenuInfo.showStates){
+            statePanelGUI();
+        }
         rightPanelGUI();
     }
 }
+
+void ape::VLFTImgui::statePanelGUI(){
+    ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Once);
+    const float width = ImGui::GetIO().DisplaySize.x;
+    const float height = ImGui::GetIO().DisplaySize.y;
+    ImGui::SetNextWindowSize(ImVec2(270, 100), ImGuiCond_Once);
+    ImGui::Begin("State panel", nullptr);
+    float timeWidth = ImGui::CalcTextSize("10.0").x+20;
+    float nameWidth = ImGui::CalcTextSize("This is that max length").x+10;
+    
+    ImGui::Text("time");
+    ImGui::SameLine(timeWidth);
+    ImGui::Text("Asset");
+    ImGui::SameLine(140);
+    ImGui::Text("State");
+    
+    for(size_t i = 0; i < mpUpdateInfo->nameOfState.size(); i++){
+        std::stringstream posStream;
+        posStream << std::fixed << std::setprecision(1) <<mpUpdateInfo->timeOfState[i];
+        ImGui::Text("%s",posStream.str().c_str());
+        ImGui::SameLine(timeWidth);
+        ImGui::Text("%s", mpUpdateInfo->nameOfState[i].c_str());
+        ImGui::SameLine(140);
+        ImGui::Text("%s", mpUpdateInfo->stateOfObjects[i].c_str());
+        }
+    ImGui::SetScrollHere(1.0f);
+    ImGui::End();
+}
+
 void ape::VLFTImgui::leftPanelGUI() {
     ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Once);
     const float width = ImGui::GetIO().DisplaySize.x;
@@ -521,6 +553,7 @@ void ape::VLFTImgui::leftPanelGUI() {
     if(ImGui::Button("Setting",ImVec2(100,25))){
         mpMainMenuInfo.settingsMenu = true;
     }
+    ImGui::Checkbox("show_headers", &mpMainMenuInfo.showStates);
     if(mpMainMenuInfo.settingsMenu){
         ImGui::SetNextWindowPos(ImVec2(5, 5));
         ImGui::SetNextWindowSize(ImVec2(width-10, height-10));
@@ -570,7 +603,7 @@ void ape::VLFTImgui::rightPanelGUI() {
         chatText += chatMessages[i] + "\n";
     }
     chatText += chatMessages[chatMessages.size()-1];
-    ImGui::TextWrapped(chatText.c_str());
+    ImGui::TextWrapped("%s", chatText.c_str());
     if(messageInBuffer){
         ImGui::SetScrollHere(1.0f);
         messageInBuffer= false;

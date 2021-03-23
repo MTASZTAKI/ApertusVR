@@ -1,1 +1,465 @@
-{"context":{"UnitOfMeasureScale":1.0,"Zup":false,"RepoPath":"/samples/"},"scene":["Pallet.2","Pallet.1","WS01","WS02","WS03","WS01.PalletPosition_CB","WS02.PalletPosition_CB","WS03.PalletPosition_CB","WS02.Conveyor_Main","WS01.Conveyor_Main","WS03.Conveyor_Main","http://www.ontoeng.com/VLFT_lib30#default_building","WS03.RA_Gripper_1","WS03.Robotic_Arm_Floating_Y","WS03.RA_Gripper_2","WS02.Robotic_Arm_Floating_Y","WS03.CBS_root","WS02.CBS_root","WS03.Robotic_Arm_Static","WS01.Robotic_Arm_Floating_Y","WS01.RA_Gripper_1","WS01.CBS_root","WS01.Robotic_Arm_Floating_X","WS01.RA_Gripper_2","WS02.RA_Gripper_2","WS02.Robotic_Arm_Floating_X","WS03.Robotic_Arm_Floating_X","WS02.Robotic_Arm_Static","WS01.Robotic_Arm_Static","WS02.RA_Gripper_1","Pallet.3","WS03.Box","WS02.Box","WS01.Box"],"assets":[{"id":"Pallet.2","type":"http://www.ontoeng.com/factory#Pallet","model":"http://www.ontoeng.com/VLFT_lib30#PalletA","position":[0.4,0.0,2.0]},{"id":"Pallet.1","type":"http://www.ontoeng.com/factory#Pallet","model":"http://www.ontoeng.com/VLFT_lib30#PalletA","position":[0.2,0.0,2.0]},{"id":"WS01","type":"http://www.ontoeng.com/factory#MachineTool","descr":"Workstation 01","model":"http://www.ontoeng.com/VLFT_lib30#CollectionBox_Station","position":[0.0,0.0,1.5],"placementRelTo":"http://www.ontoeng.com/VLFT_lib30#default_building","connectedTo":["WS02"]},{"id":"WS02","type":"http://www.ontoeng.com/factory#MachineTool","descr":"Workstation 02","model":"http://www.ontoeng.com/VLFT_lib30#CollectionBox_Station","position":[0.0,0.0,0.5],"placementRelTo":"http://www.ontoeng.com/VLFT_lib30#default_building","connectedTo":["WS03"]},{"id":"WS03","type":"http://www.ontoeng.com/factory#MachineTool","descr":"Workstation 03","model":"http://www.ontoeng.com/VLFT_lib30#CollectionBox_Station","position":[0.0,0.0,-0.5],"placementRelTo":"http://www.ontoeng.com/VLFT_lib30#default_building"},{"id":"WS01.PalletPosition_CB","type":"http://www.ontoeng.com/factory#BufferWorkingPosition","position":[-0.06,0.23,-0.0],"placementRelTo":"WS01.Conveyor_Main","parentObject":"WS01.Conveyor_Main"},{"id":"WS02.PalletPosition_CB","type":"http://www.ontoeng.com/factory#BufferWorkingPosition","position":[-0.06,0.23,-0.0],"placementRelTo":"WS02.Conveyor_Main","parentObject":"WS02.Conveyor_Main"},{"id":"WS03.PalletPosition_CB","type":"http://www.ontoeng.com/factory#BufferWorkingPosition","position":[-0.06,0.23,-0.0],"placementRelTo":"WS03.Conveyor_Main","parentObject":"WS03.Conveyor_Main"},{"id":"WS02.Conveyor_Main","type":"http://www.ontoeng.com/factory#Conveyor","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Conveyor_Main","unit":1.0}],"placementRelTo":"WS02.CBS_root","parentObject":"WS02.CBS_root"},{"id":"WS01.Conveyor_Main","type":"http://www.ontoeng.com/factory#Conveyor","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Conveyor_Main","unit":1.0}],"placementRelTo":"WS01.CBS_root","parentObject":"WS01.CBS_root"},{"id":"WS03.Conveyor_Main","type":"http://www.ontoeng.com/factory#Conveyor","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Conveyor_Main","unit":1.0}],"placementRelTo":"WS03.CBS_root","parentObject":"WS03.CBS_root"},{"id":"http://www.ontoeng.com/VLFT_lib30#default_building","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcBuilding","descr":"Plant building. This is the building hosting a factory and the related facilities."},{"id":"http://www.ontoeng.com/VLFT_lib30#PalletA","type":"http://www.ontoeng.com/factory#PalletType","descr":"Pallet for the main hinge assembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Pallet.glb","unit":1.0}]},{"id":"WS03.RA_Gripper_1","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_1","unit":1.0}],"placementRelTo":"WS03.Robotic_Arm_Floating_X","parentObject":"WS03.Robotic_Arm_Floating_X"},{"id":"WS03.Robotic_Arm_Floating_Y","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_Y","unit":1.0}],"placementRelTo":"WS03.Robotic_Arm_Static","parentObject":"WS03.Robotic_Arm_Static"},{"id":"WS03.RA_Gripper_2","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_2","unit":1.0}],"placementRelTo":"WS03.Robotic_Arm_Floating_X","parentObject":"WS03.Robotic_Arm_Floating_X"},{"id":"WS02.Robotic_Arm_Floating_Y","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_Y","unit":1.0}],"placementRelTo":"WS02.Robotic_Arm_Static","parentObject":"WS02.Robotic_Arm_Static"},{"id":"WS03.CBS_root","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#node0","unit":1.0}],"placementRelTo":"WS03","parentObject":"WS03"},{"id":"WS02.CBS_root","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#node0","unit":1.0}],"placementRelTo":"WS02","parentObject":"WS02"},{"id":"WS03.Robotic_Arm_Static","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Static","unit":1.0}],"placementRelTo":"WS03.CBS_root","parentObject":"WS03.CBS_root"},{"id":"WS01.Robotic_Arm_Floating_Y","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_Y","unit":1.0}],"placementRelTo":"WS01.Robotic_Arm_Static","parentObject":"WS01.Robotic_Arm_Static"},{"id":"WS01.RA_Gripper_1","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_1","unit":1.0}],"placementRelTo":"WS01.Robotic_Arm_Floating_X","parentObject":"WS01.Robotic_Arm_Floating_X"},{"id":"WS01.CBS_root","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#node0","unit":1.0}],"placementRelTo":"WS01","parentObject":"WS01"},{"id":"WS01.Robotic_Arm_Floating_X","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_X","unit":1.0}],"placementRelTo":"WS01.Robotic_Arm_Floating_Y","parentObject":"WS01.Robotic_Arm_Floating_Y"},{"id":"WS01.RA_Gripper_2","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_2","unit":1.0}],"placementRelTo":"WS01.Robotic_Arm_Floating_X","parentObject":"WS01.Robotic_Arm_Floating_X"},{"id":"WS02.RA_Gripper_2","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_2","unit":1.0}],"placementRelTo":"WS02.Robotic_Arm_Floating_X","parentObject":"WS02.Robotic_Arm_Floating_X"},{"id":"WS02.Robotic_Arm_Floating_X","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_X","unit":1.0}],"placementRelTo":"WS02.Robotic_Arm_Floating_Y","parentObject":"WS02.Robotic_Arm_Floating_Y"},{"id":"WS03.Robotic_Arm_Floating_X","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_X","unit":1.0}],"placementRelTo":"WS03.Robotic_Arm_Floating_Y","parentObject":"WS03.Robotic_Arm_Floating_Y"},{"id":"WS02.Robotic_Arm_Static","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Static","unit":1.0}],"placementRelTo":"WS02.CBS_root","parentObject":"WS02.CBS_root"},{"id":"WS01.Robotic_Arm_Static","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Static","unit":1.0}],"placementRelTo":"WS01.CBS_root","parentObject":"WS01.CBS_root"},{"id":"WS02.RA_Gripper_1","type":"http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_1","unit":1.0}],"placementRelTo":"WS02.Robotic_Arm_Floating_X","parentObject":"WS02.Robotic_Arm_Floating_X"},{"id":"http://www.ontoeng.com/VLFT_lib30#CollectionBox_Station","type":"http://www.ontoeng.com/factory#MachineToolType","descr":"CollectionBox station type","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb","unit":1.0}]},{"id":"Pallet.3","type":"http://www.ontoeng.com/factory#Pallet","model":"http://www.ontoeng.com/VLFT_lib30#PalletA","position":[0.6,0.0,2.0]},{"id":"WS03.Box","type":"http://www.ontoeng.com/factory#StorageElement","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Box","unit":1.0}],"placementRelTo":"WS03.CBS_root","parentObject":"WS03.CBS_root"},{"id":"WS02.Box","type":"http://www.ontoeng.com/factory#StorageElement","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Box","unit":1.0}],"placementRelTo":"WS02.CBS_root","parentObject":"WS02.CBS_root"},{"id":"WS01.Box","type":"http://www.ontoeng.com/factory#StorageElement","representations":[{"file":"../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Box","unit":1.0}],"placementRelTo":"WS01.CBS_root","parentObject":"WS01.CBS_root"}]}
+{
+    "context": {
+        "UnitOfMeasureScale": 1.0,
+        "Zup": false,
+        "RepoPath": "/samples/"
+    },
+    "scene": [
+        "WS01.CBS_root",
+        "WS01.PalletPosition_CB",
+        "WS02.PalletPosition_CB",
+        "WS02",
+        "WS01.Conveyor_Main",
+        "WS01",
+        "WS03.PalletPosition_CB",
+        "WS02.Conveyor_Main",
+        "WS03.Conveyor_Main",
+        "WS03",
+        "http://www.ontoeng.com/VLFT_lib30#default_building",
+        "Pallet.3",
+        "WS03.Box",
+        "Pallet.1",
+        "Pallet.2",
+        "WS02.Box",
+        "WS01.Box",
+        "WS02.Robotic_Arm_Static",
+        "WS02.RA_Gripper_1",
+        "WS02.RA_Gripper_2",
+        "WS03.RA_Gripper_1",
+        "WS03.RA_Gripper_2",
+        "WS01.Robotic_Arm_Floating_X",
+        "WS01.Robotic_Arm_Static",
+        "WS02.Robotic_Arm_Floating_X",
+        "WS03.CBS_root",
+        "WS02.Robotic_Arm_Floating_Y",
+        "WS01.RA_Gripper_2",
+        "WS02.CBS_root",
+        "WS03.Robotic_Arm_Static",
+        "WS01.RA_Gripper_1",
+        "WS03.Robotic_Arm_Floating_X",
+        "WS01.Robotic_Arm_Floating_Y",
+        "WS03.Robotic_Arm_Floating_Y"
+    ],
+    "assets": [
+        {
+            "id": "WS01.CBS_root",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#node0",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS01",
+            "parentObject": "WS01"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib30#CollectionBox_Station",
+            "type": "http://www.ontoeng.com/factory#MachineToolType",
+            "descr": "CollectionBox station type",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb",
+                    "unit": 1.0
+                }
+            ]
+        },
+        {
+            "id": "WS01.PalletPosition_CB",
+            "type": "http://www.ontoeng.com/factory#BufferWorkingPosition",
+            "position": [
+                -0.06,
+                0.23,
+                -0.0
+            ],
+            "placementRelTo": "WS01.Conveyor_Main",
+            "parentObject": "WS01.Conveyor_Main"
+        },
+        {
+            "id": "WS02.PalletPosition_CB",
+            "type": "http://www.ontoeng.com/factory#BufferWorkingPosition",
+            "position": [
+                -0.06,
+                0.23,
+                -0.0
+            ],
+            "placementRelTo": "WS02.Conveyor_Main",
+            "parentObject": "WS02.Conveyor_Main"
+        },
+        {
+            "id": "WS02",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "descr": "Workstation 02",
+            "model": "http://www.ontoeng.com/VLFT_lib30#CollectionBox_Station",
+            "position": [
+                0.0,
+                0.0,
+                0.5
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib30#default_building",
+            "connectedTo": [
+                "WS03"
+            ]
+        },
+        {
+            "id": "WS01.Conveyor_Main",
+            "type": "http://www.ontoeng.com/factory#Conveyor",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Conveyor_Main",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS01.CBS_root",
+            "parentObject": "WS01.CBS_root"
+        },
+        {
+            "id": "WS01",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "descr": "Workstation 01",
+            "model": "http://www.ontoeng.com/VLFT_lib30#CollectionBox_Station",
+            "position": [
+                0.0,
+                0.0,
+                1.5
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib30#default_building",
+            "connectedTo": [
+                "WS02"
+            ]
+        },
+        {
+            "id": "WS03.PalletPosition_CB",
+            "type": "http://www.ontoeng.com/factory#BufferWorkingPosition",
+            "position": [
+                -0.06,
+                0.23,
+                -0.0
+            ],
+            "placementRelTo": "WS03.Conveyor_Main",
+            "parentObject": "WS03.Conveyor_Main"
+        },
+        {
+            "id": "WS02.Conveyor_Main",
+            "type": "http://www.ontoeng.com/factory#Conveyor",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Conveyor_Main",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS02.CBS_root",
+            "parentObject": "WS02.CBS_root"
+        },
+        {
+            "id": "WS03.Conveyor_Main",
+            "type": "http://www.ontoeng.com/factory#Conveyor",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Conveyor_Main",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS03.CBS_root",
+            "parentObject": "WS03.CBS_root"
+        },
+        {
+            "id": "WS03",
+            "type": "http://www.ontoeng.com/factory#MachineTool",
+            "descr": "Workstation 03",
+            "model": "http://www.ontoeng.com/VLFT_lib30#CollectionBox_Station",
+            "position": [
+                0.0,
+                0.0,
+                -0.5
+            ],
+            "placementRelTo": "http://www.ontoeng.com/VLFT_lib30#default_building"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib30#default_building",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcBuilding",
+            "descr": "Plant building. This is the building hosting a factory and the related facilities."
+        },
+        {
+            "id": "Pallet.3",
+            "type": "http://www.ontoeng.com/factory#Pallet",
+            "model": "http://www.ontoeng.com/VLFT_lib30#PalletA",
+            "position": [
+                0.6,
+                0.0,
+                2.0
+            ]
+        },
+        {
+            "id": "WS03.Box",
+            "type": "http://www.ontoeng.com/factory#StorageElement",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Box",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS03.CBS_root",
+            "parentObject": "WS03.CBS_root"
+        },
+        {
+            "id": "Pallet.1",
+            "type": "http://www.ontoeng.com/factory#Pallet",
+            "model": "http://www.ontoeng.com/VLFT_lib30#PalletA",
+            "position": [
+                0.2,
+                0.0,
+                2.0
+            ]
+        },
+        {
+            "id": "Pallet.2",
+            "type": "http://www.ontoeng.com/factory#Pallet",
+            "model": "http://www.ontoeng.com/VLFT_lib30#PalletA",
+            "position": [
+                0.4,
+                0.0,
+                2.0
+            ]
+        },
+        {
+            "id": "WS02.Box",
+            "type": "http://www.ontoeng.com/factory#StorageElement",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Box",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS02.CBS_root",
+            "parentObject": "WS02.CBS_root"
+        },
+        {
+            "id": "WS01.Box",
+            "type": "http://www.ontoeng.com/factory#StorageElement",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Box",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS01.CBS_root",
+            "parentObject": "WS01.CBS_root"
+        },
+        {
+            "id": "WS02.Robotic_Arm_Static",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Static",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS02.CBS_root",
+            "parentObject": "WS02.CBS_root"
+        },
+        {
+            "id": "WS02.RA_Gripper_1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_1",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS02.Robotic_Arm_Floating_X",
+            "parentObject": "WS02.Robotic_Arm_Floating_X"
+        },
+        {
+            "id": "WS02.RA_Gripper_2",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_2",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS02.Robotic_Arm_Floating_X",
+            "parentObject": "WS02.Robotic_Arm_Floating_X"
+        },
+        {
+            "id": "WS03.RA_Gripper_1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_1",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS03.Robotic_Arm_Floating_X",
+            "parentObject": "WS03.Robotic_Arm_Floating_X"
+        },
+        {
+            "id": "WS03.RA_Gripper_2",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_2",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS03.Robotic_Arm_Floating_X",
+            "parentObject": "WS03.Robotic_Arm_Floating_X"
+        },
+        {
+            "id": "WS01.Robotic_Arm_Floating_X",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_X",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS01.Robotic_Arm_Floating_Y",
+            "parentObject": "WS01.Robotic_Arm_Floating_Y"
+        },
+        {
+            "id": "WS01.Robotic_Arm_Static",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Static",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS01.CBS_root",
+            "parentObject": "WS01.CBS_root"
+        },
+        {
+            "id": "WS02.Robotic_Arm_Floating_X",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_X",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS02.Robotic_Arm_Floating_Y",
+            "parentObject": "WS02.Robotic_Arm_Floating_Y"
+        },
+        {
+            "id": "WS03.CBS_root",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#node0",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS03",
+            "parentObject": "WS03"
+        },
+        {
+            "id": "WS02.Robotic_Arm_Floating_Y",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_Y",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS02.Robotic_Arm_Static",
+            "parentObject": "WS02.Robotic_Arm_Static"
+        },
+        {
+            "id": "WS01.RA_Gripper_2",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_2",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS01.Robotic_Arm_Floating_X",
+            "parentObject": "WS01.Robotic_Arm_Floating_X"
+        },
+        {
+            "id": "WS02.CBS_root",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#node0",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS02",
+            "parentObject": "WS02"
+        },
+        {
+            "id": "WS03.Robotic_Arm_Static",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Static",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS03.CBS_root",
+            "parentObject": "WS03.CBS_root"
+        },
+        {
+            "id": "WS01.RA_Gripper_1",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#RA_Gripper_1",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS01.Robotic_Arm_Floating_X",
+            "parentObject": "WS01.Robotic_Arm_Floating_X"
+        },
+        {
+            "id": "WS03.Robotic_Arm_Floating_X",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_X",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS03.Robotic_Arm_Floating_Y",
+            "parentObject": "WS03.Robotic_Arm_Floating_Y"
+        },
+        {
+            "id": "WS01.Robotic_Arm_Floating_Y",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_Y",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS01.Robotic_Arm_Static",
+            "parentObject": "WS01.Robotic_Arm_Static"
+        },
+        {
+            "id": "WS03.Robotic_Arm_Floating_Y",
+            "type": "http://ifcowl.openbimstandards.org/IFC4_ADD1#IfcElementAssembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Collection_Box_Station.glb#Robotic_Arm_Floating_Y",
+                    "unit": 1.0
+                }
+            ],
+            "placementRelTo": "WS03.Robotic_Arm_Static",
+            "parentObject": "WS03.Robotic_Arm_Static"
+        },
+        {
+            "id": "http://www.ontoeng.com/VLFT_lib30#PalletA",
+            "type": "http://www.ontoeng.com/factory#PalletType",
+            "descr": "Pallet for the main hinge assembly",
+            "representations": [
+                {
+                    "file": "../../samples/virtualLearningFactory/models/GLTF/Pallet.glb",
+                    "unit": 1.0
+                }
+            ]
+        }
+    ]
+}
