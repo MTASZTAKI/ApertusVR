@@ -32,12 +32,12 @@ ape::EventManagerImpl::~EventManagerImpl()
 
 }
 
-void ape::EventManagerImpl::connectEvent(ape::Event::Group group, std::function<void(const ape::Event&) > cb)
+void ape::EventManagerImpl::connectEvent(ape::Event::Group group, std::function<void(const ape::Event&)> cb)
 {
 	mEventMap[group].push_back(cb);
 }
 
-void ape::EventManagerImpl::disconnectEvent(ape::Event::Group group, std::function<void(const ape::Event&) > callback)
+void ape::EventManagerImpl::disconnectEvent(ape::Event::Group group, std::function<void(const ape::Event&)> callback)
 {
 	if (mEventMap.find(group) != mEventMap.end())
 	{
@@ -59,5 +59,3 @@ void ape::EventManagerImpl::fireEvent(const ape::Event& event)
 			it(event);
 	}
 }
-
-

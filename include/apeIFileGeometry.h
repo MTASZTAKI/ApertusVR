@@ -36,9 +36,9 @@ namespace ape
 		virtual ~IFileGeometry() {};
 
 	public:
-		virtual void setFileName (std::string fileName) = 0;
+		virtual void setFileName(std::string fileName) = 0;
 
-		virtual std::string getFileName () = 0;
+		virtual std::string getFileName() = 0;
 
 		virtual void setParentNode(ape::NodeWeakPtr parentNode) = 0;
 

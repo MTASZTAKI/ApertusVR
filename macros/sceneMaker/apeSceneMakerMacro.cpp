@@ -161,19 +161,19 @@ void ape::SceneMakerMacro::makeTerrain()
 void ape::SceneMakerMacro::makeCoordinateSystem()
 {
 	std::shared_ptr<ape::IManualMaterial> coordinateSystemArrowXMaterial;
-	if (coordinateSystemArrowXMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("SystemArrowXMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+	if (coordinateSystemArrowXMaterial == std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("SystemArrowXMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		coordinateSystemArrowXMaterial->setDiffuseColor(ape::Color(1.0f, 0.0f, 0.0f));
 		coordinateSystemArrowXMaterial->setSpecularColor(ape::Color(1.0f, 0.0f, 0.0f));
 	}
 	std::shared_ptr<ape::IManualMaterial> coordinateSystemArrowYMaterial;
-	if (coordinateSystemArrowYMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowYMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+	if (coordinateSystemArrowYMaterial == std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowYMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		coordinateSystemArrowYMaterial->setDiffuseColor(ape::Color(0.0f, 1.0f, 0.0f));
 		coordinateSystemArrowYMaterial->setSpecularColor(ape::Color(0.0f, 1.0f, 0.0f));
 	}
 	std::shared_ptr<ape::IManualMaterial> coordinateSystemArrowZMaterial;
-	if (coordinateSystemArrowZMaterial = std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowZMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
+	if (coordinateSystemArrowZMaterial == std::static_pointer_cast<ape::IManualMaterial>(mpSceneManager->createEntity("coordinateSystemArrowZMaterial", ape::Entity::MATERIAL_MANUAL, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		coordinateSystemArrowZMaterial->setDiffuseColor(ape::Color(0.0f, 0.0f, 1.0f));
 		coordinateSystemArrowZMaterial->setSpecularColor(ape::Color(0.0f, 0.0f, 1.0f));

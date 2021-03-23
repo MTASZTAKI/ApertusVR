@@ -50,7 +50,7 @@ inline void UnregisterHook()
 	::UnhookWinEvent(g_WindowDestructionHook);
 }
 
-int WINAPI WinMain (HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nFunsterStil)
+int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nFunsterStil)
 { 
 	ape::System::Start(lpszArgument, false);
 	while (ape::ICoreConfig::getSingletonPtr()->getWindowConfig().handle == nullptr)

@@ -61,7 +61,7 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 	std::stringstream fileFullPath; 
 	fileFullPath << mConfigFolderPath << "/apeCore.json";
 
-#ifndef __ANDROID__
+#ifndef ANDROID
 	FILE* apeCoreConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
 #else
 	FILE* apeCoreConfigFile = ape::AndroidAssetOpen::open(fileFullPath.str().c_str(), "r");
@@ -122,7 +122,6 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						else if (lobbyMemberIterator->name == "room")
 							mNetworkConfig.lobbyConfig.roomName = lobbyMemberIterator->value.GetString();
 					}
-
 				}
 				else if (networkMemberIterator->name == "resourceZipUrl")
 				{
@@ -186,8 +185,7 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 				else if (networkMemberIterator->name == "lan")
 				{
 					rapidjson::Value& lan = jsonDocument["network"]["lan"];
-					for (rapidjson::Value::MemberIterator lanMemberIterator =
-						lan.MemberBegin();
+					for (rapidjson::Value::MemberIterator lanMemberIterator = lan.MemberBegin();
 						lanMemberIterator != lan.MemberEnd(); ++lanMemberIterator)
 					{
 						if (lanMemberIterator->name == "hostReplicaIP")
@@ -199,7 +197,6 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 						else if (lanMemberIterator->name == "hostStreamPort")
 							mNetworkConfig.lanConfig.hostStreamPort = lanMemberIterator->value.GetString();
 					}
-
 				}
 				else if (networkMemberIterator->name == "selected")
 				{
@@ -223,6 +220,10 @@ ape::CoreConfigImpl::CoreConfigImpl(std::string configFolderPath)
 			{
 				mPluginNames.push_back(plugin.GetString());
 			}
+		}
+		else
+		{
+			std::cout << "Error: syntax error in json document " << fileFullPath.str() << std::endl;
 		}
 		fclose(apeCoreConfigFile);
 	}
@@ -267,9 +268,3 @@ std::string ape::CoreConfigImpl::getConfigFolderPath()
 {
 	return mConfigFolderPath;
 }
-
-
-
-
-
-

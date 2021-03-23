@@ -1,0 +1,56 @@
+# 3rdParty folders
+zip
+raknet
+
+# build directories
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Ll]og/
+build/
+
+# IDE settings / project files
+.vscode/
+.vs/
+*.pbxproj
+
+# cmake
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+Makefile.inc.cmake
+
+# shared / static libraries
+*.dylib
+*.dll
+*.lib
+*.a
+
+# generated Files
+*.exe
+*.obj
+*.lib
+*.exp
+*.stamp
+*.stamp.depend
+*.log
+*.lastbuildstate
+*.sln
+*.VC.db
+*.VC.opendb
+*.vcxproj
+*.vcxproj.filters
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.patch
