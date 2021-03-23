@@ -45,19 +45,19 @@ namespace ape
 	}
 }
 
-extern "C" APE_SYSTEM_DLL_EXPORT void ApeSystemStart();
+extern "C" APE_SYSTEM_DLL_EXPORT void ApeSystemStart(char* configFolderPath);
 
 extern "C" APE_SYSTEM_DLL_EXPORT void ApeSystemStop();
 
-extern "C" APE_SYSTEM_DLL_EXPORT int ApeSceneManager_GetIndexedFaceSet_GetSize(char name[]);
+extern "C" APE_SYSTEM_DLL_EXPORT int ApeSceneManager_GetIndexedFaceSet_GetSize(char* name);
 
-extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char name[], float vertices[]);
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char* name, float* vertices);
 
-extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetIndices(char name[], int indices[]);
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetIndices(char* name, int* indices);
 
-extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetColor(char name[], float color[]);
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetColor(char* name, float* color);
 
-extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetOrientation(char name[], float orientation[]);
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetOrientation(char* name, float* orientation);
 
 #endif
 

@@ -73,10 +73,10 @@ void ape::System::Stop()
 	delete gpLogManagerImpl;
 }
 
-void ApeSystemStart()
+void ApeSystemStart(char* configFolderPath)
 {
 	gpLogManagerImpl = new ape::LogManagerImpl();
-	gpCoreConfigImpl = new ape::CoreConfigImpl("");
+	gpCoreConfigImpl = new ape::CoreConfigImpl(std::string(configFolderPath));
 	gpEventManagerImpl = new ape::EventManagerImpl();
 	gpSceneManagerImpl = new ape::SceneManagerImpl();
 	gpPluginManagerImpl = new ape::PluginManagerImpl();
@@ -91,7 +91,7 @@ void ApeSystemStop()
 	delete gpLogManagerImpl;
 }
 
-int ApeSceneManager_GetIndexedFaceSet_GetSize(char name[])
+int ApeSceneManager_GetIndexedFaceSet_GetSize(char* name)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
@@ -100,7 +100,7 @@ int ApeSceneManager_GetIndexedFaceSet_GetSize(char name[])
 	return 0;
 }
 
-bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char name[], float vertices[])
+bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char* name, float* vertices)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
@@ -110,7 +110,7 @@ bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char name[], float vertices[]
 	return false;
 }
 
-bool ApeSceneManager_GetIndexedFaceSet_GetIndices(char name[], int indices[])
+bool ApeSceneManager_GetIndexedFaceSet_GetIndices(char* name, int* indices)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
@@ -120,7 +120,7 @@ bool ApeSceneManager_GetIndexedFaceSet_GetIndices(char name[], int indices[])
 	return false;
 }
 
-bool ApeSceneManager_GetIndexedFaceSet_GetColor(char name[], float color[])
+bool ApeSceneManager_GetIndexedFaceSet_GetColor(char* name, float* color)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
@@ -137,7 +137,7 @@ bool ApeSceneManager_GetIndexedFaceSet_GetColor(char name[], float color[])
 	return false;
 }
 
-bool ApeSceneManager_GetNode_GetOrientation(char name[], float orientation[])
+bool ApeSceneManager_GetNode_GetOrientation(char* name, float* orientation)
 {
 	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
 	{
