@@ -49,7 +49,11 @@ extern "C" APE_SYSTEM_DLL_EXPORT void ApeSystemStart(char* configFolderPath);
 
 extern "C" APE_SYSTEM_DLL_EXPORT void ApeSystemStop();
 
-extern "C" APE_SYSTEM_DLL_EXPORT int ApeSceneManager_GetIndexedFaceSet_GetSize(char* name);
+typedef void(__stdcall* ANSWERCB)(char*, int);
+static ANSWERCB cb;
+extern "C" APE_SYSTEM_DLL_EXPORT void ApeEventManager_RegisterCallback(ANSWERCB fp);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetSize(char* name, int size);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char* name, float* vertices);
 
@@ -58,6 +62,8 @@ extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetIndic
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetColor(char* name, float* color);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetOrientation(char* name, float* orientation);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetText_GetCaption(char* name, char* caption);
 
 #endif
 

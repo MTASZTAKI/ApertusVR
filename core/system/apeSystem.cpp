@@ -33,6 +33,7 @@ SOFTWARE.*/
 #include "apeINode.h"
 #include "apeIIndexedFaceSetGeometry.h"
 #include "apeIManualMaterial.h"
+#include "apeITextGeometry.h"
 
 ape::PluginManagerImpl* gpPluginManagerImpl;
 ape::EventManagerImpl* gpEventManagerImpl;
@@ -73,13 +74,19 @@ void ape::System::Stop()
 	delete gpLogManagerImpl;
 }
 
+void ApeEventListener(const ape::Event& event)
+{
+	auto subjectName = event.subjectName;
+	auto eventType = event.type;
+	cb(&subjectName[0], eventType);
+}
+
 void ApeSystemStart(char* configFolderPath)
 {
 	gpLogManagerImpl = new ape::LogManagerImpl();
 	gpCoreConfigImpl = new ape::CoreConfigImpl(std::string(configFolderPath));
 	gpEventManagerImpl = new ape::EventManagerImpl();
 	gpSceneManagerImpl = new ape::SceneManagerImpl();
-	gpPluginManagerImpl = new ape::PluginManagerImpl();
 }
 
 void ApeSystemStop()
@@ -91,13 +98,22 @@ void ApeSystemStop()
 	delete gpLogManagerImpl;
 }
 
-int ApeSceneManager_GetIndexedFaceSet_GetSize(char* name)
+void ApeEventManager_RegisterCallback(ANSWERCB fp)
+{
+	cb = fp;
+	gpEventManagerImpl->connectEvent(ape::Event::Group::NODE, std::bind(ApeEventListener, std::placeholders::_1));
+	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(ApeEventListener, std::placeholders::_1));
+	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(ApeEventListener, std::placeholders::_1));
+}
+
+bool ApeSceneManager_GetIndexedFaceSet_GetSize(char* name, int size)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		 return indexedFaceSet->getParameters().indices.size();
+		 size = indexedFaceSet->getParameters().indices.size();
+		 return true;
 	}
-	return 0;
+	return false;
 }
 
 bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char* name, float* vertices)
@@ -146,6 +162,16 @@ bool ApeSceneManager_GetNode_GetOrientation(char* name, float* orientation)
 		orientation[1] = apeOrientation.x;
 		orientation[2] = apeOrientation.y;
 		orientation[3] = apeOrientation.z;
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetText_GetCaption(char* name, char* caption)
+{
+	if (auto apeTextGeometry = std::static_pointer_cast<ape::ITextGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		caption = &apeTextGeometry->getCaption()[0];
 		return true;
 	}
 	return false;
