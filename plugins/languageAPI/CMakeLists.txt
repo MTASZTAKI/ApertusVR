@@ -23,7 +23,6 @@
 if(NOT ANDROID)
     add_subdirectory (jsAPI)
     add_subdirectory (webSocketServer)
-	add_subdirectory (CSharp)
 else()
     add_subdirectory (jni)
 endif()
