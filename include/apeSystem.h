@@ -53,9 +53,11 @@ typedef void(__stdcall* ANSWERCB)(char*, int);
 static ANSWERCB cb;
 extern "C" APE_SYSTEM_DLL_EXPORT void ApeEventManager_RegisterCallback(ANSWERCB fp);
 
-extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetSize(char* name, int* size);
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVerticesSize(char* name, int* size);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char* name, float* vertices);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetIndicesSize(char* name, int* size);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetIndices(char* name, int* indices);
 

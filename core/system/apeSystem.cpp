@@ -106,11 +106,11 @@ void ApeEventManager_RegisterCallback(ANSWERCB fp)
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(ApeEventListener, std::placeholders::_1));
 }
 
-bool ApeSceneManager_GetIndexedFaceSet_GetSize(char* name, int* size)
+bool ApeSceneManager_GetIndexedFaceSet_GetVerticesSize(char* name, int* size)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		*size = static_cast<int>(indexedFaceSet->getParameters().indices.size());
+		*size = static_cast<int>(indexedFaceSet->getParameters().coordinates.size());
 		return true;
 	}
 	return false;
@@ -120,7 +120,21 @@ bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char* name, float* vertices)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		vertices = indexedFaceSet->getParameters().coordinates.data();
+		auto apeVertices = indexedFaceSet->getParameters().coordinates;
+		for (int i = 0; i < apeVertices.size(); i++)
+		{
+			vertices[i] = apeVertices[i];
+		}
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetIndexedFaceSet_GetIndicesSize(char* name, int* size)
+{
+	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		*size = static_cast<int>(indexedFaceSet->getParameters().indices.size());
 		return true;
 	}
 	return false;
@@ -130,7 +144,11 @@ bool ApeSceneManager_GetIndexedFaceSet_GetIndices(char* name, int* indices)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		indices = indexedFaceSet->getParameters().indices.data();
+		auto apeIndices = indexedFaceSet->getParameters().indices;
+		for (int i = 0; i < apeIndices.size(); i++)
+		{
+			indices[i] = apeIndices[i];
+		}
 		return true;
 	}
 	return false;
