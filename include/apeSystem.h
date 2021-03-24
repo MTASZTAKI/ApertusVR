@@ -63,6 +63,12 @@ extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetColor
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetOrientation(char* name, float* orientation);
 
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetPosition(char* name, float* position);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetScale(char* name, float* scale);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetParent(char* name, char* parent);
+
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetText_GetCaption(char* name, char* caption);
 
 #endif

@@ -167,6 +167,45 @@ bool ApeSceneManager_GetNode_GetOrientation(char* name, float* orientation)
 	return false;
 }
 
+bool ApeSceneManager_GetNode_GetPosition(char* name, float* position)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		auto apePosition = node->getPosition();
+		position[0] = apePosition.x;
+		position[1] = apePosition.y;
+		position[2] = apePosition.z;
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_GetScale(char* name, float* scale)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		auto apeScale = node->getScale();
+		scale[0] = apeScale.x;
+		scale[1] = apeScale.y;
+		scale[2] = apeScale.z;
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_GetParent(char* name, char* parent)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		if (auto apeParent = node->getParentNode().lock())
+		{
+			parent = &apeParent->getName()[0];
+			return true;
+		}
+	}
+	return false;
+}
+
 bool ApeSceneManager_GetText_GetCaption(char* name, char* caption)
 {
 	if (auto apeTextGeometry = std::static_pointer_cast<ape::ITextGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
