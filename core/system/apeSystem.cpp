@@ -199,7 +199,12 @@ bool ApeSceneManager_GetNode_GetParent(char* name, char* parent)
 	{
 		if (auto apeParent = node->getParentNode().lock())
 		{
-			parent = &apeParent->getName()[0];
+			auto apeParentName = apeParent->getName();
+			for (int i = 0; i < apeParentName.length(); i++)
+			{
+				parent[i] = apeParentName[i];
+			}
+			parent[apeParentName.length()] = '\0';
 			return true;
 		}
 	}
@@ -210,7 +215,12 @@ bool ApeSceneManager_GetText_GetCaption(char* name, char* caption)
 {
 	if (auto apeTextGeometry = std::static_pointer_cast<ape::ITextGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		caption = &apeTextGeometry->getCaption()[0];
+		auto apeCaption = apeTextGeometry->getCaption();
+		for (int i = 0; i < apeCaption.length(); i++)
+		{
+			caption[i] = apeCaption[i];
+		}
+		caption[apeCaption.length()] = '\0';
 		return true;
 	}
 	return false;
