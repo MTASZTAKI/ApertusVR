@@ -106,12 +106,12 @@ void ApeEventManager_RegisterCallback(ANSWERCB fp)
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(ApeEventListener, std::placeholders::_1));
 }
 
-bool ApeSceneManager_GetIndexedFaceSet_GetSize(char* name, int size)
+bool ApeSceneManager_GetIndexedFaceSet_GetSize(char* name, int* size)
 {
 	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		 size = indexedFaceSet->getParameters().indices.size();
-		 return true;
+		*size = static_cast<int>(indexedFaceSet->getParameters().indices.size());
+		return true;
 	}
 	return false;
 }
