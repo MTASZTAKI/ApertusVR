@@ -98,7 +98,13 @@ namespace ape
 		std::string mLobbyServerPort;
 
 		std::string mLobbyServerSessionName;
+        
+        std::mutex mRackReplicaPeerMutex;
 
+        std::thread mRunReplicaPeerListenThread;
+        
+        bool mDestructionBegun;
+        
 		ape::SceneNetwork::ParticipantType mParticipantType;
 
 		bool mIsConnectedToNATServer;

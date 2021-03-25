@@ -100,10 +100,16 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 
 ape::SceneNetworkImpl::~SceneNetworkImpl()
 {
+   // mRackReplicaPeerMutex.lock();
+    mDestructionBegun = true;
+    //mRunReplicaPeerListenThread.join();
 	if (mpRakReplicaPeer)
 	{
+       
 		mpRakReplicaPeer->Shutdown(100);
 		RakNet::RakPeerInterface::DestroyInstance(mpRakReplicaPeer);
+        mpRakReplicaPeer = nullptr;
+       
 	}
 
 	if (mpNatPunchthroughClient)
@@ -117,6 +123,8 @@ ape::SceneNetworkImpl::~SceneNetworkImpl()
 		delete mpLobbyManager;
 		mpLobbyManager = nullptr;
 	}
+    
+    //mRackReplicaPeerMutex.unlock();
 }
 
 void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
@@ -151,6 +159,7 @@ void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
 
 void ape::SceneNetworkImpl::init()
 {
+    mDestructionBegun= false;
 	ape::NetworkConfig::NatPunchThroughConfig natPunchThroughServerConfig = mpCoreConfig->getNetworkConfig().natPunchThroughConfig;
 	mNATServerIP = natPunchThroughServerConfig.ip;
 	mNATServerPort = natPunchThroughServerConfig.port;
@@ -205,8 +214,8 @@ void ape::SceneNetworkImpl::init()
 		}
 	}
 	APE_LOG_DEBUG("runReplicaPeerListenThread");
-	std::thread runReplicaPeerListenThread((std::bind(&SceneNetworkImpl::runReplicaPeerListen, this)));
-	runReplicaPeerListenThread.detach();
+	mRunReplicaPeerListenThread = std::thread((std::bind(&SceneNetworkImpl::runReplicaPeerListen, this)));
+    mRunReplicaPeerListenThread.detach();
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN && mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.length())
 	{
 		mpRakStreamPeer = RakNet::RakPeerInterface::GetInstance();
@@ -363,10 +372,13 @@ std::string ape::SceneNetworkImpl::getCurrentRoomName()
 
 void ape::SceneNetworkImpl::runReplicaPeerListen()
 {
-	while (true)
+	while (!mDestructionBegun)
 	{
-		listenReplicaPeer();
-		std::this_thread::sleep_for (std::chrono::milliseconds(10));
+        //mRackReplicaPeerMutex.lock();
+        listenReplicaPeer();
+        //mRackReplicaPeerMutex.unlock();
+        std::this_thread::sleep_for (std::chrono::milliseconds(10));
+		
 	}
 }
 

@@ -161,6 +161,7 @@ elseif(APPLE)
 		apeFilamentApplicationPlugin.cpp
 		apeVLFTImgui.cpp
         )
+	
     include_directories(
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/filament/include
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/filament/backend/include
@@ -178,6 +179,7 @@ elseif(APPLE)
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/getopt/include
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/libsdl2/include
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/robin-map
+                ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples
                 ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 	        ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nativefiledialog
  		${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader
@@ -377,6 +379,7 @@ elseif(APPLE)
         ${FILAMENT_PREBUILD_DIR}/libs/gltfio/Debug/libgltfio_resources.a
         ${FILAMENT_PREBUILD_DIR}/filament/backend/Debug/libbackend.a
         ${FILAMENT_PREBUILD_DIR}/third_party/draco/tnt/Debug/libdracodec.a
+	${FILAMENT_PREBUILD_DIR}/samples/Debug/libsample-resources.a
         
     )
     foreach(LIB_LOC ${LIB_LOCATIONS})

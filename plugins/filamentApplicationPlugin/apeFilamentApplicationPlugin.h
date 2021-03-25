@@ -76,6 +76,8 @@ SOFTWARE.*/
 #include <filament/TransformManager.h>
 #include <filament/VertexBuffer.h>
 #include <filament/LightManager.h>
+#include <filament/Material.h>
+#include <filament/MaterialInstance.h>
 #include <filament/View.h>
 #include <filament/Frustum.h>
 #include <filament/Box.h>
@@ -100,7 +102,9 @@ SOFTWARE.*/
 #include "apeVLFTAnimationPlayerPluginConfig.h"
 //#include "generated/resources/gltf_viewer.h"
 #include "math/TVecHelpers.h"
+#include <cmath>
 
+#include "generated/resources/resources.h"
 
 #define THIS_PLUGINNAME "apeFilamentApplicationPlugin"
 using namespace filament;
@@ -130,6 +134,36 @@ struct InstanceData{
         mpInstance = instance_;
     }
     
+};
+
+struct LineVertex{
+    float3 pos;
+    uint32_t color;
+};
+
+struct SpaghettiLines{
+    filament::VertexBuffer* lineVertexBuffer;
+    filament::IndexBuffer* lineIndexBuffer;
+    std::vector<LineVertex> lineVertices;
+    std::vector<uint32_t> lineIndices;
+    size_t size;
+    utils::Entity lineEntity;
+    filament::Material* mat;
+    SpaghettiLines(){
+        size = 0;
+        lineVertexBuffer = nullptr;
+        lineIndexBuffer = nullptr;
+        lineEntity = EntityManager::get().create();
+        
+    }
+    SpaghettiLines(size_t size_,  filament::VertexBuffer* lineVertexBuffer_, filament::IndexBuffer* lineIndexBuffer_, LineVertex* lineVertices_, uint32_t* lineIndices_){
+        lineVertexBuffer = lineVertexBuffer_;
+        size = size_;
+        lineIndexBuffer = lineIndexBuffer_;
+        lineVertices.assign(lineVertices_, lineVertices_+size);
+        lineIndices.assign(lineIndices_,lineIndices_+size);
+        lineEntity = EntityManager::get().create();
+    }
 };
 
 struct App {
@@ -212,7 +246,8 @@ struct App {
         double keyStartTime;
         int keyCurrentAnimation;
     } animationData;
-
+    
+    std::map<std::string, SpaghettiLines> spaghettiLines;
     
     filament::VertexBuffer* boxVertexBuffer;
     filament::IndexBuffer* boxIndexBuffer;
@@ -315,6 +350,8 @@ namespace ape
         std::thread mAnimationThread;
         
         std::vector<Animation> mParsedAnimations;
+        
+        int mPlayedAnimations;
 
         std::vector<std::string> mAnimatedNodeNames;
 
@@ -363,6 +400,8 @@ namespace ape
         void showSpaghetti(std::string name, bool show);
         
         bool attach2NewAnimationNode(const std::string& parentNodeName, const ape::NodeSharedPtr& node);
+        
+        void drawSpaghettiSection(const ape::Vector3& startPosition, const ape::NodeSharedPtr& node, std::string& spaghettiSectionName);
         
         std::ifstream::pos_type getFileSize(const char* filename);
         

@@ -59,6 +59,6 @@ int main(int argc, char** argv)
         std::cout << "Usage example: apeSampleLauncher.exe c:/ApertusVR/samples/helloWorld" << std::endl;
     }
     }
-		
+    ape::System::Stop();
 	return 0;
 }
