@@ -148,6 +148,7 @@ struct SpaghettiLines{
     std::vector<uint32_t> lineIndices;
     size_t size;
     utils::Entity lineEntity;
+    std::string lineName;
     filament::Material* mat;
     SpaghettiLines(){
         size = 0;
@@ -207,16 +208,16 @@ struct App {
     RenderableManager * mpRenderableManager;
     std::map<std::string, TransformManager::Instance> mpTransforms;
     std::map<std::string, FilamentAsset*> mpLoadedAssets;
-    
+    std::map<std::string, utils::Entity> mpEntities;
     
     MaterialProvider* materials;
     MaterialSource materialSource = GENERATE_SHADERS;
 
     gltfio::ResourceLoader* resourceLoader = nullptr;
     bool recomputeAabb = false;
-
     bool actualSize = false;
     bool firstRun = true;
+    bool setManpipulator = false;
 
     struct ViewOptions {
         float cameraAperture = 16.0f;
@@ -353,9 +354,15 @@ namespace ape
         
         int mPlayedAnimations;
 
-        std::vector<std::string> mAnimatedNodeNames;
+        std::set<std::string> mAnimatedNodeNames;
 
-        std::vector<std::string> mSpaghettiNodeNames;
+        std::set<std::string> mSpaghettiNodeNames;
+        
+        std::map<std::string, std::string> mspaghettiLineNames;
+        
+        std::set<std::string> mstateNodeNames;
+        
+        std::set<std::string> mstateGeometryNames;
 
         std::vector<ape::NodeWeakPtr> mAttachedUsers;
         

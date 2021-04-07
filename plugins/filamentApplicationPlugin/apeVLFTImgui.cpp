@@ -40,10 +40,7 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     for(int i = 0; i < 500; i++){
         mpUpdateInfo->playedAnimation.push_back(false);
     }
-    if(mpUpdateInfo->isAdmin)
-        mpMainMenuInfo.admin = true;
-    else
-        mpMainMenuInfo.student = true;
+    mpMainMenuInfo.admin = mpUpdateInfo->isAdmin;
     chatMessages.push_back(u8"Elso uzenet bla bla");
     chatMessages.push_back(u8"Masodik uzenet bla bla");
     chatMessages.push_back(u8"Harmadik uzenet bla bla");
@@ -120,6 +117,7 @@ void ape::VLFTImgui::connectToRoom(){
         urls.push_back(urlAnimationConfig);
         locations.push_back(locationAnimationConfig);
         mpSceneNetwork->connectToRoom(roomName, urls, locations);
+        //mpSceneNetwork->
         mpMainMenuInfo.inRoomGui = true;
         mpUpdateInfo->inRoom = true;
     }
@@ -136,6 +134,7 @@ void ape::VLFTImgui::connectToRoom(){
         mpMainMenuInfo.inRoomGui = true;
         mpUpdateInfo->inRoom = true;
     }
+    mpUpdateInfo->leftRoom = false;
 }
 
 void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height){
@@ -231,17 +230,17 @@ void ape::VLFTImgui::studentRoomGUI(){
     ImGui::SetNextWindowSize(ImVec2(width-50, height-50));
     ImGui::Begin("Student", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::GetStyle().Alpha = 0.95;
-    if(mpMainMenuInfo.inMainMenu){
+    if(mpMainMenuInfo.mainMenu){
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25));
         if (ImGui::Button("SinglePlayer",ImVec2(width/5, height/12))){
             mpMainMenuInfo.singlePlayer = true;
-            mpMainMenuInfo.inMainMenu = false;
+            mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
         }
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/12+12));
         if (ImGui::Button("MultiPlayer",ImVec2(width/5, height/12))){
             mpMainMenuInfo.multiPlayer = true;
-            mpMainMenuInfo.inMainMenu = false;
+            mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
         }
     }
@@ -259,7 +258,7 @@ void ape::VLFTImgui::studentRoomGUI(){
         ImGui::SameLine(ImGui::GetWindowWidth()-205);
         if (ImGui::Button("Back",ImVec2(200, 50))){
             mpMainMenuInfo.singlePlayer = false;
-            mpMainMenuInfo.inMainMenu = true;
+            mpMainMenuInfo.mainMenu = true;
         }
     }
     else if(mpMainMenuInfo.multiPlayer){
@@ -284,7 +283,7 @@ void ape::VLFTImgui::studentRoomGUI(){
         ImGui::SameLine(ImGui::GetWindowWidth()-205);
         if (ImGui::Button("Back",ImVec2(200, 50))){
             mpMainMenuInfo.singlePlayer = false;
-            mpMainMenuInfo.inMainMenu = true;
+            mpMainMenuInfo.mainMenu = true;
         }
     }
     mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
@@ -348,29 +347,29 @@ void ape::VLFTImgui::adminRoomGUI(){
     ImGui::Begin("Admin", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
    
     ImGui::GetStyle().Alpha = 0.95;
-    if(mpMainMenuInfo.inMainMenu){
+    if(mpMainMenuInfo.mainMenu){
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25));
         if (ImGui::Button("SinglePlayer",ImVec2(width/5, height/12))){
             mpMainMenuInfo.singlePlayer = true;
-            mpMainMenuInfo.inMainMenu = false;
+            mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
         }
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/12+12));
         if (ImGui::Button("MultiPlayer",ImVec2(width/5, height/12))){
             mpMainMenuInfo.multiPlayer = true;
-            mpMainMenuInfo.inMainMenu = false;
+            mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
         }
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/6+24));
         if (ImGui::Button("Admin Room",ImVec2(width/5, height/12))){
             mpMainMenuInfo.adminMenu = true;
-            mpMainMenuInfo.inMainMenu = false;
+            mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
         }
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/4+36));
         if (ImGui::Button("Settings",ImVec2(width/5, height/12))){
             mpMainMenuInfo.adminMenu = false;
-            mpMainMenuInfo.inMainMenu = false;
+            mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
             mpMainMenuInfo.settingsMenu = true;
         }
@@ -389,7 +388,7 @@ void ape::VLFTImgui::adminRoomGUI(){
         ImGui::SameLine(width-(width/8+48));
         if (ImGui::Button("Back",ImVec2(width/8, height/15))){
             mpMainMenuInfo.singlePlayer = false;
-            mpMainMenuInfo.inMainMenu = true;
+            mpMainMenuInfo.mainMenu = true;
         }
     }
     else if(mpMainMenuInfo.multiPlayer){
@@ -405,7 +404,7 @@ void ape::VLFTImgui::adminRoomGUI(){
         createJoinButton("Teacher", width, height);
         ImGui::SameLine(width-(width/8+48));
         if (ImGui::Button("Back",ImVec2(width/8, height/15))){
-            mpMainMenuInfo.inMainMenu = true;
+            mpMainMenuInfo.mainMenu = true;
             mpMainMenuInfo.multiPlayer = false;
         }
     }
@@ -430,12 +429,12 @@ void ape::VLFTImgui::adminRoomGUI(){
         }
         ImGui::SameLine(width-(width/8+48));
         if (ImGui::Button("Back",ImVec2(width/8, height/15))){
-            mpMainMenuInfo.inMainMenu = true;
+            mpMainMenuInfo.mainMenu = true;
             mpMainMenuInfo.adminMenu = false;
         }
     }
     else if(mpMainMenuInfo.settingsMenu){
-        mpMainMenuInfo.inMainMenu = createSettingsMenu(width, height);
+        mpMainMenuInfo.mainMenu = createSettingsMenu(width, height);
         
     }
     if(mpUpdateInfo->changedKey){
@@ -450,12 +449,53 @@ void ape::VLFTImgui::adminRoomGUI(){
     mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
     ImGui::End();
 }
+void ape::VLFTImgui::loginGUI(){
+    ImGui::SetNextWindowPos(ImVec2(20, 20));
+    const float width = ImGui::GetIO().DisplaySize.x;
+    const float height = ImGui::GetIO().DisplaySize.y;
+    ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
+    ImGui::Begin("Login", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Checkbox("Teacher", &mpUpdateInfo->isAdmin);
+    static char email[255] = u8"";
+    ImGui::SetCursorPos(ImVec2(width/2-120, height/2-130));
+    ImGui::PushItemWidth(200);
+    ImGui::InputText(u8"email", email, IM_ARRAYSIZE(email));
+    static char password[255] = u8"";
+    if(mpUpdateInfo->isAdmin){
+        ImGui::SetCursorPos(ImVec2(width/2-120, height/2-90));
+        ImGui::PushItemWidth(200);
+        ImGui::InputText(u8"password", password, IM_ARRAYSIZE(password));
+        ImGui::SetCursorPos(ImVec2(width/2-70, height/2-50));
+        if(ImGui::Button("Log in", ImVec2(100,30))){
+            mpUpdateInfo->userName = email;
+            mpUpdateInfo->password = password;
+            mpUpdateInfo->checkLogin = true;
+        }
+    }
+    else{
+        ImGui::SetCursorPos(ImVec2(width/2-70, height/2+30));
+        if(ImGui::Button("Log in", ImVec2(100,30))){
+            mpUpdateInfo->userName = email;
+            mpUpdateInfo->checkLogin = true;
+        }
+    }
+    if(mpUpdateInfo->logedIn){
+        mpMainMenuInfo.loginMenu = false;
+        mpMainMenuInfo.mainMenu = true;
+    }
+    
+    
+    ImGui::PopItemWidth();
+    ImGui::End();
+}
 
 void ape::VLFTImgui::update(){
   
-    if(mpMainMenuInfo.admin && !mpMainMenuInfo.inRoomGui)
+    if(mpMainMenuInfo.loginMenu)
+        loginGUI();
+    else if(mpMainMenuInfo.admin && !mpMainMenuInfo.inRoomGui)
         adminRoomGUI();
-    else if(mpMainMenuInfo.student && !mpMainMenuInfo.inRoomGui)
+    else if(!mpMainMenuInfo.admin && !mpMainMenuInfo.inRoomGui)
         studentRoomGUI();
     else if(mpMainMenuInfo.inRoomGui){
         leftPanelGUI();
@@ -463,8 +503,27 @@ void ape::VLFTImgui::update(){
             statePanelGUI();
         }
         rightPanelGUI();
+        if(mpMainMenuInfo.showLogs){
+            movementLogsGUI();
+        }
     }
 }
+void ape::VLFTImgui::movementLogsGUI(){
+    const float width = ImGui::GetIO().DisplaySize.x;
+    const float height = ImGui::GetIO().DisplaySize.y;
+    ImGui::SetNextWindowPos(ImVec2(width-200, height-150),ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(200, 150), ImGuiCond_Once);
+    ImGui::Begin("Movement logs", nullptr);
+    std::string label ="Logged movements of" + mpUpdateInfo->userName;
+    ImGui::SetCursorPosX(ImGui::GetWindowWidth()/2-70);
+    ImGui::Text("%s", label.c_str());
+    for(size_t i = 0; i < mpUpdateInfo->movementLogs.size(); i++){
+        ImGui::Text("%s", mpUpdateInfo->movementLogs[i].c_str());
+    }
+    ImGui::SetScrollHere(1.0f);
+    ImGui::End();
+}
+
 
 void ape::VLFTImgui::statePanelGUI(){
     ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Once);
@@ -498,7 +557,7 @@ void ape::VLFTImgui::leftPanelGUI() {
     ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Once);
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowSize(ImVec2(116, 250), ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(116, 325), ImGuiCond_Once);
     ImGui::Begin("Left panel", nullptr);
     if(ImGui::Button("Delete",ImVec2(100,25)) && mpUpdateInfo->pickedItem == "")
     {
@@ -527,12 +586,17 @@ void ape::VLFTImgui::leftPanelGUI() {
     if(ImGui::Button("Leave room",ImVec2(100,25)))
     {
        //TODO delete all object;
+        mpSceneNetwork->leave();
+        mpUpdateInfo->leftRoom = true;
         mpMainMenuInfo.inRoomGui = false;
         mpUpdateInfo->inRoom = false;
         mpMainMenuInfo.adminMenu = true;
         
     }
-    if(ImGui::Button("Play",ImVec2(100,25)))
+    std::string playText="Play";
+    if(mpUpdateInfo->IsPlayClicked)
+        playText = "Pause";
+    if(ImGui::Button(playText.c_str(),ImVec2(100,25)))
     {
         if (!mpUpdateInfo->isPlayRunning)
         {
@@ -542,7 +606,7 @@ void ape::VLFTImgui::leftPanelGUI() {
             mpUpdateInfo->BookmarkID = -1;
             mpUpdateInfo->TimeToSleepFactor = 1.0f;
             mpUpdateInfo->IsPauseClicked = false;
-            mpUpdateInfo->IsStopClicked = false;
+           
         }else{
             mpUpdateInfo->IsPauseClicked = true;
             mpUpdateInfo->IsPlayClicked = false;
@@ -550,8 +614,24 @@ void ape::VLFTImgui::leftPanelGUI() {
             
         }
     }
+    if(ImGui::Button("Stop animation",ImVec2(100,25))){
+        mpUpdateInfo->IsStopClicked = true;
+        mpUpdateInfo->IsPlayClicked = false;
+        mpUpdateInfo->isPlayRunning = false;
+        mpUpdateInfo->pauseTime = 0;
+    }
     if(ImGui::Button("Setting",ImVec2(100,25))){
         mpMainMenuInfo.settingsMenu = true;
+    }
+    if(!mpUpdateInfo->usersAttached){
+        if(ImGui::Button("Attach users",ImVec2(100,25))){
+            mpUpdateInfo->attachUsers = true;
+        }
+    }
+    else{
+        if(ImGui::Button("Detach users",ImVec2(100,25))){
+            mpUpdateInfo->attachUsers = true;
+        }
     }
     ImGui::Checkbox("show_headers", &mpMainMenuInfo.showStates);
     if(mpMainMenuInfo.settingsMenu){
@@ -757,6 +837,13 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
     ImGui::TextWrapped("%s", desrcText.c_str());
     ImGui::Text("%s", stateText.c_str());
     ImGui::Text("%s", logText.c_str());
+    ImGui::SetCursorPosX(width/2-30);
+    ImGui::Text("Links");
+    for(auto link : mpUpdateInfo->animationLinks){
+        ImGui::SetCursorPosX(15);
+        ImGui::Text("%s: %s", link.first.c_str(),link.second.c_str());
+    }
+    ImGui::Checkbox("Show movement logs", &mpMainMenuInfo.showLogs);
     ImGui::EndChild();
     
 }

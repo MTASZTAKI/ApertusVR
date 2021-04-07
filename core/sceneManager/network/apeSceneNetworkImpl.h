@@ -146,7 +146,6 @@ namespace ape
 
 		void connect2ReplicaHost(std::string guid);
 
-		void leave();
 
 		std::string getGUID();
 
@@ -159,6 +158,8 @@ namespace ape
 		void downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
 
 		std::string getCurrentRoomName() override;
+        
+        void leave() override;
 
 		bool isReplicaHost();
 

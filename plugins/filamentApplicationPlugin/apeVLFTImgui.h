@@ -76,41 +76,44 @@ SOFTWARE.*/
 
 struct VLFTMainMenuInfo{
     int current_selected = -1;
-    std::vector<bool> running_rooms;
     int sideBarWidth = 300;
-    char uploadRoomName[128];
     std::vector<std::string> roomNames;
+    std::vector<bool> running_rooms;
+    char uploadRoomName[128];
     bool admin = false;
-    bool student = false;
     bool singlePlayer = false;
-    bool inMainMenu = true;
+    bool loginMenu = true;
+    bool mainMenu = false;
     bool adminMenu = false;
     bool settingsMenu = false;
     bool multiPlayer = false;
     bool namesLoaded = false;
     bool inRoomGui = false;
-    float cameraSpeed = 1.0f;
     bool showStates = false;
+    bool showLogs = false;
+    float cameraSpeed = 1.0f;
 };
 struct updateInfo{
+    std::map<std::string, std::string> keyLabel;
+    std::map<std::string, std::string> animationLinks;
+    std::vector<std::string> stateOfObjects;
+    std::vector<std::string> nameOfState;
+    std::vector<std::string> newMessage;
+    std::vector<std::string> movementLogs;
+    std::string userName = "";
+    std::string password = "";
+    std::string messageToSend ="";
+    std::string changeKeyCode = "";
     std::string selectedItem = "";
     std::string rootOfSelected = "";
+    std::string pickedItem = "";
     ape::Vector3 position;
     ape::Quaternion orientation;
     std::vector<bool> playedAnimation;
     bool deleteSelected = false;
     bool pickUp = false;
     bool drop = false;
-    std::string pickedItem = "";
     bool isAdmin = false;
-    double now = 0;
-    bool isPlayRunning = false;
-    double StartTime = -1.0;
-    double pauseTime = 0.0;
-    int ChoosedBookmarkedAnimationID = 0;
-    unsigned long long ClickedBookmarkTime = 0;
-    int BookmarkID = -1;
-    float TimeToSleepFactor = 1.0f;
     bool IsPauseClicked = false;
     bool IsStopClicked = false;
     bool IsPlayClicked = false;
@@ -120,13 +123,20 @@ struct updateInfo{
     bool inSettings = false;
     bool sendMessage = false;
     bool newChatMessage = false;
-    std::vector<std::string> newMessage;
-    std::string messageToSend ="";
-    std::string changeKeyCode = "";
-    bool changedKey = 0;
-    std::map<std::string, std::string> keyLabel;
-    std::vector<std::string> stateOfObjects;
-    std::vector<std::string> nameOfState;
+    bool leftRoom = false;
+    bool isPlayRunning = false;
+    bool changedKey = false;
+    bool checkLogin = false;
+    bool logedIn = false;
+    bool attachUsers = false;
+    bool usersAttached = false;
+    double StartTime = -1.0;
+    double pauseTime = 0.0;
+    double now = 0;
+    int ChoosedBookmarkedAnimationID = 0;
+    int BookmarkID = -1;
+    unsigned long long ClickedBookmarkTime = 0;
+    float TimeToSleepFactor = 1.0f;
     std::vector<float> timeOfState;
 };
 
@@ -180,6 +190,8 @@ namespace ape
         
         void adminRoomGUI();
         
+        void loginGUI();
+        
         void studentRoomGUI();
         
         void leftPanelGUI();
@@ -187,6 +199,7 @@ namespace ape
         void rightPanelGUI();
         
         void statePanelGUI();
+        void movementLogsGUI();
         
         void singlePlayerRoomGUI();
         
