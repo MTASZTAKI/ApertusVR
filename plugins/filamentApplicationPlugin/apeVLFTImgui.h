@@ -90,7 +90,6 @@ struct VLFTMainMenuInfo{
     bool namesLoaded = false;
     bool inRoomGui = false;
     bool showStates = false;
-    bool showLogs = false;
     float cameraSpeed = 1.0f;
 };
 struct updateInfo{
@@ -99,7 +98,6 @@ struct updateInfo{
     std::vector<std::string> stateOfObjects;
     std::vector<std::string> nameOfState;
     std::vector<std::string> newMessage;
-    std::vector<std::string> movementLogs;
     std::string userName = "";
     std::string password = "";
     std::string messageToSend ="";
@@ -130,6 +128,9 @@ struct updateInfo{
     bool logedIn = false;
     bool attachUsers = false;
     bool usersAttached = false;
+    bool logMovements = false;
+    bool mIsStudentsMovementLogging = false;
+    bool setUpRoom = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double now = 0;
@@ -199,7 +200,6 @@ namespace ape
         void rightPanelGUI();
         
         void statePanelGUI();
-        void movementLogsGUI();
         
         void singlePlayerRoomGUI();
         

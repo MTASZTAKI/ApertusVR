@@ -363,8 +363,12 @@ namespace ape
         std::set<std::string> mstateNodeNames;
         
         std::set<std::string> mstateGeometryNames;
+        
+        std::ofstream mStudentsMovementLoggingFile;
 
         std::vector<ape::NodeWeakPtr> mAttachedUsers;
+        
+        std::vector<ape::NodeWeakPtr> mStudents;
         
         double mStartTime;
 
@@ -385,8 +389,8 @@ namespace ape
         bool mIsStopClicked;
 
         bool mIsPlayRunning;
-
-        bool mIsStudentsMovementLogging;
+        
+        bool mIsScreenCaputreOn;
 
         bool mIsAllSpaghettiVisible;
         

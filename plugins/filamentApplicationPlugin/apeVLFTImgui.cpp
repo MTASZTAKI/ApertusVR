@@ -135,6 +135,7 @@ void ape::VLFTImgui::connectToRoom(){
         mpUpdateInfo->inRoom = true;
     }
     mpUpdateInfo->leftRoom = false;
+    mpUpdateInfo->setUpRoom = true;
 }
 
 void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height){
@@ -457,15 +458,15 @@ void ape::VLFTImgui::loginGUI(){
     ImGui::Begin("Login", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::Checkbox("Teacher", &mpUpdateInfo->isAdmin);
     static char email[255] = u8"";
-    ImGui::SetCursorPos(ImVec2(width/2-120, height/2-130));
+    ImGui::SetCursorPos(ImVec2(width/2-120, height/2-90));
     ImGui::PushItemWidth(200);
     ImGui::InputText(u8"email", email, IM_ARRAYSIZE(email));
     static char password[255] = u8"";
     if(mpUpdateInfo->isAdmin){
-        ImGui::SetCursorPos(ImVec2(width/2-120, height/2-90));
+        ImGui::SetCursorPos(ImVec2(width/2-120, height/2-60));
         ImGui::PushItemWidth(200);
-        ImGui::InputText(u8"password", password, IM_ARRAYSIZE(password));
-        ImGui::SetCursorPos(ImVec2(width/2-70, height/2-50));
+        ImGui::InputText(u8"password", password, IM_ARRAYSIZE(password),ImGuiInputTextFlags_Password);
+        ImGui::SetCursorPos(ImVec2(width/2-70, height/2-25));
         if(ImGui::Button("Log in", ImVec2(100,30))){
             mpUpdateInfo->userName = email;
             mpUpdateInfo->password = password;
@@ -473,7 +474,7 @@ void ape::VLFTImgui::loginGUI(){
         }
     }
     else{
-        ImGui::SetCursorPos(ImVec2(width/2-70, height/2+30));
+        ImGui::SetCursorPos(ImVec2(width/2-70, height/2-25));
         if(ImGui::Button("Log in", ImVec2(100,30))){
             mpUpdateInfo->userName = email;
             mpUpdateInfo->checkLogin = true;
@@ -503,25 +504,7 @@ void ape::VLFTImgui::update(){
             statePanelGUI();
         }
         rightPanelGUI();
-        if(mpMainMenuInfo.showLogs){
-            movementLogsGUI();
-        }
     }
-}
-void ape::VLFTImgui::movementLogsGUI(){
-    const float width = ImGui::GetIO().DisplaySize.x;
-    const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-200, height-150),ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImVec2(200, 150), ImGuiCond_Once);
-    ImGui::Begin("Movement logs", nullptr);
-    std::string label ="Logged movements of" + mpUpdateInfo->userName;
-    ImGui::SetCursorPosX(ImGui::GetWindowWidth()/2-70);
-    ImGui::Text("%s", label.c_str());
-    for(size_t i = 0; i < mpUpdateInfo->movementLogs.size(); i++){
-        ImGui::Text("%s", mpUpdateInfo->movementLogs[i].c_str());
-    }
-    ImGui::SetScrollHere(1.0f);
-    ImGui::End();
 }
 
 
@@ -843,7 +826,15 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
         ImGui::SetCursorPosX(15);
         ImGui::Text("%s: %s", link.first.c_str(),link.second.c_str());
     }
-    ImGui::Checkbox("Show movement logs", &mpMainMenuInfo.showLogs);
+    if(!mpUpdateInfo->mIsStudentsMovementLogging){
+        if(ImGui::Button("Log movements")){
+            mpUpdateInfo->logMovements = true;
+        }
+    }else{
+        if(ImGui::Button("Stop movement logging")){
+            mpUpdateInfo->logMovements = true;
+        }
+    }
     ImGui::EndChild();
     
 }

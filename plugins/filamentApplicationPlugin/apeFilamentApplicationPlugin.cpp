@@ -62,14 +62,16 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mIsPauseClicked = false;
     mIsStopClicked = false;
     mIsPlayRunning = false;
+    mIsScreenCaputreOn = false;
     mAnimatedNodeNames = std::set<std::string>();
     mAttachedUsers = std::vector<ape::NodeWeakPtr>();
-    mIsStudentsMovementLogging = false;
     mSpaghettiNodeNames = std::set<std::string>();
     mstateNodeNames = std::set<std::string>();
     mstateGeometryNames = std::set<std::string>();
     mSpaghettiNodeNames = std::set<std::string>();
     mIsAllSpaghettiVisible = false;
+    mStudents = std::vector<ape::NodeWeakPtr>();
+    mStudentsMovementLoggingFile = std::ofstream();
     mKeyMap = std::map<std::string, SDL_Scancode>();
     mCamManipulator =  filament::camutils::Manipulator<float>::Builder()
     .flightStartPosition(2.5, 1.5, 1)
@@ -94,6 +96,8 @@ void ape::FilamentApplicationPlugin::initKeyMap(){
     mKeyMap["d"] = SDL_SCANCODE_D;
     mKeyMap["e"] = SDL_SCANCODE_E;
     mKeyMap["q"] = SDL_SCANCODE_Q;
+    mKeyMap["f2"] = SDL_SCANCODE_F2;
+    mKeyMap["f3"] = SDL_SCANCODE_F3;
 }
 
 void ape::FilamentApplicationPlugin::eventCallBack(const ape::Event& event)
@@ -242,7 +246,19 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         }
                                     }
                                 }
-                            
+                            for (auto studentWP : mStudents)
+                                    {
+                                        if (auto student = studentWP.lock())
+                                        {
+                                            if (event.subjectName == student->getName())
+                                            {
+                                                std::chrono::milliseconds timeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                                                std::stringstream data;
+                                                data << std::to_string(timeStamp.count()) << " name: " << student->getName() << " pos: " << student->getDerivedPosition().toString() << " ori: "  << student->getDerivedOrientation().toString() << std::endl;
+                                                mStudentsMovementLoggingFile << data.str();
+                                            }
+                                        }
+                                    }
                         }
                        
 					}
@@ -2090,6 +2106,15 @@ void ape::FilamentApplicationPlugin::Step()
                 ImGui::End();
             }
         }
+        if(app.updateinfo.setUpRoom){
+            std::string postname = "_vlftStudent";
+            if(app.updateinfo.isAdmin)
+                postname = "_vlftTeacher";
+            if(auto node = mpSceneManager->getNode(mUserName+postname).lock()){
+                node->setOwner(mpCoreConfig->getNetworkGUID());
+            }
+            app.updateinfo.setUpRoom = false;
+        }
         FilamentApp::get().setSidebarWidth(0);
         mpVlftImgui->update();
     };
@@ -2109,6 +2134,43 @@ void ape::FilamentApplicationPlugin::Step()
                                 viewMatrix[2][0],viewMatrix[2][1],viewMatrix[2][2],viewMatrix[2][3],
                                 viewMatrix[3][0], 1.5, viewMatrix[3][2],viewMatrix[3][3]
                                              ));
+        }
+        if(app.updateinfo.logMovements){
+            if(!app.updateinfo.mIsStudentsMovementLogging){
+                app.updateinfo.mIsStudentsMovementLogging = true;
+                std::stringstream fileName;
+                std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                fileName << "../../studentsMovementLog/" << uuid.count() << ".txt";
+                mStudentsMovementLoggingFile.open(fileName.str());
+                auto nodes = mpSceneManager->getNodes();
+                for (auto node : nodes)
+                {
+                    if (auto nodeSP = node.second.lock())
+                    {
+                        if (auto parentNode = nodeSP->getParentNode().lock())
+                        {
+                            ;
+                        }
+                        else
+                        {
+                            std::string nodeName = nodeSP->getName();
+                            std::size_t pos = nodeName.find("_vlftStudent");
+                            if (pos != std::string::npos)
+                            {
+                                mStudents.push_back(nodeSP);
+                            }
+                        }
+                    }
+                }
+            }
+            else{
+                app.updateinfo.mIsStudentsMovementLogging = false;
+                mStudents.clear();
+                mStudents.resize(0);
+                mStudentsMovementLoggingFile.close();
+                
+            }
+            app.updateinfo.logMovements = false;
         }
         if(app.updateinfo.leftRoom){
             std::vector<std::string> to_erase;
@@ -2657,6 +2719,28 @@ void ape::FilamentApplicationPlugin::Step()
                         if(keyCode == mKeyMap["q"]){
                             manipulator->keyUp(filament::camutils::Manipulator<float>::Key::DOWN);
                         }
+                        if(keyCode == mKeyMap["f2"]){
+                            std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                            std::string system_command="screencapture -x ../../screenshots/screenshot"+std::to_string(uuid.count())+".jpg";
+                            system("mkdir ../../screenshots");
+                            system((system_command).c_str());
+                            
+                        }
+                        if(keyCode == mKeyMap["f3"]){
+                            if(!mIsScreenCaputreOn){
+                                mIsScreenCaputreOn = true;
+                                auto systemCommand = [this](){
+                                    std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                                    std::string system_command="screencapture -x -v -V 15 ../../screenshots/screenshot"+std::to_string(uuid.count())+".mov";
+                                    system("mkdir ../../screenshots");
+                                    system(system_command.c_str());
+                                    mIsScreenCaputreOn = false;
+                                };
+                                std::thread systemThread(systemCommand);
+                                systemThread.detach();
+                            }
+                           
+                        }
                         app.animationData.keyDown[keyCode] = false;
                         if(!app.animationData.keyDown[mKeyMap["w"]] && !app.animationData.keyDown[mKeyMap["a"]] &&
                            !app.animationData.keyDown[mKeyMap["s"]] && !app.animationData.keyDown[mKeyMap["d"]] &&
@@ -2669,51 +2753,38 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         vec3<float> camPos, camTarget, camUp;
-        if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
-            if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
-               
-                mpUserInputMacro->getUserNode();
-                manipulator->getLookAt(&camPos, &camTarget, &camUp);
-                std::string postName = "_vlftStudent";
-                if(app.updateinfo.isAdmin)
-                    postName = "_vlftTeacher";
-                if(auto node = mpSceneManager->getNode(mUserName+postName).lock()){
-                    node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+0.2));
+        if(!app.updateinfo.isAdmin){
+            if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
+                auto asd = node->getOwner();
+                auto asd2 = mpCoreConfig->getNetworkGUID();
+                if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
+                   
+                    mpUserInputMacro->getUserNode();
+                    manipulator->getLookAt(&camPos, &camTarget, &camUp);
+                    node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+0.05));
                     auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                     modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                     auto modelQuat = modelMatrix.toQuaternion();
                     node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
-                    if(moved){
-                        if(app.updateinfo.movementLogs.size() >= 1000){
-                            app.updateinfo.movementLogs.erase(app.updateinfo.movementLogs.begin());
-                        }
-                        std::string text ="X: "+std::to_string(camPos.x) + " Y: "+std::to_string(camPos.y) + " Z: "+std::to_string(camPos.z);
-                        if(app.updateinfo.movementLogs.size() == 0 || text != app.updateinfo.movementLogs.back())
-                            app.updateinfo.movementLogs.push_back(text);
-                    }
+                    
+    //                std::string postName = "_vlftStudent";
+    //                if(app.updateinfo.isAdmin)
+    //                    postName = "_vlftTeacher";
+    //                if(auto node = mpSceneManager->getNode(mUserName+postName).lock()){
+    //
+    //                }
                 }
             }
         }
         else{
-            mpUserInputMacro->getUserNode();
+            //mpUserInputMacro->getUserNode();
             manipulator->getLookAt(&camPos, &camTarget, &camUp);
-            std::string postName = "_vlftStudent";
-            if(app.updateinfo.isAdmin)
-                postName = "_vlftTeacher";
-            if(auto node = mpSceneManager->getNode(mUserName+postName).lock()){
-                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+0.2));
+            if(auto node = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock()){
+                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+0.05));
                 auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                 modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                 auto modelQuat = modelMatrix.toQuaternion();
                 node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
-                if(moved){
-                    if(app.updateinfo.movementLogs.size() >= 1000){
-                        app.updateinfo.movementLogs.erase(app.updateinfo.movementLogs.begin());
-                    }
-                    std::string text ="X: "+std::to_string(camPos.x) + " Y: "+std::to_string(camPos.y) + " Z: "+std::to_string(camPos.z);
-                    if(app.updateinfo.movementLogs.size() == 0 || text != app.updateinfo.movementLogs.back())
-                        app.updateinfo.movementLogs.push_back(text);
-                }
             }
         }
     };
