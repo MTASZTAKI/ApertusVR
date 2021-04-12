@@ -112,21 +112,33 @@ void ape::IndexedLineSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 	mVariableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mCoordinatesSize))
 	{
-		while (mParameters.coordinates.size() < mCoordinatesSize)
-		{
-			float item;
-			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
-				mParameters.coordinates.push_back(item);
-		}
+        mParameters.coordinates.resize(mCoordinatesSize);
+        for (size_t i = 0; i < mCoordinatesSize; i++) {
+            float item;
+            if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+                mParameters.coordinates[i] = item;
+        }
+//		while (mParameters.coordinates.size() < mCoordinatesSize)
+//		{
+//			float item;
+//			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+//				mParameters.coordinates.push_back(item);
+//		}
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIndicesSize))
 	{
-		while (mParameters.indices.size() < mIndicesSize)
-		{
-			int item;
-			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
-				mParameters.indices.push_back(item);
-		}
+        mParameters.indices.resize(mIndicesSize);
+        for (size_t i = 0; i < mIndicesSize; i++) {
+            int item;
+            if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+                mParameters.indices[i] = item;
+        }
+//		while (mParameters.indices.size() < mIndicesSize)
+//		{
+//			int item;
+//			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+//				mParameters.indices.push_back(item);
+//		}
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters.color))
 	{
