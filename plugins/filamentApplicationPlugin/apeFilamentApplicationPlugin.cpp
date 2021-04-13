@@ -2773,13 +2773,7 @@ void ape::FilamentApplicationPlugin::Step()
                     modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                     auto modelQuat = modelMatrix.toQuaternion();
                     node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
-                    
-    //                std::string postName = "_vlftStudent";
-    //                if(app.updateinfo.isAdmin)
-    //                    postName = "_vlftTeacher";
-    //                if(auto node = mpSceneManager->getNode(mUserName+postName).lock()){
-    //
-    //                }
+
                 }
             }
         }
@@ -2787,8 +2781,7 @@ void ape::FilamentApplicationPlugin::Step()
             //mpUserInputMacro->getUserNode();
             manipulator->getLookAt(&camPos, &camTarget, &camUp);
             if(auto node = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock()){
-                std::cout << camPos.y << " y position event" << std::endl;
-                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+1.05));
+                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+0.05));
                 auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                 modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                 auto modelQuat = modelMatrix.toQuaternion();

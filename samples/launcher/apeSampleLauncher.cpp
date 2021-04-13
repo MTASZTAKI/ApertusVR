@@ -43,7 +43,8 @@ int main(int argc, char** argv)
             std::this_thread::sleep_for(std::chrono::milliseconds(20));*/
 	}
     else{
-    std::string inPath ="/Users/erik/Documents/ApertusVR/ApertusVR/samples/virtualLearningFactory";
+        std::string inPath = APE_SOURCE_DIR;
+        inPath += "/samples/virtualLearningFactory";
 //    std::cout << "path: ";
 //    std::cin >> inPath;
     if(inPath.length()>0)

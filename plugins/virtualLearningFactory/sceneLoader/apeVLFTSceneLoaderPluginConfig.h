@@ -178,6 +178,9 @@ namespace quicktype {
 }
 
 namespace nlohmann {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+namespace detail {
+#endif
     void from_json(const json & j, quicktype::Representation & x);
     void to_json(json & j, const quicktype::Representation & x);
 
@@ -253,4 +256,7 @@ namespace nlohmann {
         j["scene"] = x.get_scene();
         j["assets"] = x.get_assets();
     }
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+}
+#endif
 }
