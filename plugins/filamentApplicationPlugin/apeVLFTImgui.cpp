@@ -5,10 +5,10 @@
 #include "rapidjson/filewritestream.h"
 #include <curl/curl.h>
 #include <curl/easy.h>
+#include "apeVLFTImgui.h"
+#include "NativeWindowHelper.h"
 #ifdef __APPLE__
 #include <sys/stat.h>
-#include "NativeWindowHelper.h"
-#include "apeVLFTImgui.h"
 #endif
 
 ape::VLFTImgui::VLFTImgui( )
@@ -27,7 +27,7 @@ ape::VLFTImgui::~VLFTImgui()
 void ape::VLFTImgui::init(updateInfo *updateinfo)
 {
     std::stringstream fileFullPath;
-    fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeVLFTSceneLoaderPlugin.json";
+    fileFullPath << "C:/ApertusVR/samples/virtualLearningFactory/apeVLFTSceneLoaderPlugin.json";
     mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
     mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
     mpUpdateInfo = updateinfo;
@@ -48,6 +48,7 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     chatMessages.push_back(u8"A hangya lassú sakkban");
     chatMessages.push_back(u8"Ha van 5 almád és nekem van 12 székem akkor hány palacsinta fér el a teton?");
     chatMessages.push_back(u8"Egyse mert az űrlények nem hordanak kalapot!");
+    std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
 }
 
 
@@ -691,7 +692,7 @@ void ape::VLFTImgui::rightPanelGUI() {
 }
 
 void ape::VLFTImgui::openFileBrowser() {
-    char* filePath;
+    /*char* filePath;
     nfdresult_t result = NFD_OpenDialog( "gltf,glb", NULL, &filePath );
     if ( result == NFD_OKAY )
     {
@@ -727,7 +728,7 @@ void ape::VLFTImgui::openFileBrowser() {
     else
     {
         printf("Error: %s\n", NFD_GetError() );
-    }
+    }*/
 }
 
 static std::string convertVecToString(std::vector<double> vec,int  precision){

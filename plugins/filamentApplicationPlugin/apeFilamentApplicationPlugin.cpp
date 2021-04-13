@@ -266,10 +266,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					case ape::Event::Type::NODE_ORIENTATION:
 					{
                             auto nodeOrientation= node->getModelMatrix().transpose();
-                            if(nodeName == "Pallet.2"){
-                                auto ori = node->getOrientation();
-                                bool stop=false;
-                            }
                             auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                             math::mat4f transform;
                             auto filamentTransform = math::mat4f(
@@ -290,9 +286,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             if(node->getChildrenVisibility()){
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
-                                    if(!app.mpScene->hasEntity(instance->getEntities()[0])){
-                                        app.mpScene->addEntities(instance->getEntities(), instance->getEntityCount());
-                                    }
+                                    if(auto root = instance->getRoot())
+                                        if(!app.mpScene->hasEntity(root)){
+                                            app.mpScene->addEntities(instance->getEntities(), instance->getEntityCount());
+                                        }
                                     
                                 }
                                 else if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
@@ -581,10 +578,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             {
                                 case ape::Event::Type::GEOMETRY_INDEXEDLINESET_CREATE:
                                 {
-                                    app.spaghettiLines[parentNodeName].mat = filament::Material::Builder()
-                                    .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
-                                    .build(*app.engine);
-                                    app.spaghettiLines[parentNodeName].lineName = geometryName;
+                                    ;
                                     
                                 }
                                     break;
@@ -598,7 +592,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     app.mpTransformManager->create(app.spaghettiLines[parentNodeName].lineEntity);
                                     auto filamentTransform = app.mpTransformManager->getInstance(app.spaghettiLines[parentNodeName].lineEntity);
                                     app.mpTransforms[parentNodeName] = filamentTransform;
-                                    
+                                    app.spaghettiLines[parentNodeName].mat = filament::Material::Builder()
+                                        .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
+                                        .build(*app.engine);
+                                    app.spaghettiLines[parentNodeName].lineName = geometryName;
 //                                    if(app.spaghettiLines.find(parentNodeName) != app.spaghettiLines.end()){
 //                                        if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
 //                                            auto lineTm = app.mpTransformManager->getInstance(app.spaghettiLines[geometryName].lineEntity);
@@ -1472,8 +1469,8 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
            
             indices[indices.size()-1] = indices[indices.size()-2];
             indices.push_back(indices[indices.size()-1]+1);
+            std::cout << indices[indices.size() - 2] << " " << indices[indices.size() - 1] << std::endl;
             indices.push_back(-1);
-            
             spaghettiLineSection->setParameters(coords, indices, color);
             if (!mIsAllSpaghettiVisible)
             {
@@ -1484,15 +1481,15 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
             }
             spaghettiSectionName = spaghettiLineSection->getName();
         }
-        else if(auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(node->getName()+"_spaghettiEntity", ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock())){
-            
+        else if(auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(node->getName()+"_spaghettiEntity", ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
+        { 
+            spagetthiLineSection->setParentNode(spaghettiNode);
             ape::GeometryCoordinates coordinates = {
                 startPosition.x, startPosition.y, startPosition.z,
                 currentPosition.x, currentPosition.y, currentPosition.z };
             ape::GeometryIndices indices = { 0, 1, -1 };
             ape::Color color(1, 0, 0);
-            spagetthiLineSection->setParameters(coordinates, indices, color);
-            spagetthiLineSection->setParentNode(spaghettiNode);
+            spagetthiLineSection->setParameters(coordinates, indices, color);            
             mspaghettiLineNames[node->getName()+"_spaghettiEntity"] = spaghettiNode->getName();
             if (!mIsAllSpaghettiVisible)
             {
@@ -1968,41 +1965,7 @@ void ape::FilamentApplicationPlugin::Step()
                 }
                 if(app.updateinfo.logedIn){
                     app.firstRun = false;
-                    app.setManpipulator = true;
-                    std::string postName = "_vlftStudent";
-                    if(app.updateinfo.isAdmin)
-                        postName = "_vlftTeacher";
-                    auto mNode = mpSceneManager->createNode(mUserName+postName, true, mpCoreConfig->getNetworkGUID());
-                    if (auto node = mNode.lock())
-                    {
-                        if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName+"characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
-                        {
-                            gltfNode->setFileName("../../plugins/filamentApplicationPlugin/resources/MC_Char_1.glb");
-                            gltfNode->setParentNode(node);
-                            node->setPosition(ape::Vector3(0.0, 0.25, 0.2));
-                            
-                            if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName+postName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
-                            {
-                                
-                                geometryClone->setSourceGeometryGroupName(gltfNode->getName());
-                                geometryClone->setParentNode(node);
-                                node->setChildrenVisibility(true);
-                            }
-                        }
-                        
-                    }
-                    auto userTextNode = mpSceneManager->createNode(mUserName+mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID());
-                    if(auto textNode = userTextNode.lock()){
-                        if(auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName, ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())){
-                            textGeometry->setCaption("My first message");
-                        }
-                    }
-                    auto mTextNode = mpSceneManager->createNode("textNode", true, mpCoreConfig->getNetworkGUID());
-                    if(auto textNode = mTextNode.lock()){
-                        if(auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("Username", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())){
-                            textGeometry->setCaption("My first message");
-                        }
-                    }
+                    app.setManpipulator = true;       
                 }
             }
         }
@@ -2107,12 +2070,45 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         if(app.updateinfo.setUpRoom){
-            std::string postname = "_vlftStudent";
+            std::string postName = "_vlftStudent";
             if(app.updateinfo.isAdmin)
-                postname = "_vlftTeacher";
-            if(auto node = mpSceneManager->getNode(mUserName+postname).lock()){
-                node->setOwner(mpCoreConfig->getNetworkGUID());
+                postName = "_vlftTeacher";
+            auto mNode = mpSceneManager->createNode(mUserName + postName, true, mpCoreConfig->getNetworkGUID());
+            if (auto node = mNode.lock())
+            {
+                if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName + "characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                {
+                    std::cout << "gltfNode created: " << gltfNode->getName() << std::endl;
+                    gltfNode->setFileName("../../plugins/filamentApplicationPlugin/resources/MC_Char_1.glb");
+                    gltfNode->setParentNode(node);
+                    node->setPosition(ape::Vector3(0.0, 0.25, 0.2));
+
+                    if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + postName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                    {
+
+                        geometryClone->setSourceGeometryGroupName(gltfNode->getName());
+                        geometryClone->setParentNode(node);
+                        node->setChildrenVisibility(true);
+                    }
+                }
+
             }
+            auto userTextNode = mpSceneManager->createNode(mUserName + mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID());
+            if (auto textNode = userTextNode.lock()) {
+                if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName, ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
+                    textGeometry->setCaption("My first message");
+                }
+            }
+            auto mTextNode = mpSceneManager->createNode("textNode", true, mpCoreConfig->getNetworkGUID());
+            if (auto textNode = mTextNode.lock()) {
+                if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("Username", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
+                    textGeometry->setCaption("My first message");
+                }
+            }
+
+            //if(auto node = mpSceneManager->getNode(mUserName+postName).lock()){
+            //    node->setOwner(mpCoreConfig->getNetworkGUID());
+            //}
             app.updateinfo.setUpRoom = false;
         }
         FilamentApp::get().setSidebarWidth(0);
@@ -2780,7 +2776,7 @@ void ape::FilamentApplicationPlugin::Step()
             //mpUserInputMacro->getUserNode();
             manipulator->getLookAt(&camPos, &camTarget, &camUp);
             if(auto node = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock()){
-                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+0.05));
+                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1.05));
                 auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                 modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                 auto modelQuat = modelMatrix.toQuaternion();

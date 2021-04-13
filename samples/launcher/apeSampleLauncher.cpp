@@ -39,20 +39,15 @@ int main(int argc, char** argv)
 	{
 		signal(SIGINT, my_handler);
 		ape::System::Start(argv[1], true);
-        /*while (true)
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));*/
 	}
     else{
-    std::string inPath ="/Users/erik/Documents/ApertusVR/ApertusVR/samples/virtualLearningFactory";
-//    std::cout << "path: ";
-//    std::cin >> inPath;
+        std::string inPath = APE_SOURCE_DIR;
+        inPath +="/samples/virtualLearningFactory";
     if(inPath.length()>0)
     {
        
         signal(SIGINT, my_handler);
         ape::System::Start(inPath.c_str(), false);
-//        while(true)
-//            std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
     else
     {

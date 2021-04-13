@@ -178,79 +178,86 @@ namespace quicktype {
 }
 
 namespace nlohmann {
-    void from_json(const json & j, quicktype::Representation & x);
-    void to_json(json & j, const quicktype::Representation & x);
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+namespace detail {
+#endif
+        void from_json(const json& j, quicktype::Representation& x);
+        void to_json(json& j, const quicktype::Representation& x);
 
-    void from_json(const json & j, quicktype::Asset & x);
-    void to_json(json & j, const quicktype::Asset & x);
+        void from_json(const json& j, quicktype::Asset& x);
+        void to_json(json& j, const quicktype::Asset& x);
 
-    void from_json(const json & j, quicktype::Context & x);
-    void to_json(json & j, const quicktype::Context & x);
+        void from_json(const json& j, quicktype::Context& x);
+        void to_json(json& j, const quicktype::Context& x);
 
-    void from_json(const json & j, quicktype::Scene & x);
-    void to_json(json & j, const quicktype::Scene & x);
+        void from_json(const json& j, quicktype::Scene& x);
+        void to_json(json& j, const quicktype::Scene& x);
 
-    inline void from_json(const json & j, quicktype::Representation& x) {
-        x.set_file(j.at("file").get<std::string>());
-        x.set_unit(quicktype::get_optional<double>(j, "unit"));
+        inline void from_json(const json& j, quicktype::Representation& x) {
+            x.set_file(j.at("file").get<std::string>());
+            x.set_unit(quicktype::get_optional<double>(j, "unit"));
+        }
+
+        inline void to_json(json& j, const quicktype::Representation& x) {
+            j = json::object();
+            j["file"] = x.get_file();
+            j["unit"] = x.get_unit();
+        }
+
+        inline void from_json(const json& j, quicktype::Asset& x) {
+            x.set_id(j.at("id").get<std::string>());
+            x.set_type(j.at("type").get<std::string>());
+            x.set_descr(quicktype::get_optional<std::string>(j, "descr"));
+            x.set_representations(quicktype::get_optional<std::vector<quicktype::Representation>>(j, "representations"));
+            x.set_position(quicktype::get_optional<std::vector<double>>(j, "position"));
+            x.set_placement_rel_to(quicktype::get_optional<std::string>(j, "placementRelTo"));
+            x.set_parent_object(quicktype::get_optional<std::string>(j, "parentObject"));
+            x.set_model(quicktype::get_optional<std::string>(j, "model"));
+            x.set_rotation(quicktype::get_optional<std::vector<double>>(j, "rotation"));
+            x.set_connected_to(quicktype::get_optional<std::vector<std::string>>(j, "connectedTo"));
+        }
+
+        inline void to_json(json& j, const quicktype::Asset& x) {
+            j = json::object();
+            j["id"] = x.get_id();
+            j["type"] = x.get_type();
+            j["descr"] = x.get_descr();
+            j["representations"] = x.get_representations();
+            j["position"] = x.get_position();
+            j["placementRelTo"] = x.get_placement_rel_to();
+            j["parentObject"] = x.get_parent_object();
+            j["model"] = x.get_model();
+            j["rotation"] = x.get_rotation();
+            j["connectedTo"] = x.get_connected_to();
+        }
+
+        inline void from_json(const json& j, quicktype::Context& x) {
+            x.set_unit_of_measure_scale(j.at("UnitOfMeasureScale").get<double>());
+            x.set_zup(j.at("Zup").get<bool>());
+            x.set_repo_path(j.at("RepoPath").get<std::string>());
+        }
+
+        inline void to_json(json& j, const quicktype::Context& x) {
+            j = json::object();
+            j["UnitOfMeasureScale"] = x.get_unit_of_measure_scale();
+            j["Zup"] = x.get_zup();
+            j["RepoPath"] = x.get_repo_path();
+        }
+
+        inline void from_json(const json& j, quicktype::Scene& x) {
+            x.set_context(j.at("context").get<quicktype::Context>());
+            x.set_scene(j.at("scene").get<std::vector<std::string>>());
+            x.set_assets(j.at("assets").get<std::vector<quicktype::Asset>>());
+        }
+
+        inline void to_json(json& j, const quicktype::Scene& x) {
+            j = json::object();
+            j["context"] = x.get_context();
+            j["scene"] = x.get_scene();
+            j["assets"] = x.get_assets();
+        }
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     }
-
-    inline void to_json(json & j, const quicktype::Representation & x) {
-        j = json::object();
-        j["file"] = x.get_file();
-        j["unit"] = x.get_unit();
-    }
-
-    inline void from_json(const json & j, quicktype::Asset& x) {
-        x.set_id(j.at("id").get<std::string>());
-        x.set_type(j.at("type").get<std::string>());
-        x.set_descr(quicktype::get_optional<std::string>(j, "descr"));
-        x.set_representations(quicktype::get_optional<std::vector<quicktype::Representation>>(j, "representations"));
-        x.set_position(quicktype::get_optional<std::vector<double>>(j, "position"));
-        x.set_placement_rel_to(quicktype::get_optional<std::string>(j, "placementRelTo"));
-        x.set_parent_object(quicktype::get_optional<std::string>(j, "parentObject"));
-        x.set_model(quicktype::get_optional<std::string>(j, "model"));
-        x.set_rotation(quicktype::get_optional<std::vector<double>>(j, "rotation"));
-        x.set_connected_to(quicktype::get_optional<std::vector<std::string>>(j, "connectedTo"));
-    }
-
-    inline void to_json(json & j, const quicktype::Asset & x) {
-        j = json::object();
-        j["id"] = x.get_id();
-        j["type"] = x.get_type();
-        j["descr"] = x.get_descr();
-        j["representations"] = x.get_representations();
-        j["position"] = x.get_position();
-        j["placementRelTo"] = x.get_placement_rel_to();
-        j["parentObject"] = x.get_parent_object();
-        j["model"] = x.get_model();
-        j["rotation"] = x.get_rotation();
-        j["connectedTo"] = x.get_connected_to();
-    }
-
-    inline void from_json(const json & j, quicktype::Context& x) {
-        x.set_unit_of_measure_scale(j.at("UnitOfMeasureScale").get<double>());
-        x.set_zup(j.at("Zup").get<bool>());
-        x.set_repo_path(j.at("RepoPath").get<std::string>());
-    }
-
-    inline void to_json(json & j, const quicktype::Context & x) {
-        j = json::object();
-        j["UnitOfMeasureScale"] = x.get_unit_of_measure_scale();
-        j["Zup"] = x.get_zup();
-        j["RepoPath"] = x.get_repo_path();
-    }
-
-    inline void from_json(const json & j, quicktype::Scene& x) {
-        x.set_context(j.at("context").get<quicktype::Context>());
-        x.set_scene(j.at("scene").get<std::vector<std::string>>());
-        x.set_assets(j.at("assets").get<std::vector<quicktype::Asset>>());
-    }
-
-    inline void to_json(json & j, const quicktype::Scene & x) {
-        j = json::object();
-        j["context"] = x.get_context();
-        j["scene"] = x.get_scene();
-        j["assets"] = x.get_assets();
-    }
+#endif
 }
+

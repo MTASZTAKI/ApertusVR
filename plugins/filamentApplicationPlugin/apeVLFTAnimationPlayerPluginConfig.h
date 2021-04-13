@@ -220,6 +220,7 @@ namespace animationQuicktype {
 }
 
 namespace nlohmann {
+    namespace detail {
         void from_json(const json& j, animationQuicktype::Bookmark& x);
         void to_json(json& j, const animationQuicktype::Bookmark& x);
 
@@ -357,7 +358,7 @@ namespace nlohmann {
             case animationQuicktype::EventType::SHOW: j = "show"; break;
             case animationQuicktype::EventType::STATE: j = "state"; break;
             case animationQuicktype::EventType::TRAIL: j = "trail"; break;
-                case animationQuicktype::EventType::ATTACH: j = "attach"; break;
+            case animationQuicktype::EventType::ATTACH: j = "attach"; break;
             default: throw "This should not happen";
             }
         }
@@ -373,5 +374,6 @@ namespace nlohmann {
             default: throw "This should not happen";
             }
         }
+    }
 }
 

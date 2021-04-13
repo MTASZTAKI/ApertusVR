@@ -93,11 +93,11 @@ struct VLFTMainMenuInfo{
     float cameraSpeed = 1.0f;
 };
 struct updateInfo{
-    std::map<std::string, std::string> keyLabel;
-    std::map<std::string, std::string> animationLinks;
-    std::vector<std::string> stateOfObjects;
-    std::vector<std::string> nameOfState;
-    std::vector<std::string> newMessage;
+    std::map<std::string, std::string> keyLabel = std::map<std::string, std::string>();
+    std::map<std::string, std::string> animationLinks = std::map<std::string, std::string>();
+    std::vector<std::string> stateOfObjects = std::vector<std::string>();
+    std::vector<std::string> nameOfState = std::vector<std::string>();
+    std::vector<std::string> newMessage = std::vector<std::string>();
     std::string userName = "";
     std::string password = "";
     std::string messageToSend ="";
@@ -107,7 +107,7 @@ struct updateInfo{
     std::string pickedItem = "";
     ape::Vector3 position;
     ape::Quaternion orientation;
-    std::vector<bool> playedAnimation;
+    std::vector<bool> playedAnimation = std::vector<bool>();
     bool deleteSelected = false;
     bool pickUp = false;
     bool drop = false;
@@ -138,7 +138,7 @@ struct updateInfo{
     int BookmarkID = -1;
     unsigned long long ClickedBookmarkTime = 0;
     float TimeToSleepFactor = 1.0f;
-    std::vector<float> timeOfState;
+    std::vector<float> timeOfState= std::vector<float>();
 };
 
 namespace ape

@@ -125,11 +125,11 @@ if(WIN32)
     set (HEADERS
                 apeFilamentApplicationPluginConfigs.h
                 apeFilamentApplicationPlugin.h
- 	        apeVLFTImgui.h
+ 				apeVLFTImgui.h
         )
     set (SOURCES
                 apeFilamentApplicationPlugin.cpp
-		apeVLFTImgui.cpp
+				apeVLFTImgui.cpp
         )
         include_directories(
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/filament/include
@@ -147,15 +147,20 @@ if(WIN32)
 				${FILAMENT_PREBUILD_DIR}/filament-1.9.9/libs/filabridge/include
 				${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/getopt/include
 				${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/libsdl2/include
+				${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples
 				${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/robin-map
-                			${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+                ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
+				${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nativefiledialog
+ 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader
+				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty
+				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty/tinygltf
 				${CURL_INCLUDE_DIRS}
         )
 elseif(APPLE)
     set (HEADERS
                 apeFilamentApplicationPluginConfigs.h
                 apeFilamentApplicationPlugin.h
-	        apeVLFTImgui.h
+				apeVLFTImgui.h
         )
     set (SOURCES
 		apeFilamentApplicationPlugin.cpp
@@ -181,10 +186,10 @@ elseif(APPLE)
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/robin-map
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples
                 ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
-	        ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nativefiledialog
- 		${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader
-		${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty
-		${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty/tinygltf
+				${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nativefiledialog
+ 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader
+				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty
+				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty/tinygltf
        	        ${CURL_INCLUDE_DIRS}
         )
 endif()
@@ -340,10 +345,14 @@ if (WIN32)
 	set_property(TARGET MY_FILAMENT_SPV_REMAPPER PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/third_party/glslang/tnt/SPIRV/Debug/SPVRemapperd.lib)
 	set_property(TARGET MY_FILAMENT_SPV_REMAPPER PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/third_party/glslang/tnt/SPIRV/Release/SPVRemapper.lib)
 	
+	add_library(MY_FILAMENT_SAMPLES_RES STATIC IMPORTED)
+	set_property(TARGET MY_FILAMENT_SAMPLES_RES PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Debug/sample-resources.lib)
+	set_property(TARGET MY_FILAMENT_SAMPLES_RES PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Release/sample-resources.lib)
+	
 	add_library(MY_FILAMENT_APP_RES STATIC IMPORTED)
 	set_property(TARGET MY_FILAMENT_APP_RES PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/libs/filamentapp/Debug/filamentapp-resources.lib)
 	set_property(TARGET MY_FILAMENT_APP_RES PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/libs/filamentapp/Release/filamentapp-resources.lib)
-	
+
 	add_library(MY_FILAMENT_TINYEXR STATIC IMPORTED)
 	set_property(TARGET MY_FILAMENT_TINYEXR PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/third_party/tinyexr/tnt/Debug/tinyexr.lib)
 	set_property(TARGET MY_FILAMENT_TINYEXR PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/third_party/tinyexr/tnt/Release/tinyexr.lib)
@@ -351,6 +360,10 @@ if (WIN32)
 	add_library(MY_FILAMENT_LIBZ STATIC IMPORTED)
 	set_property(TARGET MY_FILAMENT_LIBZ PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/third_party/libz/tnt/Debug/z.lib)
 	set_property(TARGET MY_FILAMENT_LIBZ PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/third_party/libz/tnt/Release/z.lib)
+
+	add_library(NFD STATIC IMPORTED)
+	set_property(TARGET NFD PROPERTY IMPORTED_LOCATION_DEBUG ${CMAKE_SOURCE_DIR}/plugins/filamentApplicationPlugin/3rdParty/nativefiledialog/Debug/x64/nfd_d.lib)
+	set_property(TARGET NFD PROPERTY IMPORTED_LOCATION_RELEASE ${CMAKE_SOURCE_DIR}/plugins/filamentApplicationPlugin/3rdParty/nativefiledialog/Release/x64/nfd.lib)
 
 elseif(APPLE)
     set(LIBS bluegl bluevk camutils filabridge filaflat filamat filamentapp filameshio filagui geometry gltfio ibl image imageio matdbg math mathio utils viewer )
@@ -407,10 +420,10 @@ endif ()
 
 if(WIN32)
 	target_link_libraries (${PLUGIN_NAME} apePluginManager apeSceneManager apeEventManager apeCoreConfig apeUserInputMacro ${OPENGL_LIBRARIES}
-	MY_FILAMENT MY_FILAMENT_APP MY_FILAMENT_UTILS MY_FILAMENT_GLTFIO MY_FILAMENT_GLTFIO_CORE MY_FILAMENT_DRACODEC MY_FILAMENT_BACKEND MY_FILAMENT_SHADERS MY_FILAMENT_MATH MY_FILAMENT_GEOMETRY MY_FILAMENT_VIEWER
+	MY_FILAMENT NFD MY_FILAMENT_APP MY_FILAMENT_UTILS MY_FILAMENT_GLTFIO MY_FILAMENT_GLTFIO_CORE MY_FILAMENT_DRACODEC MY_FILAMENT_BACKEND MY_FILAMENT_SHADERS MY_FILAMENT_MATH MY_FILAMENT_GEOMETRY MY_FILAMENT_VIEWER
 MY_FILAMENT_IBL MY_FILAMENT_FLAT MY_FILAMENT_BRIDGE MY_FILAMENT_CAMUTILS MY_FILAMENT_BLUEGL MY_FILAMENT_IMAGE MY_FILAMENT_SMOL-V MY_FILAMENT_MESHOPT MY_FILAMENT_MATDBG MY_FILAMENT_IMGUI MY_FILAMENT_SDL2 MY_FILAMENT_FILAGUI
 MY_FILAMENT_SPIRV_CROSS_GLSL MY_FILAMENT_SPIRV_CROSS_CORE MY_FILAMENT_SPIRV_CROSS_MSL MY_FILAMENT_GLSLANG MY_FILAMENT_GLSLANG_OS MY_FILAMENT_GLSLANG_COMP MY_FILAMENT_SPIRV_TOOLS MY_FILAMENT_SPIRV_TOOLS_OPT
-MY_FILAMENT_SPIRV MY_FILAMENT_SPV_REMAPPER MY_FILAMENT_APP_RES MY_FILAMENT_GLTFIO_RES MY_FILAMENT_IMAGEIO MY_FILAMENT_PNG MY_FILAMENT_TINYEXR MY_FILAMENT_LIBZ
+MY_FILAMENT_SPIRV MY_FILAMENT_SPV_REMAPPER MY_FILAMENT_APP_RES MY_FILAMENT_GLTFIO_RES MY_FILAMENT_IMAGEIO MY_FILAMENT_PNG MY_FILAMENT_TINYEXR MY_FILAMENT_SAMPLES_RES MY_FILAMENT_LIBZ
 Shlwapi.lib) 
 
 elseif(APPLE)
@@ -448,5 +461,7 @@ set_property (TARGET ${PLUGIN_NAME} PROPERTY FOLDER "Plugins/FilamentApplication
 
 file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/default_env DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Debug/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Release/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 
 
