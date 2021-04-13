@@ -461,7 +461,10 @@ set_property (TARGET ${PLUGIN_NAME} PROPERTY FOLDER "Plugins/FilamentApplication
 
 file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/default_env DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Debug/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Release/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+
+if(WIN32)
+	file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Debug/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Release/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+endif()
 
 

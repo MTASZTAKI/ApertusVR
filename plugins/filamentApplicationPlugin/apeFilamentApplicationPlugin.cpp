@@ -219,6 +219,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					{
                         if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                             auto nodePosition = node->getPosition();
+                            auto absPos = node->getDerivedPosition();
+                            std::cout << event.subjectName << " y: " << absPos.getY() << std::endl;
                             auto nodeScale = node->getScale();
                             auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                             float divider = 1.0;
@@ -2088,14 +2090,13 @@ void ape::FilamentApplicationPlugin::Step()
                     std::cout << "gltfNode created: " << gltfNode->getName() << std::endl;
                     gltfNode->setFileName("../../plugins/filamentApplicationPlugin/resources/MC_Char_1.glb");
                     gltfNode->setParentNode(node);
-                    node->setPosition(ape::Vector3(0.0, 0.25, 0.2));
-
                     if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + postName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                     {
                         geometryClone->setSourceGeometryGroupName(gltfNode->getName());
                         geometryClone->setParentNode(node);
                         node->setChildrenVisibility(true);
                     }
+                    node->setPosition(ape::Vector3(0.0, 0.25, 0.2));
                 }  
             }
             auto userTextNode = mpSceneManager->createNode(mUserName + mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID());
@@ -2224,7 +2225,8 @@ void ape::FilamentApplicationPlugin::Step()
                             if (pos != std::string::npos)
                             {
                                 nodeSP->setOwner(mpCoreConfig->getNetworkGUID());
-                                nodeSP->setParentNode(mpUserInputMacro->getUserNode());
+                                if(auto userNode = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock())
+                                    nodeSP->setParentNode(userNode);
                                 nodeSP->setPosition(ape::Vector3(0, 0, 0));
                                 nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
                                 mAttachedUsers.push_back(nodeSP);
@@ -2753,8 +2755,7 @@ void ape::FilamentApplicationPlugin::Step()
         if(!app.updateinfo.isAdmin){
             if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
                 if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
-                   
-                    mpUserInputMacro->getUserNode();
+                    //mpUserInputMacro->getUserNode();
                     manipulator->getLookAt(&camPos, &camTarget, &camUp);
                     node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+0.05));
                     auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
@@ -2763,12 +2764,31 @@ void ape::FilamentApplicationPlugin::Step()
                     node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
 
                 }
+                else{
+                    auto pos = node->getDerivedPosition();
+                    auto ori = node->getDerivedOrientation();
+                    double sinp = 2 * (ori.getW() * ori.getY() - ori.getZ() * ori.getX());
+                    double pitch;
+                    if (std::abs(sinp) >= 1)
+                        pitch = std::copysign(M_PI / 2, sinp);
+                    else
+                        pitch = std::asin(sinp);
+                    double siny_cosp = 2 * (ori.getW() * ori.getZ() + ori.getX() * ori.getY());
+                    double cosy_cosp = 1 - 2 * (ori.getY() * ori.getY() + ori.getZ() * ori.getZ());
+                    auto yaw = std::atan2(siny_cosp, cosy_cosp);
+                    auto mani = filament::camutils::Manipulator<float>::Builder()
+                    .flightStartPosition(2.5, 1.5, 1)
+                    .flightStartOrientation(pitch, yaw)
+                    .build(filament::camutils::Mode::FREE_FLIGHT);
+                    manipulator->jumpToBookmark(mani->getCurrentBookmark());
+                    
+                }
             }
         }
         else{
-            //mpUserInputMacro->getUserNode();
-            manipulator->getLookAt(&camPos, &camTarget, &camUp);
             if(auto node = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock()){
+                //mpUserInputMacro->getUserNode();
+                manipulator->getLookAt(&camPos, &camTarget, &camUp);
                 node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1.05));
                 auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                 modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;

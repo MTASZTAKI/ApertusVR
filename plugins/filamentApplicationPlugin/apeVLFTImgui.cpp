@@ -27,7 +27,7 @@ ape::VLFTImgui::~VLFTImgui()
 void ape::VLFTImgui::init(updateInfo *updateinfo)
 {
     std::stringstream fileFullPath;
-    fileFullPath << "C:/ApertusVR/samples/virtualLearningFactory/apeVLFTSceneLoaderPlugin.json";
+    fileFullPath << APE_SOURCE_DIR << "/samples/virtualLearningFactory/apeVLFTSceneLoaderPlugin.json";
     mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
     mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
     mpUpdateInfo = updateinfo;

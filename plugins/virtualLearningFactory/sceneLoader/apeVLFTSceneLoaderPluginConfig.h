@@ -181,13 +181,8 @@ namespace nlohmann {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 namespace detail {
 #endif
-<<<<<<< HEAD
         void from_json(const json& j, quicktype::Representation& x);
         void to_json(json& j, const quicktype::Representation& x);
-=======
-    void from_json(const json & j, quicktype::Representation & x);
-    void to_json(json & j, const quicktype::Representation & x);
->>>>>>> 46e0671cb2bc7d856fc1550eb86b888043141f72
 
         void from_json(const json& j, quicktype::Asset& x);
         void to_json(json& j, const quicktype::Asset& x);
@@ -263,11 +258,6 @@ namespace detail {
         }
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     }
-<<<<<<< HEAD
-=======
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-}
->>>>>>> 46e0671cb2bc7d856fc1550eb86b888043141f72
 #endif
 }
 
