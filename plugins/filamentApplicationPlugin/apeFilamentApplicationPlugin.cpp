@@ -335,7 +335,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             if(node->getChildrenVisibility()){
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
-                                    if(!app.mpScene->hasEntity(instance->getEntities()[0])){
+                                    auto root = instance->getRoot();
+                                    if(!app.mpScene->hasEntity(root)){
                                         app.mpScene->addEntities(instance->getEntities(), instance->getEntityCount());
                                     }
                                     
@@ -387,11 +388,13 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
 		{
-            
+            std::cout << "Geometry_file event: " << event.subjectName << std::endl;
 			if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				std::string geometryName = geometryFile->getName();
 				std::string fileName = geometryFile->getFileName();
+                std::cout << "Geomrtrynamee: " << geometryName << std::endl;
+                std::cout << "fileName: " << fileName << std::endl;
                 float unitScale = geometryFile->getUnitScale();
 				std::string parentNodeName = "";
 				if (auto parentNode = geometryFile->getParentNode().lock())
@@ -593,8 +596,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     auto filamentTransform = app.mpTransformManager->getInstance(app.spaghettiLines[parentNodeName].lineEntity);
                                     app.mpTransforms[parentNodeName] = filamentTransform;
                                     app.spaghettiLines[parentNodeName].mat = filament::Material::Builder()
-                                        .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
-                                        .build(*app.engine);
+                                    .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
+                                    .build(*app.engine);
                                     app.spaghettiLines[parentNodeName].lineName = geometryName;
 //                                    if(app.spaghettiLines.find(parentNodeName) != app.spaghettiLines.end()){
 //                                        if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
@@ -638,36 +641,37 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                             }
                                             indexIndex++;
                                         }
-                                    }
-                                    app.spaghettiLines[parentNodeName].lineVertexBuffer = VertexBuffer::Builder()
-                                    .vertexCount(app.spaghettiLines[parentNodeName].size)
-                                    .bufferCount(1)
-                                    .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3,0, 16)
-                                    .attribute(VertexAttribute::COLOR, 0, VertexBuffer::AttributeType::UBYTE4, 12, 16)
-                                    .normalized(VertexAttribute::COLOR)
-                                    .build(*app.engine);
                                     
-                                    app.spaghettiLines[parentNodeName].lineVertexBuffer->setBufferAt(*app.engine, 0, VertexBuffer::BufferDescriptor(app.spaghettiLines[parentNodeName].lineVertices.data(), app.spaghettiLines[parentNodeName].size*16,nullptr));
-                                    
-                                    
-                                    app.spaghettiLines[parentNodeName].lineIndexBuffer = IndexBuffer::Builder()
-                                    .indexCount(app.spaghettiLines[parentNodeName].lineIndices.size())
-                                    .bufferType(IndexBuffer::IndexType::UINT)
-                                    .build(*app.engine);
-                                    
-                                    app.spaghettiLines[parentNodeName].lineIndexBuffer->setBuffer(*app.engine, IndexBuffer::BufferDescriptor(app.spaghettiLines[parentNodeName].lineIndices.data(), app.spaghettiLines[parentNodeName].lineIndices.size()*sizeof(uint32_t),nullptr));
-                                    
-                                    RenderableManager::Builder(1)
-                                            .material(0,  app.spaghettiLines[parentNodeName].mat->getDefaultInstance())
-                                            .geometry(0, RenderableManager::PrimitiveType::LINES, app.spaghettiLines[parentNodeName].lineVertexBuffer,
-                                                app.spaghettiLines[parentNodeName].lineIndexBuffer)
-                                            .culling(false)
-                                            .receiveShadows(false)
-                                            .castShadows(false)
-                                            .build(*app.engine, app.spaghettiLines[parentNodeName].lineEntity);
-                                    if (auto parentNode = manual->getParentNode().lock()){
-                                        if(parentNode->getChildrenVisibility() || parentNode->isVisible())
-                                            app.mpScene->addEntity(app.spaghettiLines[parentNodeName].lineEntity);
+                                        app.spaghettiLines[parentNodeName].lineVertexBuffer = VertexBuffer::Builder()
+                                        .vertexCount(app.spaghettiLines[parentNodeName].size)
+                                        .bufferCount(1)
+                                        .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3,0, 16)
+                                        .attribute(VertexAttribute::COLOR, 0, VertexBuffer::AttributeType::UBYTE4, 12, 16)
+                                        .normalized(VertexAttribute::COLOR)
+                                        .build(*app.engine);
+                                        
+                                        app.spaghettiLines[parentNodeName].lineVertexBuffer->setBufferAt(*app.engine, 0, VertexBuffer::BufferDescriptor(app.spaghettiLines[parentNodeName].lineVertices.data(), app.spaghettiLines[parentNodeName].size*16,nullptr));
+                                        
+                                        
+                                        app.spaghettiLines[parentNodeName].lineIndexBuffer = IndexBuffer::Builder()
+                                        .indexCount(app.spaghettiLines[parentNodeName].lineIndices.size())
+                                        .bufferType(IndexBuffer::IndexType::UINT)
+                                        .build(*app.engine);
+                                        
+                                        app.spaghettiLines[parentNodeName].lineIndexBuffer->setBuffer(*app.engine, IndexBuffer::BufferDescriptor(app.spaghettiLines[parentNodeName].lineIndices.data(), app.spaghettiLines[parentNodeName].lineIndices.size()*sizeof(uint32_t),nullptr));
+                                        
+                                        RenderableManager::Builder(1)
+                                                .material(0,  app.spaghettiLines[parentNodeName].mat->getDefaultInstance())
+                                                .geometry(0, RenderableManager::PrimitiveType::LINES, app.spaghettiLines[parentNodeName].lineVertexBuffer,
+                                                    app.spaghettiLines[parentNodeName].lineIndexBuffer)
+                                                .culling(false)
+                                                .receiveShadows(false)
+                                                .castShadows(false)
+                                                .build(*app.engine, app.spaghettiLines[parentNodeName].lineEntity);
+                                        if (auto parentNode = manual->getParentNode().lock()){
+                                            if(parentNode->getChildrenVisibility() || parentNode->isVisible())
+                                                app.mpScene->addEntity(app.spaghettiLines[parentNodeName].lineEntity);
+                                        }
                                     }
                                     
                                 }
@@ -707,17 +711,20 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 {
                     case ape::Event::Type::GEOMETRY_CLONE_CREATE:
                     {
+                        
                         app.mpInstancesMap[event.subjectName];
                     }
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_PARENTNODE:
                     {
-                        auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
-                        auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
-                        app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
-                        if(auto node = mpSceneManager->getNode(event.subjectName).lock()){
-                            if(node->getChildrenVisibility()){
-                                app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                        if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].index > -1){
+                            auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
+                            auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
+                            app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
+                            if(auto node = mpSceneManager->getNode(event.subjectName).lock()){
+                                if(node->getChildrenVisibility()){
+                                    app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                                }
                             }
                         }
                     }
@@ -2085,13 +2092,11 @@ void ape::FilamentApplicationPlugin::Step()
 
                     if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + postName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                     {
-
                         geometryClone->setSourceGeometryGroupName(gltfNode->getName());
                         geometryClone->setParentNode(node);
                         node->setChildrenVisibility(true);
                     }
-                }
-
+                }  
             }
             auto userTextNode = mpSceneManager->createNode(mUserName + mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID());
             if (auto textNode = userTextNode.lock()) {
@@ -2105,10 +2110,6 @@ void ape::FilamentApplicationPlugin::Step()
                     textGeometry->setCaption("My first message");
                 }
             }
-
-            //if(auto node = mpSceneManager->getNode(mUserName+postName).lock()){
-            //    node->setOwner(mpCoreConfig->getNetworkGUID());
-            //}
             app.updateinfo.setUpRoom = false;
         }
         FilamentApp::get().setSidebarWidth(0);
@@ -2751,8 +2752,6 @@ void ape::FilamentApplicationPlugin::Step()
         vec3<float> camPos, camTarget, camUp;
         if(!app.updateinfo.isAdmin){
             if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
-                auto asd = node->getOwner();
-                auto asd2 = mpCoreConfig->getNetworkGUID();
                 if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
                    
                     mpUserInputMacro->getUserNode();
@@ -2762,13 +2761,7 @@ void ape::FilamentApplicationPlugin::Step()
                     modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                     auto modelQuat = modelMatrix.toQuaternion();
                     node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
-                    
-    //                std::string postName = "_vlftStudent";
-    //                if(app.updateinfo.isAdmin)
-    //                    postName = "_vlftTeacher";
-    //                if(auto node = mpSceneManager->getNode(mUserName+postName).lock()){
-    //
-    //                }
+
                 }
             }
         }
@@ -2857,12 +2850,15 @@ void ape::FilamentApplicationPlugin::Step()
                     animator->applyAnimation(3, 0);
                 }
                 else{
-                    if( timeDiff > animator->getAnimationDuration(app.animationData.keyCurrentAnimation) && app.animationData.keysDown){
-                        app.animationData.keyStartTime +=  animator->getAnimationDuration(app.animationData.keyCurrentAnimation);
-                        timeDiff = now - app.animationData.keyStartTime;
-                    }
-                    if(timeDiff <= animator->getAnimationDuration(app.animationData.keyCurrentAnimation)){
-                        animator->applyAnimation(app.animationData.keyCurrentAnimation, timeDiff);
+                    auto cnt = animator->getAnimationCount();
+                    if(app.animationData.keyCurrentAnimation <= cnt){
+                        if(timeDiff > animator->getAnimationDuration(app.animationData.keyCurrentAnimation) && app.animationData.keysDown){
+                            app.animationData.keyStartTime +=  animator->getAnimationDuration(app.animationData.keyCurrentAnimation);
+                            timeDiff = now - app.animationData.keyStartTime;
+                        }
+                        if(timeDiff <= animator->getAnimationDuration(app.animationData.keyCurrentAnimation)){
+                            animator->applyAnimation(app.animationData.keyCurrentAnimation, timeDiff);
+                        }
                     }
                 }
                 

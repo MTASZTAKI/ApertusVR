@@ -220,7 +220,9 @@ namespace quicktype {
 }
 
 namespace nlohmann {
-    namespace detail {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+namespace detail {
+#endif
         void from_json(const json& j, quicktype::Bookmark& x);
         void to_json(json& j, const quicktype::Bookmark& x);
 
@@ -372,6 +374,8 @@ namespace nlohmann {
             default: throw "This should not happen";
             }
         }
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     }
+#endif
 }
 

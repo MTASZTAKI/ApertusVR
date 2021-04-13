@@ -134,11 +134,11 @@ void ape::IndexedLineSetGeometryImpl::Deserialize(RakNet::DeserializeParameters 
 				mParameters.indices[i] = item;
 		}
 		/*while (mParameters.indices.size() < mIndicesSize)
-{
-	int item;
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
-		mParameters.indices.push_back(item);
-}*/
+		{
+			int item;
+			if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, item))
+				mParameters.indices.push_back(item);
+		}*/
 	}
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mParameters.color))
 	{
