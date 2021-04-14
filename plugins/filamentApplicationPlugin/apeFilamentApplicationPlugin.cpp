@@ -131,6 +131,24 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					auto filamentTransform = app.mpTransformManager->getInstance(filamentEntity);
                     app.mpTransforms[nodeName] = filamentTransform;
                     app.mpScene->addEntity(filamentEntity);
+//                    std::string postName = "_vlftStudent";
+//                    if(app.updateinfo.isAdmin)
+//                        postName = "_vlftTeacher";
+//                    std::size_t pos = nodeName.find(postName);
+//                    if(pos != std::string::npos){
+//                        if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
+//                            if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+//                                auto camEntity = app.mainCamera->getEntity();
+//                                auto camTm = app.mpTransformManager->getInstance(camEntity);
+//                                app.mpTransformManager->setParent(camTm, app.mpTransforms[nodeName]);
+//                                auto filaTm = filament::math::mat4f(1,0,0,0,
+//                                                      0,1,0,0,
+//                                                      0,0,1,0,
+//                                                      0,0,0,1);
+//                                app.mpTransformManager->setTransform(camTm, filaTm);
+//                            }
+//                        }
+//                    }
                 }
 				else
 				{
@@ -139,12 +157,32 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					case ape::Event::Type::NODE_PARENTNODE:
 					{
                        
-                            
                         std::string parentNodeName = "";
                         std::vector<utils::Entity> entities;
                         entities.resize(10);
                         if (auto parentNode = node->getParentNode().lock())
                             parentNodeName = parentNode->getName();
+                        
+                        std::size_t pos = nodeName.find("_vlftStudent");
+                        if(pos != std::string::npos){
+                            if(node->getOwner() != mpCoreConfig->getNetworkGUID()){
+                                if (auto parentNode = node->getParentNode().lock()){
+                                    if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
+                                        auto camEntity = app.mainCamera->getEntity();
+                                        auto camTm = app.mpTransformManager->getInstance(camEntity);
+                                        app.mpTransformManager->setParent(camTm, app.mpTransforms[parentNodeName]);
+                                        auto filaTm = filament::math::mat4f(1,0,0,0,
+                                                              0,1,0,0,
+                                                              0,0,1,0,
+                                                              0,0,0,1);
+                                        app.mpTransformManager->setTransform(camTm, filaTm);
+                                        //app.mainCamera->setModelMatrix(filaTm);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        
                         if (parentNodeName.find_first_of(".") != std::string::npos)
                             {
                                 bool asd;
@@ -190,15 +228,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 
                                     }
                                     else if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
-//                                        cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(parentNodeName.c_str(), entities.data(), app.instanceCount[app.mpInstancesMap[cloneName].assetName]);
-//                                        if(cnt > 0 ){
-//                                            auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
-//                                            if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
-//                                                auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
-//                                                app.mpTransformManager->setParent(app.mpTransforms[nodeName], entityTransform);
-//                                            }
-//
-//                                        }
                                         app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
                                     }
                                     
@@ -212,15 +241,70 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_DETACH:
 					{
-						;
+                        std::size_t pos = nodeName.find("_vlftStudent");
+                        if(pos != std::string::npos){
+                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], NULL);
+                            if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
+                                if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+                                    auto camEntity = app.mainCamera->getEntity();
+                                    auto camTm = app.mpTransformManager->getInstance(camEntity);
+                                    app.mpTransformManager->setParent(camTm, NULL);
+                                    
+                                    auto filaTm = filament::math::mat4f(1,0,0,0,
+                                                          0,1,0,0,
+                                                          0,0,1,0,
+                                                          0,0,0,1);
+                                    app.mpTransformManager->setTransform(camTm, filaTm);
+                                }
+                            }
+                        }
 					}
 						break;
 					case ape::Event::Type::NODE_POSITION:
 					{
+                        std::size_t pos = nodeName.find("_vlftStudent");
+                        if(pos != std::string::npos){
+                            if(node->getOwner() != mpCoreConfig->getNetworkGUID()){
+                                std::size_t pos = nodeName.find("_vlftTeacher");
+                                if (pos != std::string::npos)
+                                {
+                                    auto pos = node->getDerivedPosition();
+                                    auto ori = node->getDerivedOrientation();
+//                                    double sinp = 2 * (ori.getW() * ori.getY() - ori.getZ() * ori.getX());
+//                                    double pitch;
+//                                    if (std::abs(sinp) >= 1)
+//                                        pitch = std::copysign(M_PI / 2, sinp);
+//                                    else
+//                                        pitch = std::asin(sinp);
+//                                    double siny_cosp = 2 * (ori.getW() * ori.getZ() + ori.getX() * ori.getY());
+//                                    double cosy_cosp = 1 - 2 * (ori.getY() * ori.getY() + ori.getZ() * ori.getZ());
+//                                    auto yaw = std::atan2(siny_cosp, cosy_cosp);
+//
+//                                    auto yaw = std::atan2(2.0*(ori.getY()*ori.getZ() + ori.getW()*ori.getX()), ori.getW()* ori.getW()-ori.getX()* ori.getX()-ori.getY()* ori.getY()+ori.getZ()* ori.getZ());
+//
+//                                    auto sinp =-2.0*(ori.getX()* ori.getZ()-ori.getW()* ori.getY());
+//                                    auto pitch = std::asin(sinp);
+//                                    if(abs(-2.0*(ori.getX()* ori.getZ()-ori.getW()* ori.getY())) >= 1){
+//                                        pitch = std::copysign(M_PI / 2, sinp);
+//                                    }
+//
+//                                    auto mani = filament::camutils::Manipulator<float>::Builder()
+//                                    .flightStartPosition(pos.getX(), pos.getY(), pos.getZ())
+//                                    .flightStartOrientation(yaw, pitch)
+//                                    .build(filament::camutils::Mode::FREE_FLIGHT);
+//                                    mCamManipulator->jumpToBookmark(mani->getCurrentBookmark());
+//                                    auto nodeTransforms = node->getDerivedModelMatrix();
+//                                    auto camModel = math::mat4f(
+//                                              nodeTransforms[0][0], nodeTransforms[1][0], nodeTransforms[2][0], nodeTransforms[3][0],
+//                                              nodeTransforms[0][1], nodeTransforms[1][1], nodeTransforms[2][1], nodeTransforms[3][1],
+//                                              nodeTransforms[0][2], nodeTransforms[1][2], nodeTransforms[2][2], nodeTransforms[3][2],
+//                                              nodeTransforms[0][3], nodeTransforms[1][2], nodeTransforms[2][3], nodeTransforms[3][3]);
+//                                    app.mainCamera->setModelMatrix(camModel);
+                                }
+                            }
+                        }
                         if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                             auto nodePosition = node->getPosition();
-                            auto absPos = node->getDerivedPosition();
-                            std::cout << event.subjectName << " y: " << absPos.getY() << std::endl;
                             auto nodeScale = node->getScale();
                             auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                             float divider = 1.0;
@@ -267,6 +351,52 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_ORIENTATION:
 					{
+                        if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
+                            if(node->getOwner() != mpCoreConfig->getNetworkGUID()){
+                                std::size_t pos = nodeName.find("_vlftTeacher");
+                                if (pos != std::string::npos)
+                                {
+                                    auto pos = node->getDerivedPosition();
+                                    auto ori = node->getDerivedOrientation();
+                                    
+                                    
+//                                    double sinp = 2 * (ori.getW() * ori.getY() - ori.getZ() * ori.getX());
+//                                    double pitch;
+//                                    if (std::abs(sinp) >= 1)
+//                                        pitch = std::copysign(M_PI / 2, sinp);
+//                                    else
+//                                        pitch = std::asin(sinp);
+//                                    double siny_cosp = 2 * (ori.getW() * ori.getZ() + ori.getX() * ori.getY());
+//                                    double cosy_cosp = 1 - 2 * (ori.getY() * ori.getY() + ori.getZ() * ori.getZ());
+//                                    auto yaw = std::atan2(siny_cosp, cosy_cosp);
+                                    
+                                    
+//                                    auto yaw = std::atan2(2.0*(ori.getY()*ori.getZ() + ori.getW()*ori.getX()), ori.getW()* ori.getW()-ori.getX()* ori.getX()-ori.getY()* ori.getY()+ori.getZ()* ori.getZ());
+//
+//                                    auto sinp =-2.0*(ori.getX()* ori.getZ()-ori.getW()* ori.getY());
+//                                    auto pitch = std::asin(sinp);
+//                                    if(abs(-2.0*(ori.getX()* ori.getZ()-ori.getW()* ori.getY())) >= 1){
+//                                        pitch = std::copysign(M_PI / 2, sinp);
+//                                    }
+//                                    auto mani = filament::camutils::Manipulator<float>::Builder()
+//                                    .flightStartPosition(pos.getX(), pos.getY(), pos.getZ())
+//                                    .flightStartOrientation(yaw, pitch)
+//                                    .build(filament::camutils::Mode::FREE_FLIGHT);
+//                                    auto rotMatrix = math::mat4f(math::quatf(ori.getW(),ori.getX(),ori.getY(),ori.getZ()));
+//
+//                                    mCamManipulator->jumpToBookmark(mani->getCurrentBookmark());
+                                    
+//                                    auto nodeTransforms = node->getDerivedModelMatrix();
+//                                    auto camModel = math::mat4f(
+//                                              nodeTransforms[0][0], nodeTransforms[1][0], nodeTransforms[2][0], nodeTransforms[3][0],
+//                                              nodeTransforms[0][1], nodeTransforms[1][1], nodeTransforms[2][1], nodeTransforms[3][1],
+//                                              nodeTransforms[0][2], nodeTransforms[1][2], nodeTransforms[2][2], nodeTransforms[3][2],
+//                                              nodeTransforms[0][3], nodeTransforms[1][2], nodeTransforms[2][3], nodeTransforms[3][3]);
+//                                    app.mainCamera->setModelMatrix(camModel);
+                                    
+                                }
+                            }
+                        }
                             auto nodeOrientation= node->getModelMatrix().transpose();
                             auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                             math::mat4f transform;
@@ -390,13 +520,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
 		{
-            std::cout << "Geometry_file event: " << event.subjectName << std::endl;
 			if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				std::string geometryName = geometryFile->getName();
 				std::string fileName = geometryFile->getFileName();
-                std::cout << "Geomrtrynamee: " << geometryName << std::endl;
-                std::cout << "fileName: " << fileName << std::endl;
                 float unitScale = geometryFile->getUnitScale();
 				std::string parentNodeName = "";
 				if (auto parentNode = geometryFile->getParentNode().lock())
@@ -1478,7 +1605,6 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
            
             indices[indices.size()-1] = indices[indices.size()-2];
             indices.push_back(indices[indices.size()-1]+1);
-            std::cout << indices[indices.size() - 2] << " " << indices[indices.size() - 1] << std::endl;
             indices.push_back(-1);
             spaghettiLineSection->setParameters(coords, indices, color);
             if (!mIsAllSpaghettiVisible)
@@ -2087,7 +2213,6 @@ void ape::FilamentApplicationPlugin::Step()
             {
                 if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName + "characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
                 {
-                    std::cout << "gltfNode created: " << gltfNode->getName() << std::endl;
                     gltfNode->setFileName("../../plugins/filamentApplicationPlugin/resources/MC_Char_1.glb");
                     gltfNode->setParentNode(node);
                     if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + postName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
@@ -2257,7 +2382,6 @@ void ape::FilamentApplicationPlugin::Step()
             }
             app.updateinfo.attachUsers = false;
         }
-        view->setCamera(app.mainCamera);
         if(app.updateinfo.setPosition){
             auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
             auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
@@ -2373,6 +2497,18 @@ void ape::FilamentApplicationPlugin::Step()
         
         view->setColorGrading(nullptr);
         processEventDoubleQueue();
+        if(auto node = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock()){
+            vec3<float> camPos, camTarget, camUp;
+            mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
+            app.mainCamera->lookAt(camPos, camTarget, camUp);
+        }
+        else if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
+            if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
+                vec3<float> camPos, camTarget, camUp;
+                mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
+                app.mainCamera->lookAt(camPos, camTarget, camUp);
+            }
+        }
     };
 
     auto postRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
@@ -2381,27 +2517,24 @@ void ape::FilamentApplicationPlugin::Step()
     auto userInput = [&](Engine* engine, View* view, Scene* scene, filament::camutils::Manipulator<float>* manipulator,int x, int y, SDL_Event event, int width, int height, double now){
         if(app.setManpipulator){
             manipulator->jumpToBookmark(mCameraBookmark);
+            mCamManipulator = manipulator;
             app.setManpipulator = false;
+            app.mainCamera = &view->getCamera();
+            vec3<float> camPos, camTarget, camUp;
+            manipulator->getLookAt(&camPos, &camTarget, &camUp);
+            //app.mainCamera->lookAt(camPos, camTarget, camUp);
         }
         app.updateinfo.now = now;
         filament::math::vec3<float> origin;
         filament::math::vec3<float> dir;
         filament::math::vec3<float> mtarget;
         filament::math::vec3<float> upward;
-        auto* camera = &view->getCamera();
-        float tnear = camera->getNear()/2;
-        float tfar = camera->getCullingFar()/10;
-        float fov = camera->getFieldOfViewInDegrees(filament::Camera::Fov::VERTICAL);
-//        auto frustum = camera->getFrustum();
-        //app.mpRenderableManager->getAxisAlignedBoundingBox(<#Instance instance#>)
+        float tnear =  app.mainCamera->getNear()/2;
+        float tfar =  app.mainCamera->getCullingFar()/10;
+        float fov =  app.mainCamera->getFieldOfViewInDegrees(filament::Camera::Fov::VERTICAL);
         auto keyCode = event.key.keysym.scancode;
         auto a = event.key.keysym.sym;
         auto keyState = SDL_GetModState();
-        if(mIsStudent){
-            math::vec3<float> eyePos, targetPos, upVec;
-            manipulator->getLookAt(&eyePos, &targetPos, &upVec);
-            
-        }
         bool moved = false;
         if((!app.updateinfo.inSettings || app.updateinfo.changedKey) && app.updateinfo.logedIn){
             switch(event.type){
@@ -2752,50 +2885,32 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         vec3<float> camPos, camTarget, camUp;
+        manipulator->getLookAt(&camPos, &camTarget, &camUp);
         if(!app.updateinfo.isAdmin){
             if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
                 if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
                     //mpUserInputMacro->getUserNode();
-                    manipulator->getLookAt(&camPos, &camTarget, &camUp);
-                    node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z+0.05));
+                    node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
                     auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                     modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                     auto modelQuat = modelMatrix.toQuaternion();
                     node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
 
                 }
-                else{
-                    auto pos = node->getDerivedPosition();
-                    auto ori = node->getDerivedOrientation();
-                    double sinp = 2 * (ori.getW() * ori.getY() - ori.getZ() * ori.getX());
-                    double pitch;
-                    if (std::abs(sinp) >= 1)
-                        pitch = std::copysign(M_PI / 2, sinp);
-                    else
-                        pitch = std::asin(sinp);
-                    double siny_cosp = 2 * (ori.getW() * ori.getZ() + ori.getX() * ori.getY());
-                    double cosy_cosp = 1 - 2 * (ori.getY() * ori.getY() + ori.getZ() * ori.getZ());
-                    auto yaw = std::atan2(siny_cosp, cosy_cosp);
-                    auto mani = filament::camutils::Manipulator<float>::Builder()
-                    .flightStartPosition(2.5, 1.5, 1)
-                    .flightStartOrientation(pitch, yaw)
-                    .build(filament::camutils::Mode::FREE_FLIGHT);
-                    manipulator->jumpToBookmark(mani->getCurrentBookmark());
-                    
-                }
             }
         }
         else{
             if(auto node = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock()){
                 //mpUserInputMacro->getUserNode();
-                manipulator->getLookAt(&camPos, &camTarget, &camUp);
-                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1.05));
+                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
                 auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                 modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                 auto modelQuat = modelMatrix.toQuaternion();
                 node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
             }
         }
+        
+        
     };
 
     auto animate = [this](Engine* engine, View* view, double now) {

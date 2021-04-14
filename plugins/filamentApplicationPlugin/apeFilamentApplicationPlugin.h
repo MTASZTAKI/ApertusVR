@@ -59,6 +59,7 @@ SOFTWARE.*/
 #include "apeIUnitTexture.h"
 #include "apeIWater.h"
 #include "apeUserInputMacro.h"
+#include "apeEuler.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
 #include "apeFilamentApplicationPluginConfigs.h"
