@@ -602,7 +602,7 @@ void ape::VLFTImgui::leftPanelGUI() {
         mpUpdateInfo->IsStopClicked = true;
         mpUpdateInfo->IsPlayClicked = false;
         mpUpdateInfo->isPlayRunning = false;
-        mpUpdateInfo->pauseTime = 0;
+        //mpUpdateInfo->pauseTime = 0;
     }
     if(ImGui::Button("Setting",ImVec2(100,25))){
         mpMainMenuInfo.settingsMenu = true;
@@ -651,7 +651,6 @@ void ape::VLFTImgui::rightPanelGUI() {
     if(mpUpdateInfo->newChatMessage){
         chatMessages.insert(chatMessages.end(), mpUpdateInfo->newMessage.begin(), mpUpdateInfo->newMessage.end());
         mpUpdateInfo->newMessage.clear();
-        mpUpdateInfo->newChatMessage = false;
     }
     ImGui::SetNextWindowPos(ImVec2(0, 320),ImGuiCond_Once);
     ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Once);
@@ -668,9 +667,10 @@ void ape::VLFTImgui::rightPanelGUI() {
     }
     chatText += chatMessages[chatMessages.size()-1];
     ImGui::TextWrapped("%s", chatText.c_str());
-    if(messageInBuffer){
+    if(messageInBuffer || mpUpdateInfo->newChatMessage){
         ImGui::SetScrollHere(1.0f);
         messageInBuffer= false;
+        mpUpdateInfo->newChatMessage = false;
     }
     ImGui::PopTextWrapPos();
     ImGui::EndChild();

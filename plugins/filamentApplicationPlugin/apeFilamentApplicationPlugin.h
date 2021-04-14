@@ -379,6 +379,8 @@ namespace ape
         
         std::string mUserName;
         
+        std::string mPostUserName;
+        
         std::vector<unsigned long long> mParsedBookmarkTimes;
         
         unsigned long long mClickedBookmarkTime;

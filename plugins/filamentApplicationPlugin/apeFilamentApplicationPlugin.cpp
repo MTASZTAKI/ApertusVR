@@ -241,9 +241,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_DETACH:
 					{
+                        app.mpTransformManager->setParent(app.mpTransforms[nodeName], NULL);
                         std::size_t pos = nodeName.find("_vlftStudent");
                         if(pos != std::string::npos){
-                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], NULL);
                             if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
                                 if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                                     auto camEntity = app.mainCamera->getEntity();
@@ -351,7 +351,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_ORIENTATION:
 					{
-                        if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
+                        if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
                             if(node->getOwner() != mpCoreConfig->getNetworkGUID()){
                                 std::size_t pos = nodeName.find("_vlftTeacher");
                                 if (pos != std::string::npos)
@@ -960,7 +960,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         break;
                         case ape::Event::Type::GEOMETRY_TEXT_CAPTION:{
-                            if(name != mUserName){
+                            if(name != mUserName+mPostUserName){
                                 app.updateinfo.newMessage.push_back(textGeometry->getCaption());
                                 app.updateinfo.newChatMessage = true;
                             }
@@ -1986,8 +1986,13 @@ void ape::FilamentApplicationPlugin::Step()
     };
 
     auto cleanup = [this](Engine* engine, View*, Scene*) {
-        for(auto const& x : app.asset)
-            app.loader->destroyAsset(x.second);
+        for(auto const& x : app.asset){
+            try {
+                app.loader->destroyAsset(x.second);
+            } catch (...) {
+                APE_LOG_DEBUG("Asset has already been deleted" << x.first);
+            }
+        }
 
         engine->destroy(app.scene.groundPlane);
         engine->destroy(app.colorGrading);
@@ -2018,84 +2023,14 @@ void ape::FilamentApplicationPlugin::Step()
         if(app.updateinfo.checkLogin){
             if(app.firstRun){
                 if(app.updateinfo.isAdmin){
-                    //check password and username
-                    bool userNameOK = true;
-                    auto nodes = mpSceneManager->getNodes();
-                    for(auto node: nodes){
-                        if(auto nodeSP = node.second.lock()){
-                            if (auto parentNode = nodeSP->getParentNode().lock())
-                            {
-                                ;
-                            }
-                            else
-                            {
-                                std::string nodeName = nodeSP->getName();
-                                std::size_t pos = nodeName.find("_vlftStudent");
-                                if (pos != std::string::npos)
-                                {
-                                    auto nodeUser =  nodeName.substr(0, pos);
-                                    if(nodeUser == app.updateinfo.userName){
-                                        userNameOK = false;
-                                        break;
-                                    }
-                                }else{
-                                    std::size_t pos = nodeName.find("_vlftTeacher");
-                                    if (pos != std::string::npos)
-                                    {
-                                        auto nodeUser =  nodeName.substr(0, pos);
-                                        if(nodeUser == app.updateinfo.userName){
-                                            userNameOK = false;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if(userNameOK){
-                        mUserName = app.updateinfo.userName;
-                        app.updateinfo.logedIn = true;
-                    }
+                    //check password
+                    mUserName = app.updateinfo.userName;
+                    app.updateinfo.logedIn = true;
                     app.updateinfo.checkLogin = false;
                 }
                 else{
-                    bool userNameOK = true;
-                    auto nodes = mpSceneManager->getNodes();
-                    for(auto node: nodes){
-                        if(auto nodeSP = node.second.lock()){
-                            if (auto parentNode = nodeSP->getParentNode().lock())
-                            {
-                                ;
-                            }
-                            else
-                            {
-                                std::string nodeName = nodeSP->getName();
-                                std::size_t pos = nodeName.find("_vlftStudent");
-                                if (pos != std::string::npos)
-                                {
-                                    auto nodeUser =  nodeName.substr(0, pos);
-                                    if(nodeUser == app.updateinfo.userName){
-                                        userNameOK = false;
-                                        break;
-                                    }
-                                }else{
-                                    std::size_t pos = nodeName.find("_vlftTeacher");
-                                    if (pos != std::string::npos)
-                                    {
-                                        auto nodeUser =  nodeName.substr(0, pos);
-                                        if(nodeUser == app.updateinfo.userName){
-                                            userNameOK = false;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if(userNameOK){
-                        mUserName = app.updateinfo.userName;
-                        app.updateinfo.logedIn = true;
-                    }
+                    mUserName = app.updateinfo.userName;
+                    app.updateinfo.logedIn = true;
                     app.updateinfo.checkLogin = false;
                 }
                 if(app.updateinfo.logedIn){
@@ -2205,18 +2140,18 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         if(app.updateinfo.setUpRoom){
-            mUserName += mpCoreConfig->getNetworkGUID();
-            std::string postName = "_vlftStudent";
             if(app.updateinfo.isAdmin)
-                postName = "_vlftTeacher";
-            auto mNode = mpSceneManager->createNode(mUserName + postName, true, mpCoreConfig->getNetworkGUID());
+                mPostUserName = "_vlftTeacher"+ mpCoreConfig->getNetworkGUID();
+            else
+                mPostUserName = "_vlftStudent"+ mpCoreConfig->getNetworkGUID();
+            auto mNode = mpSceneManager->createNode(mUserName + mPostUserName, true, mpCoreConfig->getNetworkGUID());
             if (auto node = mNode.lock())
             {
-                if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName + "characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName +mPostUserName+ "characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
                 {
                     gltfNode->setFileName("../../plugins/filamentApplicationPlugin/resources/MC_Char_1.glb");
                     gltfNode->setParentNode(node);
-                    if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + postName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                    if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + mPostUserName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                     {
                         geometryClone->setSourceGeometryGroupName(gltfNode->getName());
                         geometryClone->setParentNode(node);
@@ -2225,9 +2160,9 @@ void ape::FilamentApplicationPlugin::Step()
                     node->setPosition(ape::Vector3(0.0, 0.25, 0.2));
                 }  
             }
-            auto userTextNode = mpSceneManager->createNode(mUserName + "_Text", true, mpCoreConfig->getNetworkGUID());
+            auto userTextNode = mpSceneManager->createNode(mUserName+mPostUserName + "_Text", true, mpCoreConfig->getNetworkGUID());
             if (auto textNode = userTextNode.lock()) {
-                if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName, ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
+                if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName+mPostUserName, ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
                     textGeometry->setCaption(app.updateinfo.userName+" logged in");
                 }
             }
@@ -2293,7 +2228,7 @@ void ape::FilamentApplicationPlugin::Step()
         if(app.updateinfo.leftRoom){
             std::vector<std::string> to_erase;
             for(auto instanceList: app.instances){
-                if(instanceList.first != mUserName+"characterModel")
+                if(instanceList.first != mUserName+mPostUserName+"characterModel")
                     for(size_t i = 0; i < 10; i++){
                         if(instanceList.second[i]->getEntityCount() > 0)
                         {
@@ -2308,11 +2243,8 @@ void ape::FilamentApplicationPlugin::Step()
                 app.instances.erase(item);
             }
             to_erase.clear();
-            std::string postName = "_vlftStudent";
-            if(app.updateinfo.isAdmin)
-                postName = "_vlftTeacher";
             for(auto instance: app.mpInstancesMap){
-                if(instance.first != mUserName+postName){
+                if(instance.first != mUserName+mPostUserName){
                     if(app.asset.find(instance.first) != app.asset.end()){
                         app.loader->destroyAsset(app.asset[instance.second.assetName]);
                         app.asset.erase(instance.first);
@@ -2344,13 +2276,13 @@ void ape::FilamentApplicationPlugin::Step()
                             std::size_t pos = nodeName.find("_vlftStudent");
                             if (pos != std::string::npos)
                             {
+                                nodeSP->setInitalState();
                                 nodeSP->setOwner(mpCoreConfig->getNetworkGUID());
-                                if(auto userNode = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock())
+                                if(auto userNode = mpSceneManager->getNode(mUserName+mPostUserName).lock())
                                     nodeSP->setParentNode(userNode);
                                 nodeSP->setPosition(ape::Vector3(0, 0, 0));
                                 nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
                                 mAttachedUsers.push_back(nodeSP);
-                                nodeSP->setInitalState();
                             }
                         }
                     }
@@ -2413,20 +2345,25 @@ void ape::FilamentApplicationPlugin::Step()
             app.updateinfo.deleteSelected = false;
         }
         if(app.updateinfo.drop){
-            auto parentTm = app.mpTransformManager->getInstance(app.parentOfPicked);
-            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
-            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
-            auto parentWorldMatrix = app.mpTransformManager->getTransform(tmInstance);
-            parentWorldMatrix[3][1] += 0.4;
-            parentWorldMatrix[3][2] += 2.0;
-            app.mpTransformManager->setTransform(tmInstance, parentWorldMatrix);
-            app.mpTransformManager->setParent(tmInstance,parentTm);
-            app.updateinfo.pickedItem = "";
-            app.updateinfo.drop = false;
-            scene->remove(app.boxEntity.first);
+            if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
+                clone->detachFromParentNode();
+                clone->revertToInitalState();
+                clone->setOwner(clone->getCreator());
+            }
+//            auto parentTm = app.mpTransformManager->getInstance(app.parentOfPicked);
+//            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
+//            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
+//            auto parentWorldMatrix = app.mpTransformManager->getTransform(tmInstance);
+//            parentWorldMatrix[3][1] += 0.4;
+//            parentWorldMatrix[3][2] += 2.0;
+//            app.mpTransformManager->setTransform(tmInstance, parentWorldMatrix);
+//            app.mpTransformManager->setParent(tmInstance,parentTm);
+              app.updateinfo.pickedItem = "";
+              app.updateinfo.drop = false;
+              scene->remove(app.boxEntity.first);
         }
         if(app.updateinfo.sendMessage){
-            if(auto textNode =std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName).lock()))
+            if(auto textNode =std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName+mPostUserName).lock()))
             {
                 textNode->setCaption(app.updateinfo.messageToSend);
             }
@@ -2435,7 +2372,6 @@ void ape::FilamentApplicationPlugin::Step()
         }
         else if(app.updateinfo.pickUp || app.updateinfo.pickedItem != "" ){
             if(app.updateinfo.selectedItem != ""){
-                
                 auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
                 auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
                 auto camInstance = app.mpTransformManager->getInstance(view->getCamera().getEntity());
@@ -2447,28 +2383,48 @@ void ape::FilamentApplicationPlugin::Step()
                 //auto tmParent =app.mpTransformManager->getInstance(parent);
                 
                 if(app.updateinfo.pickedItem == ""){
+                    auto pos = mPostUserName.find("_vlftTeacher");
+                    if(pos != std::string::npos)
+                    if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
+                        if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
+                            clone->setInitalState();
+                            clone->setOwner(mpCoreConfig->getNetworkGUID());
+                            clone->setParentNode(node);
+                            clone->setPosition(ape::Vector3(0.0,-0.4,-2.0));
+                            clone->setOrientation(ape::Quaternion(1, 0, 0, 0));
+                        }
+                    }
                     app.parentOfPicked = app.mpTransformManager->getParent(tmInstance);
-                    auto name = app.asset[app.mpInstancesMap[app.rootOfSelected.second].assetName]->getName(app.parentOfPicked);
-                    app.mpTransformManager->setParent(tmInstance, camInstance);
-                    parentWorldMatrix = mat4f(1);
-                    parentWorldMatrix[3][1] = -0.4;
-                    parentWorldMatrix[3][2] = -2.0;
-                    app.mpTransformManager->setTransform(tmInstance, parentWorldMatrix);
+//                    auto name = app.asset[app.mpInstancesMap[app.rootOfSelected.second].assetName]->getName(app.parentOfPicked);
+//                    app.mpTransformManager->setParent(tmInstance, camInstance);
+//                    parentWorldMatrix = mat4f(1);
+//                    parentWorldMatrix[3][1] = -0.4;
+//                    parentWorldMatrix[3][2] = -2.0;
+//                    app.mpTransformManager->setTransform(tmInstance, parentWorldMatrix);
                     app.updateinfo.pickedItem = app.updateinfo.selectedItem;
                     app.updateinfo.pickUp = false;
                 }else if(app.updateinfo.pickUp){
-                    auto parentTm = app.mpTransformManager->getInstance(app.parentOfPicked);
-                    parentWorldMatrix = app.mpTransformManager->getWorldTransform(parentTm);
+                    if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
+                        auto pos = clone->getDerivedPosition();
+                        auto ori = clone->getDerivedOrientation();
+                        clone->detachFromParentNode();
+                        clone->setPosition(pos);
+                        clone->setOrientation(ori);
+                        clone->setOwner(clone->getCreator());
+                    }
                     
-                    auto camWorldMatrix = app.mpTransformManager->getWorldTransform(tmInstance);
-                    app.mpTransformManager->setParent(tmInstance,parentTm);
-                    auto orientation = inverse(parentWorldMatrix.toQuaternion());
-                    auto invTrans = orientation*(camWorldMatrix[3].xyz-parentWorldMatrix[3].xyz);
-                    auto invertedOri = orientation* camWorldMatrix.toQuaternion();
-                    math::mat4f newLocal(invertedOri);
-                    //auto cam = &view->getCamera();
-                    newLocal[3].xyz = invTrans;
-                    app.mpTransformManager->setTransform(tmInstance, newLocal);
+//                    auto parentTm = app.mpTransformManager->getInstance(app.parentOfPicked);
+//                    parentWorldMatrix = app.mpTransformManager->getWorldTransform(parentTm);
+//
+//                    auto camWorldMatrix = app.mpTransformManager->getWorldTransform(tmInstance);
+//                    app.mpTransformManager->setParent(tmInstance,parentTm);
+//                    auto orientation = inverse(parentWorldMatrix.toQuaternion());
+//                    auto invTrans = orientation*(camWorldMatrix[3].xyz-parentWorldMatrix[3].xyz);
+//                    auto invertedOri = orientation* camWorldMatrix.toQuaternion();
+//                    math::mat4f newLocal(invertedOri);
+//                    //auto cam = &view->getCamera();
+//                    newLocal[3].xyz = invTrans;
+//                    app.mpTransformManager->setTransform(tmInstance, newLocal);
                     app.updateinfo.pickedItem = "";
                     app.updateinfo.pickUp = false;
                     scene->remove(app.boxEntity.first);
@@ -2489,12 +2445,14 @@ void ape::FilamentApplicationPlugin::Step()
         
         view->setColorGrading(nullptr);
         processEventDoubleQueue();
-        if(auto node = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock()){
-            vec3<float> camPos, camTarget, camUp;
-            mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
-            app.mainCamera->lookAt(camPos, camTarget, camUp);
+        if(mPostUserName.find("_vlftTeacher") != std::string::npos){
+            if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
+                vec3<float> camPos, camTarget, camUp;
+                mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
+                app.mainCamera->lookAt(camPos, camTarget, camUp);
+            }
         }
-        else if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
+        else if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
             if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
                 vec3<float> camPos, camTarget, camUp;
                 mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
@@ -2805,7 +2763,7 @@ void ape::FilamentApplicationPlugin::Step()
                             }
                             if(keyState == KMOD_RSHIFT || keyState == KMOD_LSHIFT){
                                 if(app.animationData.keyCurrentAnimation == 0){
-                                    auto animator = app.instances[mUserName+"characterModel"][0]->getAnimator();
+                                    auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
                                     animator->applyAnimation(0, 0);
                                 }
                                 app.animationData.keyCurrentAnimation = 1;
@@ -2813,7 +2771,7 @@ void ape::FilamentApplicationPlugin::Step()
                             }
                             else{
                                 if(app.animationData.keyCurrentAnimation == 1){
-                                    auto animator = app.instances[mUserName+"characterModel"][0]->getAnimator();
+                                    auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
                                     animator->applyAnimation(1, 0);
                                 }
                                 app.animationData.keyCurrentAnimation = 0;
@@ -2879,7 +2837,7 @@ void ape::FilamentApplicationPlugin::Step()
         vec3<float> camPos, camTarget, camUp;
         manipulator->getLookAt(&camPos, &camTarget, &camUp);
         if(!app.updateinfo.isAdmin){
-            if(auto node = mpSceneManager->getNode(mUserName+"_vlftStudent").lock()){
+            if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
                 if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
                     //mpUserInputMacro->getUserNode();
                     node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
@@ -2892,7 +2850,7 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         else{
-            if(auto node = mpSceneManager->getNode(mUserName+"_vlftTeacher").lock()){
+            if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
                 //mpUserInputMacro->getUserNode();
                 node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
                 auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
@@ -2927,9 +2885,12 @@ void ape::FilamentApplicationPlugin::Step()
             }
             for (auto stateNodeName : mstateNodeNames)
             {
-                mpSceneManager->deleteEntity(stateNodeName);
-                mpSceneManager->deleteEntity(stateNodeName+"_geometry");
-                mpSceneManager->deleteNode(stateNodeName);
+                if(mpSceneManager->getEntity(stateNodeName).lock())
+                    mpSceneManager->deleteEntity(stateNodeName);
+                if(mpSceneManager->getEntity(stateNodeName+"_geometry").lock())
+                    mpSceneManager->deleteEntity(stateNodeName+"_geometry");
+                if(mpSceneManager->getNode(stateNodeName).lock())
+                    mpSceneManager->deleteNode(stateNodeName);
             }
             for (auto animatedNodeName : mAnimatedNodeNames)
             {
@@ -2953,8 +2914,8 @@ void ape::FilamentApplicationPlugin::Step()
         else if(app.updateinfo.IsPlayClicked){
             playAnimations(now);
         }
-        if(app.updateinfo.inRoom && app.instances.find(mUserName+"characterModel") != app.instances.end()){
-            auto animator = app.instances[mUserName+"characterModel"][0]->getAnimator();
+        if(app.updateinfo.inRoom && app.instances.find(mUserName+mPostUserName+"characterModel") != app.instances.end()){
+            auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
             double timeDiff;
             if(!app.animationData.animatedClick){
                 timeDiff = now - app.animationData.mouseStartTime;
