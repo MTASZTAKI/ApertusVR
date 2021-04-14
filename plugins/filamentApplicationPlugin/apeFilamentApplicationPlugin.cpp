@@ -961,7 +961,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         break;
                         case ape::Event::Type::GEOMETRY_TEXT_CAPTION:{
                             if(name != mUserName){
-                                app.updateinfo.newMessage.push_back(name+": "+textGeometry->getCaption());
+                                app.updateinfo.newMessage.push_back(textGeometry->getCaption());
                                 app.updateinfo.newChatMessage = true;
                             }
                         }
@@ -2205,6 +2205,7 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         if(app.updateinfo.setUpRoom){
+            mUserName += mpCoreConfig->getNetworkGUID();
             std::string postName = "_vlftStudent";
             if(app.updateinfo.isAdmin)
                 postName = "_vlftTeacher";
@@ -2224,16 +2225,10 @@ void ape::FilamentApplicationPlugin::Step()
                     node->setPosition(ape::Vector3(0.0, 0.25, 0.2));
                 }  
             }
-            auto userTextNode = mpSceneManager->createNode(mUserName + mpCoreConfig->getNetworkGUID(), true, mpCoreConfig->getNetworkGUID());
+            auto userTextNode = mpSceneManager->createNode(mUserName + "_Text", true, mpCoreConfig->getNetworkGUID());
             if (auto textNode = userTextNode.lock()) {
                 if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName, ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
-                    textGeometry->setCaption("My first message");
-                }
-            }
-            auto mTextNode = mpSceneManager->createNode("textNode", true, mpCoreConfig->getNetworkGUID());
-            if (auto textNode = mTextNode.lock()) {
-                if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity("Username", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
-                    textGeometry->setCaption("My first message");
+                    textGeometry->setCaption(app.updateinfo.userName+" logged in");
                 }
             }
             app.updateinfo.setUpRoom = false;
@@ -2434,9 +2429,6 @@ void ape::FilamentApplicationPlugin::Step()
             if(auto textNode =std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName).lock()))
             {
                 textNode->setCaption(app.updateinfo.messageToSend);
-            }
-            if(auto textNode =std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity("Username").lock())){
-                textNode->setCaption("My reply");
             }
             app.updateinfo.sendMessage = false;
             

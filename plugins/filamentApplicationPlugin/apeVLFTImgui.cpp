@@ -680,8 +680,10 @@ void ape::VLFTImgui::rightPanelGUI() {
     if(ImGui::InputText(u8"", str0, IM_ARRAYSIZE(str0), ImGuiInputTextFlags_EnterReturnsTrue)){
         
         if(strlen(str0)!=0){
-            chatMessages.push_back(str0);
-            mpUpdateInfo->messageToSend = str0;
+            std::string msg = str0;
+            msg = mpUpdateInfo->userName+": "+msg;
+            chatMessages.push_back(msg);
+            mpUpdateInfo->messageToSend = msg;
             mpUpdateInfo->sendMessage = true;
             messageInBuffer = true;
         }
