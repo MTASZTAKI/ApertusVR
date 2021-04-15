@@ -8,6 +8,8 @@
 #ifdef __APPLE__
 #include <sys/stat.h>
 #include "NativeWindowHelper.h"
+#else
+#include <Windows.h>
 #endif
 
 using namespace filament;
@@ -2802,15 +2804,20 @@ void ape::FilamentApplicationPlugin::Step()
                             manipulator->keyUp(filament::camutils::Manipulator<float>::Key::DOWN);
                         }
                         if(keyCode == mKeyMap["f2"]){
+                            #ifdef __APPLE__
                             std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
                             std::string system_command="screencapture -x ../../screenshots/screenshot"+std::to_string(uuid.count())+".jpg";
                             system("mkdir ../../screenshots");
                             system((system_command).c_str());
+                            #else
+                            //Todo WINDOWS
+                            #endif
                             
                         }
                         if(keyCode == mKeyMap["f3"]){
                             if(!mIsScreenCaputreOn){
                                 mIsScreenCaputreOn = true;
+                                #ifdef __APPLE__
                                 auto systemCommand = [this](){
                                     std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
                                     std::string system_command="screencapture -x -v -V 15 ../../screenshots/screenshot"+std::to_string(uuid.count())+".mov";
@@ -2820,6 +2827,9 @@ void ape::FilamentApplicationPlugin::Step()
                                 };
                                 std::thread systemThread(systemCommand);
                                 systemThread.detach();
+                                #else
+                                //Todo WINDOWS
+                                #endif
                             }
                            
                         }

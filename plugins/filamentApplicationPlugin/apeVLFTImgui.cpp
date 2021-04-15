@@ -30,6 +30,7 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     fileFullPath << APE_SOURCE_DIR << "/samples/virtualLearningFactory/apeVLFTSceneLoaderPlugin.json";
     mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
     mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
+    std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
     mpUpdateInfo = updateinfo;
     mpUpdateInfo->keyLabel["w"] = "w";
     mpUpdateInfo->keyLabel["s"] = "s";
@@ -37,10 +38,7 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     mpUpdateInfo->keyLabel["d"] = "d";
     mpUpdateInfo->keyLabel["e"] = "e";
     mpUpdateInfo->keyLabel["q"] = "q";
-    for(int i = 0; i < 500; i++){
-        mpUpdateInfo->playedAnimation.push_back(false);
-    }
-    mpMainMenuInfo.admin = mpUpdateInfo->isAdmin;
+    //mpMainMenuInfo.admin = mpUpdateInfo->isAdmin;
     chatMessages.push_back(u8"Elso uzenet bla bla");
     chatMessages.push_back(u8"Masodik uzenet bla bla");
     chatMessages.push_back(u8"Harmadik uzenet bla bla");
@@ -48,7 +46,6 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     chatMessages.push_back(u8"A hangya lassú sakkban");
     chatMessages.push_back(u8"Ha van 5 almád és nekem van 12 székem akkor hány palacsinta fér el a teton?");
     chatMessages.push_back(u8"Egyse mert az űrlények nem hordanak kalapot!");
-    std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
 }
 
 
@@ -141,7 +138,8 @@ void ape::VLFTImgui::connectToRoom(){
 
 void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height){
     if (ImGui::Button("Join",ImVec2(width/8, height/15))){
-        connectToRoom();
+        if(mpMainMenuInfo.current_selected != -1)
+            connectToRoom();
     }
 }
 void ape::VLFTImgui::createStartButton(int width, int height){
@@ -226,11 +224,11 @@ void ape::VLFTImgui::uploadGUI(){
 void ape::VLFTImgui::studentRoomGUI(){
        
     ImGui::SetNextWindowPos(ImVec2(20, 20));
-
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowSize(ImVec2(width-50, height-50));
+    ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
     ImGui::Begin("Student", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    
     ImGui::GetStyle().Alpha = 0.95;
     if(mpMainMenuInfo.mainMenu){
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25));
@@ -245,6 +243,13 @@ void ape::VLFTImgui::studentRoomGUI(){
             mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
         }
+        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/6+24));
+        if (ImGui::Button("Settings",ImVec2(width/5, height/12))){
+            mpMainMenuInfo.adminMenu = false;
+            mpMainMenuInfo.mainMenu = false;
+            mpMainMenuInfo.namesLoaded = false;
+            mpMainMenuInfo.settingsMenu = true;
+        }
     }
     else if(mpMainMenuInfo.singlePlayer){
         if(!mpMainMenuInfo.namesLoaded){
@@ -255,10 +260,10 @@ void ape::VLFTImgui::studentRoomGUI(){
             curlData();
         }
         listRoomNames(false);
-        ImGui::SetCursorPos(ImVec2(5,height-110));
+        ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
         createJoinButton("Student", width, height);
-        ImGui::SameLine(ImGui::GetWindowWidth()-205);
-        if (ImGui::Button("Back",ImVec2(200, 50))){
+        ImGui::SameLine(width-(width/8+48));
+        if (ImGui::Button("Back",ImVec2(width/8, height/15))){
             mpMainMenuInfo.singlePlayer = false;
             mpMainMenuInfo.mainMenu = true;
         }
@@ -271,22 +276,28 @@ void ape::VLFTImgui::studentRoomGUI(){
         if (ImGui::Button("Refresh",ImVec2(width/6, height/14))) {
             curlData();
         }
-        for (int n = 0; n < mpMainMenuInfo.roomNames.size(); n++)
-        {
-            if (ImGui::Selectable(mpMainMenuInfo.roomNames[n].c_str(), mpMainMenuInfo.current_selected == n))
-                mpMainMenuInfo.current_selected = n;
-                if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)){
-                    connectToRoom();
-                    mpMainMenuInfo.current_selected = -1;
-                }
-        }
-        ImGui::SetCursorPos(ImVec2(5,height-110));
+        listRoomNames(true);
+        ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
         createJoinButton("Student", width, height);
-        ImGui::SameLine(ImGui::GetWindowWidth()-205);
-        if (ImGui::Button("Back",ImVec2(200, 50))){
-            mpMainMenuInfo.singlePlayer = false;
+        ImGui::SameLine(width-(width/8+48));
+        if (ImGui::Button("Back",ImVec2(width/8, height/15))){
+            mpMainMenuInfo.multiPlayer = false;
             mpMainMenuInfo.mainMenu = true;
         }
+    }
+    else if(mpMainMenuInfo.settingsMenu){
+        mpMainMenuInfo.mainMenu = createSettingsMenu(width, height);
+        
+    }
+    if(mpUpdateInfo->changedKey){
+        const float width = ImGui::GetIO().DisplaySize.x;
+        const float height = ImGui::GetIO().DisplaySize.y;
+        ImGui::SetNextWindowSize(ImVec2(200, 50));
+        ImGui::SetNextWindowPos(ImVec2(width/2-100, height/2-25));
+        ImGui::SetNextWindowFocus();
+        ImGui::Begin("Press a key");
+        ImGui::Text("Press a key to set the conrtol");
+        ImGui::End();
     }
     mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
     ImGui::End();
@@ -444,6 +455,7 @@ void ape::VLFTImgui::adminRoomGUI(){
         const float height = ImGui::GetIO().DisplaySize.y;
         ImGui::SetNextWindowSize(ImVec2(200, 50));
         ImGui::SetNextWindowPos(ImVec2(width/2-100, height/2-25));
+        ImGui::SetNextWindowFocus();
         ImGui::Begin("Press a key");
         ImGui::Text("Press a key to set the conrtol");
         ImGui::End();
@@ -495,9 +507,9 @@ void ape::VLFTImgui::update(){
   
     if(mpMainMenuInfo.loginMenu)
         loginGUI();
-    else if(mpMainMenuInfo.admin && !mpMainMenuInfo.inRoomGui)
+    else if(mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
         adminRoomGUI();
-    else if(!mpMainMenuInfo.admin && !mpMainMenuInfo.inRoomGui)
+    else if(!mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
         studentRoomGUI();
     else if(mpMainMenuInfo.inRoomGui){
         leftPanelGUI();
@@ -543,29 +555,68 @@ void ape::VLFTImgui::leftPanelGUI() {
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(116, 325), ImGuiCond_Once);
     ImGui::Begin("Left panel", nullptr);
-    if(ImGui::Button("Delete",ImVec2(100,25)) && mpUpdateInfo->pickedItem == "")
-    {
-        mpUpdateInfo->deleteSelected = true;
-    }
-    if(mpUpdateInfo->pickedItem == ""){
-        if(ImGui::Button("Pick up",ImVec2(100,25)))
+    if(mpUpdateInfo->isAdmin){
+        if(ImGui::Button("Delete",ImVec2(100,25)) && mpUpdateInfo->pickedItem == "")
         {
-            mpUpdateInfo->pickUp = true;
+            mpUpdateInfo->deleteSelected = true;
         }
-    }
-    else{
-        if(ImGui::Button("Put down",ImVec2(100,25)))
+        if(mpUpdateInfo->pickedItem == ""){
+            if(ImGui::Button("Pick up",ImVec2(100,25)))
+            {
+                mpUpdateInfo->pickUp = true;
+            }
+        }
+        else{
+            if(ImGui::Button("Put down",ImVec2(100,25)))
+            {
+                mpUpdateInfo->pickUp = true;
+            }
+        }
+        if(ImGui::Button("Drop", ImVec2(100,30)) && mpUpdateInfo->pickedItem != ""){
+            mpUpdateInfo->drop = true;
+        }
+        if(ImGui::Button("Browse files",ImVec2(100,25)))
         {
-            mpUpdateInfo->pickUp = true;
+            openFileBrowser();
+            
         }
-    }
-    if(ImGui::Button("Drop", ImVec2(100,30)) && mpUpdateInfo->pickedItem != ""){
-        mpUpdateInfo->drop = true;
-    }
-    if(ImGui::Button("Browse files",ImVec2(100,25)))
-    {
-        openFileBrowser();
-        
+        std::string playText="Play";
+        if(mpUpdateInfo->IsPlayClicked)
+            playText = "Pause";
+        if(ImGui::Button(playText.c_str(),ImVec2(100,25)))
+        {
+            if (!mpUpdateInfo->isPlayRunning)
+            {
+                mpUpdateInfo->IsPlayClicked = true;
+                mpUpdateInfo->ChoosedBookmarkedAnimationID = 0;
+                mpUpdateInfo->ClickedBookmarkTime = 0;
+                mpUpdateInfo->BookmarkID = -1;
+                mpUpdateInfo->TimeToSleepFactor = 1.0f;
+                mpUpdateInfo->IsPauseClicked = false;
+               
+            }else{
+                mpUpdateInfo->IsPauseClicked = true;
+                mpUpdateInfo->IsPlayClicked = false;
+                mpUpdateInfo->isPlayRunning = false;
+                
+            }
+        }
+        if(ImGui::Button("Stop animation",ImVec2(100,25))){
+            mpUpdateInfo->IsStopClicked = true;
+            mpUpdateInfo->IsPlayClicked = false;
+            mpUpdateInfo->isPlayRunning = false;
+            //mpUpdateInfo->pauseTime = 0;
+        }
+        if(!mpUpdateInfo->usersAttached){
+            if(ImGui::Button("Attach users",ImVec2(100,25))){
+                mpUpdateInfo->attachUsers = true;
+            }
+        }
+        else{
+            if(ImGui::Button("Detach users",ImVec2(100,25))){
+                mpUpdateInfo->attachUsers = true;
+            }
+        }
     }
     if(ImGui::Button("Leave room",ImVec2(100,25)))
     {
@@ -577,45 +628,8 @@ void ape::VLFTImgui::leftPanelGUI() {
         mpMainMenuInfo.adminMenu = true;
         
     }
-    std::string playText="Play";
-    if(mpUpdateInfo->IsPlayClicked)
-        playText = "Pause";
-    if(ImGui::Button(playText.c_str(),ImVec2(100,25)))
-    {
-        if (!mpUpdateInfo->isPlayRunning)
-        {
-            mpUpdateInfo->IsPlayClicked = true;
-            mpUpdateInfo->ChoosedBookmarkedAnimationID = 0;
-            mpUpdateInfo->ClickedBookmarkTime = 0;
-            mpUpdateInfo->BookmarkID = -1;
-            mpUpdateInfo->TimeToSleepFactor = 1.0f;
-            mpUpdateInfo->IsPauseClicked = false;
-           
-        }else{
-            mpUpdateInfo->IsPauseClicked = true;
-            mpUpdateInfo->IsPlayClicked = false;
-            mpUpdateInfo->isPlayRunning = false;
-            
-        }
-    }
-    if(ImGui::Button("Stop animation",ImVec2(100,25))){
-        mpUpdateInfo->IsStopClicked = true;
-        mpUpdateInfo->IsPlayClicked = false;
-        mpUpdateInfo->isPlayRunning = false;
-        //mpUpdateInfo->pauseTime = 0;
-    }
-    if(ImGui::Button("Setting",ImVec2(100,25))){
+    if(ImGui::Button("Settings",ImVec2(100,25))){
         mpMainMenuInfo.settingsMenu = true;
-    }
-    if(!mpUpdateInfo->usersAttached){
-        if(ImGui::Button("Attach users",ImVec2(100,25))){
-            mpUpdateInfo->attachUsers = true;
-        }
-    }
-    else{
-        if(ImGui::Button("Detach users",ImVec2(100,25))){
-            mpUpdateInfo->attachUsers = true;
-        }
     }
     ImGui::Checkbox("show_headers", &mpMainMenuInfo.showStates);
     if(mpMainMenuInfo.settingsMenu){
@@ -829,13 +843,15 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
         ImGui::SetCursorPosX(15);
         ImGui::Text("%s: %s", link.first.c_str(),link.second.c_str());
     }
-    if(!mpUpdateInfo->mIsStudentsMovementLogging){
-        if(ImGui::Button("Log movements")){
-            mpUpdateInfo->logMovements = true;
-        }
-    }else{
-        if(ImGui::Button("Stop movement logging")){
-            mpUpdateInfo->logMovements = true;
+    if(mpUpdateInfo->isAdmin){
+        if(!mpUpdateInfo->mIsStudentsMovementLogging){
+            if(ImGui::Button("Log movements")){
+                mpUpdateInfo->logMovements = true;
+            }
+        }else{
+            if(ImGui::Button("Stop movement logging")){
+                mpUpdateInfo->logMovements = true;
+            }
         }
     }
     ImGui::EndChild();
