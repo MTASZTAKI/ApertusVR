@@ -465,6 +465,9 @@ file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/assets DESTINATI
 if(WIN32)
 	file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Debug/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	file(COPY ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples/Release/sdl2.dll DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ffmpeg-4.2.2-win64-static/bin/ffmpeg.exe DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/ffmpeg-4.2.2-win64-static/bin/ffmpeg.exe DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 endif()
 
 
