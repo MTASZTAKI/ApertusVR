@@ -553,7 +553,7 @@ void ape::VLFTImgui::leftPanelGUI() {
     ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Once);
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowSize(ImVec2(116, 325), ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(125, 325), ImGuiCond_Once);
     ImGui::Begin("Left panel", nullptr);
     if(mpUpdateInfo->isAdmin){
         if(ImGui::Button("Delete",ImVec2(100,25)) && mpUpdateInfo->pickedItem == "")
@@ -631,7 +631,21 @@ void ape::VLFTImgui::leftPanelGUI() {
     if(ImGui::Button("Settings",ImVec2(100,25))){
         mpMainMenuInfo.settingsMenu = true;
     }
-    ImGui::Checkbox("show_headers", &mpMainMenuInfo.showStates);
+    if (ImGui::Button("Screenshot", ImVec2(100, 25))) {
+        mpUpdateInfo->takeScreenshot = true;
+    }
+    if (!mpUpdateInfo->screenCaptureOn) {
+        if (ImGui::Button("Start screen cast", ImVec2(100, 25))) {
+            mpUpdateInfo->screenCast = true;
+        }
+    }
+    else {
+        if (ImGui::Button("Stop screen cast", ImVec2(100, 25))) {
+            mpUpdateInfo->screenCast = true;
+        }
+    }
+   
+    ImGui::Checkbox("show headers", &mpMainMenuInfo.showStates);
     if(mpMainMenuInfo.settingsMenu){
         ImGui::SetNextWindowPos(ImVec2(5, 5));
         ImGui::SetNextWindowSize(ImVec2(width-10, height-10));

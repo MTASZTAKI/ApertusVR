@@ -107,6 +107,14 @@ SOFTWARE.*/
 
 #include "generated/resources/resources.h"
 
+#ifdef __APPLE__
+#include <sys/stat.h>
+#include "NativeWindowHelper.h"
+#else
+#include <Windows.h>
+#include <gdiplus.h>
+#endif
+
 #define THIS_PLUGINNAME "apeFilamentApplicationPlugin"
 using namespace filament;
 using namespace filament::math;
@@ -392,15 +400,20 @@ namespace ape
         bool mIsStopClicked;
 
         bool mIsPlayRunning;
-        
-        bool mIsScreenCaputreOn;
 
         bool mIsAllSpaghettiVisible;
         
         bool mIsStudent;
         
         bool isSelected;
-        
+
+        #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__) 
+
+        PROCESS_INFORMATION mScreenCastProcessInfo;
+
+        void screenCast();
+
+        #endif
         void initFilament();
         
         void parseJson();
@@ -410,6 +423,12 @@ namespace ape
         void initKeyMap();
         
         void playAnimations(double now);
+
+        void takeScreenshot();
+
+        void startScreenCast();
+
+        void stopScreenCast();
         
         void showSpaghetti(std::string name, bool show);
         

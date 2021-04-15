@@ -5,12 +5,6 @@
 #include "rapidjson/filewritestream.h"
 #include "apeFilamentApplicationPlugin.h"
 
-#ifdef __APPLE__
-#include <sys/stat.h>
-#include "NativeWindowHelper.h"
-#else
-#include <Windows.h>
-#endif
 
 using namespace filament;
 using namespace filament::math;
@@ -64,7 +58,6 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mIsPauseClicked = false;
     mIsStopClicked = false;
     mIsPlayRunning = false;
-    mIsScreenCaputreOn = false;
     mAnimatedNodeNames = std::set<std::string>();
     mAttachedUsers = std::vector<ape::NodeWeakPtr>();
     mSpaghettiNodeNames = std::set<std::string>();
@@ -1865,6 +1858,156 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
     }
 }
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__) 
+int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
+{
+    using namespace Gdiplus;
+    UINT  num = 0;
+    UINT  size = 0;
+    ImageCodecInfo* pImageCodecInfo = NULL;
+    GetImageEncodersSize(&num, &size);
+    if (size == 0)
+        return -1;
+    pImageCodecInfo = (ImageCodecInfo*)(malloc(size));
+    if (pImageCodecInfo == NULL)
+        return -1;
+    GetImageEncoders(num, size, pImageCodecInfo);
+    for (UINT j = 0; j < num; ++j)
+    {
+        if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
+        {
+            *pClsid = pImageCodecInfo[j].Clsid;
+            free(pImageCodecInfo);
+            return j;
+        }
+    }
+    free(pImageCodecInfo);
+    return 0;
+}
+
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+    DWORD wndPid;
+    std::cout << "IN ENUM" << std::endl;
+    GetWindowThreadProcessId(hwnd, &wndPid);
+    std::cout << "WINDOW THREAD" << std::endl;
+    int len = 0;
+    std::cout << wndPid << " PID" << std::endl;
+    len = GetWindowTextLength(hwnd) + 1;
+    std::string s;
+    s.reserve(len);
+    std::cout << len << " WINDOW LENGHT" << std::endl;
+    GetWindowText(hwnd, const_cast<char*>(s.c_str()), len - 1);
+    std::cout << "WINDOW TEXT" << std::endl;
+    if (wndPid == (DWORD)lParam)
+    {
+        ::PostMessage(hwnd, WM_CLOSE, 0, 0);
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+void ape::FilamentApplicationPlugin::screenCast()
+{
+    std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+    std::stringstream command;
+    command << "/c ffmpeg -f gdigrab -framerate 30 -i desktop ../../screencasts/" << uuid.count() << ".mkv";
+    STARTUPINFO info = { sizeof(info) };
+    memset(&mScreenCastProcessInfo, 0, sizeof(mScreenCastProcessInfo));
+    CreateProcess("C:\\windows\\system32\\cmd.exe", LPTSTR((LPCTSTR)command.str().c_str()), NULL, NULL, TRUE, 0, NULL, NULL, &info, &mScreenCastProcessInfo);
+    
+}
+#endif
+
+void ape::FilamentApplicationPlugin::takeScreenshot() {
+#ifdef __APPLE__
+    std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+    std::string system_command = "screencapture -x ../../screenshots/screenshot" + std::to_string(uuid.count()) + ".jpg";
+    system("mkdir ../../screenshots");
+    system((system_command).c_str());
+#else
+    using namespace Gdiplus;
+    IStream* istream;
+    HRESULT res = CreateStreamOnHGlobal(NULL, true, &istream);
+    GdiplusStartupInput gdiplusStartupInput;
+    ULONG_PTR gdiplusToken;
+    std::cout << "TAKING SCREENSHOT" << std::endl;
+    GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+    {
+        HDC scrdc, memdc;
+        HBITMAP membit;
+        scrdc = ::GetDC(0);
+        int Height = GetSystemMetrics(SM_CYSCREEN);
+        int Width = GetSystemMetrics(SM_CXSCREEN);
+        memdc = CreateCompatibleDC(scrdc);
+        membit = CreateCompatibleBitmap(scrdc, Width, Height);
+        HBITMAP hOldBitmap = (HBITMAP)SelectObject(memdc, membit);
+        BitBlt(memdc, 0, 0, Width, Height, scrdc, 0, 0, SRCCOPY);
+        Gdiplus::Bitmap bitmap(membit, NULL);
+        CLSID clsid;
+        GetEncoderClsid(L"image/jpeg", &clsid);
+        std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+        auto fileName = "../../screenshots/" + std::to_string(uuid.count()) + ".jpg";
+        std::wstring wFileName = std::wstring(fileName.begin(), fileName.end());
+        bitmap.Save(wFileName.c_str(), &clsid, NULL);
+    }
+    GdiplusShutdown(gdiplusToken);
+    istream->Release();
+#endif
+}
+
+void ape::FilamentApplicationPlugin::startScreenCast() {
+    app.updateinfo.screenCaptureOn = true;
+#ifdef __APPLE__
+    auto systemCommand = [this]() {
+        std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+        std::string system_command = "screencapture -x -v -V 180 ../../screencast/" + std::to_string(uuid.count()) + ".mov";
+        system("mkdir ../../screencasts");
+        system(system_command.c_str());
+        app.updateinfo.screenCaptureOn = false;
+    };
+    std::thread systemThread(systemCommand);
+    systemThread.detach();
+#else
+    auto screenCastThread = std::thread(&FilamentApplicationPlugin::screenCast, this);
+    screenCastThread.detach();
+#endif
+}
+
+void ape::FilamentApplicationPlugin::stopScreenCast() {
+#ifdef __APPLE__
+    //TODO STOP SCREENCAST
+#else
+    std::cout << "STOP CAST" << std::endl;
+    auto succ = TerminateProcess(mScreenCastProcessInfo.hProcess, 2);
+    if (succ) {
+
+        const DWORD result = WaitForSingleObject(mScreenCastProcessInfo.hProcess, 500);
+        if (result == WAIT_OBJECT_0)
+            std::cout << "SUCCESS" << std::endl;
+        else
+            std::cout << "FAIL" << std::endl;
+        CloseHandle(mScreenCastProcessInfo.hProcess);
+        CloseHandle(mScreenCastProcessInfo.hThread);
+    }
+    else
+        std::cout << "TERMINATE FAIL" << std::endl;
+    /* HANDLE ps = OpenProcess(SYNCHRONIZE | PROCESS_TERMINATE, FALSE, mScreenCastProcessInfo.dwProcessId);
+
+     std::cout << "ps" << std::endl;
+     if (ps != INVALID_HANDLE_VALUE) {
+         EnumWindows(EnumWindowsProc, mScreenCastProcessInfo.dwProcessId);
+         CloseHandle(ps);
+         std::cout << "stopped" << std::endl;
+     }else
+         std::cout << "no process" << std::endl;*/
+    app.updateinfo.screenCaptureOn = false;
+#endif
+}
+
 void ape::FilamentApplicationPlugin::Step()
 {
 
@@ -2022,6 +2165,19 @@ void ape::FilamentApplicationPlugin::Step()
         auto& tm = engine->getTransformManager();
         auto& rm = engine->getRenderableManager();
         auto& lm = engine->getLightManager();
+        if (app.updateinfo.takeScreenshot) {
+            takeScreenshot();
+            app.updateinfo.takeScreenshot = false;
+        }
+        if (app.updateinfo.screenCast) {
+            if (!app.updateinfo.screenCaptureOn) {
+                startScreenCast();
+            }
+            else {
+                stopScreenCast();
+            }
+            app.updateinfo.screenCast = false;
+        }
         if(app.updateinfo.checkLogin){
             if(app.firstRun){
                 if(app.updateinfo.isAdmin){
@@ -2804,32 +2960,14 @@ void ape::FilamentApplicationPlugin::Step()
                             manipulator->keyUp(filament::camutils::Manipulator<float>::Key::DOWN);
                         }
                         if(keyCode == mKeyMap["f2"]){
-                            #ifdef __APPLE__
-                            std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-                            std::string system_command="screencapture -x ../../screenshots/screenshot"+std::to_string(uuid.count())+".jpg";
-                            system("mkdir ../../screenshots");
-                            system((system_command).c_str());
-                            #else
-                            //Todo WINDOWS
-                            #endif
-                            
+                            takeScreenshot();
                         }
                         if(keyCode == mKeyMap["f3"]){
-                            if(!mIsScreenCaputreOn){
-                                mIsScreenCaputreOn = true;
-                                #ifdef __APPLE__
-                                auto systemCommand = [this](){
-                                    std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-                                    std::string system_command="screencapture -x -v -V 15 ../../screenshots/screenshot"+std::to_string(uuid.count())+".mov";
-                                    system("mkdir ../../screenshots");
-                                    system(system_command.c_str());
-                                    mIsScreenCaputreOn = false;
-                                };
-                                std::thread systemThread(systemCommand);
-                                systemThread.detach();
-                                #else
-                                //Todo WINDOWS
-                                #endif
+                            if(!app.updateinfo.screenCaptureOn){
+                                startScreenCast();
+                            }
+                            else {
+                                stopScreenCast();
                             }
                            
                         }

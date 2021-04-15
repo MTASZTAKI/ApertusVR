@@ -131,6 +131,9 @@ struct updateInfo{
     bool logMovements = false;
     bool mIsStudentsMovementLogging = false;
     bool setUpRoom = false;
+    bool screenCast = false;
+    bool takeScreenshot = false;
+    bool screenCaptureOn = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double now = 0;
