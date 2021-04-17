@@ -2319,7 +2319,7 @@ void ape::FilamentApplicationPlugin::Step()
             {
                 if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName +mPostUserName+ "characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
                 {
-                    gltfNode->setFileName("./MC_Char_1.glb");
+                    gltfNode->setFileName("../assets/models/avatar/MC_Char_1.glb");
                     gltfNode->setParentNode(node);
                     if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + mPostUserName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                     {
@@ -3011,7 +3011,6 @@ void ape::FilamentApplicationPlugin::Step()
         }
         else{
             if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
-                //mpUserInputMacro->getUserNode();
                 node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
                 auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                 modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
