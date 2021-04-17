@@ -54,7 +54,7 @@ set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_S
 
 set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY FOLDER "Plugins/VirtualLearningFactory")
 
-set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY CXX_STANDARD 14)
+set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY CXX_STANDARD 17)
 
 set_property (TARGET apeVLFTSceneLoaderPlugin PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 
