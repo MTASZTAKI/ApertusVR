@@ -369,7 +369,33 @@ elseif(APPLE)
     set(LIBS bluegl bluevk camutils filabridge filaflat filamat filamentapp filameshio filagui geometry gltfio ibl image imageio matdbg math mathio utils viewer )
     set(FILAMENT_PREBUILD_DIR ${CMAKE_BINARY_DIR}/filamentApp/filament-1.9.9-build)
     set(THIRD_PARTY_LIBS imgui smol-v tinyexr z sdl2 assimp png)
-    set(LIB_LOCATIONS
+    set(RELEASE_LIB_LOCATIONS
+        ${FILAMENT_PREBUILD_DIR}/shaders/Release/libshaders.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/getopt/Release/libgetopt.a
+        
+        ${FILAMENT_PREBUILD_DIR}/third_party/spirv-cross/tnt/Release/libspirv-cross-core.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/spirv-cross/tnt/Release/libspirv-cross-glsl.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/spirv-cross/tnt/Release/libspirv-cross-msl.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/spirv-tools/source/opt/Release/libSPIRV-Tools-opt.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/spirv-tools/source/Release/libSPIRV-Tools.a
+        
+        
+        ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/glslang/Release/libglslang.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/SPIRV/Release/libSPIRV.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/SPIRV/Release/libSPVRemapper.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/OGLCompilersDLL/Release/libOGLCompiler.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/glslang/tnt/glslang/OSDependent/Unix/Release/libOSDependent.a
+        
+        ${FILAMENT_PREBUILD_DIR}/libs/filamentapp/Release/libfilamentapp-resources.a
+        ${FILAMENT_PREBUILD_DIR}/libs/ibl/Release/libibl-lite.a
+        ${FILAMENT_PREBUILD_DIR}/libs/gltfio/Release/libgltfio_core.a
+        ${FILAMENT_PREBUILD_DIR}/libs/gltfio/Release/libgltfio_resources.a
+        ${FILAMENT_PREBUILD_DIR}/filament/backend/Release/libbackend.a
+        ${FILAMENT_PREBUILD_DIR}/third_party/draco/tnt/Release/libdracodec.a
+        ${FILAMENT_PREBUILD_DIR}/samples/Release/libsample-resources.a
+    )
+        
+    set(DEBUG_LIB_LOCATIONS
         ${FILAMENT_PREBUILD_DIR}/shaders/Debug/libshaders.a
         ${FILAMENT_PREBUILD_DIR}/third_party/getopt/Debug/libgetopt.a
         
@@ -392,28 +418,42 @@ elseif(APPLE)
         ${FILAMENT_PREBUILD_DIR}/libs/gltfio/Debug/libgltfio_resources.a
         ${FILAMENT_PREBUILD_DIR}/filament/backend/Debug/libbackend.a
         ${FILAMENT_PREBUILD_DIR}/third_party/draco/tnt/Debug/libdracodec.a
-	${FILAMENT_PREBUILD_DIR}/samples/Debug/libsample-resources.a
+        ${FILAMENT_PREBUILD_DIR}/samples/Debug/libsample-resources.a
         
     )
-    foreach(LIB_LOC ${LIB_LOCATIONS})
+    foreach(DEBUG_LIB_LOC ${DEBUG_LIB_LOCATIONS})
     
-        STRING(REGEX MATCH "lib[-a-zA-Z_1-9]+[\.]" LIB_NAME "${LIB_LOC}")
+        STRING(REGEX MATCH "lib[-a-zA-Z_1-9]+[\.]" LIB_NAME "${DEBUG_LIB_LOC}")
         STRING(LENGTH ${LIB_NAME} LIB_LENGTH)
         math(EXPR MY_LIB_LENGTH "${LIB_LENGTH} - 4")
         STRING(SUBSTRING ${LIB_NAME} 3 ${MY_LIB_LENGTH} MY_LIB_NAME)
         
         
         add_library(${MY_LIB_NAME} STATIC IMPORTED)
-        set_property(TARGET ${MY_LIB_NAME} PROPERTY IMPORTED_LOCATION_DEBUG ${LIB_LOC})
+        set_property(TARGET ${MY_LIB_NAME} PROPERTY IMPORTED_LOCATION_DEBUG ${DEBUG_LIB_LOC})
+    endforeach()
+    
+    foreach(RELEASE_LIB_LOC ${RELEASE_LIB_LOCATIONS})
+    
+        STRING(REGEX MATCH "lib[-a-zA-Z_1-9]+[\.]" LIB_NAME "${RELEASE_LIB_LOC}")
+        STRING(LENGTH ${LIB_NAME} LIB_LENGTH)
+        math(EXPR MY_LIB_LENGTH "${LIB_LENGTH} - 4")
+        STRING(SUBSTRING ${LIB_NAME} 3 ${MY_LIB_LENGTH} MY_LIB_NAME)
+        
+        
+        set_property(TARGET ${MY_LIB_NAME} PROPERTY IMPORTED_LOCATION_RELEASE ${RELEASE_LIB_LOC})
         target_link_libraries (${PLUGIN_NAME} ${MY_LIB_NAME})
     endforeach()
+    
     add_library(MY_FILAMENT STATIC IMPORTED)
 	set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/filament/Debug/libfilament.a)
-	set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/filament/Debug/libfilament.a)
+	set_property(TARGET MY_FILAMENT PROPERTY IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/filament/Release/libfilament.a)
+        target_link_libraries (${PLUGIN_NAME} MY_FILAMENT)
 
 	add_library(NFD STATIC IMPORTED)
-	set_property(TARGET NFD PROPERTY IMPORTED_LOCATION_DEBUG /Users/erik/Documents/ApertusVR/ApertusVR/plugins/filamentApplicationPlugin/3rdParty/nativefiledialog/libnfd.a)
-        target_link_libraries (${PLUGIN_NAME} NFD)
+	set_property(TARGET NFD PROPERTY IMPORTED_LOCATION_DEBUG ${CMAKE_SOURCE_DIR}/plugins/filamentApplicationPlugin/3rdParty/nativefiledialog/Debug/libnfd_d.a)
+    set_property(TARGET NFD PROPERTY IMPORTED_LOCATION_RELEASE ${CMAKE_SOURCE_DIR}/plugins/filamentApplicationPlugin/3rdParty/nativefiledialog/Release/libnfd.a)
+    target_link_libraries (${PLUGIN_NAME} NFD)
 	
 endif ()
 
@@ -429,18 +469,28 @@ Shlwapi.lib gdiplus.lib)
 elseif(APPLE)
 	foreach(lib ${LIBS})
         		add_library(${lib} STATIC IMPORTED)
-        		set_target_properties(${lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/libs/${lib}/Debug/lib${lib}.a)
+        		set_target_properties(${lib} PROPERTIES IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/libs/${lib}/Debug/lib${lib}.a)
+                set_target_properties(${lib} PROPERTIES IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/libs/${lib}/Release/lib${lib}.a)
 		target_link_libraries (${PLUGIN_NAME} ${lib})
 	endforeach()
 
 	foreach(third_party_lib ${THIRD_PARTY_LIBS})
         add_library(${third_party_lib} STATIC IMPORTED)
+        
         if(EXISTS ${FILAMENT_PREBUILD_DIR}/third_party/${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
-		     set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/third_party/${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
+		     set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/third_party/${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
         elseif(EXISTS ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
-             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
+             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
         else()
-             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.dylib)
+             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION_DEBUG ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.dylib)
+        endif()
+        
+        if(EXISTS ${FILAMENT_PREBUILD_DIR}/third_party/${third_party_lib}/tnt/Release/lib${third_party_lib}.a)
+             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/third_party/${third_party_lib}/tnt/Release/lib${third_party_lib}.a)
+        elseif(EXISTS ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Debug/lib${third_party_lib}.a)
+             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Release/lib${third_party_lib}.a)
+        else()
+             set_target_properties(${third_party_lib} PROPERTIES IMPORTED_LOCATION_RELEASE ${FILAMENT_PREBUILD_DIR}/third_party/lib${third_party_lib}/tnt/Release/lib${third_party_lib}.dylib)
         endif()
         target_link_libraries (${PLUGIN_NAME} ${third_party_lib})
 	endforeach()

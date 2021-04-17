@@ -11,6 +11,8 @@
 #include <sys/stat.h>
 #endif
 
+bool gDownloadRemoteConfigFileFinished = false;
+
 ape::VLFTImgui::VLFTImgui( )
 {
     mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
@@ -26,11 +28,8 @@ ape::VLFTImgui::~VLFTImgui()
 
 void ape::VLFTImgui::init(updateInfo *updateinfo)
 {
-    std::stringstream fileFullPath;
-    fileFullPath << APE_SOURCE_DIR << "/samples/virtualLearningFactory/apeVLFTSceneLoaderPlugin.json";
-    mApeVLFTSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
-    mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
-    std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
+//    std::stringstream fileFullPath;
+//    fileFullPath << APE_SOURCE_DIR << "/samples/virtualLearningFactory/apeVLFTSceneLoaderPlugin.json";
     mpUpdateInfo = updateinfo;
     mpUpdateInfo->keyLabel["w"] = "w";
     mpUpdateInfo->keyLabel["s"] = "s";
@@ -38,14 +37,7 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     mpUpdateInfo->keyLabel["d"] = "d";
     mpUpdateInfo->keyLabel["e"] = "e";
     mpUpdateInfo->keyLabel["q"] = "q";
-    //mpMainMenuInfo.admin = mpUpdateInfo->isAdmin;
-    chatMessages.push_back(u8"Elso uzenet bla bla");
-    chatMessages.push_back(u8"Masodik uzenet bla bla");
-    chatMessages.push_back(u8"Harmadik uzenet bla bla");
-    chatMessages.push_back(u8"Makosteszte krumplipürével");
-    chatMessages.push_back(u8"A hangya lassú sakkban");
-    chatMessages.push_back(u8"Ha van 5 almád és nekem van 12 székem akkor hány palacsinta fér el a teton?");
-    chatMessages.push_back(u8"Egyse mert az űrlények nem hordanak kalapot!");
+    chatMessages.push_back("Write messages here for others to see");
 }
 
 
@@ -105,11 +97,57 @@ void ape::VLFTImgui::createStopButton(int width, int height){
     }
 }
 
+size_t downloadRemoteConfigFile(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+    size_t written = fwrite(ptr, size, nmemb, stream);
+    gDownloadRemoteConfigFileFinished = true;
+    return written;
+}
+
+bool ape::VLFTImgui::downloadConfig(std::string url, std::string location){
+    CURL *curl;
+    CURLcode res;
+
+    curl = curl_easy_init();
+    if (curl)
+    {
+        APE_LOG_DEBUG("try to download from: " << url << " to: " << location);
+        FILE* downloadedConfigFile = fopen(location.c_str(), "wb");
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, downloadRemoteConfigFile);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, downloadedConfigFile);
+        CURLcode configFileRes = curl_easy_perform(curl);
+        if (configFileRes != CURLE_OK)
+        {
+            APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(configFileRes));
+        }
+        else
+        {
+            APE_LOG_DEBUG("curl_easy_perform() succes: " << curl_easy_strerror(configFileRes));
+        }
+        while (!gDownloadRemoteConfigFileFinished)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        }
+        fclose(downloadedConfigFile);
+        gDownloadRemoteConfigFileFinished = false;
+        return true;
+    }
+    return false;
+}
+
 void ape::VLFTImgui::connectToRoom(){
     std::string roomName = mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected];
+    std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
+    std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
+    std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
+    std::string locationAnimationConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
     if((mpMainMenuInfo.multiPlayer || (mpMainMenuInfo.adminMenu && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])) && !mpMainMenuInfo.inRoomGui){
-        std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
-        std::string locationAnimationConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
+        
+        downloadConfig(urlSceneConfig, locationSceneConfig);
+        mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
+        mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
+        std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
+        
         std::vector<std::string> urls;
         std::vector<std::string> locations;
         urls.push_back(urlAnimationConfig);
@@ -120,8 +158,12 @@ void ape::VLFTImgui::connectToRoom(){
         mpUpdateInfo->inRoom = true;
     }
     else if(mpMainMenuInfo.singlePlayer){
-        std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
-        std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
+        
+        downloadConfig(urlSceneConfig, locationSceneConfig);
+        mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
+        mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
+        std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
+        
         std::vector<std::string> urls;
         std::vector<std::string> locations;
         urls.push_back(urlSceneConfig);
@@ -471,6 +513,10 @@ void ape::VLFTImgui::loginGUI(){
     ImGui::Begin("Login", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::Checkbox("Teacher", &mpUpdateInfo->isAdmin);
     static char email[255] = u8"";
+    ImGui::SetCursorPos(ImVec2(width/2-105, height/2-120));
+    if(mpUpdateInfo->wrongPassword){
+        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Incorrect password or email!");
+    }
     ImGui::SetCursorPos(ImVec2(width/2-120, height/2-90));
     ImGui::PushItemWidth(200);
     ImGui::InputText(u8"email", email, IM_ARRAYSIZE(email));
@@ -681,7 +727,7 @@ void ape::VLFTImgui::rightPanelGUI() {
         mpUpdateInfo->newMessage.clear();
     }
     ImGui::SetNextWindowPos(ImVec2(0, 320),ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(300, 200), ImGuiCond_Once);
     ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
     ImGui::Begin("Chat panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
     ImGui::BeginChild("Chat region", ImVec2(ImGui::GetWindowWidth()-18, ImGui::GetWindowHeight()-45),ImGuiWindowFlags_HorizontalScrollbar);
@@ -690,7 +736,7 @@ void ape::VLFTImgui::rightPanelGUI() {
         ImGui::SetScrollHere(1.0f);
     }
     std::string chatText = u8"";
-    for(size_t i = 0; i < chatMessages.size()-1; ++i){
+    for(size_t i = 0; i < chatMessages.size()-1; i++){
         chatText += chatMessages[i] + "\n";
     }
     chatText += chatMessages[chatMessages.size()-1];

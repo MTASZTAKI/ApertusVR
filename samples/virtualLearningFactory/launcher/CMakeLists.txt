@@ -27,8 +27,12 @@ set (SOURCES
 include_directories(
 	
 	)
-
+if(WIN32)
 add_executable (apeVLFTLauncher WIN32 ${SOURCES})
+elseif(APPLE)
+add_executable (apeVLFTLauncher MACOSX_BUNDLE ${SOURCES})
+target_link_libraries(apeVLFTLauncher "-framework CoreFoundation")
+endif()
 target_link_libraries (apeVLFTLauncher apeSystem)
 set_property (TARGET apeVLFTLauncher PROPERTY COMPILE_DEFINITIONS APE_SOURCE_DIR="${APE_SOURCE_DIR}")
 set_property (TARGET apeVLFTLauncher PROPERTY FOLDER "Samples/VirtualLearningFactory")

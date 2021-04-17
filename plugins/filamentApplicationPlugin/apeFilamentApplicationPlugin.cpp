@@ -74,7 +74,6 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mCameraBookmark = mCamManipulator->getCurrentBookmark();
     mUserName = "DefaultUser";
     initKeyMap();
-    initAnimations();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -564,15 +563,16 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 							}
 							else
 							{
-								std::string separator = "../";
+								std::string separator = "./";
 								found = fileName.find(separator);
 								if (found != std::string::npos)
 								{
-                                    auto found_it = std::find_end(fileName.begin(), fileName.end(), separator.begin(), separator.end());
-                                    size_t foundPos = found_it - fileName.begin();
-                                    std::stringstream resourceLocationPath;
-                                    resourceLocationPath << APE_SOURCE_DIR << fileName.substr(foundPos + 2);
-                                    filePath << resourceLocationPath.str();
+//                                    auto found_it = std::find_end(fileName.begin(), fileName.end(), separator.begin(), separator.end());
+//                                    size_t foundPos = found_it - fileName.begin();
+//                                    std::stringstream resourceLocationPath;
+//                                    resourceLocationPath << APE_SOURCE_DIR << fileName.substr(foundPos + 2);
+//                                    filePath << resourceLocationPath.str();
+                                      filePath << fileName;
 								}
 								else
 								{
@@ -588,7 +588,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     }
                                     else{
                                         std::stringstream resourceLocationPath;
-                                        resourceLocationPath << APE_SOURCE_DIR << "/samples/virtualLearningFactory/" << fileName;
+                                        resourceLocationPath << "../../samples/virtualLearningFactory/" << fileName;
                                         filePath << resourceLocationPath.str();
                                     }
 								}
@@ -1925,8 +1925,8 @@ void ape::FilamentApplicationPlugin::screenCast()
 void ape::FilamentApplicationPlugin::takeScreenshot() {
 #ifdef __APPLE__
     std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-    std::string system_command = "screencapture -x ../../screenshots/screenshot" + std::to_string(uuid.count()) + ".jpg";
-    system("mkdir ../../screenshots");
+    std::string system_command = "screencapture -x ../../../../screenshots/screenshot" + std::to_string(uuid.count()) + ".jpg";
+    system("mkdir ../../../../screenshots");
     system((system_command).c_str());
 #else
     using namespace Gdiplus;
@@ -1964,8 +1964,8 @@ void ape::FilamentApplicationPlugin::startScreenCast() {
 #ifdef __APPLE__
     auto systemCommand = [this]() {
         std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-        std::string system_command = "screencapture -x -v -V 180 ../../screencast/" + std::to_string(uuid.count()) + ".mov";
-        system("mkdir ../../screencasts");
+        std::string system_command = "screencapture -x -v -V 180 ../../../../screencast/" + std::to_string(uuid.count()) + ".mov";
+        system("mkdir ../../../../screencasts");
         system(system_command.c_str());
         app.updateinfo.screenCaptureOn = false;
     };
@@ -2014,27 +2014,27 @@ void ape::FilamentApplicationPlugin::Step()
     app.config.title = "Filament";
     app.config.iblDirectory = FilamentApp::getRootAssetsPath() + DEFAULT_IBL;
     utils::Path filename;
-    int num_args = 1;
-    if (num_args >= 1) {
-        filename = "/Users/erik/Documents/ApertusVR/ApertusVR/plugins/scene/photorealisticScene/resources/Conveyor.gltf";
-        if (!filename.exists()) {
-            std::cerr << "file " << filename << " not found!" << std::endl;
-            //return 1;
-        }
-        if (filename.isDirectory()) {
-            auto files = filename.listContents();
-            for (auto file : files) {
-                if (file.getExtension() == "gltf" || file.getExtension() == "glb") {
-                    filename = file;
-                    break;
-                }
-            }
-            if (filename.isDirectory()) {
-                std::cerr << "no glTF file found in " << filename << std::endl;
-                //return 1;
-            }
-        }
-    }
+//    int num_args = 1;
+//    if (num_args >= 1) {
+//        filename = "/Users/erik/Documents/ApertusVR/ApertusVR/plugins/scene/photorealisticScene/resources/Conveyor.gltf";
+//        if (!filename.exists()) {
+//            std::cerr << "file " << filename << " not found!" << std::endl;
+//            //return 1;
+//        }
+//        if (filename.isDirectory()) {
+//            auto files = filename.listContents();
+//            for (auto file : files) {
+//                if (file.getExtension() == "gltf" || file.getExtension() == "glb") {
+//                    filename = file;
+//                    break;
+//                }
+//            }
+//            if (filename.isDirectory()) {
+//                std::cerr << "no glTF file found in " << filename << std::endl;
+//                //return 1;
+//            }
+//        }
+//    }
 
     auto loadAsset = [this](utils::Path filename) {
         // Peek at the file size to allow pre-allocation.
@@ -2182,13 +2182,24 @@ void ape::FilamentApplicationPlugin::Step()
             if(app.firstRun){
                 if(app.updateinfo.isAdmin){
                     //check password
-                    mUserName = app.updateinfo.userName;
-                    app.updateinfo.logedIn = true;
+                    if(app.updateinfo.password == "apertusvr2020" && app.updateinfo.userName.size() > 0){
+                        mUserName = app.updateinfo.userName;
+                        app.updateinfo.logedIn = true;
+                        app.updateinfo.wrongPassword = false;
+                    }
+                    else
+                        app.updateinfo.wrongPassword = true;
                     app.updateinfo.checkLogin = false;
                 }
                 else{
-                    mUserName = app.updateinfo.userName;
-                    app.updateinfo.logedIn = true;
+                    //check password
+                    if(app.updateinfo.userName.size() > 0){
+                        mUserName = app.updateinfo.userName;
+                        app.updateinfo.logedIn = true;
+                        app.updateinfo.wrongPassword = false;
+                    }
+                    else
+                        app.updateinfo.wrongPassword = true;
                     app.updateinfo.checkLogin = false;
                 }
                 if(app.updateinfo.logedIn){
@@ -2298,6 +2309,7 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         if(app.updateinfo.setUpRoom){
+            initAnimations();
             if(app.updateinfo.isAdmin)
                 mPostUserName = "_vlftTeacher"+ mpCoreConfig->getNetworkGUID();
             else
@@ -2307,7 +2319,7 @@ void ape::FilamentApplicationPlugin::Step()
             {
                 if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName +mPostUserName+ "characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
                 {
-                    gltfNode->setFileName("../../plugins/filamentApplicationPlugin/resources/MC_Char_1.glb");
+                    gltfNode->setFileName("./MC_Char_1.glb");
                     gltfNode->setParentNode(node);
                     if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + mPostUserName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                     {

@@ -134,6 +134,7 @@ struct updateInfo{
     bool screenCast = false;
     bool takeScreenshot = false;
     bool screenCaptureOn = false;
+    bool wrongPassword = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double now = 0;
@@ -226,6 +227,7 @@ namespace ape
         
         void getInfoAboutObject(float width, float height);
         
+        bool downloadConfig(std::string url, std::string location);
         
 	};
 }
