@@ -96,7 +96,7 @@ int main(int argc, const char * argv[]) {
 //    size_t foundPos = found - pathStr.begin();
 //    auto subPath = pathStr.substr(0, foundPos);
     std::string subPath = path;
-    subPath += "/characterGLB";
+    subPath += "/assets";
     auto asd = chdir(subPath.c_str());
     std::cout << "Current Path: " << subPath << " "<< asd << std::endl;
     

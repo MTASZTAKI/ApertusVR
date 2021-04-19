@@ -768,7 +768,7 @@ void ape::VLFTImgui::rightPanelGUI() {
 }
 
 void ape::VLFTImgui::openFileBrowser() {
-    /*char* filePath;
+    char* filePath;
     nfdresult_t result = NFD_OpenDialog( "gltf,glb", NULL, &filePath );
     if ( result == NFD_OKAY )
     {
@@ -804,7 +804,7 @@ void ape::VLFTImgui::openFileBrowser() {
     else
     {
         printf("Error: %s\n", NFD_GetError() );
-    }*/
+    }
 }
 
 static std::string convertVecToString(std::vector<double> vec,int  precision){
