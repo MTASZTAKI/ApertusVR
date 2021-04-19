@@ -90,6 +90,7 @@ struct VLFTMainMenuInfo{
     bool namesLoaded = false;
     bool inRoomGui = false;
     bool showStates = false;
+    bool inSinglePlayerMode = false;
     float cameraSpeed = 1.0f;
 };
 struct updateInfo{
@@ -201,11 +202,19 @@ namespace ape
         
         void leftPanelGUI();
         
-        void rightPanelGUI();
+        void infoPanelGUI();
         
         void statePanelGUI();
         
         void singlePlayerRoomGUI();
+        
+        void animationPanelGUI();
+        
+        void screenshotPanelGUI();
+        
+        void manipulatorPanelGUI();
+        
+        void studentPanelGUI();
         
         bool curlData();
         

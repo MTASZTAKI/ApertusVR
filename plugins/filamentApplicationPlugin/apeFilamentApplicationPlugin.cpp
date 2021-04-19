@@ -72,6 +72,7 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     .flightStartPosition(2.5, 1.5, 1)
     .build(filament::camutils::Mode::FREE_FLIGHT);
     mCameraBookmark = mCamManipulator->getCurrentBookmark();
+    logoAnimTime = 0;
     mUserName = "DefaultUser";
     initKeyMap();
 	APE_LOG_FUNC_LEAVE();
@@ -2053,17 +2054,15 @@ void ape::FilamentApplicationPlugin::Step()
         }
 
         // Parse the glTF file and create Filament entities.
-        app.instances[filename].resize(3);
-        app.instanceCount[filename] = 0;
         if (filename.getExtension() == "glb") {
-            app.asset[filename] = app.loader->createAssetFromBinary(buffer.data(), buffer.size());
+            app.logo = app.loader->createAssetFromBinary(buffer.data(), buffer.size());
         } else {
-            app.asset[filename] = app.loader->createInstancedAsset(buffer.data(), buffer.size(), app.instances[filename].data(), app.instances[filename].size());
+            app.logo = app.loader->createAssetFromJson(buffer.data(), buffer.size());
         }
         buffer.clear();
         buffer.shrink_to_fit();
 
-        if (app.asset.find(filename) == app.asset.end()) {
+        if (!app.logo) {
             std::cerr << "Unable to parse " << filename << std::endl;
             exit(1);
         }
@@ -2080,10 +2079,10 @@ void ape::FilamentApplicationPlugin::Step()
         if (!app.resourceLoader) {
             app.resourceLoader = new gltfio::ResourceLoader(configuration);
         }
-        if ( app.resourceLoader->asyncBeginLoad(app.asset[filename]))
+        if ( app.resourceLoader->asyncBeginLoad(app.logo))
         {
             APE_LOG_DEBUG("resources load OK");
-            app.mpScene->addEntities(app.asset[filename]->getEntities(), app.asset[filename]->getEntityCount());
+            app.mpScene->addEntities(app.logo->getEntities(), app.logo->getEntityCount());
         }
        
         
@@ -2127,7 +2126,26 @@ void ape::FilamentApplicationPlugin::Step()
         app.mainCamera = &view->getCamera();
         
         app.currentCamera = 0;
-        
+        auto mNode = mpSceneManager->createNode("VLFTlogo", false, mpCoreConfig->getNetworkGUID());
+        if (auto node = mNode.lock())
+        {
+            if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("VLTF_3Dlogo", ape::Entity::GEOMETRY_FILE, false, mpCoreConfig->getNetworkGUID()).lock()))
+            {
+                gltfMeshFile->setFileName("../assets/models/logo/VLTF_3Dlogo.gltf");
+                gltfMeshFile->setParentNode(node);
+                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity("VLFTlogo", ape::Entity::Type::GEOMETRY_CLONE, false, mpCoreConfig->getNetworkGUID()).lock()))
+                {
+                    geometryClone->setSourceGeometryGroupName(gltfMeshFile->getName());
+                    geometryClone->setParentNode(node);
+                }
+                node->rotate(1.5708f, ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+                node->setScale(ape::Vector3(12, 12, 12));
+                node->setPosition(ape::Vector3(2.5, 1.5, -0.4));
+                node->setChildrenVisibility(true);
+                node->setVisible(true);
+            }
+        }
+        app.setManpipulator = true;
     };
 
     auto cleanup = [this](Engine* engine, View*, Scene*) {
@@ -2165,6 +2183,7 @@ void ape::FilamentApplicationPlugin::Step()
         auto& tm = engine->getTransformManager();
         auto& rm = engine->getRenderableManager();
         auto& lm = engine->getLightManager();
+        
         if (app.updateinfo.takeScreenshot) {
             takeScreenshot();
             app.updateinfo.takeScreenshot = false;
@@ -2204,7 +2223,6 @@ void ape::FilamentApplicationPlugin::Step()
                 }
                 if(app.updateinfo.logedIn){
                     app.firstRun = false;
-                    app.setManpipulator = true;       
                 }
             }
         }
@@ -2292,24 +2310,28 @@ void ape::FilamentApplicationPlugin::Step()
                 ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_Once);
                 ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
                
-                ImGui::Begin("Hierarchy", nullptr);
-                for(auto  const& x: app.asset){
-                    auto instances = x.second->getAssetInstances();
-                    size_t cnt = x.second->getAssetInstanceCount();
-                    mAsset = x.second;
-                    if (ImGui::CollapsingHeader(x.first.c_str())) {
-                        for(size_t i = 0; i < cnt; i++){
-                                ImGui::Indent();
-                                treeNode(instances[i]->getRoot());
-                                ImGui::Unindent();
-                        }
-                    }
-                }
-                ImGui::End();
+//                ImGui::Begin("Hierarchy", nullptr);
+//                for(auto  const& x: app.asset){
+//                    auto instances = x.second->getAssetInstances();
+//                    size_t cnt = x.second->getAssetInstanceCount();
+//                    mAsset = x.second;
+//                    if (ImGui::CollapsingHeader(x.first.c_str())) {
+//                        for(size_t i = 0; i < cnt; i++){
+//                                ImGui::Indent();
+//                                treeNode(instances[i]->getRoot());
+//                                ImGui::Unindent();
+//                        }
+//                    }
+//                }
+//                ImGui::End();
             }
         }
         if(app.updateinfo.setUpRoom){
             initAnimations();
+            if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
+                logo->setVisible(false);
+                logo->setChildrenVisibility(false);
+            }
             if(app.updateinfo.isAdmin)
                 mPostUserName = "_vlftTeacher"+ mpCoreConfig->getNetworkGUID();
             else
@@ -2343,7 +2365,8 @@ void ape::FilamentApplicationPlugin::Step()
     };
 
     auto preRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
-        
+       
+       
         auto& rcm = engine->getRenderableManager();
         auto instance = rcm.getInstance(app.scene.groundPlane);
         rcm.setLayerMask(instance,
@@ -2642,7 +2665,7 @@ void ape::FilamentApplicationPlugin::Step()
             app.mainCamera = &view->getCamera();
             vec3<float> camPos, camTarget, camUp;
             manipulator->getLookAt(&camPos, &camTarget, &camUp);
-            //app.mainCamera->lookAt(camPos, camTarget, camUp);
+            app.mainCamera->lookAt(camPos, camTarget, camUp);
         }
         app.updateinfo.now = now;
         filament::math::vec3<float> origin;
@@ -3023,6 +3046,13 @@ void ape::FilamentApplicationPlugin::Step()
     };
 
     auto animate = [this](Engine* engine, View* view, double now) {
+        if(now - logoAnimTime > 0.02){
+            //float diff = (now - logoAnimTime)/0.02;
+            if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
+                logo->rotate(-0.0034f, ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::LOCAL);
+            }
+            logoAnimTime = now;
+        }
         app.updateinfo.now = now;
         if(app.updateinfo.IsStopClicked && app.updateinfo.pauseTime > 0){
             app.updateinfo.IsStopClicked=false;
@@ -3123,6 +3153,7 @@ void ape::FilamentApplicationPlugin::Step()
         loadResources(path);
     });
     app.config.cameraMode = filament::camutils::Mode::FREE_FLIGHT;
+    app.config.title = "VLFT gamification";
     filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput);
     
     //return 0;

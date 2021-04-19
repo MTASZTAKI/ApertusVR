@@ -187,6 +187,7 @@ struct App {
     Settings settings;
     AssetLoader* loader;
     std::map<std::string, FilamentAsset*> asset;
+    FilamentAsset* logo;
     NameComponentManager* names;
     std::map<std::string,std::vector<FilamentInstance*>> instances;
     std::map<std::string, int> instanceCount;
@@ -382,6 +383,8 @@ namespace ape
         double mStartTime;
 
         float mTimeToSleepFactor;
+        
+        float logoAnimTime;
         
         int mBookmarkID;
         
