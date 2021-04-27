@@ -258,58 +258,37 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					case ape::Event::Type::NODE_POSITION:
 					{
                         std::size_t pos = nodeName.find("_vlftStudent");
-                        if(pos != std::string::npos){
-                            if(node->getOwner() != mpCoreConfig->getNetworkGUID()){
-                                std::size_t pos = nodeName.find("_vlftTeacher");
-                                if (pos != std::string::npos)
-                                {
-                                    auto pos = node->getDerivedPosition();
-                                    auto ori = node->getDerivedOrientation();
-//                                    double sinp = 2 * (ori.getW() * ori.getY() - ori.getZ() * ori.getX());
-//                                    double pitch;
-//                                    if (std::abs(sinp) >= 1)
-//                                        pitch = std::copysign(M_PI / 2, sinp);
-//                                    else
-//                                        pitch = std::asin(sinp);
-//                                    double siny_cosp = 2 * (ori.getW() * ori.getZ() + ori.getX() * ori.getY());
-//                                    double cosy_cosp = 1 - 2 * (ori.getY() * ori.getY() + ori.getZ() * ori.getZ());
-//                                    auto yaw = std::atan2(siny_cosp, cosy_cosp);
-//
-//                                    auto yaw = std::atan2(2.0*(ori.getY()*ori.getZ() + ori.getW()*ori.getX()), ori.getW()* ori.getW()-ori.getX()* ori.getX()-ori.getY()* ori.getY()+ori.getZ()* ori.getZ());
-//
-//                                    auto sinp =-2.0*(ori.getX()* ori.getZ()-ori.getW()* ori.getY());
-//                                    auto pitch = std::asin(sinp);
-//                                    if(abs(-2.0*(ori.getX()* ori.getZ()-ori.getW()* ori.getY())) >= 1){
-//                                        pitch = std::copysign(M_PI / 2, sinp);
-//                                    }
-//
-//                                    auto mani = filament::camutils::Manipulator<float>::Builder()
-//                                    .flightStartPosition(pos.getX(), pos.getY(), pos.getZ())
-//                                    .flightStartOrientation(yaw, pitch)
-//                                    .build(filament::camutils::Mode::FREE_FLIGHT);
-//                                    mCamManipulator->jumpToBookmark(mani->getCurrentBookmark());
-//                                    auto nodeTransforms = node->getDerivedModelMatrix();
-//                                    auto camModel = math::mat4f(
-//                                              nodeTransforms[0][0], nodeTransforms[1][0], nodeTransforms[2][0], nodeTransforms[3][0],
-//                                              nodeTransforms[0][1], nodeTransforms[1][1], nodeTransforms[2][1], nodeTransforms[3][1],
-//                                              nodeTransforms[0][2], nodeTransforms[1][2], nodeTransforms[2][2], nodeTransforms[3][2],
-//                                              nodeTransforms[0][3], nodeTransforms[1][2], nodeTransforms[2][3], nodeTransforms[3][3]);
-//                                    app.mainCamera->setModelMatrix(camModel);
-                                }
+                        std::size_t pos2 = nodeName.find("_vlftTeacher");
+                        auto nodePosition = node->getPosition();
+                        auto nodeScale = node->getScale();
+                        auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
+                        float divider = 1.0;
+                        filament::math::mat4f filamentTransform;
+                        if(pos != std::string::npos || pos2 != std::string::npos){
+                            if(nodeName.find(mUserName) == std::string::npos){
+                                auto filamentTransform = filament::math::mat4f(
+                                    nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
+                                    nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
+                                    nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
+                                    nodePosition.getX()/divider, nodePosition.getY()/divider+0.35, nodePosition.getZ()/divider, nodeTransforms[3][3]);
+                                app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+                            }else{
+                                filamentTransform = filament::math::mat4f(
+                                    nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
+                                    nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
+                                    nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
+                                    nodePosition.getX()/divider, nodePosition.getY()/divider, nodePosition.getZ()/divider, nodeTransforms[3][3]);
                             }
+                            app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
                         }
-                        if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
-                            auto nodePosition = node->getPosition();
-                            auto nodeScale = node->getScale();
-                            auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
-                            float divider = 1.0;
-                            auto filamentTransform = filament::math::mat4f(
+                        else if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+                            filamentTransform = filament::math::mat4f(
                                 nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
                                 nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
                                 nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
                                 nodePosition.getX()/divider, nodePosition.getY()/divider, nodePosition.getZ()/divider, nodeTransforms[3][3]);
                             app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
-                                if (nodeName.find_first_of(".") != std::string::npos)
+                            if (nodeName.find_first_of(".") != std::string::npos)
                                 {
                                     std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
                                     std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
@@ -532,7 +511,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 				{
                     if(app.mpLoadedAssets.find(fileName) == app.mpLoadedAssets.end())
                     {
-                            APE_LOG_DEBUG("The asset connected to the parent nocde has not been loaded yet: " << fileName);
+                            APE_LOG_DEBUG("The asset connected to the parent node has not been loaded yet: " << fileName);
                     }
                     else{
                         auto filamentAssetRootEntity = app.mpLoadedAssets[fileName]->getRoot();
@@ -956,7 +935,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         break;
                         case ape::Event::Type::GEOMETRY_TEXT_CAPTION:{
-                            if(name != mUserName+mPostUserName){
+                            if(name != mUserName+mPostUserName+"_text"){
                                 app.updateinfo.newMessage.push_back(textGeometry->getCaption());
                                 app.updateinfo.newChatMessage = true;
                             }
@@ -1996,7 +1975,7 @@ void ape::FilamentApplicationPlugin::stopScreenCast() {
     }
     else
         std::cout << "TERMINATE FAIL" << std::endl;
-    /* HANDLE ps = OpenProcess(SYNCHRONIZE | PROCESS_TERMINATE, FALSE, mScreenCastProcessInfo.dwProcessId);
+    /* HANDLE ps = OpenProcess(SYNCHRONIZE | PROCESS_TERMINATE, FALSE, mScreenCastProcessInfo.dwProcesfsId);
 
      std::cout << "ps" << std::endl;
      if (ps != INVALID_HANDLE_VALUE) {
@@ -2012,6 +1991,8 @@ void ape::FilamentApplicationPlugin::stopScreenCast() {
 void ape::FilamentApplicationPlugin::Step()
 {
 
+    APE_LOG_FUNC_ENTER();
+    APE_LOG_DEBUG("STEP STARTED");
     app.config.title = "Filament";
     app.config.iblDirectory = FilamentApp::getRootAssetsPath() + DEFAULT_IBL;
     utils::Path filename;
@@ -2110,6 +2091,7 @@ void ape::FilamentApplicationPlugin::Step()
 
    
     auto setup = [&](Engine* engine, View* view, Scene* scene) {
+      
         app.engine = engine;
         app.view = view;
         app.mpScene = scene;
@@ -2127,10 +2109,12 @@ void ape::FilamentApplicationPlugin::Step()
         
         app.currentCamera = 0;
         auto mNode = mpSceneManager->createNode("VLFTlogo", false, mpCoreConfig->getNetworkGUID());
+        APE_LOG_DEBUG("LOGO CREATE");
         if (auto node = mNode.lock())
         {
             if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("VLTF_3Dlogo", ape::Entity::GEOMETRY_FILE, false, mpCoreConfig->getNetworkGUID()).lock()))
             {
+                APE_LOG_DEBUG("LOGO CLONE");
                 gltfMeshFile->setFileName("../assets/models/logo/VLTF_3Dlogo.gltf");
                 gltfMeshFile->setParentNode(node);
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity("VLFTlogo", ape::Entity::Type::GEOMETRY_CLONE, false, mpCoreConfig->getNetworkGUID()).lock()))
@@ -2349,12 +2333,13 @@ void ape::FilamentApplicationPlugin::Step()
                         geometryClone->setParentNode(node);
                         node->setChildrenVisibility(true);
                     }
-                    node->setPosition(ape::Vector3(0.0, 0.25, 0.2));
+                    node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
                 }  
             }
-            auto userTextNode = mpSceneManager->createNode(mUserName+mPostUserName + "_Text", true, mpCoreConfig->getNetworkGUID());
+            auto userTextNode = mpSceneManager->createNode(mUserName+mPostUserName + "_TextNode", true, mpCoreConfig->getNetworkGUID());
             if (auto textNode = userTextNode.lock()) {
-                if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName+mPostUserName, ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
+                if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName+mPostUserName+"_text", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
+                    textGeometry->setParentNode(userTextNode);
                     textGeometry->setCaption(app.updateinfo.userName+" logged in");
                 }
             }
@@ -2502,39 +2487,63 @@ void ape::FilamentApplicationPlugin::Step()
             }
             app.updateinfo.attachUsers = false;
         }
+        if(app.updateinfo.switchOwner){
+            if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
+                clone->setOwner(clone->getCreator());
+                app.updateinfo.switchOwner = false;
+            }
+        }
         if(app.updateinfo.setPosition){
-            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
-            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
-            auto transforms = app.mpTransformManager->getTransform(tmInstance);
-            auto worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
-            transforms[3][0] = app.updateinfo.position.getX();
-            transforms[3][1] = app.updateinfo.position.getY();
-            transforms[3][2] = app.updateinfo.position.getZ();
-            app.mpTransformManager->setTransform(tmInstance, transforms);
-            app.updateinfo.setPosition = false;
+            if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
+                auto owner = clone->getOwner();
+                clone->setOwner(mpCoreConfig->getNetworkGUID());
+                clone->setPosition(app.updateinfo.position);
+                app.updateinfo.setPosition = false;
+                app.updateinfo.switchOwner = true;
+            }
+//            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
+//            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
+//            auto transforms = app.mpTransformManager->getTransform(tmInstance);
+//            auto worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
+//            transforms[3][0] = app.updateinfo.position.getX();
+//            transforms[3][1] = app.updateinfo.position.getY();
+//            transforms[3][2] = app.updateinfo.position.getZ();
+//            app.mpTransformManager->setTransform(tmInstance, transforms);
+
         }
         if(app.updateinfo.setRotation){
-            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
-            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
-            auto transforms = app.mpTransformManager->getTransform(tmInstance);
-            auto setOri = math::details::TQuaternion<float>(app.updateinfo.orientation.getW(),
-                                              app.updateinfo.orientation.getX(),
-                                              app.updateinfo.orientation.getY(),
-                                              app.updateinfo.orientation.getZ());
-            auto orientation = setOri*transforms.toQuaternion();
-            math::mat4f newLocal(orientation);
-            newLocal[3][0] =  transforms[3][0];
-            newLocal[3][1] =  transforms[3][1];
-            newLocal[3][2] =  transforms[3][2];
-            app.mpTransformManager->setTransform(tmInstance, newLocal);
-            app.updateinfo.setRotation = false;
+            if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
+                auto owner = clone->getOwner();
+                clone->setOwner(mpCoreConfig->getNetworkGUID());
+                clone->setOrientation(app.updateinfo.orientation);
+                app.updateinfo.setRotation = false;
+                app.updateinfo.switchOwner = true;
+            }
+//            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
+//            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
+//            auto transforms = app.mpTransformManager->getTransform(tmInstance);
+//            auto setOri = math::details::TQuaternion<float>(app.updateinfo.orientation.getW(),
+//                                              app.updateinfo.orientation.getX(),
+//                                              app.updateinfo.orientation.getY(),
+//                                              app.updateinfo.orientation.getZ());
+//            auto orientation = setOri*transforms.toQuaternion();
+//            math::mat4f newLocal(orientation);
+//            newLocal[3][0] =  transforms[3][0];
+//            newLocal[3][1] =  transforms[3][1];
+//            newLocal[3][2] =  transforms[3][2];
+//            app.mpTransformManager->setTransform(tmInstance, newLocal);
+
         }
         if(app.updateinfo.deleteSelected){
-            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
-            scene->removeEntities(instance->getEntities(), instance->getEntityCount());
-            scene->remove(app.boxEntity.first);
-            app.updateinfo.selectedItem = "";
-            app.updateinfo.rootOfSelected = "";
+            if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
+                clone->setChildrenVisibility(false);
+                clone->setVisible(false);
+            }
+//            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
+//            scene->removeEntities(instance->getEntities(), instance->getEntityCount());
+//            scene->remove(app.boxEntity.first);
+//            app.updateinfo.selectedItem = "";
+//            app.updateinfo.rootOfSelected = "";
             app.updateinfo.deleteSelected = false;
         }
         if(app.updateinfo.drop){
@@ -2556,7 +2565,7 @@ void ape::FilamentApplicationPlugin::Step()
               scene->remove(app.boxEntity.first);
         }
         if(app.updateinfo.sendMessage){
-            if(auto textNode =std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName+mPostUserName).lock()))
+            if(auto textNode =std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName+mPostUserName+"_text").lock()))
             {
                 textNode->setCaption(app.updateinfo.messageToSend);
             }
@@ -2855,6 +2864,7 @@ void ape::FilamentApplicationPlugin::Step()
                                 tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
                                 parent = app.mpTransformManager->getParent(tmInstance);
                                 std::string sceneNodeName = "";
+                                if(sceneNodeName.find("_vlftStudent") == std::string::npos)
                                 while(parent && !found){
                                     if(app.asset[app.selectedNode.second]->getName(parent)){
                                         parentName = app.asset[app.selectedNode.second]->getName(parent);
@@ -3049,7 +3059,8 @@ void ape::FilamentApplicationPlugin::Step()
         if(now - logoAnimTime > 0.02){
             //float diff = (now - logoAnimTime)/0.02;
             if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
-                logo->rotate(-0.0034f, ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::LOCAL);
+                if(logo->getChildrenVisibility())
+                    logo->rotate(-0.0034f, ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::LOCAL);
             }
             logoAnimTime = now;
         }
@@ -3156,6 +3167,7 @@ void ape::FilamentApplicationPlugin::Step()
     app.config.title = "VLFT gamification";
     filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput);
     
+    APE_LOG_FUNC_LEAVE();
     //return 0;
 }
 

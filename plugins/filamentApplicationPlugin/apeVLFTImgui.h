@@ -136,6 +136,7 @@ struct updateInfo{
     bool takeScreenshot = false;
     bool screenCaptureOn = false;
     bool wrongPassword = false;
+    bool switchOwner = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double now = 0;
