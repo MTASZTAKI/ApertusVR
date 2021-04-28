@@ -296,6 +296,7 @@ void ape::SceneNetworkImpl::leave()
         mpRakReplicaPeer->DetachPlugin(mpNatPunchthroughClient);
         APE_LOG_DEBUG("Replica shutdown");
         mpRakReplicaPeer->Shutdown(100);
+        APE_LOG_DEBUG("Replica destroy");
         RakNet::RakPeerInterface::DestroyInstance(mpRakReplicaPeer);
         mpRakReplicaPeer = nullptr;
        

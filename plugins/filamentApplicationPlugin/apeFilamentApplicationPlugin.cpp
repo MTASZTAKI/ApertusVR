@@ -264,22 +264,13 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                         float divider = 1.0;
                         filament::math::mat4f filamentTransform;
-                        if(pos != std::string::npos || pos2 != std::string::npos){
-                            if(nodeName.find(mUserName) == std::string::npos){
-                                auto filamentTransform = filament::math::mat4f(
+                        if((pos != std::string::npos || pos2 != std::string::npos) && nodeName.find(mUserName) == std::string::npos){
+                                filamentTransform = filament::math::mat4f(
                                     nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
                                     nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
                                     nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
                                     nodePosition.getX()/divider, nodePosition.getY()/divider+0.35, nodePosition.getZ()/divider, nodeTransforms[3][3]);
                                 app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
-                            }else{
-                                filamentTransform = filament::math::mat4f(
-                                    nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
-                                    nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
-                                    nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
-                                    nodePosition.getX()/divider, nodePosition.getY()/divider, nodePosition.getZ()/divider, nodeTransforms[3][3]);
-                            }
-                            app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
                         }
                         else if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                             filamentTransform = filament::math::mat4f(
@@ -306,20 +297,25 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         }
                                     }
                                 }
-                            for (auto studentWP : mStudents)
+                        }
+                        for (auto studentWP : mStudents)
+                                {
+                                    if (auto student = studentWP.lock())
                                     {
-                                        if (auto student = studentWP.lock())
+                                        if (event.subjectName == student->getName())
                                         {
-                                            if (event.subjectName == student->getName())
-                                            {
-                                                std::chrono::milliseconds timeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-                                                std::stringstream data;
-                                                data << std::to_string(timeStamp.count()) << " name: " << student->getName() << " pos: " << student->getDerivedPosition().toString() << " ori: "  << student->getDerivedOrientation().toString() << std::endl;
-                                                mStudentsMovementLoggingFile << data.str();
+                                            std::chrono::milliseconds timeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                                            std::stringstream data;
+                                            std::size_t pos = event.subjectName.find("_vlftStudent");
+                                            std::string studentName = event.subjectName;
+                                            if(pos != std::string::npos){
+                                                studentName = event.subjectName.substr(0,pos);
                                             }
+                                            data << std::to_string(timeStamp.count()) << " name: " << studentName << " pos: " << student->getDerivedPosition().toString() << " ori: "  << student->getDerivedOrientation().toString() << std::endl;
+                                            mStudentsMovementLoggingFile << data.str();
                                         }
                                     }
-                        }
+                                }
                        
 					}
 						break;
@@ -2371,7 +2367,12 @@ void ape::FilamentApplicationPlugin::Step()
                 app.updateinfo.mIsStudentsMovementLogging = true;
                 std::stringstream fileName;
                 std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+#ifdef __APPLE__
+                system("mkdir ../../../../studentsMovementLog");
+                fileName << "../../../../studentsMovementLog/" << uuid.count() << ".txt";
+#else
                 fileName << "../../studentsMovementLog/" << uuid.count() << ".txt";
+#endif
                 mStudentsMovementLoggingFile.open(fileName.str());
                 auto nodes = mpSceneManager->getNodes();
                 for (auto node : nodes)
@@ -2405,8 +2406,9 @@ void ape::FilamentApplicationPlugin::Step()
         }
         if(app.updateinfo.leftRoom){
             std::vector<std::string> to_erase;
+            delete app.resourceLoader;
+            app.resourceLoader = nullptr;
             for(auto instanceList: app.instances){
-                if(instanceList.first != mUserName+mPostUserName+"characterModel")
                     for(size_t i = 0; i < 10; i++){
                         if(instanceList.second[i]->getEntityCount() > 0)
                         {
@@ -2422,20 +2424,19 @@ void ape::FilamentApplicationPlugin::Step()
             }
             to_erase.clear();
             for(auto instance: app.mpInstancesMap){
-                if(instance.first != mUserName+mPostUserName){
                     if(app.asset.find(instance.first) != app.asset.end()){
                         app.loader->destroyAsset(app.asset[instance.second.assetName]);
                         app.asset.erase(instance.first);
                     }
                     to_erase.push_back(instance.first);
-                }
-               
             }
             for(auto item: to_erase){
                 app.mpInstancesMap.erase(item);
             }
             to_erase.clear();
             app.updateinfo.leftRoom = false;
+            app.updateinfo.leaveWait = true;
+            app.updateinfo.leaveTime = app.updateinfo.now;
         }
         if(app.updateinfo.attachUsers){
             if(!app.updateinfo.usersAttached){
@@ -2585,8 +2586,6 @@ void ape::FilamentApplicationPlugin::Step()
                 //auto tmParent =app.mpTransformManager->getInstance(parent);
                 
                 if(app.updateinfo.pickedItem == ""){
-                    auto pos = mPostUserName.find("_vlftTeacher");
-                    if(pos != std::string::npos)
                     if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
                         if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
                             clone->setInitalState();
@@ -2688,7 +2687,7 @@ void ape::FilamentApplicationPlugin::Step()
         auto a = event.key.keysym.sym;
         auto keyState = SDL_GetModState();
         bool moved = false;
-        if((!app.updateinfo.inSettings || app.updateinfo.changedKey) && app.updateinfo.logedIn){
+        if((!app.updateinfo.inSettings || app.updateinfo.changedKey) && app.updateinfo.inRoom){
             switch(event.type){
                 case SDL_MOUSEBUTTONDOWN:{
                     if(!app.updateinfo.inSettings){
@@ -2727,119 +2726,128 @@ void ape::FilamentApplicationPlugin::Step()
                             math::mat4f worldTm;
                             
                             for(auto  const& asset: app.asset){
+                               
                                 auto* entities = asset.second->getEntities();
                                 size_t cnt = asset.second->getEntityCount();
-                                for(size_t i = 0; i < cnt; i++){
-                                    if(app.mpRenderableManager->hasComponent(entities[i]) && scene->hasEntity(entities[i])){
-                                        auto instance = app.mpRenderableManager->getInstance(entities[i]);
-                                        auto tmInstance = app.mpTransformManager->getInstance(entities[i]);
-                                        worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
-                                        auto box = app.mpRenderableManager->getAxisAlignedBoundingBox(instance);
-                                        
-                                        math::vec3<float> T_1;
-                                        math::vec3<float> T_2;
-                                        float t_near = -FLT_MIN;
-                                        float t_far = FLT_MAX;
-                                        math::float3 boxMin = box.getMin();
-                                        math::float3 boxMax = box.getMax();
-                                        if(boxMax.x != boxMin.x && boxMax.y != boxMin.y && boxMax.z != boxMin.z){
-                                            box = rigidTransform(box, worldTm);
-                                            boxMin = box.getMin();
-                                            boxMax = box.getMax();
-                                            float t[9];
-                                            t[1] = (boxMin.x - origin.x)/dir.x;
-                                            t[2] = (boxMax.x - origin.x)/dir.x;
-                                            t[3] = (boxMin.y - origin.y)/dir.y;
-                                            t[4] = (boxMax.y - origin.y)/dir.y;
-                                            t[5] = (boxMin.z - origin.z)/dir.z;
-                                            t[6] = (boxMax.z - origin.z)/dir.z;
-                                            t[7] = fmax(fmax(fmin(t[1], t[2]), fmin(t[3], t[4])), fmin(t[5], t[6]));
-                                            t[8] = fmin(fmin(fmax(t[1], t[2]), fmax(t[3], t[4])), fmax(t[5], t[6]));
-                                            if(t[8] >= 0 && t[7] <= t[8] && t[7] >= 0){
-                                                app.rayIntersectedEntities.push_back(std::pair(entities[i], t[7]));
-                                                if(abs(t[7]) < app.boxEntity.second){
-                                                    if(app.mpScene->hasEntity(app.boxEntity.first)){
-                                                        app.mpScene->remove(app.boxEntity.first);
-                                                    }
-                                                    if(app.mpEntityManager->isAlive(app.boxEntity.first)){
-                                                        app.engine->destroy(app.boxEntity.first);
-                                                        app.mpEntityManager->destroy(app.boxEntity.first);
-                                                        if(app.mpTransformManager->hasComponent(app.boxEntity.first))
-                                                            app.mpTransformManager->destroy(app.boxEntity.first);
-                                                        app.engine->destroy(app.boxVertexBuffer);
-                                                        app.engine->destroy(app.boxIndexBuffer);
-                                                    }
+                                
+                                if(asset.first.find("characterModel") == std::string::npos)
+                                {
+                                    for(size_t i = 0; i < cnt; i++){
+                                        if(app.mpRenderableManager->hasComponent(entities[i]) && scene->hasEntity(entities[i])){
+                                            auto instance = app.mpRenderableManager->getInstance(entities[i]);
+                                            auto tmInstance = app.mpTransformManager->getInstance(entities[i]);
+                                            worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
+                                            auto box = app.mpRenderableManager->getAxisAlignedBoundingBox(instance);
+                                            
+                                            math::vec3<float> T_1;
+                                            math::vec3<float> T_2;
+                                            float t_near = -FLT_MIN;
+                                            float t_far = FLT_MAX;
+                                            math::float3 boxMin = box.getMin();
+                                            math::float3 boxMax = box.getMax();
+                                            if(boxMax.x != boxMin.x && boxMax.y != boxMin.y && boxMax.z != boxMin.z){
+                                                box = rigidTransform(box, worldTm);
+                                                boxMin = box.getMin();
+                                                boxMax = box.getMax();
+                                                float t[9];
+                                                t[1] = (boxMin.x - origin.x)/dir.x;
+                                                t[2] = (boxMax.x - origin.x)/dir.x;
+                                                t[3] = (boxMin.y - origin.y)/dir.y;
+                                                t[4] = (boxMax.y - origin.y)/dir.y;
+                                                t[5] = (boxMin.z - origin.z)/dir.z;
+                                                t[6] = (boxMax.z - origin.z)/dir.z;
+                                                t[7] = fmax(fmax(fmin(t[1], t[2]), fmin(t[3], t[4])), fmin(t[5], t[6]));
+                                                t[8] = fmin(fmin(fmax(t[1], t[2]), fmax(t[3], t[4])), fmax(t[5], t[6]));
+                                                if(t[8] >= 0 && t[7] <= t[8] && t[7] >= 0){
+                                                    app.rayIntersectedEntities.push_back(std::pair(entities[i], t[7]));
+                                                    if(abs(t[7]) < app.boxEntity.second){
+                                                        if(app.mpScene->hasEntity(app.boxEntity.first)){
+                                                            app.mpScene->remove(app.boxEntity.first);
+                                                        }
+                                                        if(app.mpEntityManager->isAlive(app.boxEntity.first)){
+                                                            app.engine->destroy(app.boxEntity.first);
+                                                            app.mpEntityManager->destroy(app.boxEntity.first);
+                                                            if(app.mpTransformManager->hasComponent(app.boxEntity.first))
+                                                                app.mpTransformManager->destroy(app.boxEntity.first);
+                                                            app.engine->destroy(app.boxVertexBuffer);
+                                                            app.engine->destroy(app.boxIndexBuffer);
+                                                        }
+                                                            
+                                                        size_t boxVertCount = 8;
+                                                        size_t boxIndCount = 24;
                                                         
-                                                    size_t boxVertCount = 8;
-                                                    size_t boxIndCount = 24;
-                                                    
-                                                    app.boxVerts[0] = math::float3(boxMin.x, boxMin.y, boxMin.z);
-                                                    app.boxVerts[1] = math::float3(boxMin.x, boxMin.y, boxMax.z);
-                                                    app.boxVerts[2] = math::float3(boxMin.x, boxMax.y, boxMin.z);
-                                                    app.boxVerts[3] = math::float3(boxMin.x, boxMax.y, boxMax.z);
-                                                    app.boxVerts[4] = math::float3(boxMax.x, boxMin.y, boxMin.z);
-                                                    app.boxVerts[5] = math::float3(boxMax.x, boxMin.y, boxMax.z);
-                                                    app.boxVerts[6] = math::float3(boxMax.x, boxMax.y, boxMin.z);
-                                                    app.boxVerts[7] = math::float3(boxMax.x, boxMax.y, boxMax.z);
-                                                   
-                                                    app.boxInds[0] = 0;
-                                                    app.boxInds[1] = 1;
-                                                    app.boxInds[2] = 1;
-                                                    app.boxInds[3] = 3;
-                                                    app.boxInds[4] = 3;
-                                                    app.boxInds[5] = 2;
-                                                    app.boxInds[6] = 2;
-                                                    app.boxInds[7] = 0;
-                                                    // Generate 4 lines around face at +X.
-                                                    app.boxInds[ 8] = 4;
-                                                    app.boxInds[ 9] = 5;
-                                                    app.boxInds[10] = 5;
-                                                    app.boxInds[11] = 7;
-                                                    app.boxInds[12] = 7;
-                                                    app.boxInds[13] = 6;
-                                                    app.boxInds[14] = 6;
-                                                    app.boxInds[15] = 4;
-                                                    // Generate 2 horizontal lines at -Z.
-                                                    app.boxInds[16] = 0;
-                                                    app.boxInds[17] = 4;
-                                                    app.boxInds[18] = 2;
-                                                    app.boxInds[19] = 6;
-                                                    // Generate 2 horizontal lines at +Z.
-                                                    app.boxInds[20] = 1;
-                                                    app.boxInds[21] = 5;
-                                                    app.boxInds[22] = 3;
-                                                    app.boxInds[23] = 7;
-                                                    
-                                                    
-                                                    app.boxVertexBuffer = VertexBuffer::Builder()
-                                                        .vertexCount(8)
-                                                        .bufferCount(1)
-                                                        .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
-                                                        .build(*engine);
-
-                                                    app.boxIndexBuffer = IndexBuffer::Builder()
-                                                        .indexCount(boxIndCount)
-                                                        .bufferType(IndexBuffer::IndexType::UINT)
-                                                        .build(*engine);
-
-                                                    app.boxVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
-                                                                        app.boxVerts, 8 * sizeof(float3), nullptr));
-                                                    
-                                                    app.boxIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
-                                                            app.boxInds, app.boxIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
-                                                    
-                                                    app.boxEntity = std::pair(EntityManager::get().create(), t[7]);
-                                                    RenderableManager::Builder(1)
-                                                        .culling(false)
-                                                        .castShadows(false)
-                                                        .receiveShadows(false)
-                                                        .geometry(0, RenderableManager::PrimitiveType::LINES, app.boxVertexBuffer, app.boxIndexBuffer)
-                                                        .build(*engine, app.boxEntity.first);
-                                                    if(!app.mpScene->hasEntity(app.boxEntity.first)){
-                                                        app.mpScene->addEntity(app.boxEntity.first);
-                                                        app.selectedNode =std::pair(entities[i], asset.first);
-                                                    }
+                                                        app.boxVerts[0] = math::float3(boxMin.x, boxMin.y, boxMin.z);
+                                                        app.boxVerts[1] = math::float3(boxMin.x, boxMin.y, boxMax.z);
+                                                        app.boxVerts[2] = math::float3(boxMin.x, boxMax.y, boxMin.z);
+                                                        app.boxVerts[3] = math::float3(boxMin.x, boxMax.y, boxMax.z);
+                                                        app.boxVerts[4] = math::float3(boxMax.x, boxMin.y, boxMin.z);
+                                                        app.boxVerts[5] = math::float3(boxMax.x, boxMin.y, boxMax.z);
+                                                        app.boxVerts[6] = math::float3(boxMax.x, boxMax.y, boxMin.z);
+                                                        app.boxVerts[7] = math::float3(boxMax.x, boxMax.y, boxMax.z);
                                                        
+                                                        app.boxInds[0] = 0;
+                                                        app.boxInds[1] = 1;
+                                                        app.boxInds[2] = 1;
+                                                        app.boxInds[3] = 3;
+                                                        app.boxInds[4] = 3;
+                                                        app.boxInds[5] = 2;
+                                                        app.boxInds[6] = 2;
+                                                        app.boxInds[7] = 0;
+                                                        // Generate 4 lines around face at +X.
+                                                        app.boxInds[ 8] = 4;
+                                                        app.boxInds[ 9] = 5;
+                                                        app.boxInds[10] = 5;
+                                                        app.boxInds[11] = 7;
+                                                        app.boxInds[12] = 7;
+                                                        app.boxInds[13] = 6;
+                                                        app.boxInds[14] = 6;
+                                                        app.boxInds[15] = 4;
+                                                        // Generate 2 horizontal lines at -Z.
+                                                        app.boxInds[16] = 0;
+                                                        app.boxInds[17] = 4;
+                                                        app.boxInds[18] = 2;
+                                                        app.boxInds[19] = 6;
+                                                        // Generate 2 horizontal lines at +Z.
+                                                        app.boxInds[20] = 1;
+                                                        app.boxInds[21] = 5;
+                                                        app.boxInds[22] = 3;
+                                                        app.boxInds[23] = 7;
+                                                        
+                                                        
+                                                        app.boxVertexBuffer = VertexBuffer::Builder()
+                                                            .vertexCount(8)
+                                                            .bufferCount(1)
+                                                            .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
+                                                            .build(*engine);
+
+                                                        app.boxIndexBuffer = IndexBuffer::Builder()
+                                                            .indexCount(boxIndCount)
+                                                            .bufferType(IndexBuffer::IndexType::UINT)
+                                                            .build(*engine);
+
+                                                        app.boxVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
+                                                                            app.boxVerts, 8 * sizeof(float3), nullptr));
+                                                        
+                                                        app.boxIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
+                                                                app.boxInds, app.boxIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
+                                                        
+                                                        app.boxEntity = std::pair(EntityManager::get().create(), t[7]);
+                                                        RenderableManager::Builder(1)
+                                                            .culling(false)
+                                                            .castShadows(false)
+                                                            .receiveShadows(false)
+                                                            .geometry(0, RenderableManager::PrimitiveType::LINES, app.boxVertexBuffer, app.boxIndexBuffer)
+                                                            .build(*engine, app.boxEntity.first);
+                                                        if(!app.mpScene->hasEntity(app.boxEntity.first)){
+                                                            app.mpScene->addEntity(app.boxEntity.first);
+                                                            app.selectedNode =std::pair(entities[i], asset.first);
+                                                            auto boxTM = app.mpTransformManager->getInstance(app.boxEntity.first);
+                                                            app.mpTransformManager->setParent(boxTM, tmInstance);
+                                                            auto boxWorld = inverse(app.mpTransformManager->getWorldTransform(boxTM));
+                                                            app.mpTransformManager->setTransform(boxTM, boxWorld);
+                                                        }
+                                                           
+                                                    }
                                                 }
                                             }
                                         }
@@ -2864,7 +2872,6 @@ void ape::FilamentApplicationPlugin::Step()
                                 tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
                                 parent = app.mpTransformManager->getParent(tmInstance);
                                 std::string sceneNodeName = "";
-                                if(sceneNodeName.find("_vlftStudent") == std::string::npos)
                                 while(parent && !found){
                                     if(app.asset[app.selectedNode.second]->getName(parent)){
                                         parentName = app.asset[app.selectedNode.second]->getName(parent);
@@ -3027,28 +3034,30 @@ void ape::FilamentApplicationPlugin::Step()
                 }
             }
         }
-        vec3<float> camPos, camTarget, camUp;
-        manipulator->getLookAt(&camPos, &camTarget, &camUp);
-        if(!app.updateinfo.isAdmin){
-            if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
-                if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
-                    //mpUserInputMacro->getUserNode();
+        if(!app.updateinfo.inSettings && app.updateinfo.inRoom){
+            vec3<float> camPos, camTarget, camUp;
+            manipulator->getLookAt(&camPos, &camTarget, &camUp);
+            if(!app.updateinfo.isAdmin){
+                if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
+                    if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
+                        //mpUserInputMacro->getUserNode();
+                        node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                        auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
+                        modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
+                        auto modelQuat = modelMatrix.toQuaternion();
+                        node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+
+                    }
+                }
+            }
+            else{
+                if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
                     node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
                     auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                     modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                     auto modelQuat = modelMatrix.toQuaternion();
                     node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
-
                 }
-            }
-        }
-        else{
-            if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
-                node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
-                auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
-                modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
-                auto modelQuat = modelMatrix.toQuaternion();
-                node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
             }
         }
         
@@ -3056,7 +3065,7 @@ void ape::FilamentApplicationPlugin::Step()
     };
 
     auto animate = [this](Engine* engine, View* view, double now) {
-        if(now - logoAnimTime > 0.02){
+        if(now - logoAnimTime > 0.02 && !app.updateinfo.inRoom){
             //float diff = (now - logoAnimTime)/0.02;
             if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
                 if(logo->getChildrenVisibility())
@@ -3109,6 +3118,7 @@ void ape::FilamentApplicationPlugin::Step()
         }
         if(!app.updateinfo.isPlayRunning && app.updateinfo.IsPlayClicked){
             app.updateinfo.StartTime = now-app.updateinfo.pauseTime/1000;
+            mPlayedAnimations = 0;
             playAnimations(now);
         }
         else if(app.updateinfo.IsPlayClicked){

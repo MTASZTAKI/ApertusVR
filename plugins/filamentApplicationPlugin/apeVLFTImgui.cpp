@@ -77,7 +77,7 @@ void ape::VLFTImgui::listRoomNames(bool withState){
 
 void ape::VLFTImgui::createStopButton(int width, int height){
     if (ImGui::Button("Stop",ImVec2(width/8, height/15))){
-        if(mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected]){
+        if(mpMainMenuInfo.current_selected > -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected]){
         CURL *curl;
         CURLcode res;
         std::string readBuffer;
@@ -400,6 +400,8 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
         mpMainMenuInfo.inRoomGui = false;
         mpUpdateInfo->inRoom = false;
         mpMainMenuInfo.adminMenu = true;
+        mpMainMenuInfo.settingsMenu = false;
+        mpUpdateInfo->inSettings = false;
         
     }
     ImGui::SetCursorPos(ImVec2(width-(width/8+25),height-(height/15+25)));
@@ -523,6 +525,7 @@ void ape::VLFTImgui::adminRoomGUI(){
     mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
     ImGui::End();
 }
+
 void ape::VLFTImgui::loginGUI(){
     ImGui::GetStyle().Alpha = 0.8;
     ImGui::SetNextWindowPos(ImVec2(20, 20));
@@ -568,9 +571,28 @@ void ape::VLFTImgui::loginGUI(){
     ImGui::End();
 }
 
+void ape::VLFTImgui::waitWindow(){
+    const float width = ImGui::GetIO().DisplaySize.x;
+    const float height = ImGui::GetIO().DisplaySize.y;
+    ImGui::SetNextWindowSize(ImVec2(200, 50));
+    ImGui::SetNextWindowPos(ImVec2(width/2-100, height/2-25));
+    ImGui::Begin("Waiting", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    std::string waitFor = "Leave room in ";
+    std::stringstream posStream;
+    double timeToWait = 30.0 - (mpUpdateInfo->now - mpUpdateInfo->leaveTime);
+    posStream << std::fixed << std::setprecision(2) << timeToWait << " seconds";
+    waitFor += posStream.str();
+    ImGui::Text("%s", waitFor.c_str());
+    ImGui::End();
+    if(timeToWait <= 0.0)
+        mpUpdateInfo->leaveWait = false;
+}
+
 void ape::VLFTImgui::update(){
   
-    if(mpMainMenuInfo.loginMenu)
+    if(mpUpdateInfo->leaveWait)
+        waitWindow();
+    else if(mpMainMenuInfo.loginMenu)
         loginGUI();
     else if(mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
         adminRoomGUI();
@@ -591,7 +613,6 @@ void ape::VLFTImgui::update(){
         infoPanelGUI();
     }
 }
-
 
 void ape::VLFTImgui::statePanelGUI(){
     ImGui::SetNextWindowPos(ImVec2(122, 0));
@@ -668,7 +689,6 @@ void ape::VLFTImgui::leftPanelGUI() {
     ImGui::End();
 }
 
-
 void ape::VLFTImgui::studentPanelGUI(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
@@ -698,6 +718,7 @@ void ape::VLFTImgui::studentPanelGUI(){
     }
     ImGui::End();
 }
+
 void ape::VLFTImgui::infoPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
@@ -817,7 +838,6 @@ void ape::VLFTImgui::screenshotPanelGUI(){
    
     ImGui::End();
 }
-
 
 void ape::VLFTImgui::openFileBrowser() {
     char* filePath;

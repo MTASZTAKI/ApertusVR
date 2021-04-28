@@ -137,8 +137,10 @@ struct updateInfo{
     bool screenCaptureOn = false;
     bool wrongPassword = false;
     bool switchOwner = false;
+    bool leaveWait = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
+    double leaveTime = 30.0;
     double now = 0;
     int ChoosedBookmarkedAnimationID = 0;
     int BookmarkID = -1;
@@ -234,6 +236,8 @@ namespace ape
         void connectToRoom();
         
         void openFileBrowser();
+        
+        void waitWindow();
         
         void getInfoAboutObject(float width, float height);
         
