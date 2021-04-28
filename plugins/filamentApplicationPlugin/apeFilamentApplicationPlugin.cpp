@@ -269,7 +269,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
                                     nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
                                     nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
-                                    nodePosition.getX()/divider, nodePosition.getY()/divider+0.35, nodePosition.getZ()/divider, nodeTransforms[3][3]);
+                                    nodePosition.getX()/divider, nodePosition.getY()/divider+0.45, nodePosition.getZ()/divider, nodeTransforms[3][3]);
                                 app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
                         }
                         else if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
@@ -476,6 +476,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			}
 			else if (event.type == ape::Event::Type::NODE_DELETE)
 			{
+                APE_LOG_DEBUG("Destroy node" << event.subjectName);
                 if(app.mpEntities.find(event.subjectName) != app.mpEntities.end()){
                     if(app.mpScene->hasEntity(app.mpEntities[event.subjectName])){
                         app.mpScene->remove(app.mpEntities[event.subjectName]);
@@ -666,6 +667,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			}
 			else if (event.type == ape::Event::Type::GEOMETRY_FILE_DELETE)
 			{
+                //Destroy not needed
+                APE_LOG_DEBUG("Destroy asset" << event.subjectName);
                 app.loader->destroyAsset(app.asset[event.subjectName]);
                 app.asset.erase(event.subjectName);
 			}
@@ -699,6 +702,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
                                     .build(*app.engine);
                                     app.spaghettiLines[parentNodeName].lineName = geometryName;
+                                    mspaghettiLineNames[event.subjectName] = parentNodeName;
 //                                    if(app.spaghettiLines.find(parentNodeName) != app.spaghettiLines.end()){
 //                                        if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
 //                                            auto lineTm = app.mpTransformManager->getInstance(app.spaghettiLines[geometryName].lineEntity);
@@ -900,11 +904,16 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                     }
                     break;
-                    case ape::Event::Type::GEOMETRY_CLONE_DELETE:
-                    {
-                        ;
-                    }
-                    break;
+                }
+            }
+            else if(event.type == ape::Event::Type::GEOMETRY_CLONE_DELETE)
+            {
+                APE_LOG_DEBUG("Destroy clone" << event.subjectName);
+                auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getEntities()[0];
+                if(app.mpScene->hasEntity(cloneRoot)){
+                    app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                    app.mpInstancesMap[event.subjectName].index = -1;
+                    app.mpInstancesMap[event.subjectName].assetName = "";
                 }
             }
         }
@@ -3116,6 +3125,8 @@ void ape::FilamentApplicationPlugin::Step()
 //            mstateNodeNames.clear();
 //            mstateGeometryNames.clear();
         }
+        else if(app.updateinfo.IsStopClicked)
+            app.updateinfo.IsStopClicked = false;
         if(!app.updateinfo.isPlayRunning && app.updateinfo.IsPlayClicked){
             app.updateinfo.StartTime = now-app.updateinfo.pauseTime/1000;
             mPlayedAnimations = 0;
