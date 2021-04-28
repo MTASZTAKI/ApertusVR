@@ -1,8 +1,7 @@
 OSX xcode settings for VLFT launcher
 In XCODE click on project and choose apeVLFTLauncher target
 
-First either build apeFilamentApplicationPlugin before building the apeVLFTLauncher,
-or add it to the dependencies of apeVLFTLauncher
+First build apeFilamentApplicationPlugin before building the apeVLFTLauncher.
 
 In build settings check if other c++ flags contains std=c++17, if not add it
 
