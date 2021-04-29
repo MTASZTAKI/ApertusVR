@@ -909,11 +909,14 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
             else if(event.type == ape::Event::Type::GEOMETRY_CLONE_DELETE)
             {
                 APE_LOG_DEBUG("Destroy clone" << event.subjectName);
-                auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getEntities()[0];
-                if(app.mpScene->hasEntity(cloneRoot)){
-                    app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
-                    app.mpInstancesMap[event.subjectName].index = -1;
-                    app.mpInstancesMap[event.subjectName].assetName = "";
+                
+                if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() > 0){
+                    auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getEntities()[0];
+                    if(app.mpScene->hasEntity(cloneRoot)){
+                        app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                        app.mpInstancesMap[event.subjectName].index = -1;
+                        app.mpInstancesMap[event.subjectName].assetName = "";
+                    }
                 }
             }
         }
@@ -2414,6 +2417,14 @@ void ape::FilamentApplicationPlugin::Step()
             app.updateinfo.logMovements = false;
         }
         if(app.updateinfo.leftRoom){
+            
+            app.updateinfo.leftRoom = false;
+            app.updateinfo.callLeave = true;
+            mpSceneManager->deleteEntity(mUserName+mPostUserName+"characterModel");
+            mpSceneManager->deleteEntity(mUserName+mPostUserName);
+            mpSceneManager->deleteNode(mUserName+mPostUserName);
+            mpSceneManager->deleteEntity(mUserName+mPostUserName + "_text");
+            mpSceneManager->deleteNode(mUserName+mPostUserName + "_TextNode");
             std::vector<std::string> to_erase;
             delete app.resourceLoader;
             app.resourceLoader = nullptr;
@@ -2421,6 +2432,7 @@ void ape::FilamentApplicationPlugin::Step()
                     for(size_t i = 0; i < 10; i++){
                         if(instanceList.second[i]->getEntityCount() > 0)
                         {
+                            instanceList.first;
                             auto entity = instanceList.second[i]->getRoot();
                             if(app.mpScene->hasEntity(entity))
                                 app.mpScene->removeEntities(instanceList.second[i]->getEntities(), instanceList.second[i]->getEntityCount());
@@ -2443,7 +2455,6 @@ void ape::FilamentApplicationPlugin::Step()
                 app.mpInstancesMap.erase(item);
             }
             to_erase.clear();
-            app.updateinfo.leftRoom = false;
             app.updateinfo.leaveWait = true;
             app.updateinfo.leaveTime = app.updateinfo.now;
         }

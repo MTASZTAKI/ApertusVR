@@ -392,17 +392,18 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
     }
     
     ImGui::SetCursorPos(ImVec2(0,height-(height/15+25)));
-    if(ImGui::Button("Leave room",ImVec2(width/8, height/15)))
-    {
-       //TODO delete all object;
-        mpSceneNetwork->leave();
-        mpUpdateInfo->leftRoom = true;
-        mpMainMenuInfo.inRoomGui = false;
-        mpUpdateInfo->inRoom = false;
-        mpMainMenuInfo.adminMenu = true;
-        mpMainMenuInfo.settingsMenu = false;
-        mpUpdateInfo->inSettings = false;
-        
+    if(mpUpdateInfo->leftRoom == false && mpUpdateInfo->inRoom){
+        if(ImGui::Button("Leave room",ImVec2(width/8, height/15)))
+        {
+           //TODO delete all object;
+            mpUpdateInfo->leftRoom = true;
+            mpMainMenuInfo.inRoomGui = false;
+            mpUpdateInfo->inRoom = false;
+            mpMainMenuInfo.adminMenu = true;
+            mpMainMenuInfo.settingsMenu = false;
+            mpUpdateInfo->inSettings = false;
+            
+        }
     }
     ImGui::SetCursorPos(ImVec2(width-(width/8+25),height-(height/15+25)));
     if (ImGui::Button("Back",ImVec2(width/8, height/15))){
@@ -590,6 +591,10 @@ void ape::VLFTImgui::waitWindow(){
 
 void ape::VLFTImgui::update(){
   
+    if(mpUpdateInfo->callLeave && (mpUpdateInfo->now - mpUpdateInfo->leaveTime) > 0.5){
+        mpSceneNetwork->leave();
+        mpUpdateInfo->callLeave = false;
+    }
     if(mpUpdateInfo->leaveWait)
         waitWindow();
     else if(mpMainMenuInfo.loginMenu)

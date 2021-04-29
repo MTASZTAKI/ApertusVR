@@ -303,8 +303,10 @@ void ape::SceneNetworkImpl::leave()
     }
     RakNet::NetworkIDManager::DestroyInstance(mpNetworkIDManager);
     mpNetworkIDManager = nullptr;
-    if (mpNatPunchthroughClient)
+    if (mpNatPunchthroughClient){
         RakNet::NatPunchthroughClient::DestroyInstance(mpNatPunchthroughClient);
+        mpNatPunchthroughClient = nullptr;
+    }
    
 }
 

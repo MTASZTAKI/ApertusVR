@@ -35,7 +35,9 @@ ape::Replica::Replica(RakNet::RakString objectType, std::string name, std::strin
 
 ape::Replica::~Replica()
 {
-
+    
+    if(replicaManager && mOwnerID == mpCoreConfig->getNetworkGUID())
+        BroadcastDestruction();
 }
 
 RakNet::RM3ConstructionState ape::Replica::QueryConstruction( RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3 )
@@ -60,13 +62,13 @@ bool ape::Replica::DeserializeConstruction(RakNet::BitStream *constructionBitstr
 
 RakNet::RM3DestructionState ape::Replica::QueryDestruction(RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3)
 {
-	//APE_LOG_DEBUG("QueryDestruction");
+	APE_LOG_DEBUG("QueryDestruction "<< mReplicaName);
 	return RakNet::RM3DS_DO_NOT_QUERY_DESTRUCTION;
 }
 
 bool ape::Replica::QueryRelayDestruction(RakNet::Connection_RM3 *sourceConnection) const
 {
-	//APE_LOG_DEBUG("QueryRelayDestruction");
+	APE_LOG_DEBUG("QueryRelayDestruction");
 	return true;
 }
 
@@ -74,7 +76,7 @@ void ape::Replica::SerializeDestruction( RakNet::BitStream *destructionBitstream
 {
 	mVariableDeltaSerializer.RemoveRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
 	destructionBitstream->Write(mObjectType + RakNet::RakString("SerializeDestruction"));
-	//APE_LOG_DEBUG("SerializeDestruction");
+	APE_LOG_DEBUG("SerializeDestruction");
 }
 
 bool ape::Replica::DeserializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection )
@@ -96,9 +98,9 @@ RakNet::RM3ActionOnPopConnection ape::Replica::QueryActionOnPopConnection( RakNe
 
 void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 {
-	//APE_LOG_DEBUG("DeallocReplica");
-	if (mIsHost)
-		BroadcastDestruction();
+	APE_LOG_DEBUG("DeallocReplica");
+//	if (mIsHost)
+//		BroadcastDestruction();
 	if (mObjectType == "Node")
 		mpSceneManager->deleteNode(mReplicaName);
 	else

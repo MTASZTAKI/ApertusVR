@@ -33,7 +33,7 @@ ape::IndexedLineSetGeometryImpl::IndexedLineSetGeometryImpl(std::string name, bo
 
 ape::IndexedLineSetGeometryImpl::~IndexedLineSetGeometryImpl()
 {
-	
+    
 }
 
 void ape::IndexedLineSetGeometryImpl::setParameters(ape::GeometryCoordinates coordinates, ape::GeometryIndices indices, ape::Color color)

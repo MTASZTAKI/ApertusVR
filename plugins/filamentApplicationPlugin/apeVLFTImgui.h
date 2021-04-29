@@ -138,6 +138,7 @@ struct updateInfo{
     bool wrongPassword = false;
     bool switchOwner = false;
     bool leaveWait = false;
+    bool callLeave = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;
