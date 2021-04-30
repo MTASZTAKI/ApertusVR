@@ -239,19 +239,17 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         app.mpTransformManager->setParent(app.mpTransforms[nodeName], NULL);
                         std::size_t pos = nodeName.find("_vlftStudent");
                         if(pos != std::string::npos){
-                            if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
+                            node->setOwner(node->getCreator());
                                 if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                                     auto camEntity = app.mainCamera->getEntity();
                                     auto camTm = app.mpTransformManager->getInstance(camEntity);
                                     app.mpTransformManager->setParent(camTm, NULL);
-                                    
                                     auto filaTm = filament::math::mat4f(1,0,0,0,
                                                           0,1,0,0,
                                                           0,0,1,0,
                                                           0,0,0,1);
                                     app.mpTransformManager->setTransform(camTm, filaTm);
                                 }
-                            }
                         }
 					}
 						break;
@@ -2479,7 +2477,7 @@ void ape::FilamentApplicationPlugin::Step()
                                 nodeSP->setOwner(mpCoreConfig->getNetworkGUID());
                                 if(auto userNode = mpSceneManager->getNode(mUserName+mPostUserName).lock())
                                     nodeSP->setParentNode(userNode);
-                                nodeSP->setPosition(ape::Vector3(0, 0, 0));
+                                nodeSP->setPosition(ape::Vector3(0, -0.4, 0.05));
                                 nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
                                 mAttachedUsers.push_back(nodeSP);
                             }
@@ -2495,11 +2493,9 @@ void ape::FilamentApplicationPlugin::Step()
                     {
                         if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
                         {
-                            attachedUser->revertToInitalState();
                             attachedUser->detachFromParentNode();
                             attachedUser->setPosition(ape::Vector3(0, 1.5, 0));
                             attachedUser->setOrientation(ape::Quaternion(0, 0, 1, 0));
-                            attachedUser->setOwner(attachedUser->getCreator());
                         }
                     }
                 }
@@ -2707,352 +2703,355 @@ void ape::FilamentApplicationPlugin::Step()
         auto a = event.key.keysym.sym;
         auto keyState = SDL_GetModState();
         bool moved = false;
-        if((!app.updateinfo.inSettings || app.updateinfo.changedKey) && app.updateinfo.inRoom){
-            switch(event.type){
-                case SDL_MOUSEBUTTONDOWN:{
-                    if(!app.updateinfo.inSettings){
-                        if(event.button.button == SDL_BUTTON_LEFT && app.updateinfo.pickedItem == ""){
-                            auto viewport = view->getViewport();
-                            width = viewport.width;
-                            height = viewport.height;
-                            
-                            manipulator->getLookAt(&origin, &mtarget, &upward);
-                            if(mIsStudent){
-                                float diff = origin.y - 1.5;
-                                origin = math::vec3<float>(origin.x, 1.5, origin.z);
-                                mtarget = math::vec3<float>(mtarget.x, mtarget.y-diff, mtarget.z);
-                            }
-                            math::vec3<float>  gaze = normalize(mtarget - origin);
-                            math::vec3<float> right = normalize(cross(gaze, math::vec3<float>(0,1,0)));
-                            upward = cross(right, gaze);
-                            fov = fov * F_PI / 180.0;
+        if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
+            if(app.updateinfo.isAdmin || node->getOwner() == mpCoreConfig->getNetworkGUID())
+                if((!app.updateinfo.inSettings || app.updateinfo.changedKey) && app.updateinfo.inRoom){
+                    switch(event.type){
+                        case SDL_MOUSEBUTTONDOWN:{
+                            if(!app.updateinfo.inSettings){
+                                if(event.button.button == SDL_BUTTON_LEFT && app.updateinfo.pickedItem == ""){
+                                    auto viewport = view->getViewport();
+                                    width = viewport.width;
+                                    height = viewport.height;
+                                    
+                                    manipulator->getLookAt(&origin, &mtarget, &upward);
+                                    if(mIsStudent){
+                                        float diff = origin.y - 1.5;
+                                        origin = math::vec3<float>(origin.x, 1.5, origin.z);
+                                        mtarget = math::vec3<float>(mtarget.x, mtarget.y-diff, mtarget.z);
+                                    }
+                                    math::vec3<float>  gaze = normalize(mtarget - origin);
+                                    math::vec3<float> right = normalize(cross(gaze, math::vec3<float>(0,1,0)));
+                                    upward = cross(right, gaze);
+                                    fov = fov * F_PI / 180.0;
 
-                            // Remap the grid coordinate into [-1, +1] and shift it to the pixel center.
-                            float u = 2.0 * (0.5+x) / width - 1.0;
-                            float v = 1.0-2.0 * (0.5+y) / height;
-                            // Compute the tangent of the field-of-view angle as well as the aspect ratio.
-                            float tangent = tan(fov/2.0);
-                            float aspectRatio = (float)width / height;
+                                    // Remap the grid coordinate into [-1, +1] and shift it to the pixel center.
+                                    float u = 2.0 * (0.5+x) / width - 1.0;
+                                    float v = 1.0-2.0 * (0.5+y) / height;
+                                    // Compute the tangent of the field-of-view angle as well as the aspect ratio.
+                                    float tangent = tan(fov/2.0);
+                                    float aspectRatio = (float)width / height;
 
-                            // Adjust the gaze so it goes through the pixel of interest rather than the grid center.
-                            dir = gaze;
-                            dir += right * (tangent * u * aspectRatio);
-                            dir += upward * (tangent * v);
-                            dir = normalize(dir);
-                            origin += dir*tnear;
-                            
-                            app.rayIntersectedEntities.clear();
-                            app.boxEntity.second = 1000000.0;
-                            math::mat4f worldTm;
-                            
-                            for(auto  const& asset: app.asset){
-                               
-                                auto* entities = asset.second->getEntities();
-                                size_t cnt = asset.second->getEntityCount();
-                                
-                                if(asset.first.find("characterModel") == std::string::npos)
-                                {
-                                    for(size_t i = 0; i < cnt; i++){
-                                        if(app.mpRenderableManager->hasComponent(entities[i]) && scene->hasEntity(entities[i])){
-                                            auto instance = app.mpRenderableManager->getInstance(entities[i]);
-                                            auto tmInstance = app.mpTransformManager->getInstance(entities[i]);
-                                            worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
-                                            auto box = app.mpRenderableManager->getAxisAlignedBoundingBox(instance);
-                                            
-                                            math::vec3<float> T_1;
-                                            math::vec3<float> T_2;
-                                            float t_near = -FLT_MIN;
-                                            float t_far = FLT_MAX;
-                                            math::float3 boxMin = box.getMin();
-                                            math::float3 boxMax = box.getMax();
-                                            if(boxMax.x != boxMin.x && boxMax.y != boxMin.y && boxMax.z != boxMin.z){
-                                                box = rigidTransform(box, worldTm);
-                                                boxMin = box.getMin();
-                                                boxMax = box.getMax();
-                                                float t[9];
-                                                t[1] = (boxMin.x - origin.x)/dir.x;
-                                                t[2] = (boxMax.x - origin.x)/dir.x;
-                                                t[3] = (boxMin.y - origin.y)/dir.y;
-                                                t[4] = (boxMax.y - origin.y)/dir.y;
-                                                t[5] = (boxMin.z - origin.z)/dir.z;
-                                                t[6] = (boxMax.z - origin.z)/dir.z;
-                                                t[7] = fmax(fmax(fmin(t[1], t[2]), fmin(t[3], t[4])), fmin(t[5], t[6]));
-                                                t[8] = fmin(fmin(fmax(t[1], t[2]), fmax(t[3], t[4])), fmax(t[5], t[6]));
-                                                if(t[8] >= 0 && t[7] <= t[8] && t[7] >= 0){
-                                                    app.rayIntersectedEntities.push_back(std::pair(entities[i], t[7]));
-                                                    if(abs(t[7]) < app.boxEntity.second){
-                                                        if(app.mpScene->hasEntity(app.boxEntity.first)){
-                                                            app.mpScene->remove(app.boxEntity.first);
+                                    // Adjust the gaze so it goes through the pixel of interest rather than the grid center.
+                                    dir = gaze;
+                                    dir += right * (tangent * u * aspectRatio);
+                                    dir += upward * (tangent * v);
+                                    dir = normalize(dir);
+                                    origin += dir*tnear;
+                                    
+                                    app.rayIntersectedEntities.clear();
+                                    app.boxEntity.second = 1000000.0;
+                                    math::mat4f worldTm;
+                                    
+                                    for(auto  const& asset: app.asset){
+                                       
+                                        auto* entities = asset.second->getEntities();
+                                        size_t cnt = asset.second->getEntityCount();
+                                        
+                                        if(asset.first.find("characterModel") == std::string::npos)
+                                        {
+                                            for(size_t i = 0; i < cnt; i++){
+                                                if(app.mpRenderableManager->hasComponent(entities[i]) && scene->hasEntity(entities[i])){
+                                                    auto instance = app.mpRenderableManager->getInstance(entities[i]);
+                                                    auto tmInstance = app.mpTransformManager->getInstance(entities[i]);
+                                                    worldTm = app.mpTransformManager->getWorldTransform(tmInstance);
+                                                    auto box = app.mpRenderableManager->getAxisAlignedBoundingBox(instance);
+                                                    
+                                                    math::vec3<float> T_1;
+                                                    math::vec3<float> T_2;
+                                                    float t_near = -FLT_MIN;
+                                                    float t_far = FLT_MAX;
+                                                    math::float3 boxMin = box.getMin();
+                                                    math::float3 boxMax = box.getMax();
+                                                    if(boxMax.x != boxMin.x && boxMax.y != boxMin.y && boxMax.z != boxMin.z){
+                                                        box = rigidTransform(box, worldTm);
+                                                        boxMin = box.getMin();
+                                                        boxMax = box.getMax();
+                                                        float t[9];
+                                                        t[1] = (boxMin.x - origin.x)/dir.x;
+                                                        t[2] = (boxMax.x - origin.x)/dir.x;
+                                                        t[3] = (boxMin.y - origin.y)/dir.y;
+                                                        t[4] = (boxMax.y - origin.y)/dir.y;
+                                                        t[5] = (boxMin.z - origin.z)/dir.z;
+                                                        t[6] = (boxMax.z - origin.z)/dir.z;
+                                                        t[7] = fmax(fmax(fmin(t[1], t[2]), fmin(t[3], t[4])), fmin(t[5], t[6]));
+                                                        t[8] = fmin(fmin(fmax(t[1], t[2]), fmax(t[3], t[4])), fmax(t[5], t[6]));
+                                                        if(t[8] >= 0 && t[7] <= t[8] && t[7] >= 0){
+                                                            app.rayIntersectedEntities.push_back(std::pair(entities[i], t[7]));
+                                                            if(abs(t[7]) < app.boxEntity.second){
+                                                                if(app.mpScene->hasEntity(app.boxEntity.first)){
+                                                                    app.mpScene->remove(app.boxEntity.first);
+                                                                }
+                                                                if(app.mpEntityManager->isAlive(app.boxEntity.first)){
+                                                                    app.engine->destroy(app.boxEntity.first);
+                                                                    app.mpEntityManager->destroy(app.boxEntity.first);
+                                                                    if(app.mpTransformManager->hasComponent(app.boxEntity.first))
+                                                                        app.mpTransformManager->destroy(app.boxEntity.first);
+                                                                    app.engine->destroy(app.boxVertexBuffer);
+                                                                    app.engine->destroy(app.boxIndexBuffer);
+                                                                }
+                                                                    
+                                                                size_t boxVertCount = 8;
+                                                                size_t boxIndCount = 24;
+                                                                
+                                                                app.boxVerts[0] = math::float3(boxMin.x, boxMin.y, boxMin.z);
+                                                                app.boxVerts[1] = math::float3(boxMin.x, boxMin.y, boxMax.z);
+                                                                app.boxVerts[2] = math::float3(boxMin.x, boxMax.y, boxMin.z);
+                                                                app.boxVerts[3] = math::float3(boxMin.x, boxMax.y, boxMax.z);
+                                                                app.boxVerts[4] = math::float3(boxMax.x, boxMin.y, boxMin.z);
+                                                                app.boxVerts[5] = math::float3(boxMax.x, boxMin.y, boxMax.z);
+                                                                app.boxVerts[6] = math::float3(boxMax.x, boxMax.y, boxMin.z);
+                                                                app.boxVerts[7] = math::float3(boxMax.x, boxMax.y, boxMax.z);
+                                                               
+                                                                app.boxInds[0] = 0;
+                                                                app.boxInds[1] = 1;
+                                                                app.boxInds[2] = 1;
+                                                                app.boxInds[3] = 3;
+                                                                app.boxInds[4] = 3;
+                                                                app.boxInds[5] = 2;
+                                                                app.boxInds[6] = 2;
+                                                                app.boxInds[7] = 0;
+                                                                // Generate 4 lines around face at +X.
+                                                                app.boxInds[ 8] = 4;
+                                                                app.boxInds[ 9] = 5;
+                                                                app.boxInds[10] = 5;
+                                                                app.boxInds[11] = 7;
+                                                                app.boxInds[12] = 7;
+                                                                app.boxInds[13] = 6;
+                                                                app.boxInds[14] = 6;
+                                                                app.boxInds[15] = 4;
+                                                                // Generate 2 horizontal lines at -Z.
+                                                                app.boxInds[16] = 0;
+                                                                app.boxInds[17] = 4;
+                                                                app.boxInds[18] = 2;
+                                                                app.boxInds[19] = 6;
+                                                                // Generate 2 horizontal lines at +Z.
+                                                                app.boxInds[20] = 1;
+                                                                app.boxInds[21] = 5;
+                                                                app.boxInds[22] = 3;
+                                                                app.boxInds[23] = 7;
+                                                                
+                                                                
+                                                                app.boxVertexBuffer = VertexBuffer::Builder()
+                                                                    .vertexCount(8)
+                                                                    .bufferCount(1)
+                                                                    .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
+                                                                    .build(*engine);
+
+                                                                app.boxIndexBuffer = IndexBuffer::Builder()
+                                                                    .indexCount(boxIndCount)
+                                                                    .bufferType(IndexBuffer::IndexType::UINT)
+                                                                    .build(*engine);
+
+                                                                app.boxVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
+                                                                                    app.boxVerts, 8 * sizeof(float3), nullptr));
+                                                                
+                                                                app.boxIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
+                                                                        app.boxInds, app.boxIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
+                                                                
+                                                                app.boxEntity = std::pair(EntityManager::get().create(), t[7]);
+                                                                RenderableManager::Builder(1)
+                                                                    .culling(false)
+                                                                    .castShadows(false)
+                                                                    .receiveShadows(false)
+                                                                    .geometry(0, RenderableManager::PrimitiveType::LINES, app.boxVertexBuffer, app.boxIndexBuffer)
+                                                                    .build(*engine, app.boxEntity.first);
+                                                                if(!app.mpScene->hasEntity(app.boxEntity.first)){
+                                                                    app.mpScene->addEntity(app.boxEntity.first);
+                                                                    app.selectedNode =std::pair(entities[i], asset.first);
+                                                                    auto boxTM = app.mpTransformManager->getInstance(app.boxEntity.first);
+                                                                    app.mpTransformManager->setParent(boxTM, tmInstance);
+                                                                    auto boxWorld = inverse(app.mpTransformManager->getWorldTransform(boxTM));
+                                                                    app.mpTransformManager->setTransform(boxTM, boxWorld);
+                                                                }
+                                                                   
+                                                            }
                                                         }
-                                                        if(app.mpEntityManager->isAlive(app.boxEntity.first)){
-                                                            app.engine->destroy(app.boxEntity.first);
-                                                            app.mpEntityManager->destroy(app.boxEntity.first);
-                                                            if(app.mpTransformManager->hasComponent(app.boxEntity.first))
-                                                                app.mpTransformManager->destroy(app.boxEntity.first);
-                                                            app.engine->destroy(app.boxVertexBuffer);
-                                                            app.engine->destroy(app.boxIndexBuffer);
-                                                        }
-                                                            
-                                                        size_t boxVertCount = 8;
-                                                        size_t boxIndCount = 24;
-                                                        
-                                                        app.boxVerts[0] = math::float3(boxMin.x, boxMin.y, boxMin.z);
-                                                        app.boxVerts[1] = math::float3(boxMin.x, boxMin.y, boxMax.z);
-                                                        app.boxVerts[2] = math::float3(boxMin.x, boxMax.y, boxMin.z);
-                                                        app.boxVerts[3] = math::float3(boxMin.x, boxMax.y, boxMax.z);
-                                                        app.boxVerts[4] = math::float3(boxMax.x, boxMin.y, boxMin.z);
-                                                        app.boxVerts[5] = math::float3(boxMax.x, boxMin.y, boxMax.z);
-                                                        app.boxVerts[6] = math::float3(boxMax.x, boxMax.y, boxMin.z);
-                                                        app.boxVerts[7] = math::float3(boxMax.x, boxMax.y, boxMax.z);
-                                                       
-                                                        app.boxInds[0] = 0;
-                                                        app.boxInds[1] = 1;
-                                                        app.boxInds[2] = 1;
-                                                        app.boxInds[3] = 3;
-                                                        app.boxInds[4] = 3;
-                                                        app.boxInds[5] = 2;
-                                                        app.boxInds[6] = 2;
-                                                        app.boxInds[7] = 0;
-                                                        // Generate 4 lines around face at +X.
-                                                        app.boxInds[ 8] = 4;
-                                                        app.boxInds[ 9] = 5;
-                                                        app.boxInds[10] = 5;
-                                                        app.boxInds[11] = 7;
-                                                        app.boxInds[12] = 7;
-                                                        app.boxInds[13] = 6;
-                                                        app.boxInds[14] = 6;
-                                                        app.boxInds[15] = 4;
-                                                        // Generate 2 horizontal lines at -Z.
-                                                        app.boxInds[16] = 0;
-                                                        app.boxInds[17] = 4;
-                                                        app.boxInds[18] = 2;
-                                                        app.boxInds[19] = 6;
-                                                        // Generate 2 horizontal lines at +Z.
-                                                        app.boxInds[20] = 1;
-                                                        app.boxInds[21] = 5;
-                                                        app.boxInds[22] = 3;
-                                                        app.boxInds[23] = 7;
-                                                        
-                                                        
-                                                        app.boxVertexBuffer = VertexBuffer::Builder()
-                                                            .vertexCount(8)
-                                                            .bufferCount(1)
-                                                            .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3)
-                                                            .build(*engine);
-
-                                                        app.boxIndexBuffer = IndexBuffer::Builder()
-                                                            .indexCount(boxIndCount)
-                                                            .bufferType(IndexBuffer::IndexType::UINT)
-                                                            .build(*engine);
-
-                                                        app.boxVertexBuffer->setBufferAt(*engine, 0, VertexBuffer::BufferDescriptor(
-                                                                            app.boxVerts, 8 * sizeof(float3), nullptr));
-                                                        
-                                                        app.boxIndexBuffer->setBuffer(*engine, IndexBuffer::BufferDescriptor(
-                                                                app.boxInds, app.boxIndexBuffer->getIndexCount() * sizeof(uint32_t), nullptr));
-                                                        
-                                                        app.boxEntity = std::pair(EntityManager::get().create(), t[7]);
-                                                        RenderableManager::Builder(1)
-                                                            .culling(false)
-                                                            .castShadows(false)
-                                                            .receiveShadows(false)
-                                                            .geometry(0, RenderableManager::PrimitiveType::LINES, app.boxVertexBuffer, app.boxIndexBuffer)
-                                                            .build(*engine, app.boxEntity.first);
-                                                        if(!app.mpScene->hasEntity(app.boxEntity.first)){
-                                                            app.mpScene->addEntity(app.boxEntity.first);
-                                                            app.selectedNode =std::pair(entities[i], asset.first);
-                                                            auto boxTM = app.mpTransformManager->getInstance(app.boxEntity.first);
-                                                            app.mpTransformManager->setParent(boxTM, tmInstance);
-                                                            auto boxWorld = inverse(app.mpTransformManager->getWorldTransform(boxTM));
-                                                            app.mpTransformManager->setTransform(boxTM, boxWorld);
-                                                        }
-                                                           
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            }
-                            if(app.boxEntity.second < 1000000.0){
-                                auto tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
-                                auto parent = app.mpTransformManager->getParent(tmInstance);
-                                bool found = false;
-                                auto sceneNodes = mpSceneManager->getNodes();
-                                std::string parentName = "";
-                                std::string rootName = app.asset[app.selectedNode.second]->getName(parent);
-                                while(app.mpInstancesMap.find(rootName) == app.mpInstancesMap.end()){
-                                    tmInstance = app.mpTransformManager->getInstance(parent);
-                                    parent = app.mpTransformManager->getParent(tmInstance);
-                                    rootName = app.asset[app.selectedNode.second]->getName(parent);
-                                }
-                                app.rootOfSelected.first = parent;
-                                app.rootOfSelected.second = rootName;
-                                app.updateinfo.rootOfSelected = rootName;
-                                tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
-                                parent = app.mpTransformManager->getParent(tmInstance);
-                                std::string sceneNodeName = "";
-                                while(parent && !found){
-                                    if(app.asset[app.selectedNode.second]->getName(parent)){
-                                        parentName = app.asset[app.selectedNode.second]->getName(parent);
-                                        for(auto  const& x: sceneNodes){
-                                            sceneNodeName = x.first;
-                                            if(sceneNodeName == parentName){
-                                                app.selectedNode.first = parent;
-                                                app.selectedNode.second = parentName;
-                                                app.updateinfo.selectedItem = parentName;
-                                                found = true;
-                                                break;
-                                            }
-                                            else if (sceneNodeName.find_first_of(".") != std::string::npos)
-                                            {
-                                                std::string cloneName = sceneNodeName.substr(0,sceneNodeName.find_last_of("."));
-                                                std::string nodeName = sceneNodeName.substr(sceneNodeName.find_last_of(".")+1);
-                                                if(parentName == nodeName && rootName == cloneName){
-                                                    app.updateinfo.selectedItem = sceneNodeName;
-                                                    app.updateinfo.rootOfSelected = cloneName;
-                                                    app.selectedNode.first = parent;
-                                                    found = true;
-                                                    break;
+                                    if(app.boxEntity.second < 1000000.0){
+                                        auto tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
+                                        auto parent = app.mpTransformManager->getParent(tmInstance);
+                                        bool found = false;
+                                        auto sceneNodes = mpSceneManager->getNodes();
+                                        std::string parentName = "";
+                                        std::string rootName = app.asset[app.selectedNode.second]->getName(parent);
+                                        while(app.mpInstancesMap.find(rootName) == app.mpInstancesMap.end()){
+                                            tmInstance = app.mpTransformManager->getInstance(parent);
+                                            parent = app.mpTransformManager->getParent(tmInstance);
+                                            rootName = app.asset[app.selectedNode.second]->getName(parent);
+                                        }
+                                        app.rootOfSelected.first = parent;
+                                        app.rootOfSelected.second = rootName;
+                                        app.updateinfo.rootOfSelected = rootName;
+                                        tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
+                                        parent = app.mpTransformManager->getParent(tmInstance);
+                                        std::string sceneNodeName = "";
+                                        while(parent && !found){
+                                            if(app.asset[app.selectedNode.second]->getName(parent)){
+                                                parentName = app.asset[app.selectedNode.second]->getName(parent);
+                                                for(auto  const& x: sceneNodes){
+                                                    sceneNodeName = x.first;
+                                                    if(sceneNodeName == parentName){
+                                                        app.selectedNode.first = parent;
+                                                        app.selectedNode.second = parentName;
+                                                        app.updateinfo.selectedItem = parentName;
+                                                        found = true;
+                                                        break;
+                                                    }
+                                                    else if (sceneNodeName.find_first_of(".") != std::string::npos)
+                                                    {
+                                                        std::string cloneName = sceneNodeName.substr(0,sceneNodeName.find_last_of("."));
+                                                        std::string nodeName = sceneNodeName.substr(sceneNodeName.find_last_of(".")+1);
+                                                        if(parentName == nodeName && rootName == cloneName){
+                                                            app.updateinfo.selectedItem = sceneNodeName;
+                                                            app.updateinfo.rootOfSelected = cloneName;
+                                                            app.selectedNode.first = parent;
+                                                            found = true;
+                                                            break;
+                                                        }
+                                                            
+                                                    }
                                                 }
-                                                    
+                                            }
+                                            if(!found){
+                                                tmInstance = app.mpTransformManager->getInstance(parent);
+                                                parent = app.mpTransformManager->getParent(tmInstance);
                                             }
                                         }
+                                        if(!found)
+                                            app.updateinfo.selectedItem = rootName;
                                     }
-                                    if(!found){
-                                        tmInstance = app.mpTransformManager->getInstance(parent);
-                                        parent = app.mpTransformManager->getParent(tmInstance);
-                                    }
+                                    isSelected = true;
                                 }
-                                if(!found)
-                                    app.updateinfo.selectedItem = rootName;
-                            }
-                            isSelected = true;
-                        }
-                        app.animationData.mouseDown = true;
-                        app.animationData.animatedClick = false;
-                        app.animationData.mouseStartTime = now;
-                        break;
-                    }
-                }
-                case SDL_MOUSEBUTTONUP:{
-                    if(!app.updateinfo.inSettings){
-                        if(event.button.button == SDL_BUTTON_LEFT){
-                            app.animationData.mouseDown = false;
-                        }
-                        break;
-                    }
-                }
-                case SDL_KEYDOWN:{
-                    if(app.updateinfo.changedKey){
-                        bool sameKey = false;
-                        for(auto const& x : mKeyMap){
-                            if(x.second == keyCode){
-                                sameKey = true;
+                                app.animationData.mouseDown = true;
+                                app.animationData.animatedClick = false;
+                                app.animationData.mouseStartTime = now;
                                 break;
                             }
                         }
-                        if(!sameKey){
-                            mKeyMap[app.updateinfo.changeKeyCode] = keyCode;
-                            app.updateinfo.keyLabel[app.updateinfo.changeKeyCode] = event.text.text[8];
-                        }
-                        app.updateinfo.changedKey = false;
-                    }
-                    else if(!app.updateinfo.inSettings){
-                        //bool moved = false;
-                        if(keyCode == mKeyMap["w"]){
-                            moved = true;
-                            manipulator->keyDown(filament::camutils::Manipulator<float>::Key::FORWARD);
-                        }
-                        if(keyCode == mKeyMap["s"]){
-                            moved = true;
-                            manipulator->keyDown(filament::camutils::Manipulator<float>::Key::BACKWARD);
-                        }
-                        if(keyCode == mKeyMap["a"]){
-                            moved = true;
-                            manipulator->keyDown(filament::camutils::Manipulator<float>::Key::LEFT);
-                        }
-                        if(keyCode == mKeyMap["d"]){
-                            moved = true;
-                            manipulator->keyDown(filament::camutils::Manipulator<float>::Key::RIGHT);
-                        }
-                        if(keyCode == mKeyMap["e"]){
-                            moved = true;
-                            manipulator->keyDown(filament::camutils::Manipulator<float>::Key::UP);
-                        }
-                        if(keyCode == mKeyMap["q"]){
-                            moved = true;
-                            manipulator->keyDown(filament::camutils::Manipulator<float>::Key::DOWN);
-                        }
-                        if(moved){
-                            
-                            if(app.animationData.animatedKey){
-                                app.animationData.keyStartTime = now;
-                                app.animationData.animatedKey = false;
-                                app.animationData.keysDown = true;
-                            }
-                            if(keyState == KMOD_RSHIFT || keyState == KMOD_LSHIFT){
-                                if(app.animationData.keyCurrentAnimation == 0){
-                                    auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
-                                    animator->applyAnimation(0, 0);
+                        case SDL_MOUSEBUTTONUP:{
+                            if(!app.updateinfo.inSettings){
+                                if(event.button.button == SDL_BUTTON_LEFT){
+                                    app.animationData.mouseDown = false;
                                 }
-                                app.animationData.keyCurrentAnimation = 1;
-                                
+                                break;
                             }
-                            else{
-                                if(app.animationData.keyCurrentAnimation == 1){
-                                    auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
-                                    animator->applyAnimation(1, 0);
+                        }
+                        case SDL_KEYDOWN:{
+                            if(app.updateinfo.changedKey){
+                                bool sameKey = false;
+                                for(auto const& x : mKeyMap){
+                                    if(x.second == keyCode){
+                                        sameKey = true;
+                                        break;
+                                    }
                                 }
-                                app.animationData.keyCurrentAnimation = 0;
+                                if(!sameKey){
+                                    mKeyMap[app.updateinfo.changeKeyCode] = keyCode;
+                                    app.updateinfo.keyLabel[app.updateinfo.changeKeyCode] = event.text.text[8];
+                                }
+                                app.updateinfo.changedKey = false;
                             }
-                            app.animationData.keyDown[keyCode] = true;
+                            else if(!app.updateinfo.inSettings){
+                                //bool moved = false;
+                                if(keyCode == mKeyMap["w"]){
+                                    moved = true;
+                                    manipulator->keyDown(filament::camutils::Manipulator<float>::Key::FORWARD);
+                                }
+                                if(keyCode == mKeyMap["s"]){
+                                    moved = true;
+                                    manipulator->keyDown(filament::camutils::Manipulator<float>::Key::BACKWARD);
+                                }
+                                if(keyCode == mKeyMap["a"]){
+                                    moved = true;
+                                    manipulator->keyDown(filament::camutils::Manipulator<float>::Key::LEFT);
+                                }
+                                if(keyCode == mKeyMap["d"]){
+                                    moved = true;
+                                    manipulator->keyDown(filament::camutils::Manipulator<float>::Key::RIGHT);
+                                }
+                                if(keyCode == mKeyMap["e"]){
+                                    moved = true;
+                                    manipulator->keyDown(filament::camutils::Manipulator<float>::Key::UP);
+                                }
+                                if(keyCode == mKeyMap["q"]){
+                                    moved = true;
+                                    manipulator->keyDown(filament::camutils::Manipulator<float>::Key::DOWN);
+                                }
+                                if(moved){
+                                    
+                                    if(app.animationData.animatedKey){
+                                        app.animationData.keyStartTime = now;
+                                        app.animationData.animatedKey = false;
+                                        app.animationData.keysDown = true;
+                                    }
+                                    if(keyState == KMOD_RSHIFT || keyState == KMOD_LSHIFT){
+                                        if(app.animationData.keyCurrentAnimation == 0){
+                                            auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
+                                            animator->applyAnimation(0, 0);
+                                        }
+                                        app.animationData.keyCurrentAnimation = 1;
+                                        
+                                    }
+                                    else{
+                                        if(app.animationData.keyCurrentAnimation == 1){
+                                            auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
+                                            animator->applyAnimation(1, 0);
+                                        }
+                                        app.animationData.keyCurrentAnimation = 0;
+                                    }
+                                    app.animationData.keyDown[keyCode] = true;
+                                }
+                            }
+                            break;
+                        }
+                        case SDL_KEYUP:{
+                            if(!app.updateinfo.inSettings){
+                                if(keyCode == mKeyMap["w"]){
+                                    manipulator->keyUp(filament::camutils::Manipulator<float>::Key::FORWARD);
+                                }
+                                if(keyCode == mKeyMap["s"]){
+                                    manipulator->keyUp(filament::camutils::Manipulator<float>::Key::BACKWARD);
+                                }
+                                if(keyCode == mKeyMap["a"]){
+                                    manipulator->keyUp(filament::camutils::Manipulator<float>::Key::LEFT);
+                                }
+                                if(keyCode == mKeyMap["d"]){
+                                    manipulator->keyUp(filament::camutils::Manipulator<float>::Key::RIGHT);
+                                }
+                                if(keyCode == mKeyMap["e"]){
+                                    manipulator->keyUp(filament::camutils::Manipulator<float>::Key::UP);
+                                }
+                                if(keyCode == mKeyMap["q"]){
+                                    manipulator->keyUp(filament::camutils::Manipulator<float>::Key::DOWN);
+                                }
+                                if(keyCode == mKeyMap["f2"]){
+                                    takeScreenshot();
+                                }
+                                if(keyCode == mKeyMap["f3"]){
+                                    if(!app.updateinfo.screenCaptureOn){
+                                        startScreenCast();
+                                    }
+                                    else {
+                                        stopScreenCast();
+                                    }
+                                   
+                                }
+                                app.animationData.keyDown[keyCode] = false;
+                                if(!app.animationData.keyDown[mKeyMap["w"]] && !app.animationData.keyDown[mKeyMap["a"]] &&
+                                   !app.animationData.keyDown[mKeyMap["s"]] && !app.animationData.keyDown[mKeyMap["d"]] &&
+                                   !app.animationData.keyDown[mKeyMap["e"]] && !app.animationData.keyDown[mKeyMap["q"]]){
+                                    app.animationData.keysDown = false;
+                                }
+                                break;
+                            }
                         }
                     }
-                    break;
                 }
-                case SDL_KEYUP:{
-                    if(!app.updateinfo.inSettings){
-                        if(keyCode == mKeyMap["w"]){
-                            manipulator->keyUp(filament::camutils::Manipulator<float>::Key::FORWARD);
-                        }
-                        if(keyCode == mKeyMap["s"]){
-                            manipulator->keyUp(filament::camutils::Manipulator<float>::Key::BACKWARD);
-                        }
-                        if(keyCode == mKeyMap["a"]){
-                            manipulator->keyUp(filament::camutils::Manipulator<float>::Key::LEFT);
-                        }
-                        if(keyCode == mKeyMap["d"]){
-                            manipulator->keyUp(filament::camutils::Manipulator<float>::Key::RIGHT);
-                        }
-                        if(keyCode == mKeyMap["e"]){
-                            manipulator->keyUp(filament::camutils::Manipulator<float>::Key::UP);
-                        }
-                        if(keyCode == mKeyMap["q"]){
-                            manipulator->keyUp(filament::camutils::Manipulator<float>::Key::DOWN);
-                        }
-                        if(keyCode == mKeyMap["f2"]){
-                            takeScreenshot();
-                        }
-                        if(keyCode == mKeyMap["f3"]){
-                            if(!app.updateinfo.screenCaptureOn){
-                                startScreenCast();
-                            }
-                            else {
-                                stopScreenCast();
-                            }
-                           
-                        }
-                        app.animationData.keyDown[keyCode] = false;
-                        if(!app.animationData.keyDown[mKeyMap["w"]] && !app.animationData.keyDown[mKeyMap["a"]] &&
-                           !app.animationData.keyDown[mKeyMap["s"]] && !app.animationData.keyDown[mKeyMap["d"]] &&
-                           !app.animationData.keyDown[mKeyMap["e"]] && !app.animationData.keyDown[mKeyMap["q"]]){
-                            app.animationData.keysDown = false;
-                        }
-                        break;
-                    }
-                }
-            }
         }
         if(!app.updateinfo.inSettings && app.updateinfo.inRoom){
             vec3<float> camPos, camTarget, camUp;
