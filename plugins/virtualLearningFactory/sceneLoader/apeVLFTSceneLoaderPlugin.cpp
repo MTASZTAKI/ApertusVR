@@ -69,7 +69,7 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 {
 	for (auto asset : mScene.get_assets())
 	{
-		std::weak_ptr<std::vector<quicktype::Representation>> representations = asset.get_representations();
+		std::weak_ptr<std::vector<CoreConfig::Representation>> representations = asset.get_representations();
 		if (representations.lock())
 		{
 			for (auto representation : *asset.get_representations())

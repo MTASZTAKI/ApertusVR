@@ -66,6 +66,8 @@ namespace ape
 
 		virtual void downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations) = 0;
 
+        virtual void updateResources() = 0;
+        
 		virtual std::string getCurrentRoomName() = 0;
         
         virtual void leave() = 0;

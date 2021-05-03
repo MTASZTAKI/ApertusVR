@@ -26,11 +26,48 @@ ape::VLFTImgui::~VLFTImgui()
 {
 }
 
+void ape::VLFTImgui::updateResources(){
+    ImGui::SetNextWindowPos(ImVec2(20, 20));
+    const float width = ImGui::GetIO().DisplaySize.x;
+    const float height = ImGui::GetIO().DisplaySize.y;
+    ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
+    ImGui::Begin("ResouceUpdate", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::SetWindowFontScale(1.5);
+    ImGui::SetCursorPos(ImVec2(width/2-150, height/2-90));
+    ImGui::Text("Resources are being updated");
+    ImGui::SetWindowFontScale(1);
+    ImGui::End();
+}
+
 void ape::VLFTImgui::init(updateInfo *updateinfo)
 {
 //    std::stringstream fileFullPath;
 //    fileFullPath << APE_SOURCE_DIR << "/samples/virtualLearningFactory/apeVLFTSceneLoaderPlugin.json";
     mpUpdateInfo = updateinfo;
+    if(!mpUpdateInfo->resourcesUpdated)
+        updateResources();
+    
+    mPreChosenRoomName = "";
+    auto networkConfig =mpCoreConfig->getNetworkConfig();
+    if(networkConfig.userName.find("VLFTAdmin") != std::string::npos){
+        if(networkConfig.userName.find("_VLFTTeacher")){
+            mpUpdateInfo->isAdmin = true;
+        }
+        else{
+            mpUpdateInfo->isAdmin = false;
+        }
+        
+        mPreChosenRoomName = networkConfig.lobbyConfig.roomName;
+        if(networkConfig.selected == networkConfig.INTERNET){
+            mpMainMenuInfo.multiPlayer = true;
+            mpMainMenuInfo.singlePlayer = false;
+        }
+        else{
+            mpMainMenuInfo.multiPlayer = false;
+            mpMainMenuInfo.singlePlayer = true;
+        }
+        mpMainMenuInfo.loginMenu = false;
+    }
     mpUpdateInfo->keyLabel["w"] = "w";
     mpUpdateInfo->keyLabel["s"] = "s";
     mpUpdateInfo->keyLabel["a"] = "a";
@@ -38,6 +75,15 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     mpUpdateInfo->keyLabel["e"] = "e";
     mpUpdateInfo->keyLabel["q"] = "q";
     chatMessages.push_back("Write messages here for others to see");
+    auto systemCommand = [this]() {
+        mpSceneNetwork->updateResources();
+        mpUpdateInfo->resourcesUpdated = true;
+        if(mPreChosenRoomName != "")
+            connectToRoom();
+    };
+    std::thread systemThread(systemCommand);
+    systemThread.detach();
+    mpUpdateInfo->initRun = true;
 }
 
 
@@ -136,7 +182,12 @@ bool ape::VLFTImgui::downloadConfig(std::string url, std::string location){
 }
 
 void ape::VLFTImgui::connectToRoom(){
-    std::string roomName = mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected];
+    
+    std::string roomName;
+    if(mPreChosenRoomName != "")
+        roomName = mPreChosenRoomName;
+    else
+        roomName= mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected];
     std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
     std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
     std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
@@ -590,32 +641,45 @@ void ape::VLFTImgui::waitWindow(){
 }
 
 void ape::VLFTImgui::update(){
-  
-    if(mpUpdateInfo->callLeave && (mpUpdateInfo->now - mpUpdateInfo->leaveTime) > 0.5){
-        mpSceneNetwork->leave();
-        mpUpdateInfo->callLeave = false;
+    if(!mpUpdateInfo->resourcesUpdated){
+        updateResources();
     }
-    if(mpUpdateInfo->leaveWait)
-        waitWindow();
-    else if(mpMainMenuInfo.loginMenu)
-        loginGUI();
-    else if(mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
-        adminRoomGUI();
-    else if(!mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
-        studentRoomGUI();
-    else if(mpMainMenuInfo.inRoomGui){
-        ImGui::GetStyle().Alpha = 0.95;
-        leftPanelGUI();
-        if(mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode){
-            animationPanelGUI();
-            manipulatorPanelGUI();
-            studentPanelGUI();
+    else{
+        if(mpUpdateInfo->callLeave && (mpUpdateInfo->now - mpUpdateInfo->leaveTime) > 0.5){
+            mpSceneNetwork->leave();
+            auto nodes = mpSceneManager->getNodes();
+            for (auto node : nodes)
+            {
+                mpSceneManager->deleteNode(node.first);
+            }
+            auto apeEntities = mpSceneManager->getEntities();
+            for (auto apeEntity : apeEntities){
+                mpSceneManager->deleteEntity(apeEntity.first);
+            }
+            mpUpdateInfo->callLeave = false;
         }
-        //screenshotPanelGUI();
-        if(mpMainMenuInfo.showStates){
-            statePanelGUI();
+        if(mpUpdateInfo->leaveWait)
+            waitWindow();
+        else if(mpMainMenuInfo.loginMenu)
+            loginGUI();
+        else if(mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
+            adminRoomGUI();
+        else if(!mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
+            studentRoomGUI();
+        else if(mpMainMenuInfo.inRoomGui){
+            ImGui::GetStyle().Alpha = 0.95;
+            leftPanelGUI();
+            if(mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode){
+                animationPanelGUI();
+                manipulatorPanelGUI();
+                studentPanelGUI();
+            }
+            //screenshotPanelGUI();
+            if(mpMainMenuInfo.showStates){
+                statePanelGUI();
+            }
+            infoPanelGUI();
         }
-        infoPanelGUI();
     }
 }
 
@@ -651,7 +715,7 @@ void ape::VLFTImgui::leftPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowPos(ImVec2(width-135, 0));
-    ImGui::SetNextWindowSize(ImVec2(120, 80));
+    ImGui::SetNextWindowSize(ImVec2(130, 120));
     ImGui::Begin("Record", nullptr);
     if (ImGui::Button("Screenshot", ImVec2(115, 25))) {
         mpUpdateInfo->takeScreenshot = true;

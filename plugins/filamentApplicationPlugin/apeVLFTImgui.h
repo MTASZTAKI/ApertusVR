@@ -139,6 +139,8 @@ struct updateInfo{
     bool switchOwner = false;
     bool leaveWait = false;
     bool callLeave = false;
+    bool initRun = false;
+    bool resourcesUpdated = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;
@@ -190,6 +192,8 @@ namespace ape
         
         std::vector<std::string> chatMessages;
         
+        std::string mPreChosenRoomName;
+        
         bool messageInBuffer = false;
         
         static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
@@ -239,6 +243,8 @@ namespace ape
         void openFileBrowser();
         
         void waitWindow();
+        
+        void updateResources();
         
         void getInfoAboutObject(float width, float height);
         

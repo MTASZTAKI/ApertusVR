@@ -49,7 +49,6 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
 	mFilamentApplicationPluginConfig = ape::FilamentApplicationPluginConfig();
     mpVlftImgui = new VLFTImgui();
     app.updateinfo.isAdmin = true;
-    mpVlftImgui->init(&app.updateinfo);
     mIsStudent = false;
     parseJson();
     initFilament();
@@ -2173,7 +2172,9 @@ void ape::FilamentApplicationPlugin::Step()
         auto& tm = engine->getTransformManager();
         auto& rm = engine->getRenderableManager();
         auto& lm = engine->getLightManager();
-        
+        if(!app.updateinfo.initRun){
+            mpVlftImgui->init(&app.updateinfo);
+        }
         if (app.updateinfo.takeScreenshot) {
             takeScreenshot();
             app.updateinfo.takeScreenshot = false;
@@ -2442,6 +2443,8 @@ void ape::FilamentApplicationPlugin::Step()
                 app.instances.erase(item);
             }
             to_erase.clear();
+            app.geometryNameMap.clear();
+            
             for(auto instance: app.mpInstancesMap){
                     if(app.asset.find(instance.first) != app.asset.end()){
                         app.loader->destroyAsset(app.asset[instance.second.assetName]);
@@ -2449,6 +2452,7 @@ void ape::FilamentApplicationPlugin::Step()
                     }
                     to_erase.push_back(instance.first);
             }
+            app.mpLoadedAssets.clear();
             for(auto item: to_erase){
                 app.mpInstancesMap.erase(item);
             }
@@ -2877,6 +2881,7 @@ void ape::FilamentApplicationPlugin::Step()
                                         auto parent = app.mpTransformManager->getParent(tmInstance);
                                         bool found = false;
                                         auto sceneNodes = mpSceneManager->getNodes();
+                                      
                                         std::string parentName = "";
                                         std::string rootName = app.asset[app.selectedNode.second]->getName(parent);
                                         while(app.mpInstancesMap.find(rootName) == app.mpInstancesMap.end()){

@@ -156,6 +156,8 @@ namespace ape
 	    void connectToRoom(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
 
 		void downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
+        
+        void updateResources() override;
 
 		std::string getCurrentRoomName() override;
         

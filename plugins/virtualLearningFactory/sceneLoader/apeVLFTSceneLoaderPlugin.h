@@ -71,7 +71,7 @@ namespace ape
 
 		ape::ICoreConfig* mpCoreConfig;
 
-		quicktype::Scene mScene;
+		CoreConfig::Scene mScene;
 
 		FILE* mApeVLFTSceneLoaderPluginConfigFile;
 

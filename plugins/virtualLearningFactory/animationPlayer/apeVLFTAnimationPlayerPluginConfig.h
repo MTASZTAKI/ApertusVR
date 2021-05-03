@@ -31,7 +31,7 @@ namespace nlohmann {
 }
 #endif
 
-namespace quicktype {
+namespace CoreConfig {
     using nlohmann::json;
 
     inline json get_untyped(const json& j, const char* property) {
@@ -99,7 +99,7 @@ namespace quicktype {
         virtual ~Event() = default;
 
     private:
-        quicktype::EventType type;
+        CoreConfig::EventType type;
         std::shared_ptr<std::string> descr;
         std::shared_ptr<std::vector<double>> position;
         std::shared_ptr<std::vector<double>> rotation;
@@ -109,9 +109,9 @@ namespace quicktype {
         std::shared_ptr<std::string> url;
 
     public:
-        const quicktype::EventType& get_type() const { return type; }
-        quicktype::EventType& get_mutable_type() { return type; }
-        void set_type(const quicktype::EventType& value) { this->type = value; }
+        const CoreConfig::EventType& get_type() const { return type; }
+        CoreConfig::EventType& get_mutable_type() { return type; }
+        void set_type(const CoreConfig::EventType& value) { this->type = value; }
 
         std::shared_ptr<std::string> get_descr() const { return descr; }
         void set_descr(std::shared_ptr<std::string> value) { this->descr = value; }
@@ -143,13 +143,13 @@ namespace quicktype {
         virtual ~Trigger() = default;
 
     private:
-        quicktype::TriggerType type;
+        CoreConfig::TriggerType type;
         std::string data;
 
     public:
-        const quicktype::TriggerType& get_type() const { return type; }
-        quicktype::TriggerType& get_mutable_type() { return type; }
-        void set_type(const quicktype::TriggerType& value) { this->type = value; }
+        const CoreConfig::TriggerType& get_type() const { return type; }
+        CoreConfig::TriggerType& get_mutable_type() { return type; }
+        void set_type(const CoreConfig::TriggerType& value) { this->type = value; }
 
         const std::string& get_data() const { return data; }
         std::string& get_mutable_data() { return data; }
@@ -162,17 +162,17 @@ namespace quicktype {
         virtual ~Action() = default;
 
     private:
-        quicktype::Trigger trigger;
-        quicktype::Event event;
+        CoreConfig::Trigger trigger;
+        CoreConfig::Event event;
 
     public:
-        const quicktype::Trigger& get_trigger() const { return trigger; }
-        quicktype::Trigger& get_mutable_trigger() { return trigger; }
-        void set_trigger(const quicktype::Trigger& value) { this->trigger = value; }
+        const CoreConfig::Trigger& get_trigger() const { return trigger; }
+        CoreConfig::Trigger& get_mutable_trigger() { return trigger; }
+        void set_trigger(const CoreConfig::Trigger& value) { this->trigger = value; }
 
-        const quicktype::Event& get_event() const { return event; }
-        quicktype::Event& get_mutable_event() { return event; }
-        void set_event(const quicktype::Event& value) { this->event = value; }
+        const CoreConfig::Event& get_event() const { return event; }
+        CoreConfig::Event& get_mutable_event() { return event; }
+        void set_event(const CoreConfig::Event& value) { this->event = value; }
     };
 
     class Node {
@@ -200,14 +200,14 @@ namespace quicktype {
         virtual ~Animations() = default;
 
     private:
-        quicktype::Context context;
+        CoreConfig::Context context;
         std::vector<quicktype::Node> nodes;
         std::vector<quicktype::Bookmark> bookmarks;
 
     public:
-        const quicktype::Context& get_context() const { return context; }
-        quicktype::Context& get_mutable_context() { return context; }
-        void set_context(const quicktype::Context& value) { this->context = value; }
+        const CoreConfig::Context& get_context() const { return context; }
+        CoreConfig::Context& get_mutable_context() { return context; }
+        void set_context(const CoreConfig::Context& value) { this->context = value; }
 
         const std::vector<quicktype::Node>& get_nodes() const { return nodes; }
         std::vector<quicktype::Node>& get_mutable_nodes() { return nodes; }
@@ -223,34 +223,34 @@ namespace nlohmann {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 namespace detail {
 #endif
-        void from_json(const json& j, quicktype::Bookmark& x);
+        void from_json(const json& j, CoreConfig::Bookmark& x);
         void to_json(json& j, const quicktype::Bookmark& x);
 
-        void from_json(const json& j, quicktype::Context& x);
+        void from_json(const json& j, CoreConfig::Context& x);
         void to_json(json& j, const quicktype::Context& x);
 
-        void from_json(const json& j, quicktype::Event& x);
+        void from_json(const json& j, CoreConfig::Event& x);
         void to_json(json& j, const quicktype::Event& x);
 
-        void from_json(const json& j, quicktype::Trigger& x);
+        void from_json(const json& j, CoreConfig::Trigger& x);
         void to_json(json& j, const quicktype::Trigger& x);
 
-        void from_json(const json& j, quicktype::Action& x);
+        void from_json(const json& j, CoreConfig::Action& x);
         void to_json(json& j, const quicktype::Action& x);
 
-        void from_json(const json& j, quicktype::Node& x);
+        void from_json(const json& j, CoreConfig::Node& x);
         void to_json(json& j, const quicktype::Node& x);
 
-        void from_json(const json& j, quicktype::Animations& x);
+        void from_json(const json& j, CoreConfig::Animations& x);
         void to_json(json& j, const quicktype::Animations& x);
 
-        void from_json(const json& j, quicktype::EventType& x);
+        void from_json(const json& j, CoreConfig::EventType& x);
         void to_json(json& j, const quicktype::EventType& x);
 
-        void from_json(const json& j, quicktype::TriggerType& x);
+        void from_json(const json& j, CoreConfig::TriggerType& x);
         void to_json(json& j, const quicktype::TriggerType& x);
 
-        inline void from_json(const json& j, quicktype::Bookmark& x) {
+        inline void from_json(const json& j, CoreConfig::Bookmark& x) {
             x.set_name(j.at("name").get<std::string>());
             x.set_time(j.at("time").get<std::string>());
         }

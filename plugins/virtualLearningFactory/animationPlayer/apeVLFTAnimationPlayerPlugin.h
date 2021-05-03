@@ -60,7 +60,7 @@ namespace ape
 	public:
 		struct Animation
 		{
-			quicktype::EventType type;
+			CoreConfig::EventType type;
 			std::string nodeName;
 			std::string parentNodeName;
 			unsigned long long time;
@@ -86,7 +86,7 @@ namespace ape
 
 		ape::ICoreConfig* mpCoreConfig;
 
-		quicktype::Animations mAnimations;
+		CoreConfig::Animations mAnimations;
 
 		std::thread mAnimationThread;
 

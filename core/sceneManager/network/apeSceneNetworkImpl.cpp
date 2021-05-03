@@ -54,11 +54,11 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 	APE_LOG_DEBUG("mLobbyServerSessionName: " << mLobbyServerSessionName);
 	mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
 
-	if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
-	{
-		APE_LOG_DEBUG("use lobbyManager to update the resources...");
-		mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
-	}
+//	if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
+//	{
+//		APE_LOG_DEBUG("use lobbyManager to update the resources...");
+//		mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
+//	}
 
 	if (mParticipantType == ape::SceneNetwork::HOST)
 	{
@@ -125,6 +125,14 @@ ape::SceneNetworkImpl::~SceneNetworkImpl()
 	}
     
     //mRackReplicaPeerMutex.unlock();
+}
+
+void ape::SceneNetworkImpl::updateResources(){
+        if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
+        {
+            APE_LOG_DEBUG("use lobbyManager to update the resources...");
+            mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
+        }
 }
 
 void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
@@ -306,6 +314,7 @@ void ape::SceneNetworkImpl::leave()
     if (mpNatPunchthroughClient){
         RakNet::NatPunchthroughClient::DestroyInstance(mpNatPunchthroughClient);
         mpNatPunchthroughClient = nullptr;
+        mIsConnectedToNATServer = false;
     }
    
 }
@@ -368,7 +377,9 @@ void ape::SceneNetworkImpl::connectToRoom(std::string roomName, std::vector<std:
 		bool getSessionRes = mpLobbyManager->getSessionHostGuid(roomName, uuid);
 		APE_LOG_DEBUG("lobbyManager->getSessionHostGuid() res: " << getSessionRes << " uuid: " << uuid);
 	}
-	connect2ReplicaHost(uuid);
+    while( !mIsConnectedToNATServer)
+        std::this_thread::sleep_for (std::chrono::milliseconds(20));
+    connect2ReplicaHost(uuid);
 }
 
 void ape::SceneNetworkImpl::downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations)
