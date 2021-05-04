@@ -382,7 +382,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_CHILDVISIBILITY:
                         {
-                            if(node->getChildrenVisibility()){
+                            if(node->getChildrenVisibility() && nodeName.find(mUserName) == std::string::npos){
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     if(auto root = instance->getRoot())
@@ -391,7 +391,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         }
                                     
                                 }
-                                else if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+                                else if(app.mpTransforms.find(nodeName) != app.mpTransforms.end() && nodeName.find(mUserName) == std::string::npos){
                                     std::vector<utils::Entity> children;
                                     size_t cnt = app.mpTransformManager->getChildCount(app.mpTransforms[nodeName]);
                                     if(cnt > 0){
@@ -823,8 +823,12 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
                             app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
                             if(auto node = mpSceneManager->getNode(event.subjectName).lock()){
-                                if(node->getChildrenVisibility()){
+                                std::string nodeName = event.subjectName;
+                                if(node->getChildrenVisibility() && nodeName.find(mUserName) == std::string::npos){
                                     app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                                }
+                                else if(nodeName.find(mUserName) != std::string::npos){
+                                    app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                 }
                             }
                         }
@@ -873,8 +877,12 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 if(nameInstance)
                                   app.names->setName(nameInstance, event.subjectName.c_str());
                                 if(auto node = mpSceneManager->getNode(event.subjectName).lock()){
-                                    if(node->getChildrenVisibility()){
+                                    std::string nodeName = event.subjectName;
+                                    if(node->getChildrenVisibility() && nodeName.find(mUserName) == std::string::npos){
                                         app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                                    }
+                                    else if(nodeName.find(mUserName) != std::string::npos){
+                                        app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                     }
                                 }
 //                                if(nameOfGeometry == mUserName+"characterModel"){
@@ -2347,7 +2355,7 @@ void ape::FilamentApplicationPlugin::Step()
                         geometryClone->setParentNode(node);
                         node->setChildrenVisibility(true);
                     }
-                    node->setPosition(ape::Vector3(0.0, 0.0, 0.35));
+                    node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
                 }  
             }
             auto userTextNode = mpSceneManager->createNode(mUserName+mPostUserName + "_TextNode", true, mpCoreConfig->getNetworkGUID());
