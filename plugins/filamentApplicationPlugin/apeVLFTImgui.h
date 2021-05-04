@@ -64,7 +64,6 @@ SOFTWARE.*/
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
 #include <imgui.h>
-#include "nfd.h"
 
 
 //#include "generated/resources/gltf_viewer.h"

@@ -7,8 +7,12 @@
 #include <curl/easy.h>
 #include "apeVLFTImgui.h"
 #include "NativeWindowHelper.h"
+#include "nfd.h"
 #ifdef __APPLE__
 #include <sys/stat.h>
+#else
+#include <stdio.h>
+#include <stdlib.h>
 #endif
 
 bool gDownloadRemoteConfigFileFinished = false;
@@ -909,7 +913,6 @@ void ape::VLFTImgui::screenshotPanelGUI(){
 }
 
 void ape::VLFTImgui::openFileBrowser() {
-#ifdef __APPLE__
     char* filePath;
     nfdresult_t result = NFD_OpenDialog( "gltf,glb", NULL, &filePath );
     if ( result == NFD_OKAY )
@@ -947,7 +950,6 @@ void ape::VLFTImgui::openFileBrowser() {
     {
         printf("Error: %s\n", NFD_GetError() );
     }
-#endif
 }
 
 static std::string convertVecToString(std::vector<double> vec,int  precision){
