@@ -572,7 +572,15 @@ Java_org_apertusvr_ApertusJNI_processEventDoubleQueue(JNIEnv *env, jclass clazz)
         ape::Event frontEvent = eventDoubleQueue->front();
         const char* sname = frontEvent.subjectName.c_str();
         jstring jSubjectName =  env->NewStringUTF(sname);
-        jint typeAsJint = jniPlugin->getEventNumberMap().at(frontEvent.type);
+		jint typeAsJint = -1;
+		if (jniPlugin->getEventNumberMap().size() > frontEvent.type)
+		{
+			typeAsJint = jniPlugin->getEventNumberMap().at(frontEvent.type);
+		}
+		else
+		{
+			__android_log_print(ANDROID_LOG_INFO, "cpplog", "Unknow event type");
+		}
 
         env->CallStaticVoidMethod(
                 jEventManagerClass,
