@@ -22,7 +22,7 @@ SOFTWARE.*/
 
 #define APE_JNIPLUGIN_CPP
 
-#include "../../core/eventManager/apeEventManagerImpl.h"
+#include "../../../core/eventManager/apeEventManagerImpl.h"
 #include <map>
 #include <apeColor.h>
 #include "apeJNIPlugin.h"
