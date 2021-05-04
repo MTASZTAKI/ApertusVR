@@ -27,6 +27,10 @@ include("prepare_cxx.cmake")
 include("prepare_cmake.cmake")
 include("prepare_ape.cmake")
 
+if(NOT ANDROID)
+else()
+	include("prepare_android.cmake")
+endif()
 
 
 set(CXX_STANDARD "-std=c++17")
@@ -56,29 +60,12 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} -fstrict-aliasing -Wno-unknown-pragmas -Wno-unused-function")
 endif()
 
-
-
-
-if(ANDROID)
-    include("prepare_android.cmake")
-endif()
-
 include_directories("include")
 
-if(WIN32)
-    add_subdirectory(core)
-    add_subdirectory(plugins)
-    add_subdirectory(include)
-    add_subdirectory(samples)
-    add_subdirectory(macros)
-elseif(ANDORID)
-    add_subdirectory(core)
-    add_subdirectory(plugins)
-    add_subdirectory(include)
-    add_subdirectory(macros)
-elseif(APPLE)
-    add_subdirectory(core)
-    add_subdirectory(plugins)
-    add_subdirectory(macros)
-    add_subdirectory(samples)
-endif()
+add_subdirectory(core)
+add_subdirectory(include)
+add_subdirectory(macros)
+add_subdirectory(plugins)
+add_subdirectory(samples)
+
+
