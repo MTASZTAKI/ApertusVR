@@ -939,6 +939,8 @@ void ape::VLFTImgui::openFileBrowser() {
             {
                 geometryClone->setSourceGeometryGroupName(entityName);
                 geometryClone->setParentNode(cloneNode);
+                cloneNode->setChildrenVisibility(true);
+                cloneNode->setVisible(true);
             }
         }
     }

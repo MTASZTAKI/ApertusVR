@@ -23,6 +23,10 @@ SOFTWARE.*/
 #ifndef APE_FILAMENTAPPLICATIONPLUGIN_H
 #define APE_FILAMENTAPPLICATIONPLUGIN_H
 
+
+#include <stdlib.h>
+#include <signal.h>
+#include <stdio.h>
 #include <chrono>
 #include <fstream>
 #include <iostream>
@@ -391,6 +395,8 @@ namespace ape
         std::string mUserName;
         
         std::string mPostUserName;
+        
+        std::string mLastScreenCapture;
         
         std::vector<unsigned long long> mParsedBookmarkTimes;
         

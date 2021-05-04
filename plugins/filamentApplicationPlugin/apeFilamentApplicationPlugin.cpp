@@ -1949,10 +1949,10 @@ void ape::FilamentApplicationPlugin::startScreenCast() {
 #ifdef __APPLE__
     auto systemCommand = [this]() {
         std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-        std::string system_command = "screencapture -x -v -V 180 ../../../../screencast/" + std::to_string(uuid.count()) + ".mov";
+        mLastScreenCapture = std::to_string(uuid.count()) + ".mov";
+        std::string system_command = "screencapture -x -v -V 600 ../../../../screencasts/" + std::to_string(uuid.count()) + ".mov &";
         system("mkdir ../../../../screencasts");
         system(system_command.c_str());
-        app.updateinfo.screenCaptureOn = false;
     };
     std::thread systemThread(systemCommand);
     systemThread.detach();
@@ -1964,7 +1964,10 @@ void ape::FilamentApplicationPlugin::startScreenCast() {
 
 void ape::FilamentApplicationPlugin::stopScreenCast() {
 #ifdef __APPLE__
-    //TODO STOP SCREENCAST
+    system("killall -9 screencapture");
+    std::string sysCommand = "mv -v ~/Library/ScreenRecordings/* ../../../../screencasts/";
+    system(sysCommand.c_str());
+    app.updateinfo.screenCaptureOn = false;
 #else
     std::cout << "STOP CAST" << std::endl;
     auto succ = TerminateProcess(mScreenCastProcessInfo.hProcess, 2);
@@ -2327,9 +2330,13 @@ void ape::FilamentApplicationPlugin::Step()
                 mPostUserName = "_vlftTeacher"+ mpCoreConfig->getNetworkGUID();
             else
                 mPostUserName = "_vlftStudent"+ mpCoreConfig->getNetworkGUID();
+            auto mCamNode = mpSceneManager->createNode(mUserName + mPostUserName+"_cam", true, mpCoreConfig->getNetworkGUID());
             auto mNode = mpSceneManager->createNode(mUserName + mPostUserName, true, mpCoreConfig->getNetworkGUID());
+            if(auto camNode = mCamNode.lock())
             if (auto node = mNode.lock())
             {
+                camNode->setPosition(ape::Vector3(0.0, 0.0, 0.0));
+                node->setParentNode(camNode);
                 if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName +mPostUserName+ "characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
                 {
                     gltfNode->setFileName("../assets/models/avatar/MC_Char_1.glb");
@@ -2340,7 +2347,7 @@ void ape::FilamentApplicationPlugin::Step()
                         geometryClone->setParentNode(node);
                         node->setChildrenVisibility(true);
                     }
-                    node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
+                    node->setPosition(ape::Vector3(0.0, 0.0, 0.35));
                 }  
             }
             auto userTextNode = mpSceneManager->createNode(mUserName+mPostUserName + "_TextNode", true, mpCoreConfig->getNetworkGUID());
@@ -3065,22 +3072,29 @@ void ape::FilamentApplicationPlugin::Step()
                 if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
                     if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
                         //mpUserInputMacro->getUserNode();
-                        node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                        //node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1));
                         auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                         modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                         auto modelQuat = modelMatrix.toQuaternion();
-                        node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+                        if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
+                            camNode->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                            camNode->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+                        }
 
                     }
                 }
             }
             else{
                 if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
-                    node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                    //node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1));
                     auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                     modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                     auto modelQuat = modelMatrix.toQuaternion();
-                    node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+                    if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
+                        camNode->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                        camNode->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+                    }
+
                 }
             }
         }
