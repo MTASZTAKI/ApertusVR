@@ -1657,7 +1657,8 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                 {
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::SHOW)
                     {
-                        attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node);
+                        if(!attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
+                            node->detachFromParentNode();
                         node->setChildrenVisibility(true);
 
                        
