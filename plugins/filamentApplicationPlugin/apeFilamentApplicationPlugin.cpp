@@ -102,7 +102,6 @@ void ape::FilamentApplicationPlugin::eventCallBack(const ape::Event& event)
 void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 {
 	mEventDoubleQueue.swap();
-    std::vector<ape::Event> eventsToRepeat;
 	while (!mEventDoubleQueue.emptyPop())
 	{
 		ape::Event event = mEventDoubleQueue.front();
@@ -470,7 +469,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 				{
                     if(app.mpLoadedAssets.find(fileName) == app.mpLoadedAssets.end())
                     {
-                        eventsToRepeat.push_back(event);
                             APE_LOG_DEBUG("The asset connected to the parent node has not been loaded yet: " << fileName);
                     }
                     else{
@@ -804,7 +802,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         else{
                             
                             APE_LOG_ERROR("The clone does not exist yet");
-                            eventsToRepeat.push_back(event);
                         }
                     }
                     break;
@@ -880,8 +877,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         else if(app.instances.find(nameOfGeometry) == app.instances.end()){
                             
-                            APE_LOG_ERROR("The clone's sourcefile has not been loaded yet.")
-                            eventsToRepeat.push_back(event);
+                            APE_LOG_ERROR("The clone's sourcefile has not been loaded yet.");
                         }
                     }
                     break;
@@ -1114,8 +1110,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			APE_LOG_DEBUG("");
 		}
 		mEventDoubleQueue.pop();
-        for(int i = 0; i < eventsToRepeat.size(); i++)
-        mEventDoubleQueue.push(eventsToRepeat[i]);
 	}
 }
 void ape::FilamentApplicationPlugin::initFilament(){
@@ -1721,6 +1715,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                                                                 fileGeometry->setParentNode(fileNode);
                                                                 mstateGeometryNames.insert(fileGeometry->getName());
                                                                 mstateNodeNames.insert(fileNode->getName());
+                                                                std::this_thread::sleep_for(std::chrono::milliseconds(100));
                                                                 if (auto replaceClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(node->getName()+"_replace", ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                                                                 {
                                                                     
