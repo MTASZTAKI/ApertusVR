@@ -2339,13 +2339,13 @@ void ape::FilamentApplicationPlugin::Step()
                 mPostUserName = "_vlftTeacher"+ mpCoreConfig->getNetworkGUID();
             else
                 mPostUserName = "_vlftStudent"+ mpCoreConfig->getNetworkGUID();
-            auto mCamNode = mpSceneManager->createNode(mUserName + mPostUserName+"_cam", true, mpCoreConfig->getNetworkGUID());
+            //auto mCamNode = mpSceneManager->createNode(mUserName + mPostUserName+"_cam", true, mpCoreConfig->getNetworkGUID());
             auto mNode = mpSceneManager->createNode(mUserName + mPostUserName, true, mpCoreConfig->getNetworkGUID());
-            if(auto camNode = mCamNode.lock())
+            //if(auto camNode = mCamNode.lock())
             if (auto node = mNode.lock())
             {
-                camNode->setPosition(ape::Vector3(0.0, 0.0, 0.0));
-                node->setParentNode(camNode);
+                //camNode->setPosition(ape::Vector3(0.0, 0.0, 0.0));
+                //node->setParentNode(camNode);
                 if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(mUserName +mPostUserName+ "characterModel", ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
                 {
                     gltfNode->setFileName("../assets/models/avatar/MC_Char_1.glb");
@@ -2440,6 +2440,7 @@ void ape::FilamentApplicationPlugin::Step()
             mpSceneManager->deleteNode(mUserName+mPostUserName);
             mpSceneManager->deleteEntity(mUserName+mPostUserName + "_text");
             mpSceneManager->deleteNode(mUserName+mPostUserName + "_TextNode");
+            //mpSceneManager->deleteNode(mUserName+mPostUserName+"_cam");
             std::vector<std::string> to_erase;
             delete app.resourceLoader;
             app.resourceLoader = nullptr;
@@ -3085,10 +3086,10 @@ void ape::FilamentApplicationPlugin::Step()
                         auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                         modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                         auto modelQuat = modelMatrix.toQuaternion();
-                        if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
-                            camNode->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
-                            camNode->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
-                        }
+                        //if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
+                            node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                            node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+                        //}
 
                     }
                 }
@@ -3099,10 +3100,10 @@ void ape::FilamentApplicationPlugin::Step()
                     auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                     modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
                     auto modelQuat = modelMatrix.toQuaternion();
-                    if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
-                        camNode->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
-                        camNode->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
-                    }
+                    //if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
+                        node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                        node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+                    //}
 
                 }
             }
