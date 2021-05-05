@@ -102,6 +102,7 @@ void ape::FilamentApplicationPlugin::eventCallBack(const ape::Event& event)
 void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 {
 	mEventDoubleQueue.swap();
+    std::vector<ape::Event> eventsToRepeat;
 	while (!mEventDoubleQueue.emptyPop())
 	{
 		ape::Event event = mEventDoubleQueue.front();
@@ -325,42 +326,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 {
                                     auto pos = node->getDerivedPosition();
                                     auto ori = node->getDerivedOrientation();
-                                    
-                                    
-//                                    double sinp = 2 * (ori.getW() * ori.getY() - ori.getZ() * ori.getX());
-//                                    double pitch;
-//                                    if (std::abs(sinp) >= 1)
-//                                        pitch = std::copysign(M_PI / 2, sinp);
-//                                    else
-//                                        pitch = std::asin(sinp);
-//                                    double siny_cosp = 2 * (ori.getW() * ori.getZ() + ori.getX() * ori.getY());
-//                                    double cosy_cosp = 1 - 2 * (ori.getY() * ori.getY() + ori.getZ() * ori.getZ());
-//                                    auto yaw = std::atan2(siny_cosp, cosy_cosp);
-                                    
-                                    
-//                                    auto yaw = std::atan2(2.0*(ori.getY()*ori.getZ() + ori.getW()*ori.getX()), ori.getW()* ori.getW()-ori.getX()* ori.getX()-ori.getY()* ori.getY()+ori.getZ()* ori.getZ());
-//
-//                                    auto sinp =-2.0*(ori.getX()* ori.getZ()-ori.getW()* ori.getY());
-//                                    auto pitch = std::asin(sinp);
-//                                    if(abs(-2.0*(ori.getX()* ori.getZ()-ori.getW()* ori.getY())) >= 1){
-//                                        pitch = std::copysign(M_PI / 2, sinp);
-//                                    }
-//                                    auto mani = filament::camutils::Manipulator<float>::Builder()
-//                                    .flightStartPosition(pos.getX(), pos.getY(), pos.getZ())
-//                                    .flightStartOrientation(yaw, pitch)
-//                                    .build(filament::camutils::Mode::FREE_FLIGHT);
-//                                    auto rotMatrix = math::mat4f(math::quatf(ori.getW(),ori.getX(),ori.getY(),ori.getZ()));
-//
-//                                    mCamManipulator->jumpToBookmark(mani->getCurrentBookmark());
-                                    
-//                                    auto nodeTransforms = node->getDerivedModelMatrix();
-//                                    auto camModel = math::mat4f(
-//                                              nodeTransforms[0][0], nodeTransforms[1][0], nodeTransforms[2][0], nodeTransforms[3][0],
-//                                              nodeTransforms[0][1], nodeTransforms[1][1], nodeTransforms[2][1], nodeTransforms[3][1],
-//                                              nodeTransforms[0][2], nodeTransforms[1][2], nodeTransforms[2][2], nodeTransforms[3][2],
-//                                              nodeTransforms[0][3], nodeTransforms[1][2], nodeTransforms[2][3], nodeTransforms[3][3]);
-//                                    app.mainCamera->setModelMatrix(camModel);
-                                    
                                 }
                             }
                         }
@@ -505,6 +470,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 				{
                     if(app.mpLoadedAssets.find(fileName) == app.mpLoadedAssets.end())
                     {
+                        eventsToRepeat.push_back(event);
                             APE_LOG_DEBUG("The asset connected to the parent node has not been loaded yet: " << fileName);
                     }
                     else{
@@ -835,6 +801,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                         }
+                        else{
+                            
+                            APE_LOG_ERROR("The clone does not exist yet");
+                            eventsToRepeat.push_back(event);
+                        }
                     }
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY:
@@ -908,8 +879,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             }
                         }
                         else if(app.instances.find(nameOfGeometry) == app.instances.end()){
-                            mEventDoubleQueue.push(event);
+                            
                             APE_LOG_ERROR("The clone's sourcefile has not been loaded yet.")
+                            eventsToRepeat.push_back(event);
                         }
                     }
                     break;
@@ -1142,6 +1114,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			APE_LOG_DEBUG("");
 		}
 		mEventDoubleQueue.pop();
+        for(int i = 0; i < eventsToRepeat.size(); i++)
+        mEventDoubleQueue.push(eventsToRepeat[i]);
 	}
 }
 void ape::FilamentApplicationPlugin::initFilament(){
