@@ -666,6 +666,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			{
                 //Destroy not needed
                 APE_LOG_DEBUG("Destroy asset" << event.subjectName);
+                if(app.resourceLoader)
+                    delete app.resourceLoader;
+                app.resourceLoader = nullptr;
                 app.loader->destroyAsset(app.asset[event.subjectName]);
                 app.asset.erase(event.subjectName);
 			}
@@ -919,10 +922,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                     if(app.mpScene->hasEntity(cloneRoot)){
                         app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
-                        app.mpInstancesMap[event.subjectName].index = -1;
-                        app.mpInstancesMap[event.subjectName].assetName = "";
                     }
                 }
+                if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end())
+                    app.mpInstancesMap.erase(event.subjectName);
             }
         }
         else if (event.group == ape::Event::Group::GEOMETRY_TEXT){
@@ -1410,7 +1413,7 @@ void ape::FilamentApplicationPlugin::initAnimations(){
                     animation.parentNodeName = "";
                     animation.time = atoi(action.get_trigger().get_data().c_str());
                     if (action.get_event().get_data())
-                        animation.modelName = "/"+*action.get_event().get_data();
+                        animation.modelName = *action.get_event().get_data();
                     if (action.get_event().get_descr())
                         animation.descr = *action.get_event().get_descr();
                     mParsedAnimations.push_back(animation);
@@ -1735,12 +1738,12 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                                                         //geometryClone->setParentNode(ape::NodeWeakPtr());
                                                         if(auto fileNode = mpSceneManager->createNode(node->getName()+"_replace", true, mpCoreConfig->getNetworkGUID()).lock())
                                                         {
+                                                            fileNode->setParentNode(node);
                                                             if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(node->getName()+"_replace_geometry",
                                                                 ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
                                                             {
-                                                                fileNode->setParentNode(node);
-                                                                fileGeometry->setParentNode(fileNode);
                                                                 fileGeometry->setFileName(mParsedAnimations[i].modelName);
+                                                                fileGeometry->setParentNode(fileNode);
                                                                 mstateGeometryNames.insert(fileGeometry->getName());
                                                                 if (auto replaceClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(node->getName()+"_replace", ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                                                                 {
@@ -1749,7 +1752,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                                                                     replaceClone->setParentNode(fileNode);
                                                                     node->setChildrenVisibility(false);
                                                                     fileNode->setChildrenVisibility(true);
-                                                                    
+                                                                    mstateGeometryNames.insert(replaceClone->getName());
                                                                 }
                                                                 mstateNodeNames.insert(fileNode->getName());
                                                                 
@@ -1763,6 +1766,18 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                                                             fileNode->detachFromParentNode();
                                                             fileNode->setChildrenVisibility(false);
                                                         }
+                                                        if(mpSceneManager->getEntity(node->getName()+"_replace").lock())
+                                                            mpSceneManager->deleteEntity(node->getName()+"_replace");
+                                                        
+                                                        if(mpSceneManager->getEntity(node->getName()+"_replace_geometry").lock())
+                                                            mpSceneManager->deleteEntity(node->getName()+"_replace_geometry");
+                                                        
+                                                        if(mpSceneManager->getNode(node->getName()+"_replace").lock())
+                                                            mpSceneManager->deleteNode(node->getName()+"_replace");
+                                                        
+                                                        mstateNodeNames.erase(node->getName()+"_replace");
+                                                        mstateGeometryNames.erase(node->getName()+"_replace_geometry");
+                                                        mstateGeometryNames.erase(node->getName()+"_replace");
                                                     }
                                                 }
                                             }

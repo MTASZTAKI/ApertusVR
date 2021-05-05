@@ -3,8 +3,8 @@
      "apeFilamentApplicationPlugin"
   ],
   "network": {
-    "user": "VLFTAdmin_VLFTTeacher",
-    "participant": "guest",
+    "user": "",
+    "participant": "",
     "internet": {
           "natPunchThrough": {
             "ip": "195.111.2.95",
@@ -13,7 +13,7 @@
           "lobby": {
             "ip": "195.111.2.95",
             "port": "8888",
-            "room": "37"
+            "room": ""
           }
         },
         "lan": {
