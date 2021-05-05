@@ -824,10 +824,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
                             if(auto node = mpSceneManager->getNode(event.subjectName).lock()){
                                 std::string nodeName = event.subjectName;
-                                if(node->getChildrenVisibility() && nodeName.find(mUserName) == std::string::npos){
+                                if(node->getChildrenVisibility() && nodeName.find(mUserName+mPostUserName) == std::string::npos){
                                     app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                 }
-                                else if(nodeName.find(mUserName) != std::string::npos){
+                                else if(nodeName.find(mUserName+mPostUserName) != std::string::npos){
                                     app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                 }
                             }
@@ -878,10 +878,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                   app.names->setName(nameInstance, event.subjectName.c_str());
                                 if(auto node = mpSceneManager->getNode(event.subjectName).lock()){
                                     std::string nodeName = event.subjectName;
-                                    if(node->getChildrenVisibility() && nodeName.find(mUserName) == std::string::npos){
+                                    if(node->getChildrenVisibility() && nodeName.find(mUserName+mPostUserName) == std::string::npos){
                                         app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                     }
-                                    else if(nodeName.find(mUserName) != std::string::npos){
+                                    else if(nodeName.find(mUserName+mPostUserName) != std::string::npos){
                                         app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                     }
                                 }
