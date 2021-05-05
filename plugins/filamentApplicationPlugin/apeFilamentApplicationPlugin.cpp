@@ -908,6 +908,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             }
                         }
                         else if(app.instances.find(nameOfGeometry) == app.instances.end()){
+                            mEventDoubleQueue.push(event);
                             APE_LOG_ERROR("The clone's sourcefile has not been loaded yet.")
                         }
                     }
@@ -1745,17 +1746,18 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                                                                 fileGeometry->setFileName(mParsedAnimations[i].modelName);
                                                                 fileGeometry->setParentNode(fileNode);
                                                                 mstateGeometryNames.insert(fileGeometry->getName());
+                                                                mstateNodeNames.insert(fileNode->getName());
                                                                 if (auto replaceClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(node->getName()+"_replace", ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                                                                 {
                                                                     
+                                                                    mstateGeometryNames.insert(replaceClone->getName());
                                                                     replaceClone->setSourceGeometryGroupName(fileGeometry->getName());
                                                                     replaceClone->setParentNode(fileNode);
                                                                     node->setChildrenVisibility(false);
                                                                     fileNode->setChildrenVisibility(true);
-                                                                    mstateGeometryNames.insert(replaceClone->getName());
+                                                                    
                                                                 }
-                                                                mstateNodeNames.insert(fileNode->getName());
-                                                                
+                                                               
                                                             }
                                                         }
                                                     }
