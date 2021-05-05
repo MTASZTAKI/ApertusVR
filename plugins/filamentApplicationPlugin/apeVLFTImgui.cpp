@@ -278,31 +278,32 @@ bool ape::VLFTImgui::curlData(){
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
-        
-        std::size_t foldersPos = readBuffer.find("[DIR]");
-        readBuffer = readBuffer.substr(foldersPos, std::string::npos );
-        std::size_t folderStartPos = 0;
-        while(folderStartPos != 2){
-            folderStartPos = readBuffer.find("/\">")+3;
-            if(folderStartPos == 2)
-                break;
-            std::size_t folderEndPos = readBuffer.find("/</a>");
-            std::string roomName = readBuffer.substr(folderStartPos, folderEndPos-folderStartPos);
-            mpMainMenuInfo.roomNames.push_back(roomName);
-            readBuffer = readBuffer.substr(folderEndPos+5, std::string::npos);
+        if(res != CURLE_COULDNT_CONNECT){
+            std::size_t foldersPos = readBuffer.find("[DIR]");
+            readBuffer = readBuffer.substr(foldersPos, std::string::npos );
+            std::size_t folderStartPos = 0;
+            while(folderStartPos != 2){
+                folderStartPos = readBuffer.find("/\">")+3;
+                if(folderStartPos == 2)
+                    break;
+                std::size_t folderEndPos = readBuffer.find("/</a>");
+                std::string roomName = readBuffer.substr(folderStartPos, folderEndPos-folderStartPos);
+                mpMainMenuInfo.roomNames.push_back(roomName);
+                readBuffer = readBuffer.substr(folderEndPos+5, std::string::npos);
+            }
+            for(int i =0; i < mpMainMenuInfo.roomNames.size(); i++){
+                  if(mpSceneNetwork->isRoomRunning(mpMainMenuInfo.roomNames[i])){
+                     mpMainMenuInfo.running_rooms.push_back(true);
+                  }
+                  else{
+                    if(mpMainMenuInfo.multiPlayer)
+                        mpMainMenuInfo.roomNames.erase(mpMainMenuInfo.roomNames.begin()+i--);
+                    else
+                        mpMainMenuInfo.running_rooms.push_back(false);
+                  }
+            }
+            return true;
         }
-        for(int i =0; i < mpMainMenuInfo.roomNames.size(); i++){
-              if(mpSceneNetwork->isRoomRunning(mpMainMenuInfo.roomNames[i])){
-                 mpMainMenuInfo.running_rooms.push_back(true);
-              }
-              else{
-                if(mpMainMenuInfo.multiPlayer)
-                    mpMainMenuInfo.roomNames.erase(mpMainMenuInfo.roomNames.begin()+i--);
-                else
-                    mpMainMenuInfo.running_rooms.push_back(false);
-              }
-        }
-        return true;
     }
     return false;
 }

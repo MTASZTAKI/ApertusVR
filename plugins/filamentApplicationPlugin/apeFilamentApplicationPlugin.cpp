@@ -916,7 +916,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 APE_LOG_DEBUG("Destroy clone" << event.subjectName);
                 
                 if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() > 0){
-                    auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getEntities()[0];
+                    auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                     if(app.mpScene->hasEntity(cloneRoot)){
                         app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                         app.mpInstancesMap[event.subjectName].index = -1;
@@ -1410,7 +1410,7 @@ void ape::FilamentApplicationPlugin::initAnimations(){
                     animation.parentNodeName = "";
                     animation.time = atoi(action.get_trigger().get_data().c_str());
                     if (action.get_event().get_data())
-                        animation.modelName = mpCoreConfig->getConfigFolderPath()+ "/"+*action.get_event().get_data();
+                        animation.modelName = "/"+*action.get_event().get_data();
                     if (action.get_event().get_descr())
                         animation.descr = *action.get_event().get_descr();
                     mParsedAnimations.push_back(animation);
