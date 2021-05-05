@@ -261,7 +261,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                         float divider = 1.0;
                         filament::math::mat4f filamentTransform;
-                        if((pos != std::string::npos || pos2 != std::string::npos) && nodeName.find(mUserName) == std::string::npos){
+                        if((pos != std::string::npos || pos2 != std::string::npos) && nodeName.find(mUserName+mPostUserName) == std::string::npos){
                                 filamentTransform = filament::math::mat4f(
                                     nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
                                     nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
