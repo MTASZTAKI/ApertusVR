@@ -135,7 +135,7 @@ void ape::VLFTSceneLoaderPlugin::cloneGeometry(ape::FileGeometrySharedPtr fileGe
 {
 	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(id, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
-		geometryClone->setSourceGeometryGroupName(fileGeometry->getName());
+		geometryClone->setSourceGeometry(fileGeometry);
 		geometryClone->setParentNode(parentNode);
 		//APE_LOG_DEBUG("clone: " << geometryClone->getName() << " source: " << fileGeometry->getName());
 	}
