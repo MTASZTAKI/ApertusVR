@@ -16,7 +16,7 @@ public final class apeTextGeometry extends apeGeometry {
         }
     }
 
-    apeTextGeometry(String name) {
+    public apeTextGeometry(String name) {
         super(name, apeEntity.Type.GEOMETRY_TEXT);
     }
 
