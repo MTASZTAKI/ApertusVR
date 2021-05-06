@@ -94,7 +94,7 @@ void ape::JNIPlugin::eventCallBack(const ape::Event& event)
         __android_log_print(ANDROID_LOG_INFO, "cpplog", "!!! SKY EVENT !!!");
     }
 
-	//mEventDoubleQueue.push(event);
+	mEventDoubleQueue.push(event);
 }
 
 void ape::JNIPlugin::processEventDoubleQueue()
@@ -564,7 +564,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_org_apertusvr_ApertusJNI_processEventDoubleQueue(JNIEnv *env, jclass clazz)
 {
-    /*ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
+    ape::JNIPlugin* jniPlugin = ape::JNIPlugin::getPluginPtr();
     jclass jEventManagerClass = env->FindClass("org/apertusvr/apeEventManager");
 
     jmethodID jFireEventID = env->GetStaticMethodID(jEventManagerClass,"fireEvent","(IILjava/lang/String;)V");
@@ -585,7 +585,7 @@ Java_org_apertusvr_ApertusJNI_processEventDoubleQueue(JNIEnv *env, jclass clazz)
 			(jint)frontEvent.group,
 			jSubjectName
 			);
-        env->ReleaseStringUTFChars(jSubjectName,sname);
+        //env->ReleaseStringUTFChars(jSubjectName,sname);
         eventDoubleQueue->pop();
-    }*/
+    }
 }
