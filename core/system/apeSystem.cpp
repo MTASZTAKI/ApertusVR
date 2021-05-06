@@ -171,6 +171,25 @@ bool ApeSceneManager_GetIndexedFaceSet_GetColor(char* name, float* color)
 	return false;
 }
 
+
+bool ApeSceneManager_GetIndexedFaceSet_GetParent(char* name, char* parent)
+{
+	if (auto indexedFaceSet = std::static_pointer_cast<ape::IIndexedFaceSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		if (auto apeParent = indexedFaceSet->getParentNode().lock())
+		{
+			auto apeParentName = apeParent->getName();
+			for (int i = 0; i < apeParentName.length(); i++)
+			{
+				parent[i] = apeParentName[i];
+			}
+			parent[apeParentName.length()] = '\0';
+			return true;
+		}
+	}
+	return false;
+}
+
 bool ApeSceneManager_GetNode_GetOrientation(char* name, float* orientation)
 {
 	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
