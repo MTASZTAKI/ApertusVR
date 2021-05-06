@@ -76,6 +76,7 @@ SOFTWARE.*/
 struct VLFTMainMenuInfo{
     int current_selected = -1;
     int sideBarWidth = 300;
+    int prevStateNum = 0;
     std::vector<std::string> roomNames;
     std::vector<bool> running_rooms;
     char uploadRoomName[128];

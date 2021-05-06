@@ -199,6 +199,7 @@ void ape::VLFTImgui::connectToRoom(){
     if((mpMainMenuInfo.multiPlayer || (mpMainMenuInfo.adminMenu && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])) && !mpMainMenuInfo.inRoomGui){
         
         downloadConfig(urlSceneConfig, locationSceneConfig);
+        downloadConfig(urlAnimationConfig, locationAnimationConfig);
         mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
         mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
         std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
@@ -215,6 +216,7 @@ void ape::VLFTImgui::connectToRoom(){
     else if(mpMainMenuInfo.singlePlayer){
         
         downloadConfig(urlSceneConfig, locationSceneConfig);
+        downloadConfig(urlAnimationConfig, locationAnimationConfig);
         mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
         mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
         std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
@@ -651,7 +653,8 @@ void ape::VLFTImgui::update(){
     }
     else{
         if(mpUpdateInfo->callLeave && (mpUpdateInfo->now - mpUpdateInfo->leaveTime) > 0.5){
-            mpSceneNetwork->leave();
+            if(mpMainMenuInfo.multiPlayer)
+                mpSceneNetwork->leave();
             auto nodes = mpSceneManager->getNodes();
             for (auto node : nodes)
             {
@@ -702,7 +705,6 @@ void ape::VLFTImgui::statePanelGUI(){
     ImGui::Text("Asset");
     ImGui::SameLine(140);
     ImGui::Text("State");
-    
     for(size_t i = 0; i < mpUpdateInfo->nameOfState.size(); i++){
         std::stringstream posStream;
         posStream << std::fixed << std::setprecision(1) <<mpUpdateInfo->timeOfState[i];
@@ -712,7 +714,11 @@ void ape::VLFTImgui::statePanelGUI(){
         ImGui::SameLine(140);
         ImGui::Text("%s", mpUpdateInfo->stateOfObjects[i].c_str());
         }
-    ImGui::SetScrollHere(1.0f);
+    if( mpMainMenuInfo.prevStateNum != mpUpdateInfo->nameOfState.size()){
+        ImGui::SetScrollHere(1.0f);
+        mpMainMenuInfo.prevStateNum = mpUpdateInfo->nameOfState.size();
+    }
+   
     ImGui::End();
 }
 
@@ -938,10 +944,12 @@ void ape::VLFTImgui::openFileBrowser() {
         if(auto cloneNode = mCloneNode.lock()){
             if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(cloneEntityName, ape::Entity::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
             {
-                geometryClone->setSourceGeometryGroupName(entityName);
-                geometryClone->setParentNode(cloneNode);
-                cloneNode->setChildrenVisibility(true);
-                cloneNode->setVisible(true);
+                if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())){
+                    geometryClone->setSourceGeometry(gltfMeshFile);
+                    geometryClone->setParentNode(cloneNode);
+                    cloneNode->setChildrenVisibility(true);
+                    cloneNode->setVisible(true);
+                }
             }
         }
     }

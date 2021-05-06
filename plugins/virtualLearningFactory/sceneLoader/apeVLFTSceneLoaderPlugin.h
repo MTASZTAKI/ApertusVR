@@ -75,7 +75,7 @@ namespace ape
 
 		FILE* mApeVLFTSceneLoaderPluginConfigFile;
 
-		tinygltf::Model mGltfModel;
+		std::map<std::string,tinygltf::Model> mGltfModel;
 
 		void parseGltfModel(std::string filePath);
 

@@ -769,8 +769,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
         {
             if (auto cloneGeometry = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
             {
-                auto sourceGeometry = std::static_pointer_cast<ape::IFileGeometry>(cloneGeometry->getSourceGeometry().lock());
-                auto sourceFileName = sourceGeometry->getFileName();
+                std::string sourceFileName = "";
+                if(auto sourceGeometry = std::static_pointer_cast<ape::IFileGeometry>(cloneGeometry->getSourceGeometry().lock()))
+                    sourceFileName = sourceGeometry->getFileName();
                 std::string parentNodeName = "";
                 if (auto parentNode = cloneGeometry->getParentNode().lock())
                     parentNodeName = parentNode->getName();
@@ -801,7 +802,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         else{
                             
-                            APE_LOG_ERROR("The clone does not exist yet");
+                            APE_LOG_ERROR("The clone does not exist yet "<<event.subjectName);
                         }
                     }
                     break;
@@ -811,24 +812,15 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         std::string nameOfGeometry = "";
                         std::string nameOfFile = "";
                         if(app.instances.find(sourceFileName) == app.instances.end()){
-                            for(auto const& x: app.geometryNameMap){
-                                for(size_t i = 0; i < x.second.size(); i++){
-                                    if(x.second[i] == sourceFileName){
+                            if(app.geometryNameMap.find(sourceFileName) != app.geometryNameMap.end()){
+                                auto names = app.geometryNameMap[sourceFileName];
+                                for(size_t i = 0; i < names.size(); i++){
+                                    if(app.instances.find(names[i]) != app.instances.end()){
                                         exists = true;
-                                        nameOfFile = x.first;
+                                        nameOfGeometry = names[i];
                                         break;
                                     }
                                 }
-                                if(exists){
-                                    for(size_t i = 0; i < x.second.size(); i++){
-                                        if(app.instances.find(x.second[i]) != app.instances.end()){
-                                            nameOfGeometry = x.second[i];
-                                            break;
-                                        }
-                                    }
-                                    break;
-                                }
-                                
                             }
                         }
                         if(!exists)
@@ -872,13 +864,13 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         else if(app.instances.find(nameOfGeometry) == app.instances.end()){
                             
-                            APE_LOG_ERROR("The clone's sourcefile has not been loaded yet.");
+                            APE_LOG_ERROR("The clone's sourcefile has not been loaded yet "<<event.subjectName);
                         }
                     }
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME:
                     {
-                        ;
+                        APE_LOG_ERROR("GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME "<<event.subjectName);
                     }
                     break;
                 }
@@ -1609,6 +1601,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
         {
             if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
             {
+                node->setInitalState();
                 node->setOwner(mpCoreConfig->getNetworkGUID());
                 if (auto spaghettiNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiNode", true, mpCoreConfig->getNetworkGUID()).lock())
                 {
@@ -1630,7 +1623,15 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::SHOW)
                     {
                         if(!attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
-                            node->detachFromParentNode();
+                        {
+                            std::string parentsName = "";
+                            if(auto parent = node->getParentNode().lock())
+                                parentsName = parent->getName();
+
+                            if(parentsName == "")
+                                node->detachFromParentNode();
+                        }
+                           
                         node->setChildrenVisibility(true);
 
                        
@@ -1718,55 +1719,55 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                                     fileNode->detachFromParentNode();
                                     fileNode->setChildrenVisibility(false);
                                 }
-                                if(mpSceneManager->getEntity(node->getName()+"_replace").lock())
-                                    mpSceneManager->deleteEntity(node->getName()+"_replace");
-                                
-                                if(mpSceneManager->getEntity(node->getName()+"_replace_geometry").lock())
-                                    mpSceneManager->deleteEntity(node->getName()+"_replace_geometry");
-                                
-                                if(mpSceneManager->getNode(node->getName()+"_replace").lock())
-                                    mpSceneManager->deleteNode(node->getName()+"_replace");
-                                
-                                mstateNodeNames.erase(node->getName()+"_replace");
-                                mstateGeometryNames.erase(node->getName()+"_replace_geometry");
-                                mstateGeometryNames.erase(node->getName()+"_replace");
+//                                if(mpSceneManager->getEntity(node->getName()+"_replace").lock())
+//                                    mpSceneManager->deleteEntity(node->getName()+"_replace");
+//
+//                                if(mpSceneManager->getEntity(node->getName()+"_replace_geometry").lock())
+//                                    mpSceneManager->deleteEntity(node->getName()+"_replace_geometry");
+//
+//                                if(mpSceneManager->getNode(node->getName()+"_replace").lock())
+//                                    mpSceneManager->deleteNode(node->getName()+"_replace");
+//
+//                                mstateNodeNames.erase(node->getName()+"_replace");
+//                                mstateGeometryNames.erase(node->getName()+"_replace_geometry");
+//                                mstateGeometryNames.erase(node->getName()+"_replace");
                             }
                         }
-                        else if (mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION || mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION_ADDITIVE)
+                    }
+                    else if (mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION || mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION_ADDITIVE)
+                    {
+                       
+                        auto previousPosition = node->getDerivedPosition();
+                        if (attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
                         {
-                           
-                            auto previousPosition = node->getDerivedPosition();
-                            if (attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
-                            {
-                                previousPosition = node->getDerivedPosition();
-                            }
-                            if (mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION)
-                            {
-                                if(mParsedAnimations[i].parentNodeName != ""){
-                                    if (auto parentNode = mpSceneManager->getNode(mParsedAnimations[i].parentNodeName).lock()){
-                                        if(node->getParentNode().lock() == parentNode){
-                                            node->setPosition(mParsedAnimations[i].position);
-                                        }
+                            previousPosition = node->getDerivedPosition();
+                        }
+                        if (mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION)
+                        {
+                            if(mParsedAnimations[i].parentNodeName != ""){
+                                if (auto parentNode = mpSceneManager->getNode(mParsedAnimations[i].parentNodeName).lock()){
+                                    if(node->getParentNode().lock() == parentNode){
+                                        node->setPosition(mParsedAnimations[i].position);
                                     }
                                 }
-                                else{
-                                    auto nodeAbsolutePos = node->getDerivedPosition();
-                                    auto nodePos =mParsedAnimations[i].position;
-                                    auto newPos = Vector3(nodePos.getX()-nodeAbsolutePos.getX(), nodePos.getY()-nodeAbsolutePos.getY(), nodePos.getZ()-nodeAbsolutePos.getZ());
-                                    node->setPosition(newPos);
-                                }
-                                node->setOrientation(mParsedAnimations[i].orientation);
-                                
                             }
-                            else if (mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION_ADDITIVE)
-                            {
-                                node->rotate(mParsedAnimations[i].rotationAngle.toRadian(), mParsedAnimations[i].rotationAxis, ape::Node::TransformationSpace::PARENT);
-                                node->translate(mParsedAnimations[i].translate, ape::Node::TransformationSpace::PARENT);
+                            else{
+                                auto nodeAbsolutePos = node->getDerivedPosition();
+                                auto nodePos =mParsedAnimations[i].position;
+                                auto newPos = Vector3(nodePos.getX()-nodeAbsolutePos.getX(), nodePos.getY()-nodeAbsolutePos.getY(), nodePos.getZ()-nodeAbsolutePos.getZ());
+                                node->setPosition(newPos);
                             }
-                            std::string spaghettiSectionName;
-                            drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
-                            //mspaghettiLineNames[spaghettiSectionName]=mParsedAnimations[i].nodeName;
+                            node->setOrientation(mParsedAnimations[i].orientation);
+                            
                         }
+                        else if (mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION_ADDITIVE)
+                        {
+                            node->rotate(mParsedAnimations[i].rotationAngle.toRadian(), mParsedAnimations[i].rotationAxis, ape::Node::TransformationSpace::PARENT);
+                            node->translate(mParsedAnimations[i].translate, ape::Node::TransformationSpace::PARENT);
+                        }
+                        std::string spaghettiSectionName;
+                        drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
+                        //mspaghettiLineNames[spaghettiSectionName]=mParsedAnimations[i].nodeName;
                     }
                     mPlayedAnimations++;
                 }
@@ -1778,9 +1779,21 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                 if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
                 {
                     APE_LOG_DEBUG("revertToInitalState: " << animatedNodeName);
-                    node->detachFromParentNode();
+                    auto prevParent = node->getParentNode();
                     node->revertToInitalState();
-                   
+                    std::string parentsName = "";
+                    if(auto parent = node->getParentNode().lock())
+                    {
+                        parentsName = parent->getName();
+                        node->setParentNode(parent);
+                    }
+                    if(parentsName == ""){
+                        if(prevParent.lock())
+                            node->setParentNode(prevParent);
+                        APE_LOG_DEBUG("DETACH "<< node->getName());
+                        node->detachFromParentNode();
+                    }
+                        
                 }
             }
             
@@ -2106,17 +2119,19 @@ void ape::FilamentApplicationPlugin::Step()
                 APE_LOG_DEBUG("LOGO CLONE");
                 gltfMeshFile->setFileName("../assets/models/logo/VLTF_3Dlogo.gltf");
                 gltfMeshFile->setParentNode(node);
+            }
+            if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity("VLTF_3Dlogo").lock())){
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity("VLFTlogo", ape::Entity::Type::GEOMETRY_CLONE, false, mpCoreConfig->getNetworkGUID()).lock()))
                 {
                     geometryClone->setSourceGeometry(gltfMeshFile);
                     geometryClone->setParentNode(node);
                 }
-                node->rotate(1.5708f, ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
-                node->setScale(ape::Vector3(12, 12, 12));
-                node->setPosition(ape::Vector3(2.5, 1.5, -0.4));
-                node->setChildrenVisibility(true);
-                node->setVisible(true);
             }
+            node->rotate(1.5708f, ape::Vector3(1, 0, 0), ape::Node::TransformationSpace::LOCAL);
+            node->setScale(ape::Vector3(12, 12, 12));
+            node->setPosition(ape::Vector3(2.5, 1.5, -0.4));
+            node->setChildrenVisibility(true);
+            node->setVisible(true);
         }
         app.setManpipulator = true;
     };
@@ -2302,7 +2317,6 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         if(app.updateinfo.setUpRoom){
-            initAnimations();
             if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
                 logo->setVisible(false);
                 logo->setChildrenVisibility(false);
@@ -2322,14 +2336,16 @@ void ape::FilamentApplicationPlugin::Step()
                 {
                     gltfNode->setFileName("../assets/models/avatar/MC_Char_1.glb");
                     gltfNode->setParentNode(node);
+                }
+                if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName +mPostUserName+ "characterModel").lock())){
                     if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + mPostUserName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                     {
                         geometryClone->setSourceGeometry(gltfNode);
                         geometryClone->setParentNode(node);
                         node->setChildrenVisibility(true);
                     }
-                    node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
-                }  
+                }
+                node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
             }
             auto userTextNode = mpSceneManager->createNode(mUserName+mPostUserName + "_TextNode", true, mpCoreConfig->getNetworkGUID());
             if (auto textNode = userTextNode.lock()) {
@@ -2338,6 +2354,7 @@ void ape::FilamentApplicationPlugin::Step()
                     textGeometry->setCaption(app.updateinfo.userName+" logged in");
                 }
             }
+            initAnimations();
             app.updateinfo.setUpRoom = false;
         }
         FilamentApp::get().setSidebarWidth(0);
@@ -3100,8 +3117,21 @@ void ape::FilamentApplicationPlugin::Step()
                 if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
                 {
                     APE_LOG_DEBUG("revertToInitalState: " << animatedNodeName);
-                    node->detachFromParentNode();
+                    auto prevParent = node->getParentNode();
                     node->revertToInitalState();
+                    std::string parentsName = "";
+                    if(auto parent = node->getParentNode().lock())
+                    {
+                        parentsName = parent->getName();
+                        node->setParentNode(parent);
+                    }
+                    if(parentsName == ""){
+                        if(prevParent.lock())
+                            node->setParentNode(prevParent);
+                        APE_LOG_DEBUG("DETACH "<< node->getName());
+                        node->detachFromParentNode();
+                    }
+                       
                 }
             }
             app.updateinfo.IsStopClicked=false;
