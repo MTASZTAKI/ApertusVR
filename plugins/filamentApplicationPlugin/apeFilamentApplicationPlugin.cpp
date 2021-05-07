@@ -168,7 +168,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         auto filaTm = filament::math::mat4f(1,0,0,0,
                                                               0,1,0,0,
                                                               0,0,1,0,
-                                                              0,0,0,1);
+                                                              0,-0.45,-0.05,1);
                                         app.mpTransformManager->setTransform(camTm, filaTm);
                                         //app.mainCamera->setModelMatrix(filaTm);
                                     }
@@ -2514,6 +2514,9 @@ void ape::FilamentApplicationPlugin::Step()
                                 nodeSP->setPosition(ape::Vector3(0, -0.65, 0.05));
                                 nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
                                 mAttachedUsers.push_back(nodeSP);
+                                app.updateinfo.switchOwner = true;
+                                mNodeToSwitchOwner.push_back(nodeSP->getName());
+
                             }
                         }
                     }
@@ -2527,6 +2530,7 @@ void ape::FilamentApplicationPlugin::Step()
                     {
                         if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
                         {
+                            attachedUser->setOwner(mpCoreConfig->getNetworkGUID());
                             attachedUser->detachFromParentNode();
                             attachedUser->setPosition(ape::Vector3(0, 1.5, 0));
                             attachedUser->setOrientation(ape::Quaternion(0, 0, 1, 0));
