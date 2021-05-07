@@ -824,7 +824,8 @@ void ape::VLFTImgui::infoPanelGUI() {
     }
     std::string chatText = u8"";
     for(size_t i = 0; i < chatMessages.size()-1; i++){
-        chatText += chatMessages[i] + "\n";
+        if(chatMessages[i].size() >0)
+            chatText += chatMessages[i] + "\n";
     }
     chatText += chatMessages[chatMessages.size()-1];
     ImGui::TextWrapped("%s", chatText.c_str());

@@ -398,6 +398,8 @@ namespace ape
         
         std::string mLastScreenCapture;
         
+        std::vector<std::string> mNodeToSwitchOwner;
+        
         std::vector<unsigned long long> mParsedBookmarkTimes;
         
         unsigned long long mClickedBookmarkTime;
