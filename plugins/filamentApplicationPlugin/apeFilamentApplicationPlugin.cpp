@@ -448,6 +448,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     }
                     app.engine->destroy(app.mpEntities[event.subjectName]);
                 }
+               
 			}
 		}
 		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
@@ -879,10 +880,15 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
             {
                 APE_LOG_DEBUG("Destroy clone" << event.subjectName);
                 
-                if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() > 0){
+                if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() >= 0){
                     auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                     if(app.mpScene->hasEntity(cloneRoot)){
                         app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                    }else{
+                        int cnt = app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount();
+                        if(cnt >0 && app.mpScene->hasEntity(app.mpInstancesMap[event.subjectName].mpInstance->getEntities()[0])){
+                            app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                        }
                     }
                 }
                 if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end())
@@ -2505,7 +2511,7 @@ void ape::FilamentApplicationPlugin::Step()
                                 nodeSP->setOwner(mpCoreConfig->getNetworkGUID());
                                 if(auto userNode = mpSceneManager->getNode(mUserName+mPostUserName).lock())
                                     nodeSP->setParentNode(userNode);
-                                nodeSP->setPosition(ape::Vector3(0, -0.5, 0.05));
+                                nodeSP->setPosition(ape::Vector3(0, -0.65, 0.05));
                                 nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
                                 mAttachedUsers.push_back(nodeSP);
                             }
