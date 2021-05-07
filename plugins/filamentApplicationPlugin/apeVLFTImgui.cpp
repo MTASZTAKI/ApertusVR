@@ -593,7 +593,7 @@ void ape::VLFTImgui::loginGUI(){
     ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
     ImGui::Begin("Login", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::Checkbox("Teacher", &mpUpdateInfo->isAdmin);
-    static char email[255] = u8"default";
+    static char email[255] = u8"";
     ImGui::SetCursorPos(ImVec2(width/2-105, height/2-120));
     if(mpUpdateInfo->wrongPassword){
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Incorrect password or email!");
@@ -601,7 +601,7 @@ void ape::VLFTImgui::loginGUI(){
     ImGui::SetCursorPos(ImVec2(width/2-120, height/2-90));
     ImGui::PushItemWidth(200);
     ImGui::InputText(u8"email", email, IM_ARRAYSIZE(email));
-    static char password[255] = u8"apertusvr2020";
+    static char password[255] = u8"";
     if(mpUpdateInfo->isAdmin){
         ImGui::SetCursorPos(ImVec2(width/2-120, height/2-60));
         ImGui::PushItemWidth(200);
