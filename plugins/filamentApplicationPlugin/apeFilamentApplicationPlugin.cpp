@@ -2439,6 +2439,13 @@ void ape::FilamentApplicationPlugin::Step()
             
             app.updateinfo.leftRoom = false;
             app.updateinfo.callLeave = true;
+            if(auto mNode = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
+                mNode->setOwner(mNode->getCreator());
+            }
+            if(auto mNode = mpSceneManager->getNode(mUserName+mPostUserName+"_TextNode").lock()){
+                mNode->setOwner(mNode->getCreator());
+            }
+            
             mpSceneManager->deleteEntity(mUserName+mPostUserName+"characterModel");
             mpSceneManager->deleteEntity(mUserName+mPostUserName);
             mpSceneManager->deleteNode(mUserName+mPostUserName);
@@ -2514,8 +2521,6 @@ void ape::FilamentApplicationPlugin::Step()
                                 nodeSP->setPosition(ape::Vector3(0, -0.65, 0.05));
                                 nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
                                 mAttachedUsers.push_back(nodeSP);
-                                app.updateinfo.switchOwner = true;
-                                mNodeToSwitchOwner.push_back(nodeSP->getName());
 
                             }
                         }
@@ -2530,7 +2535,6 @@ void ape::FilamentApplicationPlugin::Step()
                     {
                         if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
                         {
-                            attachedUser->setOwner(mpCoreConfig->getNetworkGUID());
                             attachedUser->detachFromParentNode();
                             attachedUser->setPosition(ape::Vector3(0, 1.5, 0));
                             attachedUser->setOrientation(ape::Quaternion(0, 0, 1, 0));
