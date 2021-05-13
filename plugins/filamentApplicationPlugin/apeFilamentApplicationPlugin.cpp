@@ -1599,7 +1599,7 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
                 spaghettiNode->setChildrenVisibility(true);
             }
             mspaghettiLineNames[spagetthiLineSection->getName()]=spaghettiNode->getName();
-            //spaghettiSectionName = spagetthiLineSection->getName();
+            spaghettiSectionName = spagetthiLineSection->getName();
             
         }
     }
@@ -1783,7 +1783,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                         }
                         std::string spaghettiSectionName;
                         drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
-                        mspaghettiLineNames[spaghettiSectionName]=mParsedAnimations[i].nodeName;
+                        //mspaghettiLineNames[spaghettiSectionName]=mParsedAnimations[i].nodeName;
                     }
                     mPlayedAnimations++;
                 }

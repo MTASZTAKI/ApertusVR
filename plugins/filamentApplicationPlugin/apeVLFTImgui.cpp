@@ -80,14 +80,16 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     mpUpdateInfo->keyLabel["e"] = "e";
     mpUpdateInfo->keyLabel["q"] = "q";
     chatMessages.push_back("Write messages here for others to see");
-//    auto systemCommand = [this]() {
-//        mpSceneNetwork->updateResources();
-//        mpUpdateInfo->resourcesUpdated = true;
-//        if(mPreChosenRoomName != "")
-//            connectToRoom();
-//    };
-//    std::thread systemThread(systemCommand);
-//    systemThread.detach();
+    if(!mpUpdateInfo->resourcesUpdated){
+        auto systemCommand = [this]() {
+            mpSceneNetwork->updateResources();
+            mpUpdateInfo->resourcesUpdated = true;
+            if(mPreChosenRoomName != "")
+                connectToRoom();
+        };
+        std::thread systemThread(systemCommand);
+        systemThread.detach();
+    }
     if(mPreChosenRoomName != "")
         connectToRoom();
     mpUpdateInfo->initRun = true;
