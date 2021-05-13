@@ -1557,7 +1557,7 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
         auto currentPosition = node->getDerivedPosition();
         //APE_LOG_DEBUG("startPosition: " << startPosition.toString());
         //APE_LOG_DEBUG("currentPosition: " << currentPosition.toString());
-        if (auto spaghettiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->getEntity(node->getName()+"_spaghettiEntity").lock()))
+        if (auto spaghettiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->getEntity(spaghettiNode->getName()+"_spaghettiEntity").lock()))
         {
             ape::Color color(1, 0, 0);
             auto params = spaghettiLineSection->getParameters();
@@ -1581,7 +1581,7 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
             }
             spaghettiSectionName = spaghettiLineSection->getName();
         }
-        else if(auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(node->getName()+"_spaghettiEntity", ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
+        else if(auto spagetthiLineSection = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(mpSceneManager->createEntity(spaghettiNode->getName()+"_spaghettiEntity", ape::Entity::GEOMETRY_INDEXEDLINESET, true, mpCoreConfig->getNetworkGUID()).lock()))
         { 
             spagetthiLineSection->setParentNode(spaghettiNode);
             ape::GeometryCoordinates coordinates = {
@@ -1590,7 +1590,7 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
             ape::GeometryIndices indices = { 0, 1, -1 };
             ape::Color color(1, 0, 0);
             spagetthiLineSection->setParameters(coordinates, indices, color);            
-            mspaghettiLineNames[node->getName()+"_spaghettiEntity"] = spaghettiNode->getName();
+            //mspaghettiLineNames[node->getName()+"_spaghettiEntity"] = spaghettiNode->getName();
             if (!mIsAllSpaghettiVisible)
             {
                 spaghettiNode->setChildrenVisibility(false);
@@ -1598,6 +1598,7 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
             else{
                 spaghettiNode->setChildrenVisibility(true);
             }
+            mspaghettiLineNames[spagetthiLineSection->getName()]=spaghettiNode->getName();
             //spaghettiSectionName = spagetthiLineSection->getName();
             
         }
@@ -1617,10 +1618,10 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                 node->setInitalState();
                 node->setOwner(mpCoreConfig->getNetworkGUID());
                 std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-//                if (auto spaghettiNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiNode"+std::to_string(uuid.count()), true, mpCoreConfig->getNetworkGUID()).lock())
-//                {
-//                    mSpaghettiNodeNames.insert(spaghettiNode->getName());
-//                }
+                if (auto spaghettiNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiNode"+std::to_string(uuid.count()), true, mpCoreConfig->getNetworkGUID()).lock())
+                {
+                    mSpaghettiNodeNames.insert(spaghettiNode->getName());
+                }
             }
         }
     }
@@ -1781,8 +1782,8 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                             node->translate(mParsedAnimations[i].translate, ape::Node::TransformationSpace::PARENT);
                         }
                         std::string spaghettiSectionName;
-                        //drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
-                        //mspaghettiLineNames[spaghettiSectionName]=mParsedAnimations[i].nodeName;
+                        drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
+                        mspaghettiLineNames[spaghettiSectionName]=mParsedAnimations[i].nodeName;
                     }
                     mPlayedAnimations++;
                 }

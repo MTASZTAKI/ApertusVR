@@ -45,6 +45,6 @@ Create New link binary with libraries and add:
 
 Lastly: in the build settings of apeVLFTLauncher the Runpath Search Paths needs to be set to:
 	"@executable_path/../Frameworks/Release" for release
-	"@executable_path/../Frameworks/Release" for debug
+	"@executable_path/../Frameworks/Debug" for debug
 
 After this, you can either build and run apeVLFTlauncher itself, or if it cannot copy the dylibs from build/lib run ALL_BUILD first.
