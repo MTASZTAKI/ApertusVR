@@ -57,19 +57,7 @@ inline void UnregisterHook()
 int WINAPI WinMain (HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nFunsterStil)
 { 
 	ape::System::Start(lpszArgument, false);
-	while (ape::ICoreConfig::getSingletonPtr()->getWindowConfig().handle == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	gpMainWindow = ape::ICoreConfig::getSingletonPtr()->getWindowConfig().handle;
-	::CoInitialize(NULL);
-	RegisterWindowDestructionHook();
-	MSG msg = {};
-	while (::GetMessageW(&msg, nullptr, 0, 0) > 0) {
-		::TranslateMessage(&msg);
-		::DispatchMessageW(&msg);
-	}
 	ape::System::Stop();
-	UnregisterHook();
-	::CoUninitialize();
 	return 0;
 }
 #else

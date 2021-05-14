@@ -2130,13 +2130,14 @@ void ape::FilamentApplicationPlugin::Step()
         APE_LOG_DEBUG("LOGO CREATE");
         if (auto node = mNode.lock())
         {
-            if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity("VLTF_3Dlogo", ape::Entity::GEOMETRY_FILE, false, mpCoreConfig->getNetworkGUID()).lock()))
+            auto logoName = "VLTF_3Dlogo";
+            if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(logoName, ape::Entity::GEOMETRY_FILE, false, mpCoreConfig->getNetworkGUID()).lock()))
             {
                 APE_LOG_DEBUG("LOGO CLONE");
                 gltfMeshFile->setFileName("../assets/models/logo/VLTF_3Dlogo.gltf");
                 gltfMeshFile->setParentNode(node);
             }
-            if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity("VLTF_3Dlogo").lock())){
+            if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(logoName).lock())){
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity("VLFTlogo", ape::Entity::Type::GEOMETRY_CLONE, false, mpCoreConfig->getNetworkGUID()).lock()))
                 {
                     geometryClone->setSourceGeometry(gltfMeshFile);
