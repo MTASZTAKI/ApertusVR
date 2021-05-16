@@ -281,10 +281,19 @@ void ape::VLFTImgui::connectToRoom(){
 }
 
 void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height){
-    if (ImGui::Button("Join",ImVec2(width/8, height/15))){
-        if(mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
-            connectToRoom();
+    if(mpMainMenuInfo.singlePlayer){
+        if (ImGui::Button("Start",ImVec2(width/8, height/15))){
+            if(mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
+                connectToRoom();
+        }
     }
+    else{
+        if (ImGui::Button("Join",ImVec2(width/8, height/15))){
+            if(mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
+                connectToRoom();
+        }
+    }
+    
 }
 void ape::VLFTImgui::createStartButton(int width, int height){
     if (ImGui::Button("Start",ImVec2(width/8, height/15))){
@@ -423,7 +432,7 @@ void ape::VLFTImgui::studentRoomGUI(){
         }
         listRoomNames(true);
         ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
-        createJoinButton("Student", width, height);
+        createJoinButton("Teacher", width, height);
         ImGui::SameLine(width-(width/8+48));
         if (ImGui::Button("Back",ImVec2(width/8, height/15))){
             mpMainMenuInfo.multiPlayer = false;
@@ -562,7 +571,7 @@ void ape::VLFTImgui::adminRoomGUI(){
         }
         listRoomNames(false);
         ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
-        createJoinButton("Teacher", width, height);
+        createJoinButton("Student", width, height);
         ImGui::SameLine(width-(width/8+48));
         if (ImGui::Button("Back",ImVec2(width/8, height/15))){
             mpMainMenuInfo.singlePlayer = false;
