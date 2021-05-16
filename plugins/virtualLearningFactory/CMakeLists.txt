@@ -20,10 +20,6 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-if (NOT ANDROID)
-    add_subdirectory (animationPlayer)
-    add_subdirectory (userInterfaceManager)
-    add_subdirectory (sceneLoader)
-else()
-    add_subdirectory (sceneLoader)
-endif()
+
+add_subdirectory (sceneLoader)
+
