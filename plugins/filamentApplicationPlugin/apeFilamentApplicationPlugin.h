@@ -364,6 +364,8 @@ namespace ape
         
         std::thread mAnimationThread;
         
+        quicktype::Scene mSceneJson;
+        
         std::vector<Animation> mParsedAnimations;
         
         int mPlayedAnimations;
@@ -371,6 +373,8 @@ namespace ape
         std::set<std::string> mAnimatedNodeNames;
 
         std::set<std::string> mSpaghettiNodeNames;
+        
+        std::map<std::string, std::string> idGltfMap;
         
         std::map<std::string, std::string> mspaghettiLineNames;
         

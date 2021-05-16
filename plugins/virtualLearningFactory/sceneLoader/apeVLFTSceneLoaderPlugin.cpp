@@ -85,7 +85,11 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 					{
 						float unitScale = *representation.get_unit() / 0.01f;
-						if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                        if(mpSceneManager->getEntity(asset.get_id()).lock()){
+                            APE_LOG_DEBUG("fileGeometry: " << asset.get_id() << " filename: " << filePath);
+                            ;
+                        }
+						else if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
 							APE_LOG_DEBUG("fileGeometry: " << asset.get_id() << " filename: " << filePath);
 							fileGeometry->setUnitScale(unitScale);
@@ -148,83 +152,104 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 {
 	for (auto asset : mScene.get_assets())
 	{
-		bool exists = false;
-		size_t ind = 0;
-        std::string gltfName = "";
-        for(auto gltfModel :mGltfModel){
-            while (!exists && ind < gltfModel.second.nodes.size()) {
-                std::string nodeName = asset.get_id().substr(asset.get_id().find_last_of(".")+1);
-                if (gltfModel.second.nodes[ind++].name == nodeName)
-                    exists = true;
-            }
-            if(exists){
-                gltfName = gltfModel.first;
-                break;
-            }
-        }
-		
-		if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
-		{
-			if (exists) {
-				std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
-                if(positionWP.lock()){
-                    std::vector<double> pos = *asset.get_position();
-                    if(pos[0] != 0 && pos[1] != 0 && pos[2] != 0){
-                        ape::Vector3 apePosition(pos[0], pos[1], pos[2]);
-                        //APE_LOG_DEBUG("apePosition: " << apePosition.toString());
-                        node->setPosition(apePosition);
-                    }
-                }
-                else{
-                    std::vector<double> position = mGltfModel[gltfName].nodes[ind-1].matrix;
-                    if (position.size() == 16)
-                    {
-                        ape::Vector3 apePosition(position[12], position[13], position[14]);
-                        //APE_LOG_DEBUG("apePosition: " << apePosition.toString());
-                        node->setPosition(apePosition);
-                    }
-                }
-				std::weak_ptr<std::vector<double>> orientationWP = asset.get_rotation();
-                if (orientationWP.lock())
+            bool exists = false;
+            size_t ind = 0;
+            std::string gltfName = "";
+            for(auto gltfModel :mGltfModel){
+                std::weak_ptr<std::vector<quicktype::Representation>> representations = asset.get_representations();
+                if (representations.lock())
                 {
-                    std::vector<double> ori = *asset.get_rotation();
-                    ape::Quaternion apeOrientation(ori[0], ori[1], ori[2], ori[3]);
-                    //APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
-                    node->setOrientation(apeOrientation);
+                    for (auto representation : *asset.get_representations())
+                    {
+                        std::string fileName= representation.get_file();
+                        std::string gltfNodeName = fileName.substr(fileName.find_last_of(".")+1);
+                        while (!exists && ind < gltfModel.second.nodes.size()) {
+                            //std::string nodeName = gltfNodeName.substr(gltfNodeName.find_last_of(".")+1);
+                            if (gltfModel.second.nodes[ind++].name == gltfNodeName)
+                                exists = true;
+                        }
+                        if(exists){
+                            gltfName = gltfModel.first;
+                            break;
+                        }
+                    }
                 }
                 else{
-                    std::vector<double> orientation = mGltfModel[gltfName].nodes[ind-1].rotation;
-                    if (orientation.size() == 4)
+                    while (!exists && ind < gltfModel.second.nodes.size()) {
+                        std::string nodeName = asset.get_id().substr(asset.get_id().find_last_of(".")+1);
+                        if (gltfModel.second.nodes[ind++].name == nodeName)
+                            exists = true;
+                    }
+                    if(exists){
+                        gltfName = gltfModel.first;
+                        break;
+                    }
+                }
+            }
+		
+            if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
+            {
+                if (exists) {
+                    std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
+                    if(positionWP.lock()){
+                        std::vector<double> pos = *asset.get_position();
+                        if(pos[0] != 0 && pos[1] != 0 && pos[2] != 0){
+                            ape::Vector3 apePosition(pos[0], pos[1], pos[2]);
+                            //APE_LOG_DEBUG("apePosition: " << apePosition.toString());
+                            node->setPosition(apePosition);
+                        }
+                    }
+                    else{
+                        std::vector<double> position = mGltfModel[gltfName].nodes[ind-1].matrix;
+                        if (position.size() == 16)
+                        {
+                            ape::Vector3 apePosition(position[12], position[13], position[14]);
+                            //APE_LOG_DEBUG("apePosition: " << apePosition.toString());
+                            node->setPosition(apePosition);
+                        }
+                    }
+                    std::weak_ptr<std::vector<double>> orientationWP = asset.get_rotation();
+                    if (orientationWP.lock())
                     {
-                        ape::Quaternion apeOrientation(orientation[0], orientation[1], orientation[2], orientation[3]);
+                        std::vector<double> ori = *asset.get_rotation();
+                        ape::Quaternion apeOrientation(ori[0], ori[1], ori[2], ori[3]);
                         //APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
                         node->setOrientation(apeOrientation);
                     }
+                    else{
+                        std::vector<double> orientation = mGltfModel[gltfName].nodes[ind-1].rotation;
+                        if (orientation.size() == 4)
+                        {
+                            ape::Quaternion apeOrientation(orientation[0], orientation[1], orientation[2], orientation[3]);
+                            //APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
+                            node->setOrientation(apeOrientation);
+                        }
+                    }
                 }
-			}
-			APE_LOG_DEBUG("createNode: " << asset.get_id());
-			std::weak_ptr<std::string> model = asset.get_model();
-			if (model.lock())
-			{
-				auto fileGeometryName = findGeometryNameByModelName(*asset.get_model());
-				//APE_LOG_DEBUG("findGeometryNameByModelName: " << fileGeometryName << " model: " << *asset.get_model());
-                APE_LOG_DEBUG("CLONE CREATE: " << asset.get_id());
-				if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
-				{
-                    APE_LOG_DEBUG("IFILEGEOM CREATE: " << asset.get_id());
-					cloneGeometry(fileGeometry, asset.get_id(), node);
-				}
-				else
-				{
-                    APE_LOG_DEBUG("CLONE FAILED : " << asset.get_id());
-					if (auto pureNode = mpSceneManager->getNode(*asset.get_model()).lock())
-					{
-						pureNode->setParentNode(node);
-						//APE_LOG_DEBUG("pureNode: " << *asset.get_model() << " attached to: " << asset.get_id());
-					}
-				}
-			}
-		}
+                APE_LOG_DEBUG("createNode: " << asset.get_id());
+                std::weak_ptr<std::string> model = asset.get_model();
+                if (model.lock())
+                {
+                    auto fileGeometryName = findGeometryNameByModelName(*asset.get_model());
+                    //APE_LOG_DEBUG("findGeometryNameByModelName: " << fileGeometryName << " model: " << *asset.get_model());
+                    APE_LOG_DEBUG("CLONE CREATE: " << asset.get_id());
+                    if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
+                    {
+                        APE_LOG_DEBUG("IFILEGEOM CREATE: " << asset.get_id());
+                        cloneGeometry(fileGeometry, asset.get_id(), node);
+                    }
+                    else
+                    {
+                        APE_LOG_DEBUG("CLONE FAILED : " << asset.get_id());
+                        if (auto pureNode = mpSceneManager->getNode(*asset.get_model()).lock())
+                        {
+                            pureNode->setParentNode(node);
+                            //APE_LOG_DEBUG("pureNode: " << *asset.get_model() << " attached to: " << asset.get_id());
+                        }
+                    }
+                }
+            
+        }
 	}
 }
 

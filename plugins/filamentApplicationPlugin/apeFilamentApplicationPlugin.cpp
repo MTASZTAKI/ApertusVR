@@ -67,6 +67,7 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mStudents = std::vector<ape::NodeWeakPtr>();
     mStudentsMovementLoggingFile = std::ofstream();
     mKeyMap = std::map<std::string, SDL_Scancode>();
+    idGltfMap = std::map<std::string, std::string>();
     mCamManipulator =  filament::camutils::Manipulator<float>::Builder()
     .flightStartPosition(2.5, 1.5, 1)
     .build(filament::camutils::Mode::FREE_FLIGHT);
@@ -112,6 +113,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			if (auto node = mpSceneManager->getNode(event.subjectName).lock())
 			{
 				std::string nodeName = node->getName();
+                std::string glftNodeName =  idGltfMap[nodeName];
 				if (event.type == ape::Event::Type::NODE_CREATE)
 				{
                 
@@ -180,8 +182,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if (parentNodeName.find_first_of(".") != std::string::npos)
                             {
                                 bool asd;
-                                std::string cloneName = parentNodeName.substr(0,parentNodeName.find_last_of("."));
-                                std::string subNodeName = parentNodeName.substr(parentNodeName.find_last_of(".")+1);
+                                std::string parentglftNodeName = idGltfMap[parentNodeName];
+                                std::string cloneName = parentglftNodeName.substr(0,parentglftNodeName.find_last_of("."));
+                                std::string subNodeName = parentglftNodeName.substr(parentglftNodeName.find_last_of(".")+1);
                                 if(app.mpInstancesMap.find(cloneName) == app.mpInstancesMap.end() || app.mpInstancesMap[cloneName].index == -1){
                                     bool foundAsset = false;
                                     auto assetItaretor = app.asset.begin();
@@ -278,8 +281,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
                             if (nodeName.find_first_of(".") != std::string::npos)
                                 {
-                                    std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
-                                    std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
+                                    std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                                    std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
                                     if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
                                         int entitiyIndex = app.mpInstancesMap[cloneName].index;
                                         std::vector<utils::Entity> entities;
@@ -328,6 +331,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                         }
+                        
                             auto nodeOrientation= node->getModelMatrix().transpose();
                             auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                             math::mat4f transform;
@@ -337,6 +341,24 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2], nodeTransforms[2][3],
                                 nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
                             app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+                        if (nodeName.find_first_of(".") != std::string::npos)
+                            {
+                                std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                                std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
+                                    int entitiyIndex = app.mpInstancesMap[cloneName].index;
+                                    std::vector<utils::Entity> entities;
+                                    entities.resize(10);
+                                    int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
+                                    if(cnt > 0 ){
+                                        if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
+                                            auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
+                                            app.mpTransformManager->setTransform(entityTransform,filamentTransform);
+                                        }
+
+                                    }
+                                }
+                            }
 					}
 						break;
 					case ape::Event::Type::NODE_SCALE:
@@ -2341,6 +2363,30 @@ void ape::FilamentApplicationPlugin::Step()
             }
         }
         if(app.updateinfo.setUpRoom){
+            
+            std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
+            auto mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
+            mSceneJson = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
+            std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
+            
+            for (auto asset : mSceneJson.get_assets())
+            {
+                std::weak_ptr<std::vector<quicktype::Representation>> representations = asset.get_representations();
+                if (representations.lock())
+                {
+                    for (auto representation : *asset.get_representations())
+                    {
+                        std::string fileName = representation.get_file();
+                        std::string idName = asset.get_id();
+                        std::string gltfName = fileName.substr(fileName.find_last_of("#")+1);
+                        std::string cloneName = idName.substr(0,idName.find_last_of("."));
+                        idGltfMap[idName] = cloneName+"."+gltfName;
+                        APE_LOG_DEBUG(idName << " IDMAP: " <<idGltfMap[idName]);
+                    }
+                }
+                
+            }
+            
             if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
                 logo->setVisible(false);
                 logo->setChildrenVisibility(false);
@@ -2954,8 +3000,9 @@ void ape::FilamentApplicationPlugin::Step()
                                                     }
                                                     else if (sceneNodeName.find_first_of(".") != std::string::npos)
                                                     {
-                                                        std::string cloneName = sceneNodeName.substr(0,sceneNodeName.find_last_of("."));
-                                                        std::string nodeName = sceneNodeName.substr(sceneNodeName.find_last_of(".")+1);
+                                                        std::string glftNodeName = idGltfMap[sceneNodeName];
+                                                        std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                                                        std::string nodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
                                                         if(parentName == nodeName && rootName == cloneName){
                                                             app.updateinfo.selectedItem = sceneNodeName;
                                                             app.updateinfo.rootOfSelected = cloneName;
