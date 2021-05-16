@@ -532,7 +532,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     }
 								}
 							}
-                            if(app.mpLoadedAssets.find(filePath.str()) == app.mpLoadedAssets.end()){
+                            if(app.mpLoadedAssets.find(fileName) == app.mpLoadedAssets.end()){
                                 std::ifstream in(filePath.str().c_str(), std::ifstream::ate | std::ifstream::binary);
                                 long contentSize = static_cast<long>(in.tellg());
                                 if (contentSize <= 0)
@@ -582,7 +582,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         app.resourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
                                         if (app.resourceLoader->loadResources(app.asset[geometryName]))
                                         {
-                                            APE_LOG_DEBUG("resources load OK");
+                                            APE_LOG_DEBUG("resources load OK "<<fileName);
         //                                    auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[geometryName]);
         //                                    auto filamentTransform = filament::math::mat4f(
         //                                       1/1000,0,0,0,
@@ -770,18 +770,19 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
         {
             if (auto cloneGeometry = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
             {
-                std::string sourceFileName = "";
-                if(auto sourceGeometry = std::static_pointer_cast<ape::IFileGeometry>(cloneGeometry->getSourceGeometry().lock()))
+                std::string sourceFileName = "", sourceGeometryName = "";
+                if(auto sourceGeometry = std::static_pointer_cast<ape::IFileGeometry>(cloneGeometry->getSourceGeometry().lock())){
+                    sourceGeometryName = sourceGeometry->getName();
                     sourceFileName = sourceGeometry->getFileName();
+                }
                 std::string parentNodeName = "";
                 if (auto parentNode = cloneGeometry->getParentNode().lock())
                     parentNodeName = parentNode->getName();
-                
                 switch (event.type)
                 {
                     case ape::Event::Type::GEOMETRY_CLONE_CREATE:
                     {
-                        
+                        APE_LOG_DEBUG("CLONE CREATE " << event.subjectName);
                         app.mpInstancesMap[event.subjectName];
                     }
                     break;
@@ -791,12 +792,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                             auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
                             app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
-                            if(auto node = mpSceneManager->getNode(event.subjectName).lock()){
-                                std::string nodeName = event.subjectName;
-                                if(node->getChildrenVisibility() && nodeName.find(mUserName+mPostUserName) == std::string::npos){
+                            if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
+                                if(node->getChildrenVisibility() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
                                     app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                 }
-                                else if(nodeName.find(mUserName+mPostUserName) != std::string::npos){
+                                else if(parentNodeName.find(mUserName+mPostUserName) != std::string::npos){
                                     app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                 }
                             }
@@ -812,7 +812,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         bool exists  =false;
                         std::string nameOfGeometry = "";
                         std::string nameOfFile = "";
-                        if(app.instances.find(sourceFileName) == app.instances.end()){
+                        if(app.instances.find(sourceGeometryName) == app.instances.end()){
                             if(app.geometryNameMap.find(sourceFileName) != app.geometryNameMap.end()){
                                 auto names = app.geometryNameMap[sourceFileName];
                                 for(size_t i = 0; i < names.size(); i++){
@@ -825,8 +825,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             }
                         }
                         if(!exists)
-                            nameOfGeometry = sourceFileName;
+                            nameOfGeometry = sourceGeometryName;
                         if(app.instances.find(nameOfGeometry) != app.instances.end() && app.mpInstancesMap[event.subjectName].index == -1){
+                            APE_LOG_DEBUG(event.subjectName <<" CLONE SOURCE " << nameOfGeometry);
                             if(app.instanceCount[nameOfGeometry] < 10){
                                 int cnt = app.instanceCount[nameOfGeometry]++;
                                 app.mpInstancesMap[event.subjectName] =  InstanceData(cnt, nameOfGeometry, app.instances[nameOfGeometry][cnt]);
@@ -835,12 +836,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 auto nameInstance = app.names->getInstance(root);
                                 if(nameInstance)
                                   app.names->setName(nameInstance, event.subjectName.c_str());
-                                if(auto node = mpSceneManager->getNode(event.subjectName).lock()){
-                                    std::string nodeName = event.subjectName;
-                                    if(node->getChildrenVisibility() && nodeName.find(mUserName+mPostUserName) == std::string::npos){
+                                if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
+                                    if(node->getChildrenVisibility() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
                                         app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                     }
-                                    else if(nodeName.find(mUserName+mPostUserName) != std::string::npos){
+                                    else if(parentNodeName.find(mUserName+mPostUserName) != std::string::npos){
                                         app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                     }
                                 }
@@ -1698,6 +1698,13 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                         if (mParsedAnimations[i].modelName.size())
                         {
                             ;
+                            //new IFileGeometry(name_replace_geometry)
+                            //setparent(Node)
+                            //setfileName
+                            //mstateGeometryNames.insert(Ifile)
+                            //new Clone(name_Replace)
+                            //clone->setsourcegeom
+                            //setParent(node)
 //                            if(mParsedAnimations[i].descr == "replace"){
 //
 //                                //geometryClone->setParentNode(ape::NodeWeakPtr());
@@ -1752,7 +1759,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     }
                     else if (mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION || mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION_ADDITIVE)
                     {
-                       
+                        APE_LOG_DEBUG("ANIMATION: " << node->getName());
                         auto previousPosition = node->getDerivedPosition();
                         if (attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
                         {
