@@ -196,7 +196,7 @@ void ape::SceneNetworkImpl::init()
 	RakNet::StartupResult sr = mpRakReplicaPeer->Startup(8, &sd, 1);
 	APE_LOG_DEBUG("Raknet StartupResult: " << (int)sr);
 	RakAssert(sr == RakNet::RAKNET_STARTED);
-	mpRakReplicaPeer->SetMaximumIncomingConnections(8);
+	mpRakReplicaPeer->SetMaximumIncomingConnections(32);
 	mpRakReplicaPeer->SetTimeoutTime(30000,RakNet::UNASSIGNED_SYSTEM_ADDRESS);
 	mGuid = mpRakReplicaPeer->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS);
 
