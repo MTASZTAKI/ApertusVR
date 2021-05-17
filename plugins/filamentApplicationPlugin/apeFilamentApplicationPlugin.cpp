@@ -597,6 +597,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
 				{
+                    if(fileName.find("Warehouse") == std::string::npos)
 					if (fileName.find_first_of(".") != std::string::npos)
 					{
 						std::string fileExtension = fileName.substr(fileName.find_last_of("."));
