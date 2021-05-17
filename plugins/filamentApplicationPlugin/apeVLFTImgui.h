@@ -193,6 +193,8 @@ namespace ape
         
         std::vector<std::string> chatMessages;
         
+        std::map<std::string, std::string> statesMap;
+        
         std::string mPreChosenRoomName;
         
         bool messageInBuffer = false;

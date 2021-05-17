@@ -24,6 +24,7 @@ ape::VLFTImgui::VLFTImgui( )
     mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
     mpPluginManager = ape::IPluginManager::getSingletonPtr();
     mpSceneManager = ape::ISceneManager::getSingletonPtr();
+    statesMap =  std::map<std::string, std::string>();
 }
 
 ape::VLFTImgui::~VLFTImgui()
@@ -768,6 +769,7 @@ void ape::VLFTImgui::statePanelGUI(){
         ImGui::Text("%s", mpUpdateInfo->nameOfState[i].c_str());
         ImGui::SameLine(140);
         ImGui::Text("%s", mpUpdateInfo->stateOfObjects[i].c_str());
+        statesMap[mpUpdateInfo->nameOfState[i]] = mpUpdateInfo->stateOfObjects[i];
         }
     if( mpMainMenuInfo.prevStateNum != mpUpdateInfo->nameOfState.size()){
         ImGui::SetScrollHere(1.0f);
@@ -1062,7 +1064,7 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
     if(mpUpdateInfo->selectedItem != "")
     {
         for(auto asset : mScene.get_assets()){
-            if(asset.get_id() == mpUpdateInfo->selectedItem){
+            if(asset.get_id() == mpUpdateInfo->rootOfSelected){
                 auto position = asset.get_position();
                 auto rotation = asset.get_rotation();
                 
@@ -1087,6 +1089,8 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
                 break;
         }
         if(auto node = mpSceneManager->getNode(mpUpdateInfo->selectedItem).lock()){
+            APE_LOG_DEBUG(node->getName());
+            stateText += statesMap[mpUpdateInfo->rootOfSelected];
             auto pos = node->getDerivedPosition();
             positionText = "Position: " + convertApeVec3ToString(pos, 2);
             auto ori = node->getDerivedOrientation();
