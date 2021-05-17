@@ -280,23 +280,23 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 nodePosition.getX()/divider, nodePosition.getY()/divider, nodePosition.getZ()/divider, nodeTransforms[3][3]);
                             app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
                             if (nodeName.find_first_of(".") != std::string::npos)
-                                {
-                                    std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
-                                    std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
-                                    if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
-                                        int entitiyIndex = app.mpInstancesMap[cloneName].index;
-                                        std::vector<utils::Entity> entities;
-                                        entities.resize(10);
-                                        int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
-                                        if(cnt > 0 ){
-                                            if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
-                                                auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
-                                                app.mpTransformManager->setTransform(entityTransform,filamentTransform);
-                                            }
-
+                            {
+                                std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                                std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
+                                    int entitiyIndex = app.mpInstancesMap[cloneName].index;
+                                    std::vector<utils::Entity> entities;
+                                    entities.resize(10);
+                                    int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
+                                    if(cnt > 0 ){
+                                        if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
+                                            auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
+                                            app.mpTransformManager->setTransform(entityTransform,filamentTransform);
                                         }
+
                                     }
                                 }
+                            }
                         }
                         for (auto studentWP : mStudents)
                                 {
@@ -368,7 +368,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_CHILDVISIBILITY:
                         {
+                            if(nodeName.find("Hinge") != std::string::npos){
+                                APE_LOG_DEBUG("VISIBILITY: " << node->getName());
+                            }
                             if(node->getChildrenVisibility() && nodeName.find(mUserName) == std::string::npos){
+                                APE_LOG_DEBUG("SHOW: " << node->getName());
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     if(auto root = instance->getRoot())
@@ -390,8 +394,35 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     if(!app.mpScene->hasEntity(app.spaghettiLines[nodeName].lineEntity))
                                         app.mpScene->addEntity(app.spaghettiLines[nodeName].lineEntity);
                                 }
+                                
+                                if (nodeName.find_first_of(".") != std::string::npos)
+                                {
+                                    std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                                    std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+                                    if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
+                                        int entitiyIndex = app.mpInstancesMap[cloneName].index;
+                                        std::vector<utils::Entity> entities;
+                                        entities.resize(10);
+                                        int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
+                                        if(cnt > 0 ){
+                                            std::function<void(utils::Entity)> addToScene;
+                                            addToScene = [&](utils::Entity nodeEntity){
+                                                auto entityTransform = app.mpTransformManager->getInstance(nodeEntity);
+                                                std::vector<utils::Entity> children(app.mpTransformManager->getChildCount(entityTransform));
+                                                app.mpTransformManager->getChildren(entityTransform, children.data(), children.size());
+                                                for (auto ce : children) {
+                                                    if(!app.mpScene->hasEntity(entities[entitiyIndex])){
+                                                        app.mpScene->addEntity(ce);
+                                                    }
+                                                    addToScene(ce);
+                                                }
+                                            };
+                                        }
+                                    }
+                                }
                             }
                             else{
+                                APE_LOG_DEBUG("HIDE: " << node->getName());
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end()  && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     if(app.mpScene->hasEntity(instance->getEntities()[0])){
@@ -412,12 +443,40 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     if(app.mpScene->hasEntity(app.spaghettiLines[nodeName].lineEntity))
                                         app.mpScene->remove(app.spaghettiLines[nodeName].lineEntity);
                                 }
+                                if (nodeName.find_first_of(".") != std::string::npos)
+                                {
+                                    std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                                    std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+                                    if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
+                                        int entitiyIndex = app.mpInstancesMap[cloneName].index;
+                                        std::vector<utils::Entity> entities;
+                                        entities.resize(10);
+                                        int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
+                                        if(cnt > 0 )
+                                        {
+                                            std::function<void(utils::Entity)> removeFromScene;
+                                            removeFromScene = [&](utils::Entity nodeEntity){
+                                                auto entityTransform = app.mpTransformManager->getInstance(nodeEntity);
+                                                std::vector<utils::Entity> children(app.mpTransformManager->getChildCount(entityTransform));
+                                                app.mpTransformManager->getChildren(entityTransform, children.data(), children.size());
+                                                for (auto ce : children) {
+                                                    if(app.mpScene->hasEntity(ce)){
+                                                        app.mpScene->remove(ce);
+                                                    }
+                                                    removeFromScene(ce);
+                                                }
+                                            };
+                                            removeFromScene(entities[entitiyIndex]);
+                                        }
+                                    }
+                                }
                             }
                         }
 						break;
 					case ape::Event::Type::NODE_VISIBILITY:
                         {
-                            if(node->getChildrenVisibility()){
+                            if(node->isVisible()){
+                                APE_LOG_DEBUG("SHOW: " << node->getName());
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     auto root = instance->getRoot();
@@ -426,13 +485,48 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     }
                                     
                                 }
+                                if (nodeName.find_first_of(".") != std::string::npos)
+                                {
+                                    std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                                    std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+                                    if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
+                                        int entitiyIndex = app.mpInstancesMap[cloneName].index;
+                                        std::vector<utils::Entity> entities;
+                                        entities.resize(10);
+                                        int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
+                                        if(cnt > 0 )
+                                        {
+                                            APE_LOG_DEBUG("SHOWN: " << node->getName());
+                                            if(!app.mpScene->hasEntity(entities[entitiyIndex]))
+                                                app.mpScene->addEntity(entities[entitiyIndex]);
+                                        }
+                                    }
+                                }
                                 
                             }
                             else{
+                                APE_LOG_DEBUG("HIDE: " << node->getName());
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     if(app.mpScene->hasEntity(instance->getEntities()[0])){
                                         app.mpScene->removeEntities(instance->getEntities(), instance->getEntityCount());
+                                    }
+                                    if (nodeName.find_first_of(".") != std::string::npos)
+                                    {
+                                        std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                                        std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+                                        if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
+                                            int entitiyIndex = app.mpInstancesMap[cloneName].index;
+                                            std::vector<utils::Entity> entities;
+                                            entities.resize(10);
+                                            int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
+                                            if(cnt > 0 )
+                                            {
+                                                APE_LOG_DEBUG("HID: " << node->getName());
+                                                if(app.mpScene->hasEntity(entities[entitiyIndex]))
+                                                    app.mpScene->remove(entities[entitiyIndex]);
+                                            }
+                                        }
                                     }
                                     
                                 }
@@ -1659,6 +1753,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                 {
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::SHOW)
                     {
+                        APE_LOG_DEBUG("SHOW: " << node->getName());
                         if(!attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
                         {
                             std::string parentsName = "";
@@ -1669,8 +1764,8 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                                 node->detachFromParentNode();
                         }
                            
-                        node->setChildrenVisibility(true);
-
+                        //node->setChildrenVisibility(true);
+                        
                        
                         if(mParsedAnimations[i].parentNodeName != ""){
                             if (auto parentNode = mpSceneManager->getNode(mParsedAnimations[i].parentNodeName).lock()){
@@ -1686,10 +1781,13 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                             node->setPosition(newPos);
                         }
                         node->setOrientation(mParsedAnimations[i].orientation);
+                        node->setVisible(true);
                     }
                     else if (mParsedAnimations[i].type == animationQuicktype::EventType::HIDE)
                     {
-                        node->setChildrenVisibility(false);
+                        APE_LOG_DEBUG("HIDE: " << node->getName());
+                        //node->setChildrenVisibility(false);
+                        node->setVisible(false);
                     }
                     else if (mParsedAnimations[i].type == animationQuicktype::EventType::ATTACH)
                     {
@@ -1781,7 +1879,6 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     }
                     else if (mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION || mParsedAnimations[i].type == animationQuicktype::EventType::ANIMATION_ADDITIVE)
                     {
-                        APE_LOG_DEBUG("ANIMATION: " << node->getName());
                         auto previousPosition = node->getDerivedPosition();
                         if (attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
                         {
