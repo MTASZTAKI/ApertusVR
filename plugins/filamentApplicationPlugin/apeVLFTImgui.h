@@ -141,6 +141,7 @@ struct updateInfo{
     bool callLeave = false;
     bool initRun = false;
     bool resourcesUpdated = false;
+    bool inSinlgePlayer = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;

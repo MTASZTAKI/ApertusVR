@@ -801,6 +801,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     {
                                         app.mpScene->removeEntities(app.asset[geometryName]->getEntities(), app.asset[geometryName]->getEntityCount());
                                     }
+                                    app.instances[geometryName].resize(1);
                                     app.instances[geometryName].resize(10);
                                     app.instanceCount[geometryName] = 0;
                                     app.asset[geometryName] = app.loader->createInstancedAsset(buffer.data(), buffer.size(), app.instances[geometryName].data(), app.instances[geometryName].size());
@@ -1932,7 +1933,8 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     }
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::TRAIL)
                     {
-                        showSpaghetti(node->getName(), mParsedAnimations[i].trail);
+                        if(app.updateinfo.inSinlgePlayer)
+                            showSpaghetti(node->getName(), mParsedAnimations[i].trail);
                     }
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::LINK)
                     {
@@ -2037,7 +2039,8 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                             node->translate(mParsedAnimations[i].translate, ape::Node::TransformationSpace::PARENT);
                         }
                         std::string spaghettiSectionName;
-                        drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
+                        if(app.updateinfo.inSinlgePlayer)
+                            drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
                         //mspaghettiLineNames[spaghettiSectionName]=mParsedAnimations[i].nodeName;
                     }
                     mPlayedAnimations++;

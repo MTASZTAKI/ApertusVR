@@ -69,6 +69,7 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
         else{
             mpMainMenuInfo.multiPlayer = false;
             mpMainMenuInfo.singlePlayer = true;
+            mpUpdateInfo->inSinlgePlayer = true;
         }
         mpMainMenuInfo.loginMenu = false;
         mpUpdateInfo->resourcesUpdated = true;
@@ -388,6 +389,7 @@ void ape::VLFTImgui::studentRoomGUI(){
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25));
         if (ImGui::Button("SinglePlayer",ImVec2(width/5, height/12))){
             mpMainMenuInfo.singlePlayer = true;
+            mpUpdateInfo->inSinlgePlayer = true;
             mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
         }
