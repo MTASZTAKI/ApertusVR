@@ -612,15 +612,38 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     }
                                     
                                 }
+                                if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+                                    APE_LOG_DEBUG("FoundTM: " << nodeName);
+                                    if(app.mpEntities.find(nodeName) != app.mpEntities.end() && !app.mpScene->hasEntity(app.mpEntities[nodeName]))
+                                    {
+                                        APE_LOG_DEBUG("FoundEnt: " << nodeName);
+                                        app.mpScene->addEntity(app.mpEntities[nodeName]);
+                                        if(app.mpTransformManager->hasComponent(app.mpEntities[nodeName])){
+                                            APE_LOG_DEBUG("HasTM: " << nodeName);
+                                            std::vector<utils::Entity> children;
+                                            size_t cnt = app.mpTransformManager->getChildCount(app.mpTransforms[nodeName]);
+                                            if(cnt > 0){
+                                                app.mpTransformManager->getChildren(app.mpTransforms[nodeName], children.data(), cnt);
+                                                if(!app.mpScene->hasEntity(children[0]))
+                                                    app.mpScene->addEntities(children.data(), cnt);
+                                            }
+                                        }
+                                    }
+                                   
+                                }
                                 if (nodeName.find_first_of(".") != std::string::npos)
                                 {
-                                    std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
-                                    std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+                                    std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
+                                    std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
+                                    if(idGltfMap.find(nodeName) != idGltfMap.end())
+                                        subNodeName = idGltfMap[nodeName].substr( idGltfMap[nodeName].find_last_of(".")+1);
+                                    APE_LOG_DEBUG("Search: " << cloneName << " " << subNodeName);
                                     if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
                                         int entitiyIndex = app.mpInstancesMap[cloneName].index;
                                         std::vector<utils::Entity> entities;
                                         entities.resize(10);
                                         int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
+                                        APE_LOG_DEBUG("Get entitites: " << cloneName << " " << subNodeName << " " << cnt);
                                         if(cnt > 0 )
                                         {
                                             APE_LOG_DEBUG("SHOWN: " << node->getName());
