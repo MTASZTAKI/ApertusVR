@@ -86,12 +86,10 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
 					{
 						float unitScale = *representation.get_unit() / 0.01f;
                         if(mpSceneManager->getEntity(asset.get_id()).lock()){
-                            APE_LOG_DEBUG("fileGeometry: " << asset.get_id() << " filename: " << filePath);
                             ;
                         }
 						else if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
-							APE_LOG_DEBUG("fileGeometry: " << asset.get_id() << " filename: " << filePath);
 							fileGeometry->setUnitScale(unitScale);
 							fileGeometry->setFileName(filePath);
                             fileGeometry->setParentNode(node);
@@ -139,12 +137,10 @@ void ape::VLFTSceneLoaderPlugin::setInitialState()
 
 void ape::VLFTSceneLoaderPlugin::cloneGeometry(ape::FileGeometrySharedPtr fileGeometry, std::string id, ape::NodeSharedPtr parentNode)
 {
-    APE_LOG_DEBUG("clone: CALL" << id);
 	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(id, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
 		geometryClone->setSourceGeometry(fileGeometry);
 		geometryClone->setParentNode(parentNode);
-		APE_LOG_DEBUG("clone: " << geometryClone->getName() << " source: " << fileGeometry->getName());
 	}
 }
 
@@ -226,21 +222,17 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
                         }
                     }
                 }
-                APE_LOG_DEBUG("createNode: " << asset.get_id());
                 std::weak_ptr<std::string> model = asset.get_model();
                 if (model.lock())
                 {
                     auto fileGeometryName = findGeometryNameByModelName(*asset.get_model());
                     //APE_LOG_DEBUG("findGeometryNameByModelName: " << fileGeometryName << " model: " << *asset.get_model());
-                    APE_LOG_DEBUG("CLONE CREATE: " << asset.get_id());
                     if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(fileGeometryName).lock()))
                     {
-                        APE_LOG_DEBUG("IFILEGEOM CREATE: " << asset.get_id());
                         cloneGeometry(fileGeometry, asset.get_id(), node);
                     }
                     else
                     {
-                        APE_LOG_DEBUG("CLONE FAILED : " << asset.get_id());
                         if (auto pureNode = mpSceneManager->getNode(*asset.get_model()).lock())
                         {
                             pureNode->setParentNode(node);

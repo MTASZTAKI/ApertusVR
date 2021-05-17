@@ -177,62 +177,189 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                         }
-                        
-                        
-                        if (parentNodeName.find_first_of(".") != std::string::npos)
+                        if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+                            if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end())
                             {
-                                bool asd;
-                                std::string parentglftNodeName = idGltfMap[parentNodeName];
-                                std::string cloneName = parentglftNodeName.substr(0,parentglftNodeName.find_last_of("."));
-                                std::string subNodeName = parentglftNodeName.substr(parentglftNodeName.find_last_of(".")+1);
-                                if(app.mpInstancesMap.find(cloneName) == app.mpInstancesMap.end() || app.mpInstancesMap[cloneName].index == -1){
-                                    bool foundAsset = false;
-                                    auto assetItaretor = app.asset.begin();
-                                    while(!foundAsset && assetItaretor != app.asset.end()){
-                                        if(assetItaretor->second->getEntitiesByName(subNodeName.c_str(), nullptr, 10) + assetItaretor->second->getEntitiesByName(parentNodeName.c_str(), nullptr, 10)){
-                                            foundAsset = true;
-                                        }
-                                        else{
-                                            assetItaretor++;
-                                        }
-                                    }
-                                    if(foundAsset && app.instanceCount[assetItaretor->first] < 10){
-                                        int cnt = app.instanceCount[assetItaretor->first]++;
-                                        app.mpInstancesMap[cloneName] = InstanceData(cnt, assetItaretor->first, app.instances[assetItaretor->first][cnt]);
-                                        auto root = app.instances[assetItaretor->first][cnt]->getRoot();
-                                        app.names->addComponent(root);
-                                        auto nameInstance = app.names->getInstance(root);
-                                        if(nameInstance)
-                                          app.names->setName(nameInstance, cloneName.c_str());
-                                    }
-                                    else{
-                                        
-                                        if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
-                                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
+                                APE_LOG_DEBUG("both TM "<< nodeName << " parent: " << parentNodeName);
+                                app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
+                            }
+                            if(parentNodeName.find_first_of(".") != std::string::npos){
+                                std::string parentClone = parentNodeName.substr(0,parentNodeName.find_last_of("."));
+                                std::string parentGltfName = parentNodeName.substr(parentNodeName.find_last_of(".")+1);
+                                if(idGltfMap.find(parentNodeName) != idGltfMap.end())
+                                    parentGltfName = idGltfMap[parentNodeName].substr( idGltfMap[parentNodeName].find_last_of(".")+1);
+                                
+                                if(app.mpInstancesMap.find(parentClone) != app.mpInstancesMap.end() && app.mpInstancesMap[parentClone].index > -1){
+                                    int parentIndex = app.mpInstancesMap[parentClone].index;
+                                    std::vector<utils::Entity> parentEntities;
+                                    parentEntities.resize(10);
+                                    int cnt2 = app.asset[app.mpInstancesMap[parentClone].assetName]->getEntitiesByName(parentGltfName.c_str(), parentEntities.data(), 10);
+                                    if(cnt2 > 0 ){
+                                        if(app.mpTransformManager->hasComponent(parentEntities[parentIndex])){
+                                            auto parentTM = app.mpTransformManager->getInstance(parentEntities[parentIndex]);
+                                            APE_LOG_DEBUG("node TM "<< nodeName << " parent: " << parentNodeName);
+                                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], parentTM);
                                         }
                                     }
                                 }
-                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() && app.mpInstancesMap[cloneName].index > -1){
-                                    int entitiyIndex = app.mpInstancesMap[cloneName].index;
-                                   
-                                    int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.instanceCount[app.mpInstancesMap[cloneName].assetName]);
-                                    if(cnt > 0 ){
-                                        auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
-                                        if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
-                                            auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
-                                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], entityTransform);
+                                
+                            }
+                        }
+                        if(nodeName.find_first_of(".") != std::string::npos){
+                            std::string nodeClone = nodeName.substr(0,nodeName.find_last_of("."));
+                            std::string nodeGltfName = nodeName.substr(nodeName.find_last_of(".")+1);
+                            if(idGltfMap.find(parentNodeName) != idGltfMap.end())
+                                nodeGltfName = idGltfMap[nodeName].substr( idGltfMap[nodeName].find_last_of(".")+1);
+                            
+                            if(app.mpInstancesMap.find(nodeClone) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeClone].index > -1){
+                                int nodeIndex = app.mpInstancesMap[nodeClone].index;
+                                std::vector<utils::Entity> nodeEntities;
+                                nodeEntities.resize(10);
+                                int cnt2 = app.asset[app.mpInstancesMap[nodeClone].assetName]->getEntitiesByName(nodeGltfName.c_str(), nodeEntities.data(), 10);
+                                if(cnt2 > 0 ){
+                                    if(app.mpTransformManager->hasComponent(nodeEntities[nodeIndex])){
+                                        auto nodeTM = app.mpTransformManager->getInstance(nodeEntities[nodeIndex]);
+                                        if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end())
+                                        {
+                                            APE_LOG_DEBUG("PARENT TM "<< nodeName << " parent: "<<parentNodeName);
+                                            app.mpTransformManager->setParent(nodeTM, app.mpTransforms[parentNodeName]);
                                         }
-
+                                        if(parentNodeName.find_first_of("." ) != std::string::npos){
+                                            std::string parentClone = parentNodeName.substr(0,parentNodeName.find_last_of("."));
+                                            std::string parentGltfName = parentNodeName.substr(parentNodeName.find_last_of(".")+1);
+                                            if(idGltfMap.find(parentNodeName) != idGltfMap.end())
+                                                parentGltfName = idGltfMap[parentNodeName].substr( idGltfMap[parentNodeName].find_last_of(".")+1);
+                                            
+                                            if(app.mpInstancesMap.find(parentClone) != app.mpInstancesMap.end() && app.mpInstancesMap[parentClone].index > -1){
+                                                int parentIndex = app.mpInstancesMap[parentClone].index;
+                                                std::vector<utils::Entity> parentEntities;
+                                                parentEntities.resize(10);
+                                                int cnt = app.asset[app.mpInstancesMap[parentClone].assetName]->getEntitiesByName(parentGltfName.c_str(), parentEntities.data(), 10);
+                                                if(cnt > 0 ){
+                                                    if(app.mpTransformManager->hasComponent(parentEntities[parentIndex])){
+                                                        APE_LOG_DEBUG("NEITHER TM "<< nodeName << " parent: " << parentNodeName);
+                                                        auto parentTM = app.mpTransformManager->getInstance(parentEntities[parentIndex]);
+                                                        app.mpTransformManager->setParent(nodeTM, parentTM);
+                                                    }
+                                                }
+                                            }
+                                            
+                                        }
                                     }
-                                    else if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
-                                        app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
-                                    }
-                                    
                                 }
                             }
-                        else if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
-                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
                         }
+                           
+//                        bool parentSet = false;
+//                        if (parentNodeName.find_first_of(".") != std::string::npos)
+//                            {
+//
+//                                std::string parentglftNodeName = parentNodeName;
+//                                if(idGltfMap.find(parentNodeName) != idGltfMap.end())
+//                                    parentglftNodeName = idGltfMap[parentNodeName];
+//                                std::string cloneName = parentglftNodeName.substr(0,parentglftNodeName.find_last_of("."));
+//                                std::string subNodeName = parentglftNodeName.substr(parentglftNodeName.find_last_of(".")+1);
+//                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() && app.mpInstancesMap[cloneName].index != -1){
+//                                    int parentIndex = app.mpInstancesMap[cloneName].index;
+//                                    std::vector<utils::Entity> parentEntities;
+//                                    parentEntities.resize(10);
+//                                    int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), parentEntities.data(), 10);
+//                                    if(cnt > 0 ){
+//                                        if(app.mpTransformManager->hasComponent(parentEntities[parentIndex])){
+//                                            auto parentTM = app.mpTransformManager->getInstance(parentEntities[parentIndex]);
+//
+//                                            if(glftNodeName.find_first_of(".") != std::string::npos){
+//                                                std::string nodeClone = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+//                                                std::string nodeGltfName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+//                                                if(app.mpInstancesMap.find(nodeClone) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeClone].index > -1){
+//                                                    int nodeIndex = app.mpInstancesMap[nodeClone].index;
+//                                                    std::vector<utils::Entity> nodeEntities;
+//                                                    nodeEntities.resize(10);
+//                                                    int cnt2 = app.asset[app.mpInstancesMap[nodeClone].assetName]->getEntitiesByName(nodeGltfName.c_str(), nodeEntities.data(), 10);
+//                                                    if(cnt2 > 0 ){
+//                                                        if(app.mpTransformManager->hasComponent(nodeEntities[nodeIndex])){
+//                                                            auto nodeTM = app.mpTransformManager->getInstance(nodeEntities[nodeIndex]);
+//                                                            app.mpTransformManager->setParent(nodeTM, parentTM);
+//                                                            parentSet = true;
+//                                                        }
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+//
+//                                    }
+//                                }
+//                                //last resort
+//                                if(!parentSet && (app.mpInstancesMap.find(cloneName) == app.mpInstancesMap.end() || app.mpInstancesMap[cloneName].index == -1)){
+//                                    bool foundAsset = false;
+//                                    auto assetItaretor = app.asset.begin();
+//                                    while(!foundAsset && assetItaretor != app.asset.end()){
+//                                        if(assetItaretor->second->getEntitiesByName(subNodeName.c_str(), nullptr, 10) + assetItaretor->second->getEntitiesByName(parentNodeName.c_str(), nullptr, 10)){
+//                                            foundAsset = true;
+//                                        }
+//                                        else{
+//                                            assetItaretor++;
+//                                        }
+//                                    }
+//                                    if(foundAsset && app.instanceCount[assetItaretor->first] < 10){
+//                                        int cnt = app.instanceCount[assetItaretor->first]++;
+//                                        app.mpInstancesMap[cloneName] = InstanceData(cnt, assetItaretor->first, app.instances[assetItaretor->first][cnt]);
+//                                        auto root = app.instances[assetItaretor->first][cnt]->getRoot();
+//                                        app.names->addComponent(root);
+//                                        auto nameInstance = app.names->getInstance(root);
+//                                        if(nameInstance)
+//                                          app.names->setName(nameInstance, cloneName.c_str());
+//                                    }
+//                                    else{
+//
+//                                        if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
+//                                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
+//                                            parentSet = true;
+//                                        }
+//                                    }
+//                                }
+//                                if(!parentSet && app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() && app.mpInstancesMap[cloneName].index > -1){
+//                                    int entitiyIndex = app.mpInstancesMap[cloneName].index;
+//
+//                                    int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.instanceCount[app.mpInstancesMap[cloneName].assetName]);
+//                                    if(cnt > 0 ){
+//                                        auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
+//                                        if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
+//                                            auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
+//                                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], entityTransform);
+//                                            parentSet = true;
+//                                        }
+//
+//                                    }
+//                                    else if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
+//                                        app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
+//                                        parentSet = true;
+//                                    }
+//
+//                                }
+//                            }
+//                        if(!parentSet && app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
+//
+//                            if(glftNodeName.find_first_of(".") != std::string::npos){
+//                                std::string nodeClone = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+//                                std::string nodeGltfName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+//                                if(app.mpInstancesMap.find(nodeClone) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeClone].index > -1){
+//                                    int nodeIndex = app.mpInstancesMap[nodeClone].index;
+//                                    std::vector<utils::Entity> nodeEntities;
+//                                    nodeEntities.resize(10);
+//                                    int cnt2 = app.asset[app.mpInstancesMap[nodeClone].assetName]->getEntitiesByName(nodeGltfName.c_str(), nodeEntities.data(), 10);
+//                                    if(cnt2 > 0 ){
+//                                        if(app.mpTransformManager->hasComponent(nodeEntities[nodeIndex])){
+//                                            auto nodeTM = app.mpTransformManager->getInstance(nodeEntities[nodeIndex]);
+//                                            app.mpTransformManager->setParent(nodeTM, app.mpTransforms[parentNodeName]);
+//                                            parentSet = true;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            if(!parentSet)
+//                                app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
+//                        }
                         
 					}
 						break;
@@ -1414,6 +1541,8 @@ bool ape::FilamentApplicationPlugin::attach2NewAnimationNode(const std::string& 
         {
             if (newParentNode != currentParentNode)
             {
+                if(node->getName().find("Hinge_1.Box") != std::string::npos)
+                    APE_LOG_DEBUG("ASDASDSDAASDD");
                 node->setParentNode(newParentNode);
                 return true;
             }
@@ -1754,7 +1883,8 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                 {
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::SHOW)
                     {
-                        APE_LOG_DEBUG("SHOW: " << node->getName());
+                        if(node->getName().find("Hinge_1.Box") != std::string::npos)
+                            APE_LOG_DEBUG("ASDASDSDAASDD");
                         if(!attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
                         {
                             std::string parentsName = "";
@@ -1786,8 +1916,6 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     }
                     else if (mParsedAnimations[i].type == animationQuicktype::EventType::HIDE)
                     {
-                        APE_LOG_DEBUG("HIDE: " << node->getName());
-                        //node->setChildrenVisibility(false);
                         node->setVisible(false);
                     }
                     else if (mParsedAnimations[i].type == animationQuicktype::EventType::ATTACH)
