@@ -1888,6 +1888,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                 node->setInitalState();
                 node->setOwner(mpCoreConfig->getNetworkGUID());
                 std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                if(app.updateinfo.inSinlgePlayer)
                 if (auto spaghettiNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiNode"+std::to_string(uuid.count()), true, mpCoreConfig->getNetworkGUID()).lock())
                 {
                     mSpaghettiNodeNames.insert(spaghettiNode->getName());

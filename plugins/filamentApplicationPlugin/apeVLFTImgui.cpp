@@ -54,7 +54,7 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     mPreChosenRoomName = "";
     auto networkConfig =mpCoreConfig->getNetworkConfig();
     if(networkConfig.userName.find("VLFTAdmin") != std::string::npos){
-        if(networkConfig.userName.find("_VLFTTeacher")){
+        if(networkConfig.userName.find("_VLFTTeacher")!= std::string::npos){
             mpUpdateInfo->isAdmin = true;
         }
         else{
