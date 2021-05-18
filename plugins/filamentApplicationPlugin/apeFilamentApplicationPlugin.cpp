@@ -823,7 +823,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     {
                                         app.mpScene->removeEntities(app.asset[geometryName]->getEntities(), app.asset[geometryName]->getEntityCount());
                                     }
-                                    if(fileName.find("Warehouse") == std::string::npos)
+                                    if(fileName.find("Warehouse") != std::string::npos)
                                         app.instances[geometryName].resize(1);
                                     else
                                         app.instances[geometryName].resize(10);
