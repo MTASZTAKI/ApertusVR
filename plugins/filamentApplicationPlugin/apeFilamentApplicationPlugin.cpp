@@ -747,7 +747,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
 				{
-                    if(fileName.find("Warehouse") == std::string::npos)
 					if (fileName.find_first_of(".") != std::string::npos)
 					{
 						std::string fileExtension = fileName.substr(fileName.find_last_of("."));
@@ -824,8 +823,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     {
                                         app.mpScene->removeEntities(app.asset[geometryName]->getEntities(), app.asset[geometryName]->getEntityCount());
                                     }
-                                    app.instances[geometryName].resize(1);
-                                    app.instances[geometryName].resize(10);
+                                    if(fileName.find("Warehouse") == std::string::npos)
+                                        app.instances[geometryName].resize(1);
+                                    else
+                                        app.instances[geometryName].resize(10);
                                     app.instanceCount[geometryName] = 0;
                                     app.asset[geometryName] = app.loader->createInstancedAsset(buffer.data(), buffer.size(), app.instances[geometryName].data(), app.instances[geometryName].size());
                                     buffer.clear();
