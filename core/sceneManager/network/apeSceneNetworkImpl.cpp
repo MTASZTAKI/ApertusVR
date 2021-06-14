@@ -43,6 +43,7 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 	mNATServerAddress.FromString("");
 	mParticipantType = mpCoreConfig->getNetworkConfig().participant;
 	mReplicaHostGuid = RakNet::RakNetGUID();
+	mIsStreamHost = false;
 
 	ape::NetworkConfig::LobbyConfig lobbyServerConfig = mpCoreConfig->getNetworkConfig().lobbyConfig;
 	mLobbyServerIP = lobbyServerConfig.ip;
@@ -541,7 +542,7 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 					if (mpReplicaManager3->GetAllConnectionDownloadsCompleted() == true)
 					{
 						APE_LOG_DEBUG("Completed all remote downloads");
-						if (!mIsStreamHost && mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::Selected::LAN)
+						if (!mIsStreamHost && mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::Selected::LAN && mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP.length())
 						{
 							APE_LOG_DEBUG("Try to connect to stream host: " << mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP << "|" << mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort);
 							RakNet::ConnectionAttemptResult car = mpRakStreamPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.c_str()), 0, 0);
