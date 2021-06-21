@@ -309,6 +309,7 @@ std::weak_ptr<RakNet::ReplicaManager3> ape::SceneNetworkImpl::getReplicaManager(
 	return mpReplicaManager3;
 }
 
+
 ape::SceneNetwork::ParticipantType ape::SceneNetworkImpl::getParticipantType()
 {
 	return mParticipantType;
@@ -318,6 +319,23 @@ bool ape::SceneNetworkImpl::isRoomRunning(std::string roomName)
 {
 	std::string guid;
 	return mpLobbyManager->getSessionHostGuid(roomName, guid);
+}
+
+void ape::SceneNetworkImpl::connectToLanHost(std::string ip, std::string port)
+{
+	mParticipantType = ape::SceneNetwork::GUEST;
+	mIsReplicaHost = false;
+	init();
+	APE_LOG_DEBUG("Try to connect to host IP: " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaIP << " port: " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort);
+	RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort.c_str()), 0, 0);
+	if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
+	{
+		APE_LOG_DEBUG("Failed connect call to " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort << ". Code=" << car);
+	}
+	else
+	{
+		APE_LOG_DEBUG("Connection attempt was successful to remote system " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort);
+	}
 }
 
 void ape::SceneNetworkImpl::connectToRoom(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations)

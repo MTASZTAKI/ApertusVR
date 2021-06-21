@@ -157,6 +157,8 @@ namespace ape
 		bool isReplicaHost();
 
 		std::weak_ptr<RakNet::ReplicaManager3>  getReplicaManager();
+
+		void connectToLanHost(std::string ip, std::string port);
 	};
 }
 
