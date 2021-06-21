@@ -326,8 +326,8 @@ void ape::SceneNetworkImpl::connectToLanHost(std::string ip, std::string port)
 	mParticipantType = ape::SceneNetwork::GUEST;
 	mIsReplicaHost = false;
 	init();
-	APE_LOG_DEBUG("Try to connect to host IP: " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaIP << " port: " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort);
-	RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaIP.c_str(), atoi(mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort.c_str()), 0, 0);
+	APE_LOG_DEBUG("Try to connect to host IP: " << ip << " port: " << port);
+	RakNet::ConnectionAttemptResult car = mpRakReplicaPeer->Connect(ip.c_str(), atoi(port.c_str()), 0, 0);
 	if (car != RakNet::CONNECTION_ATTEMPT_STARTED)
 	{
 		APE_LOG_DEBUG("Failed connect call to " << mpCoreConfig->getNetworkConfig().lanConfig.hostReplicaPort << ". Code=" << car);
