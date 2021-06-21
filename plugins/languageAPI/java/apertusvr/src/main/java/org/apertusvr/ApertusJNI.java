@@ -296,6 +296,7 @@ public final class ApertusJNI {
     static native int getSceneNetworkParticipantType();
     static native boolean isSceneNetworkRoomRunning(String roomName);
     static native void connectSceneNetworkToRoom(String roomName);
+    static native void connectSceneNetworkToLanHost(String hostIP, String hostPort);
     static native String getSceneNetworkCurrentRoomName();
 
     /* --- SceneManager --- */

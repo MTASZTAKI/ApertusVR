@@ -22,6 +22,10 @@ public class apeSceneNetwork {
     public static void connectToRoom(String roomName) {
         ApertusJNI.connectSceneNetworkToRoom(roomName);
     }
+	
+	public static void connectToLanHost(String hostIP, String hostPort) {
+        ApertusJNI.connectSceneNetworkToLanHost(hostIP, hostPort);
+    }
 
     public static String getCurrentRoomName() {
         return ApertusJNI.getSceneNetworkCurrentRoomName();

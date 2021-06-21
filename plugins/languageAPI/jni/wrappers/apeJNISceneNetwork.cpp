@@ -25,6 +25,20 @@ Java_org_apertusvr_ApertusJNI_isSceneNetworkRoomRunning(JNIEnv *env, jclass claz
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_org_apertusvr_ApertusJNI_connectSceneNetworkToLanHost(JNIEnv *env, jclass clazz, jstring host_ip, jstring host_port)
+{
+    auto mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
+    const char* hostIP = env->GetStringUTFChars(host_ip,nullptr);
+	const char* hostPort = env->GetStringUTFChars(host_port,nullptr);
+
+    mpSceneNetwork->connectToLanHost(hostIP, hostPort);
+
+    env->ReleaseStringUTFChars(host_ip, hostIP);
+	env->ReleaseStringUTFChars(host_port, hostPort);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_org_apertusvr_ApertusJNI_connectSceneNetworkToRoom(JNIEnv *env, jclass clazz, jstring room_name)
 {
     auto mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
