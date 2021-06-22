@@ -447,7 +447,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 				//  TODO: create a textGeometry
 			}
 		} else if (tagName == 'scene') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(currentlyLoadingFileName, true);
+			var nodeObj = ape.nbind.JsBindManager().createNode(currentlyLoadingFileName, false);
 			nodeLevel++;
 			nodeObj.setScale(new ape.nbind.Vector3(currentlyLoadingScale[0], currentlyLoadingScale[1], currentlyLoadingScale[2]));
 			nodeObj.setOrientation(new ape.nbind.Quaternion(currentlyLoadingOrientation[0], currentlyLoadingOrientation[1], currentlyLoadingOrientation[2], currentlyLoadingOrientation[3]));
@@ -612,7 +612,11 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 		    }
 		}*/
 		else if (tagName == 'transform') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, true);
+			var isReplicate = false;
+			if(itemName.indexOf("Rotational") != -1){
+				isReplicate = true;
+			}
+			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, isReplicate);
 			nodeLevel++;
 
 			var position = self.parseTranslationAttr(currentItem);
@@ -629,7 +633,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 
 			return nodeObj;
 		} else if (tagName == 'group') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, true);
+			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, false);
 			nodeLevel++;
 
 			if (parentNodeObj) {
@@ -640,7 +644,7 @@ exports.parseItem = function(parentItem, currentItem, parentNodeObj) {
 			log('groupChanged: ' + groupNodeObj.getName());
 			return nodeObj;
 		} else if (tagName == 'switch') {
-			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, true);
+			var nodeObj = ape.nbind.JsBindManager().createNode(itemName, false);
 			nodeLevel++;
 
 			if (parentNodeObj) {
