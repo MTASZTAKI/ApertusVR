@@ -151,77 +151,77 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
             bool exists = false;
             size_t ind = 0;
             std::string gltfName = "";
-            for(auto gltfModel :mGltfModel){
-                std::weak_ptr<std::vector<quicktype::Representation>> representations = asset.get_representations();
-                if (representations.lock())
-                {
-                    for (auto representation : *asset.get_representations())
-                    {
-                        std::string fileName= representation.get_file();
-                        std::string gltfNodeName = fileName.substr(fileName.find_last_of(".")+1);
-                        while (!exists && ind < gltfModel.second.nodes.size()) {
-                            //std::string nodeName = gltfNodeName.substr(gltfNodeName.find_last_of(".")+1);
-                            if (gltfModel.second.nodes[ind++].name == gltfNodeName)
-                                exists = true;
-                        }
-                        if(exists){
-                            gltfName = gltfModel.first;
-                            break;
-                        }
-                    }
-                }
-                else{
-                    while (!exists && ind < gltfModel.second.nodes.size()) {
-                        std::string nodeName = asset.get_id().substr(asset.get_id().find_last_of(".")+1);
-                        if (gltfModel.second.nodes[ind++].name == nodeName)
-                            exists = true;
-                    }
-                    if(exists){
-                        gltfName = gltfModel.first;
-                        break;
-                    }
-                }
-            }
+            //for(auto gltfModel :mGltfModel){
+            //    std::weak_ptr<std::vector<quicktype::Representation>> representations = asset.get_representations();
+            //    if (representations.lock())
+            //    {
+            //        for (auto representation : *asset.get_representations())
+            //        {
+            //            std::string fileName= representation.get_file();
+            //            std::string gltfNodeName = fileName.substr(fileName.find_last_of(".")+1);
+            //            while (!exists && ind < gltfModel.second.nodes.size()) {
+            //                //std::string nodeName = gltfNodeName.substr(gltfNodeName.find_last_of(".")+1);
+            //                if (gltfModel.second.nodes[ind++].name == gltfNodeName)
+            //                    exists = true;
+            //            }
+            //            if(exists){
+            //                gltfName = gltfModel.first;
+            //                break;
+            //            }
+            //        }
+            //    }
+            //    else{
+            //        while (!exists && ind < gltfModel.second.nodes.size()) {
+            //            std::string nodeName = asset.get_id().substr(asset.get_id().find_last_of(".")+1);
+            //            if (gltfModel.second.nodes[ind++].name == nodeName)
+            //                exists = true;
+            //        }
+            //        if(exists){
+            //            gltfName = gltfModel.first;
+            //            break;
+            //        }
+            //    }
+            //}
 		
             if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
             {
-                if (exists) {
-                    std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
-                    if(positionWP.lock()){
-                        std::vector<double> pos = *asset.get_position();
-                        if(pos[0] != 0 && pos[1] != 0 && pos[2] != 0){
-                            ape::Vector3 apePosition(pos[0], pos[1], pos[2]);
-                            //APE_LOG_DEBUG("apePosition: " << apePosition.toString());
-                            node->setPosition(apePosition);
-                        }
-                    }
-                    else{
-                        std::vector<double> position = mGltfModel[gltfName].nodes[ind-1].matrix;
-                        if (position.size() == 16)
-                        {
-                            ape::Vector3 apePosition(position[12], position[13], position[14]);
-                            //APE_LOG_DEBUG("apePosition: " << apePosition.toString());
-                            node->setPosition(apePosition);
-                        }
-                    }
-                    std::weak_ptr<std::vector<double>> orientationWP = asset.get_rotation();
-                    if (orientationWP.lock())
-                    {
-                        std::vector<double> ori = *asset.get_rotation();
-                        ape::Quaternion apeOrientation(ori[0], ori[1], ori[2], ori[3]);
-                        //APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
-                        node->setOrientation(apeOrientation);
-                    }
-                    else{
-                        std::vector<double> orientation = mGltfModel[gltfName].nodes[ind-1].rotation;
-                        if (orientation.size() == 4)
-                        {
-                            ape::Quaternion apeOrientation(orientation[0], orientation[1], orientation[2], orientation[3]);
-                            //APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
-                            node->setOrientation(apeOrientation);
-                        }
-                    }
-                }
+                //if (exists) {
+                //    std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
+                //    if(positionWP.lock()){
+                //        std::vector<double> pos = *asset.get_position();
+                //        if(pos[0] != 0 && pos[1] != 0 && pos[2] != 0){
+                //            ape::Vector3 apePosition(pos[0], pos[1], pos[2]);
+                //            //APE_LOG_DEBUG("apePosition: " << apePosition.toString());
+                //            node->setPosition(apePosition);
+                //        }
+                //    }
+                //    else{
+                //        std::vector<double> position = mGltfModel[gltfName].nodes[ind-1].matrix;
+                //        if (position.size() == 16)
+                //        {
+                //            ape::Vector3 apePosition(position[12], position[13], position[14]);
+                //            APE_LOG_DEBUG("apePosition: " << apePosition.toString());
+                //            node->setPosition(apePosition);
+                //        }
+                //    }
+                //    std::weak_ptr<std::vector<double>> orientationWP = asset.get_rotation();
+                //    if (orientationWP.lock())
+                //    {
+                //        std::vector<double> ori = *asset.get_rotation();
+                //        ape::Quaternion apeOrientation(ori[0], ori[1], ori[2], ori[3]);
+                //        //APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
+                //        node->setOrientation(apeOrientation);
+                //    }
+                //    else{
+                //        std::vector<double> orientation = mGltfModel[gltfName].nodes[ind-1].rotation;
+                //        if (orientation.size() == 4)
+                //        {
+                //            ape::Quaternion apeOrientation(orientation[0], orientation[1], orientation[2], orientation[3]);
+                //            APE_LOG_DEBUG("apeOrientation: " << apeOrientation.toString());
+                //            node->setOrientation(apeOrientation);
+                //        }
+                //    }
+                //}
                 std::weak_ptr<std::string> model = asset.get_model();
                 if (model.lock())
                 {

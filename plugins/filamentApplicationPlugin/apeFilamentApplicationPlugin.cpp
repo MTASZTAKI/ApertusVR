@@ -180,7 +180,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                             if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end())
                             {
-                                APE_LOG_DEBUG("both TM "<< nodeName << " parent: " << parentNodeName);
                                 app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
                             }
                             if(parentNodeName.find_first_of(".") != std::string::npos){
@@ -197,7 +196,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     if(cnt2 > 0 ){
                                         if(app.mpTransformManager->hasComponent(parentEntities[parentIndex])){
                                             auto parentTM = app.mpTransformManager->getInstance(parentEntities[parentIndex]);
-                                            APE_LOG_DEBUG("node TM "<< nodeName << " parent: " << parentNodeName);
                                             app.mpTransformManager->setParent(app.mpTransforms[nodeName], parentTM);
                                         }
                                     }
@@ -221,7 +219,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         auto nodeTM = app.mpTransformManager->getInstance(nodeEntities[nodeIndex]);
                                         if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end())
                                         {
-                                            APE_LOG_DEBUG("PARENT TM "<< nodeName << " parent: "<<parentNodeName);
                                             app.mpTransformManager->setParent(nodeTM, app.mpTransforms[parentNodeName]);
                                         }
                                         if(parentNodeName.find_first_of("." ) != std::string::npos){
@@ -237,7 +234,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                                 int cnt = app.asset[app.mpInstancesMap[parentClone].assetName]->getEntitiesByName(parentGltfName.c_str(), parentEntities.data(), 10);
                                                 if(cnt > 0 ){
                                                     if(app.mpTransformManager->hasComponent(parentEntities[parentIndex])){
-                                                        APE_LOG_DEBUG("NEITHER TM "<< nodeName << " parent: " << parentNodeName);
                                                         auto parentTM = app.mpTransformManager->getInstance(parentEntities[parentIndex]);
                                                         app.mpTransformManager->setParent(nodeTM, parentTM);
                                                     }
@@ -495,11 +491,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						break;
 					case ape::Event::Type::NODE_CHILDVISIBILITY:
                         {
-                            if(nodeName.find("Hinge") != std::string::npos){
-                                APE_LOG_DEBUG("VISIBILITY: " << node->getName());
-                            }
                             if(node->getChildrenVisibility() && nodeName.find(mUserName) == std::string::npos){
-                                APE_LOG_DEBUG("SHOW: " << node->getName());
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     if(auto root = instance->getRoot())
@@ -549,7 +541,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                             else{
-                                APE_LOG_DEBUG("HIDE: " << node->getName());
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end()  && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     if(app.mpScene->hasEntity(instance->getEntities()[0])){
@@ -603,7 +594,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					case ape::Event::Type::NODE_VISIBILITY:
                         {
                             if(node->isVisible()){
-                                APE_LOG_DEBUG("SHOW: " << node->getName());
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     auto root = instance->getRoot();
@@ -646,7 +636,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         APE_LOG_DEBUG("Get entitites: " << cloneName << " " << subNodeName << " " << cnt);
                                         if(cnt > 0 )
                                         {
-                                            APE_LOG_DEBUG("SHOWN: " << node->getName());
                                             if(!app.mpScene->hasEntity(entities[entitiyIndex]))
                                                 app.mpScene->addEntity(entities[entitiyIndex]);
                                         }
@@ -655,7 +644,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 
                             }
                             else{
-                                APE_LOG_DEBUG("HIDE: " << node->getName());
                                 if(app.mpInstancesMap.find(nodeName) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeName].index > -1){
                                     auto instance = app.mpInstancesMap[nodeName].mpInstance;
                                     if(app.mpScene->hasEntity(instance->getEntities()[0])){
@@ -672,7 +660,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                             int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
                                             if(cnt > 0 )
                                             {
-                                                APE_LOG_DEBUG("HID: " << node->getName());
                                                 if(app.mpScene->hasEntity(entities[entitiyIndex]))
                                                     app.mpScene->remove(entities[entitiyIndex]);
                                             }
@@ -703,7 +690,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			}
 			else if (event.type == ape::Event::Type::NODE_DELETE)
 			{
-                APE_LOG_DEBUG("Destroy node" << event.subjectName);
                 if(app.mpEntities.find(event.subjectName) != app.mpEntities.end()){
                     if(app.mpScene->hasEntity(app.mpEntities[event.subjectName])){
                         app.mpScene->remove(app.mpEntities[event.subjectName]);
@@ -747,6 +733,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
 				{
+                    //if(fileName.find("Warehouse") == std::string::npos)
 					if (fileName.find_first_of(".") != std::string::npos)
 					{
 						std::string fileExtension = fileName.substr(fileName.find_last_of("."));
@@ -823,10 +810,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     {
                                         app.mpScene->removeEntities(app.asset[geometryName]->getEntities(), app.asset[geometryName]->getEntityCount());
                                     }
-                                    if(fileName.find("Warehouse") != std::string::npos)
-                                        app.instances[geometryName].resize(1);
-                                    else
+                                    if (fileName.find("Warehouse") == std::string::npos)
                                         app.instances[geometryName].resize(10);
+                                    else
+                                        app.instances[geometryName].resize(1);
                                     app.instanceCount[geometryName] = 0;
                                     app.asset[geometryName] = app.loader->createInstancedAsset(buffer.data(), buffer.size(), app.instances[geometryName].data(), app.instances[geometryName].size());
                                     buffer.clear();
@@ -899,7 +886,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			else if (event.type == ape::Event::Type::GEOMETRY_FILE_DELETE)
 			{
                 //Destroy not needed
-                APE_LOG_DEBUG("Destroy asset" << event.subjectName);
                 if(app.resourceLoader)
                     delete app.resourceLoader;
                 app.resourceLoader = nullptr;
@@ -1051,7 +1037,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 {
                     case ape::Event::Type::GEOMETRY_CLONE_CREATE:
                     {
-                        APE_LOG_DEBUG("CLONE CREATE " << event.subjectName);
                         app.mpInstancesMap[event.subjectName];
                     }
                     break;
@@ -1063,7 +1048,27 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
                             if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
                                 if(node->getChildrenVisibility() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
+                                    auto rcm = app.mpRenderableManager;
+                                    auto entities = app.mpInstancesMap[event.subjectName].mpInstance->getEntities();
+                                    for (int i = 0; i < app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount(); i++) {
+                                        auto rm = rcm->getInstance(entities[i]);
+                                        if (sourceFileName.find("Warehouse") == std::string::npos)
+                                        {
+                                            if (rcm->hasComponent(entities[i])) {
+                                                rcm->setCastShadows(rm, true);
+                                                rcm->setReceiveShadows(rm, true);
+                                            }
+                                        }
+                                        else {
+                                            if (rcm->hasComponent(entities[i])) {
+                                                rcm->setCastShadows(rm, false);
+                                                rcm->setReceiveShadows(rm, true);
+                                            }
+                                        }
+                                        
+                                    }
                                     app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+
                                 }
                                 else if(parentNodeName.find(mUserName+mPostUserName) != std::string::npos){
                                     app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
@@ -1096,7 +1101,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if(!exists)
                             nameOfGeometry = sourceGeometryName;
                         if(app.instances.find(nameOfGeometry) != app.instances.end() && app.mpInstancesMap[event.subjectName].index == -1){
-                            APE_LOG_DEBUG(event.subjectName <<" CLONE SOURCE " << nameOfGeometry);
                             if(app.instanceCount[nameOfGeometry] < 10){
                                 int cnt = app.instanceCount[nameOfGeometry]++;
                                 app.mpInstancesMap[event.subjectName] =  InstanceData(cnt, nameOfGeometry, app.instances[nameOfGeometry][cnt]);
@@ -1147,7 +1151,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
             }
             else if(event.type == ape::Event::Type::GEOMETRY_CLONE_DELETE)
             {
-                APE_LOG_DEBUG("Destroy clone" << event.subjectName);
                 
                 if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() >= 0){
                     auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
@@ -1187,9 +1190,26 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         break;
                         case ape::Event::Type::GEOMETRY_TEXT_CAPTION:{
-                            if(name != mUserName+mPostUserName+"_text"){
+                            if(name != mUserName+mPostUserName+"_text" && name.find("_text") != std::string::npos){
                                 app.updateinfo.newMessage.push_back(textGeometry->getCaption());
                                 app.updateinfo.newChatMessage = true;
+                            }
+                            else if(name != mUserName + mPostUserName + "_StateText" && name.find("_StateText") != std::string::npos) {
+                                //name != mUserName + mPostUserName + "_StateText" &&
+                                std::vector<std::string> words;
+                                size_t start;
+                                size_t end = 0;
+                                auto str = textGeometry->getCaption();
+                                while ((start = str.find_first_not_of(" ", end)) != std::string::npos)
+                                {
+                                    end = str.find(" ", start);
+                                    words.push_back(str.substr(start, end - start));
+                                }
+                                if (words.size() == 3) {
+                                    app.updateinfo.stateOfObjects.push_back(words[0]);
+                                    app.updateinfo.nameOfState.push_back(words[1]);
+                                    app.updateinfo.timeOfState.push_back(std::stof(words[2]));
+                                }
                             }
                         }
                         break;
@@ -1566,8 +1586,6 @@ bool ape::FilamentApplicationPlugin::attach2NewAnimationNode(const std::string& 
         {
             if (newParentNode != currentParentNode)
             {
-                if(node->getName().find("Hinge_1.Box") != std::string::npos)
-                    APE_LOG_DEBUG("ASDASDSDAASDD");
                 node->setParentNode(newParentNode);
                 return true;
             }
@@ -1909,8 +1927,6 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                 {
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::SHOW)
                     {
-                        if(node->getName().find("Hinge_1.Box") != std::string::npos)
-                            APE_LOG_DEBUG("ASDASDSDAASDD");
                         if(!attach2NewAnimationNode(mParsedAnimations[i].parentNodeName, node))
                         {
                             std::string parentsName = "";
@@ -1968,6 +1984,12 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     }
                     else if (mParsedAnimations[i].type == animationQuicktype::EventType::STATE)
                     {
+                        if (auto stateEntity = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_StateText").lock()))
+                        {
+                            std::stringstream posStream;
+                            posStream << std::fixed << std::setprecision(1) << (mParsedAnimations[i].time / 1000.0);
+                            stateEntity->setCaption(mParsedAnimations[i].descr+" "+ mParsedAnimations[i].nodeName+" "+ posStream.str());
+                        }
                         app.updateinfo.stateOfObjects.push_back(mParsedAnimations[i].descr);
                         app.updateinfo.nameOfState.push_back(mParsedAnimations[i].nodeName);
                         app.updateinfo.timeOfState.push_back(mParsedAnimations[i].time/1000.0);
@@ -2077,7 +2099,6 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
             {
                 if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
                 {
-                    APE_LOG_DEBUG("revertToInitalState: " << animatedNodeName);
                     auto prevParent = node->getParentNode();
                     node->revertToInitalState();
                     std::string parentsName = "";
@@ -2089,7 +2110,6 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     if(parentsName == ""){
                         if(prevParent.lock())
                             node->setParentNode(prevParent);
-                        APE_LOG_DEBUG("DETACH "<< node->getName());
                         node->detachFromParentNode();
                     }
                         
@@ -2367,8 +2387,9 @@ void ape::FilamentApplicationPlugin::Step()
             app.mpScene->addEntities(app.logo->getEntities(), app.logo->getEntityCount());
         }
        
-        
         auto ibl = FilamentApp::get().getIBL();
+        ibl->~IBL();
+      /*  auto ibl = FilamentApp::get().getIBL();
         if (ibl) {
             using namespace filament::math;
             filament::math::float3 const* sh3 = ibl->getSphericalHarmonics();
@@ -2387,7 +2408,9 @@ void ape::FilamentApplicationPlugin::Step()
                     app.indirectLight->setRotation(mat3f::rotation(app.IblRotation, float3{ 0, 1, 0 }));
                 }
             }
-        }
+        }*/
+       
+
     };
 
    
@@ -2410,13 +2433,11 @@ void ape::FilamentApplicationPlugin::Step()
         
         app.currentCamera = 0;
         auto mNode = mpSceneManager->createNode("VLFTlogo", false, mpCoreConfig->getNetworkGUID());
-        APE_LOG_DEBUG("LOGO CREATE");
         if (auto node = mNode.lock())
         {
             auto logoName = "VLTF_3Dlogo";
             if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(logoName, ape::Entity::GEOMETRY_FILE, false, mpCoreConfig->getNetworkGUID()).lock()))
             {
-                APE_LOG_DEBUG("LOGO CLONE");
                 gltfMeshFile->setFileName("../assets/models/logo/VLTF_3Dlogo.gltf");
                 gltfMeshFile->setParentNode(node);
             }
@@ -2434,6 +2455,18 @@ void ape::FilamentApplicationPlugin::Step()
             node->setVisible(true);
         }
         app.setManpipulator = true;
+        app.sunLight = utils::EntityManager::get().create();
+        LightManager::Builder(LightManager::Type::SUN)
+            .color(filament::Color::toLinear<ACCURATE>(sRGBColor(0.98f, 0.92f, 0.89f)))
+            .intensity(550000)
+            .direction({ 0.7, -1, -0.8 })
+            .sunAngularRadius(1.9f)
+            .castShadows(true)
+            .build(*app.engine, app.sunLight);
+        app.mpScene->addEntity(app.sunLight);
+        auto ibl = FilamentApp::get().getIBL();
+        auto indirectLight = ibl->getIndirectLight();
+        indirectLight->setIntensity(25000);
     };
 
     auto cleanup = [this](Engine* engine, View*, Scene*) {
@@ -2635,7 +2668,6 @@ void ape::FilamentApplicationPlugin::Step()
                         std::string gltfName = fileName.substr(fileName.find_last_of("#")+1);
                         std::string cloneName = idName.substr(0,idName.find_last_of("."));
                         idGltfMap[idName] = cloneName+"."+gltfName;
-                        APE_LOG_DEBUG(idName << " IDMAP: " <<idGltfMap[idName]);
                     }
                 }
                 
@@ -2678,6 +2710,14 @@ void ape::FilamentApplicationPlugin::Step()
                     textGeometry->setCaption(app.updateinfo.userName+" logged in");
                 }
             }
+
+            auto stateTextNode = mpSceneManager->createNode(mUserName + mPostUserName + "_StateNode", true, mpCoreConfig->getNetworkGUID());
+            if (auto textNode = stateTextNode.lock()) {
+                if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName + mPostUserName + "_StateText", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
+                    textGeometry->setParentNode(userTextNode);
+                }
+            }
+
             initAnimations();
             app.updateinfo.setUpRoom = false;
         }
@@ -3004,10 +3044,10 @@ void ape::FilamentApplicationPlugin::Step()
                 app.viewOptions.cameraAperture,
                 1.0f / app.viewOptions.cameraSpeed,
                 app.viewOptions.cameraISO);
-        auto ibl = FilamentApp::get().getIBL();
+       /* auto ibl = FilamentApp::get().getIBL();
         if (ibl) {
             ibl->getSkybox()->setLayerMask(0xff, app.viewOptions.skyboxEnabled ? 0xff : 0x00);
-        }
+        }*/
         
         view->setColorGrading(nullptr);
         processEventDoubleQueue();
@@ -3456,7 +3496,6 @@ void ape::FilamentApplicationPlugin::Step()
             {
                 if (auto node = mpSceneManager->getNode(animatedNodeName).lock())
                 {
-                    APE_LOG_DEBUG("revertToInitalState: " << animatedNodeName);
                     auto prevParent = node->getParentNode();
                     node->revertToInitalState();
                     std::string parentsName = "";
@@ -3468,7 +3507,6 @@ void ape::FilamentApplicationPlugin::Step()
                     if(parentsName == ""){
                         if(prevParent.lock())
                             node->setParentNode(prevParent);
-                        APE_LOG_DEBUG("DETACH "<< node->getName());
                         node->detachFromParentNode();
                     }
                        
@@ -3571,6 +3609,7 @@ void ape::FilamentApplicationPlugin::Step()
     });
     app.config.cameraMode = filament::camutils::Mode::FREE_FLIGHT;
     app.config.title = "VLFT gamification";
+    //app.config.iblDirectory = "";
     filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput);
     
     APE_LOG_FUNC_LEAVE();

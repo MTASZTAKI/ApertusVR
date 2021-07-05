@@ -785,6 +785,7 @@ void ape::VLFTImgui::leftPanelGUI() {
     ImGui::SetNextWindowPos(ImVec2(width-135, 0));
     ImGui::SetNextWindowSize(ImVec2(130, 120));
     ImGui::Begin("Record", nullptr);
+    ImGui::Checkbox("show headers", &mpMainMenuInfo.showStates);
     if (ImGui::Button("Screenshot", ImVec2(115, 25))) {
         mpUpdateInfo->takeScreenshot = true;
     }
@@ -950,7 +951,7 @@ void ape::VLFTImgui::animationPanelGUI(){
         mpUpdateInfo->IsPauseClicked = false;
         //mpUpdateInfo->pauseTime = 0;
     }
-    ImGui::Checkbox("show headers", &mpMainMenuInfo.showStates);
+    //ImGui::Checkbox("show headers", &mpMainMenuInfo.showStates);
     ImGui::End();
 }
 
