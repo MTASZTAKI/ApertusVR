@@ -170,10 +170,9 @@ RakNet::RM3SerializationResult ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsExportMesh);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsSubMeshesMerged);
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mRunningAnimation.c_str()));
-
 	APE_LOG_DEBUG("mIsAnimationRunning " << std::to_string(mIsAnimationRunning));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsAnimationRunning);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mRunningAnimation.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -214,19 +213,21 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsSubMeshesMerged))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
 
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsAnimationRunning))
+	{
+		APE_LOG_DEBUG("DESERIALIZE isAnimationRunning");
+		if (mIsAnimationRunning)
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
+		else
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));
+	}
+
 	RakNet::RakString runningAnimation;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, runningAnimation))
 	{	
 		mRunningAnimation = runningAnimation.C_String();	
 	}
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsAnimationRunning))
-	{
-		APE_LOG_DEBUG("DESERIALIZE isAnimationRunning");
-		if(mIsAnimationRunning)
-			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
-		else
-			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));
-	}
+	
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 
