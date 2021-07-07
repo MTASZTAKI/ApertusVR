@@ -57,13 +57,13 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mIsPauseClicked = false;
     mIsStopClicked = false;
     mIsPlayRunning = false;
+    mIsAllSpaghettiVisible = false;
     mAnimatedNodeNames = std::set<std::string>();
     mAttachedUsers = std::vector<ape::NodeWeakPtr>();
     mSpaghettiNodeNames = std::set<std::string>();
     mstateNodeNames = std::set<std::string>();
     mstateGeometryNames = std::set<std::string>();
     mSpaghettiNodeNames = std::set<std::string>();
-    mIsAllSpaghettiVisible = false;
     mStudents = std::vector<ape::NodeWeakPtr>();
     mStudentsMovementLoggingFile = std::ofstream();
     mKeyMap = std::map<std::string, SDL_Scancode>();
@@ -509,7 +509,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         app.mpScene->addEntities(children.data(), cnt);
                                     }
                                 }
-                                else if(app.spaghettiLines.find(nodeName) != app.spaghettiLines.end()){
+                                if(app.spaghettiLines.find(nodeName) != app.spaghettiLines.end()){
                                     if(!app.mpScene->hasEntity(app.spaghettiLines[nodeName].lineEntity))
                                         app.mpScene->addEntity(app.spaghettiLines[nodeName].lineEntity);
                                 }
@@ -557,7 +557,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         app.mpScene->removeEntities(children.data(), cnt);
                                     }
                                 }
-                                else if(app.spaghettiLines.find(nodeName) != app.spaghettiLines.end()){
+                                if(app.spaghettiLines.find(nodeName) != app.spaghettiLines.end()){
                                     if(app.mpScene->hasEntity(app.spaghettiLines[nodeName].lineEntity))
                                         app.mpScene->remove(app.spaghettiLines[nodeName].lineEntity);
                                 }
@@ -641,6 +641,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         }
                                     }
                                 }
+                                if (app.spaghettiLines.find(nodeName) != app.spaghettiLines.end()) {
+                                    if (!app.mpScene->hasEntity(app.spaghettiLines[nodeName].lineEntity))
+                                        app.mpScene->addEntity(app.spaghettiLines[nodeName].lineEntity);
+                                }
                                 
                             }
                             else{
@@ -664,6 +668,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                                     app.mpScene->remove(entities[entitiyIndex]);
                                             }
                                         }
+                                    }
+                                    if (app.spaghettiLines.find(nodeName) != app.spaghettiLines.end()) {
+                                        if (app.mpScene->hasEntity(app.spaghettiLines[nodeName].lineEntity))
+                                            app.mpScene->remove(app.spaghettiLines[nodeName].lineEntity);
                                     }
                                     
                                 }
@@ -731,6 +739,17 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     }
 				}
 					break;
+                case ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION:
+                {
+                    auto runningAnimation = geometryFile->getRunningAnimation();
+                }
+                break;
+                case ape::Event::Type::GEOMETRY_FILE_STOPANIMATION:
+                {
+                    auto runningAnimation = geometryFile->getRunningAnimation();
+                    geometryName;
+                }
+                break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
 				{
                     //if(fileName.find("Warehouse") == std::string::npos)
@@ -1609,7 +1628,7 @@ void ape::FilamentApplicationPlugin::initAnimations(){
     mAnimations = nlohmann::json::parse(apeVLFTAnimationPlayerPluginConfigFile);
     animationQuicktype::Context* context = &mAnimations.get_mutable_context();
     if (context)
-        mIsAllSpaghettiVisible = mAnimations.get_context().get_asset_trail();
+        app.updateinfo.spaghettiVisible = mAnimations.get_context().get_asset_trail();
     for (const auto& node : mAnimations.get_nodes())
     {
         mAnimatedNodeNames.insert(node.get_name());
@@ -1861,12 +1880,14 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
             indices.push_back(indices[indices.size()-1]+1);
             indices.push_back(-1);
             spaghettiLineSection->setParameters(coords, indices, color);
-            if (!mIsAllSpaghettiVisible)
+            if (!app.updateinfo.spaghettiVisible)
             {
                 spaghettiNode->setChildrenVisibility(false);
+                spaghettiNode->setVisible(false);
             }
             else{
                 spaghettiNode->setChildrenVisibility(true);
+                spaghettiNode->setVisible(true);
             }
             spaghettiSectionName = spaghettiLineSection->getName();
         }
@@ -1880,12 +1901,14 @@ void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& st
             ape::Color color(1, 0, 0);
             spagetthiLineSection->setParameters(coordinates, indices, color);            
             //mspaghettiLineNames[node->getName()+"_spaghettiEntity"] = spaghettiNode->getName();
-            if (!mIsAllSpaghettiVisible)
+            if (!app.updateinfo.spaghettiVisible)
             {
                 spaghettiNode->setChildrenVisibility(false);
+                spaghettiNode->setVisible(false);
             }
             else{
                 spaghettiNode->setChildrenVisibility(true);
+                spaghettiNode->setVisible(true);
             }
             mspaghettiLineNames[spagetthiLineSection->getName()]=spaghettiNode->getName();
             spaghettiSectionName = spagetthiLineSection->getName();
@@ -2093,6 +2116,16 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     mPlayedAnimations++;
                 }
             }
+            if (mIsAllSpaghettiVisible != app.updateinfo.spaghettiVisible) {
+                mIsAllSpaghettiVisible = app.updateinfo.spaghettiVisible;
+                for (auto spg : mSpaghettiNodeNames) {
+                    if (auto spgNode = mpSceneManager->getNode(spg).lock()) {
+                        spgNode->setChildrenVisibility(app.updateinfo.spaghettiVisible);
+                        spgNode->setVisible(app.updateinfo.spaghettiVisible);
+                    }
+                }
+            }
+            
         }
         if(mParsedAnimations.size() == mPlayedAnimations){
             for (auto animatedNodeName : mAnimatedNodeNames)
@@ -3320,6 +3353,9 @@ void ape::FilamentApplicationPlugin::Step()
                                 }
                                 app.animationData.mouseDown = true;
                                 app.animationData.animatedClick = false;
+                                if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                                    userGeometry->playAnimation("3");
+                                }
                                 app.animationData.mouseStartTime = now;
                                 break;
                             }
@@ -3384,16 +3420,27 @@ void ape::FilamentApplicationPlugin::Step()
                                         if(app.animationData.keyCurrentAnimation == 0){
                                             auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
                                             animator->applyAnimation(0, 0);
+                                            if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                                                userGeometry->stopAnimation("0");
+                                            }
                                         }
                                         app.animationData.keyCurrentAnimation = 1;
-                                        
+                                        if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                                            userGeometry->playAnimation("1");
+                                        }
                                     }
                                     else{
                                         if(app.animationData.keyCurrentAnimation == 1){
                                             auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
                                             animator->applyAnimation(1, 0);
+                                            if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                                                userGeometry->stopAnimation("1");
+                                            }
                                         }
                                         app.animationData.keyCurrentAnimation = 0;
+                                        if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                                            userGeometry->playAnimation("0");
+                                        }
                                     }
                                     app.animationData.keyDown[keyCode] = true;
                                 }
@@ -3573,6 +3620,9 @@ void ape::FilamentApplicationPlugin::Step()
                 }else{
                     app.animationData.animatedClick = true;
                     animator->applyAnimation(3, 0);
+                    if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                        userGeometry->stopAnimation("3");
+                    }
                 }
             }
             if(!app.animationData.animatedKey){
@@ -3580,6 +3630,12 @@ void ape::FilamentApplicationPlugin::Step()
                 if(!app.animationData.keysDown){
                     app.animationData.animatedKey = true;
                     animator->applyAnimation(3, 0);
+                    if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                        userGeometry->stopAnimation("3");
+                    }
+                    if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                        userGeometry->stopAnimation("1");
+                    }
                 }
                 else{
                     auto cnt = animator->getAnimationCount();

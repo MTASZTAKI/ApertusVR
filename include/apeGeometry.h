@@ -59,6 +59,10 @@ namespace ape
 
 		bool mIntersectingEnabled;
 
+		std::string mRunningAnimation;
+
+		bool mIsAnimationRunning;
+
 		std::vector<ape::EntityWeakPtr> mIntersections;
 
 
@@ -77,7 +81,6 @@ namespace ape
 		{
 			return mIntersections;
 		};
-
 	};
 }
 

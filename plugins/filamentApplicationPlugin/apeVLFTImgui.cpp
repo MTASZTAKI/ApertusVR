@@ -926,6 +926,7 @@ void ape::VLFTImgui::animationPanelGUI(){
     }
     if(mpUpdateInfo->IsPlayClicked)
         playText = "Pause";
+    ImGui::Checkbox("Show spaghetti", &mpUpdateInfo->spaghettiVisible);
     if(ImGui::Button(playText.c_str(),ImVec2(100,25)))
     {
         if (!mpUpdateInfo->isPlayRunning)

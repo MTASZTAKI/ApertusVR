@@ -142,6 +142,7 @@ struct updateInfo{
     bool initRun = false;
     bool resourcesUpdated = false;
     bool inSinlgePlayer = false;
+    bool spaghettiVisible = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;

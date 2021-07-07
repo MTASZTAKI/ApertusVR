@@ -65,6 +65,12 @@ namespace ape
 		virtual void setUnitScale(float unitScale) = 0;
 
 		virtual float getUnitScale() = 0;
+
+		virtual void playAnimation(std::string animationID) = 0;
+
+		virtual void stopAnimation(std::string animationID) = 0;
+
+		virtual std::string getRunningAnimation() = 0;
 	};
 }
 
