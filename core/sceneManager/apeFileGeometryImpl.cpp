@@ -170,7 +170,7 @@ RakNet::RM3SerializationResult ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mMaterialName.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsExportMesh);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsSubMeshesMerged);
-	APE_LOG_DEBUG("mIsAnimationRunning " << std::to_string(mIsAnimationRunning));
+	//APE_LOG_DEBUG("mIsAnimationRunning " << std::to_string(mIsAnimationRunning));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsAnimationRunning);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mRunningAnimation.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
@@ -215,7 +215,7 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsAnimationRunning))
 	{
-		APE_LOG_DEBUG("DESERIALIZE isAnimationRunning");
+		//APE_LOG_DEBUG("DESERIALIZE isAnimationRunning");
 		if (mIsAnimationRunning)
 			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
 		else
