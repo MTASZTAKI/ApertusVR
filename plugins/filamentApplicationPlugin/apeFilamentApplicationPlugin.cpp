@@ -741,13 +741,39 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					break;
                 case ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION:
                 {
-                    auto runningAnimation = geometryFile->getRunningAnimation();
+                    if (parentNodeName != mUserName + mPostUserName) {
+                        app.playerAnimations[parentNodeName];
+                        auto runningAnimation = std::stoi(geometryFile->getRunningAnimation());
+                        if (runningAnimation == 3) {
+                            app.playerAnimations[parentNodeName].mouseDown = true;
+                            app.playerAnimations[parentNodeName].animatedClick = false;
+                            app.playerAnimations[parentNodeName].mouseStartTime = app.currentTime;
+                        }
+                        else if (runningAnimation == 0 || runningAnimation == 1) {
+                            if (app.playerAnimations[parentNodeName].animatedKey) {
+                                app.playerAnimations[parentNodeName].keyStartTime = app.currentTime;
+                                app.playerAnimations[parentNodeName].animatedKey = false;
+                                app.playerAnimations[parentNodeName].keysDown = true;
+                                app.playerAnimations[parentNodeName].keyCurrentAnimation = runningAnimation;
+                            }
+
+                        }
+
+                    }
                 }
                 break;
                 case ape::Event::Type::GEOMETRY_FILE_STOPANIMATION:
                 {
-                    auto runningAnimation = geometryFile->getRunningAnimation();
-                    geometryName;
+                    if (parentNodeName != mUserName + mPostUserName) {
+                        auto runningAnimation = std::stoi(geometryFile->getRunningAnimation());
+                        if (runningAnimation == 3) {
+                            app.playerAnimations[parentNodeName].mouseDown = false;
+                        }
+                        else if (runningAnimation == 0 || runningAnimation == 1) {
+                            app.playerAnimations[parentNodeName].keysDown = false;
+                        }
+                    }
+                    
                 }
                 break;
 				case ape::Event::Type::GEOMETRY_FILE_FILENAME:
@@ -3529,6 +3555,7 @@ void ape::FilamentApplicationPlugin::Step()
     };
 
     auto animate = [this](Engine* engine, View* view, double now) {
+        
         if(now - logoAnimTime > 0.02 && !app.updateinfo.inRoom){
             //float diff = (now - logoAnimTime)/0.02;
             if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
@@ -3605,6 +3632,54 @@ void ape::FilamentApplicationPlugin::Step()
         else if(app.updateinfo.IsPlayClicked){
             playAnimations(now);
         }
+        for (auto &playerAnim : app.playerAnimations) {
+            if (app.updateinfo.inRoom && app.mpInstancesMap.find(playerAnim.first) != app.mpInstancesMap.end()) {
+                auto animator = app.mpInstancesMap[playerAnim.first].mpInstance->getAnimator();
+                double timeDiff;
+                if (!playerAnim.second.animatedClick) {
+                    timeDiff = now - playerAnim.second.mouseStartTime;
+
+                    if (timeDiff > animator->getAnimationDuration(3) && playerAnim.second.mouseDown) {
+                        while (timeDiff > animator->getAnimationDuration(3)) {
+                            playerAnim.second.mouseStartTime += animator->getAnimationDuration(3);
+                            timeDiff = now - playerAnim.second.mouseStartTime;
+                        }
+                    }
+                    if (timeDiff <= animator->getAnimationDuration(3)) {
+                        animator->applyAnimation(3, timeDiff);
+                    }
+                    else {
+                        playerAnim.second.animatedClick = true;
+                        animator->applyAnimation(3, 0);
+                    }
+                }
+                if (!playerAnim.second.animatedKey) {
+                    timeDiff = now - playerAnim.second.keyStartTime;
+                   /* if (!playerAnim.second.keysDown) {
+                        playerAnim.second.animatedKey = true;
+                        animator->applyAnimation(3, 0);
+                    }*/
+                        auto cnt = animator->getAnimationCount();
+                        if (playerAnim.second.keyCurrentAnimation <= cnt) {
+                            if (timeDiff > animator->getAnimationDuration(playerAnim.second.keyCurrentAnimation) && playerAnim.second.keysDown) {
+                                while (timeDiff > animator->getAnimationDuration(playerAnim.second.keyCurrentAnimation)) {
+                                    playerAnim.second.keyStartTime += animator->getAnimationDuration(playerAnim.second.keyCurrentAnimation);
+                                    timeDiff = now - playerAnim.second.keyStartTime;
+                                }
+                            }
+                            if (timeDiff <= animator->getAnimationDuration(playerAnim.second.keyCurrentAnimation)) {
+                                animator->applyAnimation(playerAnim.second.keyCurrentAnimation, timeDiff);
+                            }
+                            else {
+                                playerAnim.second.animatedKey = true;
+                                animator->applyAnimation(3, 0);
+                            }
+                        }
+
+                }
+                animator->updateBoneMatrices();
+            }
+        }
         if(app.updateinfo.inRoom && app.instances.find(mUserName+mPostUserName+"characterModel") != app.instances.end()){
             auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
             double timeDiff;
@@ -3653,7 +3728,7 @@ void ape::FilamentApplicationPlugin::Step()
             }
             animator->updateBoneMatrices();
         }
-       
+        app.currentTime = now;
     };
     
     FilamentApp& filamentApp = FilamentApp::get();

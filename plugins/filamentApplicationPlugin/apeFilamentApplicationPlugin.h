@@ -180,6 +180,18 @@ struct SpaghettiLines{
     }
 };
 
+struct AnimationData {
+    bool animatedClick = true;
+    bool mouseDown = false;
+    double mouseStartTime = 0.0;
+
+    bool animatedKey = true;
+    std::map<SDL_Scancode, bool> keyDown;
+    bool keysDown = false;
+    double keyStartTime= 0.0;
+    int keyCurrentAnimation = -1;
+};
+
 struct App {
     Engine* engine;
     SimpleViewer* viewer;
@@ -250,18 +262,10 @@ struct App {
         Material* groundMaterial;
     } scene;
     
-    struct AnimationData{
-        bool animatedClick;
-        bool mouseDown;
-        double mouseStartTime;
-        
-        bool animatedKey;
-        std::map<SDL_Scancode,bool> keyDown;
-        bool keysDown;
-        double keyStartTime;
-        int keyCurrentAnimation;
-    } animationData;
+    AnimationData animationData;
     
+    std::map<std::string, AnimationData> playerAnimations;
+
     std::map<std::string, SpaghettiLines> spaghettiLines;
     
     filament::VertexBuffer* boxVertexBuffer;
@@ -273,6 +277,8 @@ struct App {
     ColorGradingSettings lastColorGradingOptions = { 0 };
 
     ColorGrading* colorGrading = nullptr;
+
+    double currentTime = 0.0;
 
     float rangePlot[1024 * 3];
     float curvePlot[1024 * 3];
