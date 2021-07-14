@@ -387,6 +387,16 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                         float divider = 1.0;
                         filament::math::mat4f filamentTransform;
+                        if (app.worldMap.playerTriangles.find(nodeName) != app.worldMap.playerTriangles.end()) {
+                            auto cam = app.mainCamera->getPosition();
+                            if (abs(cam.x - nodePosition.getX()) < 25 && abs(cam.y - nodePosition.getY()) < 25) {
+                                auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
+                                auto playerTransform = app.mpTransformManager->getTransform(playerTM);
+                                playerTransform[3][0] = (cam.x - nodePosition.getX())/2000;
+                                playerTransform[3][1] = (cam.y - nodePosition.getY())/2000;
+                                app.mpTransformManager->setTransform(playerTM, playerTransform);
+                            }
+                        }
                         if((pos != std::string::npos || pos2 != std::string::npos) && nodeName.find(mUserName+mPostUserName) == std::string::npos){
                                 filamentTransform = filament::math::mat4f(
                                     nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
@@ -394,6 +404,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
                                     nodePosition.getX()/divider, nodePosition.getY()/divider+0.45, nodePosition.getZ()/divider, nodeTransforms[3][3]);
                                 app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+
+                               
                         }
                         else if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                             filamentTransform = filament::math::mat4f(
@@ -1179,6 +1191,26 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                   if(nameInstance)
                                     app.names->setName(nameInstance, event.subjectName.c_str());
 
+                            }
+                            if (nameOfGeometry.find("characterModel") != std::string::npos) {
+                                app.worldMap.playerTriangles[event.subjectName] = EntityManager::get().create();
+                                RenderableManager::Builder(1)
+                                    .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+                                    .material(0, app.worldMap.mapMaterial->getDefaultInstance())
+                                    .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.playerVertexBuffer, app.worldMap.playerIndexBuffer, 0, 3)
+                                    .culling(true)
+                                    .receiveShadows(false)
+                                    .castShadows(false)
+                                    .build(*app.engine, app.worldMap.playerTriangles[event.subjectName]);
+                                app.mpScene->addEntity(app.worldMap.playerTriangles[event.subjectName]);
+                                auto mapTM = app.mpTransformManager->getInstance(app.worldMap.mapReferencePoint);
+                                auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[event.subjectName]);
+                                app.mpTransformManager->setParent(playerTM, mapTM);
+                               /* auto playerTransform = app.mpTransformManager->getTransform(playerTM);
+                                playerTransform[3][0] = 0.0125;
+                                playerTransform[3][1] = -0.0125;
+                                playerTransform[3][2] = 0.0001;
+                                app.mpTransformManager->setTransform(playerTM, playerTransform);*/
                             }
                         }
                         else if(app.instances.find(nameOfGeometry) == app.instances.end()){
@@ -2777,7 +2809,103 @@ void ape::FilamentApplicationPlugin::Step()
                 }
             }
 
+            app.worldMap.mapVertexBuffer = VertexBuffer::Builder()
+                .vertexCount(4)
+                .bufferCount(1)
+                .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3, 0, 16)
+                .attribute(VertexAttribute::COLOR, 0, VertexBuffer::AttributeType::UBYTE4, 12, 16)
+                .normalized(VertexAttribute::COLOR)
+                .build(*engine);
+            app.worldMap.mapVertexBuffer->setBufferAt(*engine, 0,
+                VertexBuffer::BufferDescriptor(app.worldMap.mapVertices, 64, nullptr));
+            app.worldMap.mapIndexBuffer = IndexBuffer::Builder()
+                .indexCount(6)
+                .bufferType(IndexBuffer::IndexType::USHORT)
+                .build(*engine);
+            app.worldMap.mapIndexBuffer->setBuffer(*engine,
+                IndexBuffer::BufferDescriptor(app.worldMap.mapIndices, 12, nullptr));
+            app.worldMap.mapMaterial = filament::Material::Builder()
+                .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
+                .build(*engine);
+            app.worldMap.playerMap = EntityManager::get().create();
+            RenderableManager::Builder(1)
+                .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+                .material(0, app.worldMap.mapMaterial->getDefaultInstance())
+                .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
+                .culling(true)
+                .receiveShadows(false)
+                .castShadows(false)
+                .build(*engine, app.worldMap.playerMap);
+            app.mpScene->addEntity(app.worldMap.playerMap);
+
+            auto camEntity = app.mainCamera->getEntity();
+            auto camTM = app.mpTransformManager->getInstance(camEntity);
+            auto mapTM = app.mpTransformManager->getInstance(app.worldMap.playerMap);
+            app.mpTransformManager->setParent(mapTM, camTM);
+            auto mapTransform = app.mpTransformManager->getTransform(mapTM);
+            mapTransform[3][0] = 0.0433;
+            mapTransform[3][1] = 0.0423;
+            mapTransform[3][2] = -0.10015;
+            app.mpTransformManager->setTransform(mapTM, mapTransform);
+
+
+            auto vb = VertexBuffer::Builder()
+                .vertexCount(1)
+                .bufferCount(1)
+                .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3, 0, 16)
+                .attribute(VertexAttribute::COLOR, 0, VertexBuffer::AttributeType::UBYTE4, 12, 16)
+                .normalized(VertexAttribute::COLOR)
+                .build(*engine);
+            LineVertex rfPoint[1] = { { {0,0,0}, 0xffff0000u } };
+            vb->setBufferAt(*engine, 0,
+                VertexBuffer::BufferDescriptor(rfPoint, 16, nullptr));
+            auto ib = IndexBuffer::Builder()
+                .indexCount(6)
+                .bufferType(IndexBuffer::IndexType::USHORT)
+                .build(*engine);
+            uint16_t rfIndices[1] = { 0 };
+            ib->setBuffer(*engine,
+                IndexBuffer::BufferDescriptor(rfIndices, 2, nullptr));
+            app.worldMap.mapMaterial = filament::Material::Builder()
+                .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
+                .build(*engine);
+
+           app.worldMap.mapReferencePoint = EntityManager::get().create();
+           RenderableManager::Builder(1)
+                .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+                .material(0, app.worldMap.mapMaterial->getDefaultInstance())
+                .geometry(0, RenderableManager::PrimitiveType::POINTS, vb, ib, 0, 1)
+                .culling(true)
+                .receiveShadows(false)
+                .castShadows(false)
+                .build(*engine, app.worldMap.mapReferencePoint);
+            app.mpScene->addEntity(app.worldMap.mapReferencePoint);
+            auto rfTM = app.mpTransformManager->getInstance(app.worldMap.mapReferencePoint);
+            app.mpTransformManager->setParent(rfTM, mapTM);
+            auto rfTransform = app.mpTransformManager->getTransform(rfTM);
+            rfTransform[3][0] = 0.0125;
+            rfTransform[3][1] = -0.0125;
+            rfTransform[3][2] = 0.0001;
+            app.mpTransformManager->setTransform(rfTM, rfTransform);
+
             initAnimations();
+            
+            app.worldMap.playerVertexBuffer = VertexBuffer::Builder()
+                .vertexCount(3)
+                .bufferCount(1)
+                .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3, 0, 16)
+                .attribute(VertexAttribute::COLOR, 0, VertexBuffer::AttributeType::UBYTE4, 12, 16)
+                .normalized(VertexAttribute::COLOR)
+                .build(*engine);
+            app.worldMap.playerVertexBuffer->setBufferAt(*engine, 0,
+                VertexBuffer::BufferDescriptor(app.worldMap.playerVertices, 48, nullptr));
+            app.worldMap.playerIndexBuffer = IndexBuffer::Builder()
+                .indexCount(3)
+                .bufferType(IndexBuffer::IndexType::USHORT)
+                .build(*engine);
+            app.worldMap.playerIndexBuffer->setBuffer(*engine,
+                IndexBuffer::BufferDescriptor(app.worldMap.playerIndices, 6, nullptr));
+
             app.updateinfo.setUpRoom = false;
         }
         FilamentApp::get().setSidebarWidth(0);

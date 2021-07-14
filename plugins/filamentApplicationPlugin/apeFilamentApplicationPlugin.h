@@ -154,6 +154,11 @@ struct LineVertex{
     uint32_t color;
 };
 
+struct Vertex {
+    float2 pos;
+    uint32_t color;
+};
+
 struct SpaghettiLines{
     filament::VertexBuffer* lineVertexBuffer;
     filament::IndexBuffer* lineIndexBuffer;
@@ -261,6 +266,34 @@ struct App {
         IndexBuffer* groundIndexBuffer;
         Material* groundMaterial;
     } scene;
+
+    struct WorldMap {
+        std::vector<filament::math::float2> playerPositions[10];
+        std::map<std::string, utils::Entity> playerTriangles;
+        std::vector<uint32_t> playerColors[10];
+        LineVertex mapVertices[4] = {
+            {{0, 0, 0}, 0xffaaaaaau},
+            {{0.025,-0.025, 0}, 0xffaaaaaau},
+            {{0,-0.025, 0}, 0xffaaaaaau},
+            {{0.025, 0, 0}, 0xffaaaaaau},
+        };
+
+        LineVertex playerVertices[3] = {
+            {{0, 0, 0}, 0xff0000ffu },
+            {{0.0012,-0.00208, 0}, 0xff0000ffu },
+            {{-0.0012,-0.00208, 0}, 0xff0000ffu},
+        };
+
+        uint16_t mapIndices[6] = {0,1,2,0,3,1};
+        uint16_t playerIndices[3] = { 0,1,2 };
+        filament::Material* mapMaterial;
+        Entity playerMap;
+        Entity mapReferencePoint;
+        filament::VertexBuffer* mapVertexBuffer;
+        filament::IndexBuffer* mapIndexBuffer;
+        filament::VertexBuffer* playerVertexBuffer;
+        filament::IndexBuffer* playerIndexBuffer;
+    } worldMap;
     
     AnimationData animationData;
     
@@ -272,7 +305,8 @@ struct App {
     filament::IndexBuffer* boxIndexBuffer;
     float3* boxVerts = (float3*) malloc(sizeof(float3) * 8);
     uint32_t* boxInds = (uint32_t*) malloc(sizeof(uint32_t) * 24);
-    
+      
+
     // zero-initialized so that the first time through is always dirty.
     ColorGradingSettings lastColorGradingOptions = { 0 };
 

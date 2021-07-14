@@ -61,6 +61,7 @@ SOFTWARE.*/
 #include "apeIWater.h"
 #include "apeUserInputMacro.h"
 #include "apeVLFTSceneLoaderPluginConfig.h"
+#include "apeVLFTAnimationPlayerPluginConfig.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
 #include <imgui.h>
@@ -89,6 +90,7 @@ struct VLFTMainMenuInfo{
     bool multiPlayer = false;
     bool namesLoaded = false;
     bool inRoomGui = false;
+    bool uploadRoomGui = false;
     bool showStates = false;
     bool inSinglePlayerMode = false;
     float cameraSpeed = 1.0f;
@@ -185,6 +187,10 @@ namespace ape
         ape::ISceneManager* mpSceneManager;
         
         quicktype::Scene mScene;
+
+        std::string mUploadScene;
+
+        std::string mUploadAnimations;
         
         FILE* mApeVLFTSceneLoaderPluginConfigFile;
         
@@ -209,7 +215,7 @@ namespace ape
         void adminRoomGUI();
         
         void loginGUI();
-        
+
         void studentRoomGUI();
         
         void leftPanelGUI();
@@ -230,7 +236,7 @@ namespace ape
         
         bool curlData();
         
-        void uploadGUI();
+        void uploadGUI(int width, int height);
         
         void createStartButton(int width, int height);
         

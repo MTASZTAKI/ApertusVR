@@ -51,7 +51,8 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
     mpUpdateInfo = updateinfo;
     if(!mpUpdateInfo->resourcesUpdated)
         updateResources();
-    
+    mUploadScene = "";
+    mUploadAnimations = "";
     mPreChosenRoomName = "";
     auto networkConfig =mpCoreConfig->getNetworkConfig();
     if(networkConfig.userName.find("VLFTAdmin") != std::string::npos){
@@ -365,16 +366,69 @@ bool ape::VLFTImgui::curlData(){
     return false;
 }
 
-void ape::VLFTImgui::uploadGUI(){
-//    const float width = ImGui::GetIO().DisplaySize.x;
-//    const float height = ImGui::GetIO().DisplaySize.y;
-//    ImGui::SetNextWindowPos(ImVec2(width-300, 0),ImGuiCond_FirstUseEver);
-//    ImGui::SetNextWindowSize(ImVec2(300, 150), ImGuiCond_Once);
-//    ImGui::SetNextWindowSizeConstraints(ImVec2(150, 70), ImVec2(width, height));
-//    ImGui::Begin("Upload", nullptr);
-//    ImGui::Text("Enter the name of the room for uploading");
-//    ImGui::InputTextWithHint("", "write room name here", mpMainMenuInfo.uploadRoomName, IM_ARRAYSIZE(mpMainMenuInfo.uploadRoomName));
-//    ImGui::End();
+void ape::VLFTImgui::uploadGUI(int width, int height) {
+    ImGui::SetCursorPos(ImVec2(width/2-125, height/10));
+    ImGui::Text("Enter the name of the room for uploading");
+    static char uploadRoomName[255];
+    ImGui::InputText(u8"RoomName", uploadRoomName, IM_ARRAYSIZE(uploadRoomName));
+    char* filePath;
+    if (ImGui::Button("Chose a scene json file ", ImVec2(width / 7, height / 15))) {
+        nfdresult_t result = NFD_OpenDialog("json", NULL, &filePath);
+        std::ifstream file(filePath);
+        std::ostringstream tmp;
+        tmp << file.rdbuf();
+        mUploadScene = tmp.str();
+    }
+    if (mUploadScene != "") {
+        ImGui::SameLine(width / 7+25);
+        if (ImGui::Button("Upload", ImVec2(width / 8, height / 15))) {
+            CURL* curl;
+            CURLcode res;
+            std::string readBuffer;
+
+            curl = curl_easy_init();
+            if (curl) {
+                std::string postCommand = "command=uploadSceneJson_" + std::string(uploadRoomName) + "/:" + mUploadScene;
+                curl_easy_setopt(curl, CURLOPT_URL, "195.111.1.138:8888");
+                curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postCommand.c_str());
+                res = curl_easy_perform(curl);
+                curl_easy_cleanup(curl);
+                curlData();
+            }
+            mUploadScene = "";
+        }
+    }
+    if (ImGui::Button("Chose an animation json file ", ImVec2(width / 7, height / 15))) {
+        nfdresult_t result = NFD_OpenDialog("json", NULL, &filePath);
+        std::ifstream file(filePath);
+        std::ostringstream tmp;
+        tmp << file.rdbuf();
+        mUploadAnimations = tmp.str();
+    }
+    if (mUploadAnimations != "") {
+        ImGui::SameLine(width / 7 + 25);
+        if (ImGui::Button("Upload", ImVec2(width / 8, height / 15))) {
+            CURL* curl;
+            CURLcode res;
+            std::string readBuffer;
+
+            curl = curl_easy_init();
+            if (curl) {
+                std::string postCommand = "command=uploadAnimationJson_" + std::string(uploadRoomName) + "/:" + mUploadAnimations;
+                curl_easy_setopt(curl, CURLOPT_URL, "195.111.1.138:8888");
+                curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postCommand.c_str());
+                res = curl_easy_perform(curl);
+                curl_easy_cleanup(curl);
+                curlData();
+            }
+            mUploadAnimations = "";
+        }
+    }
+    ImGui::SetCursorPos(ImVec2(width - (width / 8 + 75), height - (height / 15 + 75)));
+    if (ImGui::Button("Back", ImVec2(width / 8, height / 15))) {
+        mpMainMenuInfo.uploadRoomGui = false;
+        mpMainMenuInfo.mainMenu = true;
+    }
 }
 
 void ape::VLFTImgui::studentRoomGUI(){
@@ -563,6 +617,13 @@ void ape::VLFTImgui::adminRoomGUI(){
             mpMainMenuInfo.namesLoaded = false;
             mpMainMenuInfo.settingsMenu = true;
         }
+        ImGui::SetCursorPos(ImVec2(width - width / 5-75, 10));
+        if (ImGui::Button("Upload room", ImVec2(width / 5, height / 12))) {
+            mpMainMenuInfo.adminMenu = false;
+            mpMainMenuInfo.mainMenu = false;
+            mpMainMenuInfo.namesLoaded = false;
+            mpMainMenuInfo.uploadRoomGui = true;
+        }
     }
     else if(mpMainMenuInfo.singlePlayer){
         if(!mpMainMenuInfo.namesLoaded){
@@ -622,6 +683,9 @@ void ape::VLFTImgui::adminRoomGUI(){
             mpMainMenuInfo.mainMenu = true;
             mpMainMenuInfo.adminMenu = false;
         }
+    }
+    else if (mpMainMenuInfo.uploadRoomGui) {
+        uploadGUI(width, height);
     }
     else if(mpMainMenuInfo.settingsMenu){
         mpMainMenuInfo.mainMenu = createSettingsMenu(width, height);
@@ -782,7 +846,7 @@ void ape::VLFTImgui::statePanelGUI(){
 void ape::VLFTImgui::leftPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-135, 0));
+    ImGui::SetNextWindowPos(ImVec2(width-135, height/3));
     ImGui::SetNextWindowSize(ImVec2(130, 120));
     ImGui::Begin("Record", nullptr);
     ImGui::Checkbox("show headers", &mpMainMenuInfo.showStates);
@@ -830,7 +894,7 @@ void ape::VLFTImgui::leftPanelGUI() {
 void ape::VLFTImgui::studentPanelGUI(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-135, 150));
+    ImGui::SetNextWindowPos(ImVec2(width-135, height/3+150));
     ImGui::SetNextWindowSize(ImVec2(135, 105), ImGuiCond_Once);
     ImGui::Begin("Student control", nullptr);
     if(mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode){
