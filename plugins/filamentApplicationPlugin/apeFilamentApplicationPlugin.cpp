@@ -389,11 +389,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         filament::math::mat4f filamentTransform;
                         if (app.worldMap.playerTriangles.find(nodeName) != app.worldMap.playerTriangles.end()) {
                             auto cam = app.mainCamera->getPosition();
-                            if (abs(cam.x - nodePosition.getX()) < 25 && abs(cam.y - nodePosition.getY()) < 25) {
+                            if (abs(cam.x - nodePosition.getX()) < 25 && abs(cam.z - nodePosition.getZ()) < 25) {
                                 auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
                                 auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                 playerTransform[3][0] = (cam.x - nodePosition.getX())/2000;
-                                playerTransform[3][1] = (cam.y - nodePosition.getY())/2000;
+                                playerTransform[3][1] = (cam.z - nodePosition.getZ())/2000;
                                 app.mpTransformManager->setTransform(playerTM, playerTransform);
                             }
                         }
