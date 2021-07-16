@@ -145,6 +145,7 @@ struct updateInfo{
     bool resourcesUpdated = false;
     bool inSinlgePlayer = false;
     bool spaghettiVisible = false;
+    bool isMapVisible = true;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;

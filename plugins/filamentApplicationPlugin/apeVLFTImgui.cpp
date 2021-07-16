@@ -389,7 +389,7 @@ void ape::VLFTImgui::uploadGUI(int width, int height) {
             curl = curl_easy_init();
             if (curl) {
                 std::string postCommand = "command=uploadSceneJson_" + std::string(uploadRoomName) + "/:" + mUploadScene;
-                curl_easy_setopt(curl, CURLOPT_URL, "195.111.1.138:8888");
+                curl_easy_setopt(curl, CURLOPT_URL, "195.111.2.95:4444");
                 curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postCommand.c_str());
                 res = curl_easy_perform(curl);
                 curl_easy_cleanup(curl);
@@ -415,7 +415,7 @@ void ape::VLFTImgui::uploadGUI(int width, int height) {
             curl = curl_easy_init();
             if (curl) {
                 std::string postCommand = "command=uploadAnimationJson_" + std::string(uploadRoomName) + "/:" + mUploadAnimations;
-                curl_easy_setopt(curl, CURLOPT_URL, "195.111.1.138:8888");
+                curl_easy_setopt(curl, CURLOPT_URL, "195.111.2.95:4444");
                 curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postCommand.c_str());
                 res = curl_easy_perform(curl);
                 curl_easy_cleanup(curl);
@@ -849,6 +849,7 @@ void ape::VLFTImgui::leftPanelGUI() {
     ImGui::SetNextWindowPos(ImVec2(width-135, height/3));
     ImGui::SetNextWindowSize(ImVec2(130, 120));
     ImGui::Begin("Record", nullptr);
+    ImGui::Checkbox("Show map", &mpUpdateInfo->isMapVisible);
     ImGui::Checkbox("show headers", &mpMainMenuInfo.showStates);
     if (ImGui::Button("Screenshot", ImVec2(115, 25))) {
         mpUpdateInfo->takeScreenshot = true;

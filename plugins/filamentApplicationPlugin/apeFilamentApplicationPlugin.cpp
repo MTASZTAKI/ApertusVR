@@ -387,15 +387,44 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                         float divider = 1.0;
                         filament::math::mat4f filamentTransform;
-                        if (app.worldMap.playerTriangles.find(nodeName) != app.worldMap.playerTriangles.end()) {
+                        if (app.worldMap.playerTriangles.find(nodeName) != app.worldMap.playerTriangles.end() && nodeName.find(mUserName + mPostUserName) == std::string::npos) {
                             auto cam = app.mainCamera->getPosition();
+                            auto camWorld = app.mainCamera->getModelMatrix();
                             if (abs(cam.x - nodePosition.getX()) < 25 && abs(cam.z - nodePosition.getZ()) < 25) {
+                                auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
                                 auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
                                 auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                 playerTransform[3][0] = (cam.x - nodePosition.getX())/2000;
                                 playerTransform[3][1] = (cam.z - nodePosition.getZ())/2000;
-                                app.mpTransformManager->setTransform(playerTM, playerTransform);
+                                double yaw = 0.0;
+                                if (nodeWorldTransforms[0][0] == 1.0f || nodeWorldTransforms[0][0] == -1.0f)
+                                {
+                                    yaw = atan2f(nodeWorldTransforms[0][2], nodeWorldTransforms[2][3]);
+                                }
+                                else
+                                {
+                                    yaw = atan2(-nodeWorldTransforms[2][0], nodeWorldTransforms[0][0]);
+                                }
+                                double camYaw = 0.0;
+                                if (camWorld[0][0] == 1.0f || camWorld[0][0] == -1.0f)
+                                {
+                                    camYaw = atan2f(camWorld[0][2], camWorld[2][3]);
+                                }
+                                else
+                                {
+                                    camYaw = atan2(-camWorld[2][0], camWorld[0][0]);
+                                }
+                                auto rot = math::mat4f::eulerYXZ(0, 0, yaw);
+                                auto newTransform = filament::math::mat4f(1, 0, 0, 0,
+                                                                          0, 1, 0, 0,
+                                                                          0, 0, 1, 0,
+                                    playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
+                                app.mpTransformManager->setTransform(playerTM, rot*newTransform);
+
                             }
+                        }
+                        else if (nodeName.find(mUserName + mPostUserName) != std::string::npos) {
+                            
                         }
                         if((pos != std::string::npos || pos2 != std::string::npos) && nodeName.find(mUserName+mPostUserName) == std::string::npos){
                                 filamentTransform = filament::math::mat4f(
@@ -2592,6 +2621,26 @@ void ape::FilamentApplicationPlugin::Step()
 
     auto gui = [this](Engine* engine, View* view) {
         //copy and edit apecoreJson to vfgame2
+        if (app.updateinfo.isMapVisible) {
+            if (!app.mpScene->hasEntity(app.worldMap.playerMap)) {
+                app.mpScene->addEntity(app.worldMap.playerMap);
+                for (auto &ply : app.worldMap.playerTriangles) {
+                    if (!app.mpScene->hasEntity(ply.second)) {
+                        app.mpScene->addEntity(ply.second);
+                    }
+                }
+            }
+        }
+        else {
+            if (app.mpScene->hasEntity(app.worldMap.playerMap)) {
+                app.mpScene->remove(app.worldMap.playerMap);
+                for (auto& ply : app.worldMap.playerTriangles) {
+                    if (app.mpScene->hasEntity(ply.second)) {
+                        app.mpScene->remove(ply.second);
+                    }
+                }
+            }
+        }
         auto& tm = engine->getTransformManager();
         auto& rm = engine->getRenderableManager();
         auto& lm = engine->getLightManager();
@@ -2828,9 +2877,10 @@ void ape::FilamentApplicationPlugin::Step()
                 .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
                 .build(*engine);
             app.worldMap.playerMap = EntityManager::get().create();
+            auto mat = app.worldMap.mapMaterial->getDefaultInstance();
             RenderableManager::Builder(1)
                 .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-                .material(0, app.worldMap.mapMaterial->getDefaultInstance())
+                .material(0, mat)
                 .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
                 .culling(true)
                 .receiveShadows(false)

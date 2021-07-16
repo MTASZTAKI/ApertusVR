@@ -272,10 +272,10 @@ struct App {
         std::map<std::string, utils::Entity> playerTriangles;
         std::vector<uint32_t> playerColors[10];
         LineVertex mapVertices[4] = {
-            {{0, 0, 0}, 0xffaaaaaau},
-            {{0.025,-0.025, 0}, 0xffaaaaaau},
-            {{0,-0.025, 0}, 0xffaaaaaau},
-            {{0.025, 0, 0}, 0xffaaaaaau},
+            {{0, 0, 0}, 0x11111111u},
+            {{0.025,-0.025, 0}, 0x11111111u},
+            {{0,-0.025, 0}, 0x11111111u},
+            {{0.025, 0, 0}, 0x11111111u},
         };
 
         LineVertex playerVertices[3] = {
