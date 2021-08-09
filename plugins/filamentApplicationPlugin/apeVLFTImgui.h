@@ -98,6 +98,7 @@ struct VLFTMainMenuInfo{
 struct updateInfo{
     std::map<std::string, std::string> keyLabel = std::map<std::string, std::string>();
     std::map<std::string, std::string> animationLinks = std::map<std::string, std::string>();
+    std::map<std::string, float[3]> playerNamePositions = std::map<std::string, float[3]>();
     std::vector<std::string> stateOfObjects = std::vector<std::string>();
     std::vector<std::string> nameOfState = std::vector<std::string>();
     std::vector<std::string> newMessage = std::vector<std::string>();
@@ -146,6 +147,8 @@ struct updateInfo{
     bool inSinlgePlayer = false;
     bool spaghettiVisible = false;
     bool isMapVisible = true;
+    bool lightOn = true;
+    bool changeLightDir = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;
@@ -155,6 +158,7 @@ struct updateInfo{
     unsigned long long ClickedBookmarkTime = 0;
     float TimeToSleepFactor = 1.0f;
     std::vector<float> timeOfState= std::vector<float>();
+    std::vector<float> lightDirection = { 0.7, -1, -0.8 };
 };
 
 namespace ape
@@ -175,6 +179,8 @@ namespace ape
 
 	private:
         
+        ImFont* usernameFont;
+
         VLFTMainMenuInfo mpMainMenuInfo;
         
         ape::ISceneNetwork* mpSceneNetwork;
@@ -234,6 +240,8 @@ namespace ape
         void manipulatorPanelGUI();
         
         void studentPanelGUI();
+
+        void drawUserNames();
         
         bool curlData();
         

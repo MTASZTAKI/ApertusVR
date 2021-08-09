@@ -213,6 +213,7 @@ struct App {
     std::map<std::string,std::vector<FilamentInstance*>> instances;
     std::map<std::string, int> instanceCount;
     std::map<std::string, std::vector<std::string>> geometryNameMap;
+    std::set<std::string> playerNamesToShow;
     
     std::map<std::string, InstanceData> mpInstancesMap;
     
@@ -278,14 +279,17 @@ struct App {
             {{0.025, 0, 0}, 0x11111111u},
         };
 
-        LineVertex playerVertices[3] = {
-            {{0, 0, 0}, 0xff0000ffu },
-            {{0.0012,-0.00208, 0}, 0xff0000ffu },
-            {{-0.0012,-0.00208, 0}, 0xff0000ffu},
+        LineVertex playerVertices[6] = {
+            {{0, 0.00104, 0}, 0xffff0000u },
+            {{0.0012,-0.00104, 0}, 0xff0000ffu },
+            {{-0.0012,-0.00104, 0}, 0xff0000ffu},
+            {{0, 0.00104, 0.00001}, 0xffff0000u },
+            {{0.0008,-0.00025, 0}, 0xffff0000u },
+            {{-0.0008,-0.00025, 0}, 0xffff0000u},
         };
 
         uint16_t mapIndices[6] = {0,1,2,0,3,1};
-        uint16_t playerIndices[3] = { 0,1,2 };
+        uint16_t playerIndices[6] = { 0,1,2,3,4,5 };
         filament::Material* mapMaterial;
         Entity playerMap;
         Entity mapReferencePoint;

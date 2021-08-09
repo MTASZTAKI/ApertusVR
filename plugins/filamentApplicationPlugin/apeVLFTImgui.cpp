@@ -558,7 +558,19 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
         mpUpdateInfo->changeKeyCode = "q";
         mpUpdateInfo->changedKey = true;
     }
-    
+
+    ImGui::Checkbox("Lights on", &mpUpdateInfo->lightOn);
+    if (ImGui::Button("Change light direction", ImVec2(150, 25))) {
+        mpUpdateInfo->changeLightDir = true;
+    }
+    ImGui::PushItemWidth(75);
+    ImGui::InputFloat("x", &mpUpdateInfo->lightDirection[0]);
+    ImGui::SameLine();
+    ImGui::InputFloat("y", &mpUpdateInfo->lightDirection[1]);
+    ImGui::SameLine();
+    ImGui::InputFloat("z", &mpUpdateInfo->lightDirection[2]);
+    ImGui::PopItemWidth();
+
     ImGui::SetCursorPos(ImVec2(0,height-(height/15+25)));
     if(mpUpdateInfo->leftRoom == false && mpUpdateInfo->inRoom){
         if(ImGui::Button("Leave room",ImVec2(width/8, height/15)))
@@ -807,6 +819,7 @@ void ape::VLFTImgui::update(){
                 statePanelGUI();
             }
             infoPanelGUI();
+            drawUserNames();
         }
     }
 }
@@ -846,8 +859,8 @@ void ape::VLFTImgui::statePanelGUI(){
 void ape::VLFTImgui::leftPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-135, height/3));
-    ImGui::SetNextWindowSize(ImVec2(130, 120));
+    ImGui::SetNextWindowPos(ImVec2(width-135, height/3-20));
+    ImGui::SetNextWindowSize(ImVec2(130, 170));
     ImGui::Begin("Record", nullptr);
     ImGui::Checkbox("Show map", &mpUpdateInfo->isMapVisible);
     ImGui::Checkbox("show headers", &mpMainMenuInfo.showStates);
@@ -920,6 +933,23 @@ void ape::VLFTImgui::studentPanelGUI(){
         }
     }
     ImGui::End();
+}
+
+void ape::VLFTImgui::drawUserNames()
+{
+    for (auto x : mpUpdateInfo->playerNamePositions) {
+        auto scale = x.second[2] > 0.6 ? x.second[2] : 0.6;
+        auto width = ImGui::CalcTextSize(x.first.c_str()).x * (scale+0.2);
+        auto height = ImGui::CalcTextSize(x.first.c_str()).y * (scale + 0.2);
+        ImGui::SetNextWindowPos(ImVec2(x.second[0]-width/2, x.second[1]));
+        ImGui::SetNextWindowSize(ImVec2(width*1.2, height));
+        ImGui::Begin(x.first.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar
+        | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoFocusOnAppearing);
+        ImGui::SetWindowFontScale(scale);
+        ImGui::Text(x.first.c_str());
+        ImGui::SetWindowFontScale(1);
+        ImGui::End();
+    }
 }
 
 void ape::VLFTImgui::infoPanelGUI() {
