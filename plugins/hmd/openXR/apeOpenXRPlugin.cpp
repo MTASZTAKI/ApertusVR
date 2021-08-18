@@ -25,7 +25,8 @@ ape::OpenXRPlugin::OpenXRPlugin()
 	mCameraRight = ape::CameraWeakPtr();
 	mOpenXRViews = std::vector<XrView>();
 	mOpenXRSwapchains = std::vector<XrSwapchain>();
-	mOpenXRSwapchainTextures = std::vector<XrSwapchainImageD3D11KHR>();
+	mOpenXRSwapchainDX11Textures = std::vector<XrSwapchainImageD3D11KHR>();
+	mOpenXRSwapchainOGLTextures = std::vector<XrSwapchainImageOpenGLKHR>();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -263,22 +264,35 @@ bool ape::OpenXRPlugin::openXRRenderLayer(XrTime predictedTime, std::vector<XrCo
 		{
 			if (auto manualTextureLeftEye = mManualTextureLeftEye.lock())
 			{
-				Microsoft::WRL::ComPtr<ID3D11Device> dev11;
-				Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
-				mOpenXRSwapchainTextures[textureID].texture->GetDevice(&dev11);
-				dev11->GetImmediateContext(&devcon11);
-				devcon11->CopyResource(mOpenXRSwapchainTextures[textureID].texture, (ID3D11Texture2D*)manualTextureLeftEye->getGraphicsApiID());
+				if (renderBackend == "DX11") {
+					Microsoft::WRL::ComPtr<ID3D11Device> dev11;
+					Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
+					mOpenXRSwapchainDX11Textures[textureID].texture->GetDevice(&dev11);
+					dev11->GetImmediateContext(&devcon11);
+					devcon11->CopyResource(mOpenXRSwapchainDX11Textures[textureID].texture, (ID3D11Texture2D*)manualTextureLeftEye->getGraphicsApiID());
+				}
+				else if (renderBackend == "OGL") {
+					manualTextureLeftEye->setGraphicsApiID((void*)textureID);
+					manualTextureLeftEye->setContextID((void*)wglGetCurrentContext());
+				}
+				
 			}
 		}
 		else
 		{
 			if (auto manualTextureRightEye = mManualTextureRightEye.lock())
 			{
-				Microsoft::WRL::ComPtr<ID3D11Device> dev11;
-				Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
-				mOpenXRSwapchainTextures[textureID].texture->GetDevice(&dev11);
-				dev11->GetImmediateContext(&devcon11);
-				devcon11->CopyResource(mOpenXRSwapchainTextures[textureID].texture, (ID3D11Texture2D*)manualTextureRightEye->getGraphicsApiID());
+				if (renderBackend == "DX11") {
+					Microsoft::WRL::ComPtr<ID3D11Device> dev11;
+					Microsoft::WRL::ComPtr<ID3D11DeviceContext> devcon11;
+					mOpenXRSwapchainDX11Textures[textureID].texture->GetDevice(&dev11);
+					dev11->GetImmediateContext(&devcon11);
+					devcon11->CopyResource(mOpenXRSwapchainDX11Textures[textureID].texture, (ID3D11Texture2D*)manualTextureRightEye->getGraphicsApiID());
+				}
+				else if (renderBackend == "OGL") {
+					manualTextureRightEye->setGraphicsApiID((void*)textureID);
+					manualTextureRightEye->setContextID((void*)wglGetCurrentContext());
+				}
 			}
 		}
 		XrSwapchainImageReleaseInfo release_info = { XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO };
@@ -351,11 +365,22 @@ void ape::OpenXRPlugin::eventCallBack(const ape::Event& event)
 void ape::OpenXRPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
+
+	std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeOpenXRPlugin.json";
+	auto mApeOpenXRConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
+	mOpenXRJson = nlohmann::json::parse(mApeOpenXRConfigFile);
+	renderBackend = mOpenXRJson.get_render_system();
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
-	APE_LOG_DEBUG("waiting for main window");
-	while (mpCoreConfig->getWindowConfig().handle == nullptr && mpCoreConfig->getWindowConfig().device == nullptr)
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	APE_LOG_DEBUG("main window was found");
+
+	//if (renderBackend == "DX11") {
+		APE_LOG_DEBUG("waiting for main window");
+		while (mpCoreConfig->getWindowConfig().handle == nullptr && mpCoreConfig->getWindowConfig().device == nullptr)
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		APE_LOG_DEBUG("main window was found");
+	//}
+	
+
+
 	APE_LOG_DEBUG("try to initialize openXR HMD");
 	uint32_t extension_count = 0;
 	openXRPreferredExtensions(extension_count, nullptr);
@@ -383,117 +408,239 @@ void ape::OpenXRPlugin::Init()
 	{
 		APE_LOG_DEBUG("xrGetSystem failed " << result);
 	}
-	XrGraphicsRequirementsD3D11KHR requirement = { XR_TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR };
-	result = mOpenXRExtensions.xrGetD3D11GraphicsRequirementsKHR(mOpenXRInstance, mOpenXRSystemID, &requirement);
-	if (XR_FAILED(result)) 
-	{
-		APE_LOG_DEBUG("xrGetD3D11GraphicsRequirementsKHR failed " << result);
-	}
-	uint32_t blend_count = 0;
-	std::vector<XrEnvironmentBlendMode> blend_modes;
-	result = xrEnumerateEnvironmentBlendModes(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, 0, &blend_count, nullptr);
-	blend_modes.resize(blend_count);
-	result = xrEnumerateEnvironmentBlendModes(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, blend_count, &blend_count, blend_modes.data());
-	if (XR_FAILED(result)) 
-	{
-		APE_LOG_DEBUG("xrEnumerateEnvironmentBlendModes failed " << result);
-	}
-	for (size_t i = 0; i < blend_count; i++) 
-	{
-		if (blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_ADDITIVE ||
-			blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_OPAQUE ||
-			blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND) 
-		{
-			mOpenXRBlend = blend_modes[i];
-			break;
-		}
-	}
-	XrGraphicsBindingD3D11KHR d3d_binding = { XR_TYPE_GRAPHICS_BINDING_D3D11_KHR };
-	d3d_binding.device = (ID3D11Device*) mpCoreConfig->getWindowConfig().device;
-	XrSessionCreateInfo sessionInfo = { XR_TYPE_SESSION_CREATE_INFO };
-	sessionInfo.next = &d3d_binding;
-	sessionInfo.systemId = mOpenXRSystemID;
-	xrCreateSession(mOpenXRInstance, &sessionInfo, &mOpenXRSession);
-	if (XR_FAILED(result) || mOpenXRSession == XR_NULL_HANDLE)
-	{
-		APE_LOG_DEBUG("Couldn't create an OpenXR session, no MR device attached/ready? " << result);
-	}
-	mOpenXRRefSpace = openXRPreferredSpace();
-	XrReferenceSpaceCreateInfo ref_space = { XR_TYPE_REFERENCE_SPACE_CREATE_INFO };
-	ref_space.poseInReferenceSpace = { {0,0,0,1}, {0,0,0} };
-	ref_space.referenceSpaceType = mOpenXRRefSpace;
-	result = xrCreateReferenceSpace(mOpenXRSession, &ref_space, &mOpenXRAppSpace);
-	if (XR_FAILED(result)) 
-	{
-		APE_LOG_DEBUG("xrCreateReferenceSpace failed " << result);
-	}
-	ref_space = { XR_TYPE_REFERENCE_SPACE_CREATE_INFO };
-	ref_space.poseInReferenceSpace = { {0,0,0,1}, {0,0,0} };
-	ref_space.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_VIEW;
-	result = xrCreateReferenceSpace(mOpenXRSession, &ref_space, &mOpenXRHeadSpace);
-	if (XR_FAILED(result)) 
-	{
-		APE_LOG_DEBUG("xrCreateReferenceSpace failed " << result);
-	}
-	DXGI_FORMAT color_format;
-	tex_format_ depth_format;
-	openXRPreferredFormat(color_format, depth_format);
-	uint32_t view_count = 0;
-	xrEnumerateViewConfigurationViews(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, 0, &view_count, nullptr);
-	mOpenXRConfigViews.resize(view_count, { XR_TYPE_VIEW_CONFIGURATION_VIEW });
-	mOpenXRViews.resize(view_count, { XR_TYPE_VIEW });
-	mOpenXRViewPointView.resize(view_count, { });
-	mOpenXRViewPointProjection.resize(view_count, { });
-	result = xrEnumerateViewConfigurationViews(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, view_count, &view_count, mOpenXRConfigViews.data());
-	if (XR_FAILED(result)) 
-	{
-		APE_LOG_DEBUG("xrEnumerateViewConfigurationViews failed " << result);
-	}
-	for (auto openXRConfigViews : mOpenXRConfigViews)
-	{
-		XrSwapchainCreateInfo swapchain_info = { XR_TYPE_SWAPCHAIN_CREATE_INFO };
-		XrSwapchain xrSwapchain;
-		swapchain_info.arraySize = 1;
-		swapchain_info.mipCount = 1;
-		swapchain_info.faceCount = 1;
-		swapchain_info.format = color_format;
-		swapchain_info.width = openXRConfigViews.recommendedImageRectWidth;
-		swapchain_info.height = openXRConfigViews.recommendedImageRectHeight;
-		swapchain_info.sampleCount = openXRConfigViews.recommendedSwapchainSampleCount;
-		swapchain_info.usageFlags = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT;
-		result = xrCreateSwapchain(mOpenXRSession, &swapchain_info, &xrSwapchain);
+	if (renderBackend == "OGL") {
+		XrGraphicsRequirementsOpenGLKHR requirement = { XR_TYPE_GRAPHICS_REQUIREMENTS_OPENGL_KHR };
+		result = mOpenXRExtensions.xrGetOpenGLGraphicsRequirementsKHR(mOpenXRInstance, mOpenXRSystemID, &requirement);
 		if (XR_FAILED(result))
 		{
-			APE_LOG_DEBUG("xrCreateSwapchain failed " << result);
+			APE_LOG_DEBUG("xrGetD3D11GraphicsRequirementsKHR failed " << result);
 		}
-		else
-		{
-			APE_LOG_DEBUG("xrCreateSwapchain, recommendedImageRectWidth: " << swapchain_info.width);
-			APE_LOG_DEBUG("xrCreateSwapchain, recommendedImageRectHeight: " << swapchain_info.height);
-		}
-		uint32_t surface_count = 0;
-		xrEnumerateSwapchainImages(xrSwapchain, 0, &surface_count, nullptr);
-		std::vector<XrSwapchainImageD3D11KHR> openXRSwapchainTextures;
-		openXRSwapchainTextures.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_D3D11_KHR });
-		result = xrEnumerateSwapchainImages(xrSwapchain, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)openXRSwapchainTextures.data());
+		uint32_t blend_count = 0;
+		std::vector<XrEnvironmentBlendMode> blend_modes;
+		result = xrEnumerateEnvironmentBlendModes(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, 0, &blend_count, nullptr);
+		blend_modes.resize(blend_count);
+		result = xrEnumerateEnvironmentBlendModes(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, blend_count, &blend_count, blend_modes.data());
 		if (XR_FAILED(result))
 		{
-			APE_LOG_DEBUG("xrEnumerateSwapchainImages failed " << result);
+			APE_LOG_DEBUG("xrEnumerateEnvironmentBlendModes failed " << result);
 		}
-		for (auto openXRSwapchainTexture : openXRSwapchainTextures)
+		for (size_t i = 0; i < blend_count; i++)
 		{
-			mOpenXRSwapchainTextures.push_back(openXRSwapchainTexture);
+			if (blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_ADDITIVE ||
+				blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_OPAQUE ||
+				blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND)
+			{
+				mOpenXRBlend = blend_modes[i];
+				break;
+			}
 		}
-		mOpenXRSwapchains.push_back(xrSwapchain);
+
+		XrGraphicsBindingOpenGLWin32KHR ogl_bindig = { XR_TYPE_GRAPHICS_BINDING_OPENGL_WIN32_KHR };
+		ogl_bindig.hDC = (HDC)mpCoreConfig->getWindowConfig().device;
+		ogl_bindig.hGLRC = wglGetCurrentContext();
+		//ogl_bindig.hDC = wglGetCurrentDC();
+		XrSessionCreateInfo sessionInfo = { XR_TYPE_SESSION_CREATE_INFO };
+		sessionInfo.next = &ogl_bindig;
+		sessionInfo.systemId = mOpenXRSystemID;
+
+		xrCreateSession(mOpenXRInstance, &sessionInfo, &mOpenXRSession);
+		if (XR_FAILED(result) || mOpenXRSession == XR_NULL_HANDLE)
+		{
+			APE_LOG_DEBUG("Couldn't create an OpenXR session, no MR device attached/ready? " << result);
+		}
+		mOpenXRRefSpace = openXRPreferredSpace();
+		XrReferenceSpaceCreateInfo ref_space = { XR_TYPE_REFERENCE_SPACE_CREATE_INFO };
+		ref_space.poseInReferenceSpace = { {0,0,0,1}, {0,0,0} };
+		ref_space.referenceSpaceType = mOpenXRRefSpace;
+		result = xrCreateReferenceSpace(mOpenXRSession, &ref_space, &mOpenXRAppSpace);
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrCreateReferenceSpace failed " << result);
+		}
+		ref_space = { XR_TYPE_REFERENCE_SPACE_CREATE_INFO };
+		ref_space.poseInReferenceSpace = { {0,0,0,1}, {0,0,0} };
+		ref_space.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_VIEW;
+		result = xrCreateReferenceSpace(mOpenXRSession, &ref_space, &mOpenXRHeadSpace);
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrCreateReferenceSpace failed " << result);
+		}
+
+		DXGI_FORMAT color_format;
+		tex_format_ depth_format;
+		openXRPreferredFormat(color_format, depth_format);
+		uint32_t view_count = 0;
+		xrEnumerateViewConfigurationViews(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, 0, &view_count, nullptr);
+		mOpenXRConfigViews.resize(view_count, { XR_TYPE_VIEW_CONFIGURATION_VIEW });
+		mOpenXRViews.resize(view_count, { XR_TYPE_VIEW });
+		mOpenXRViewPointView.resize(view_count, { });
+		mOpenXRViewPointProjection.resize(view_count, { });
+		result = xrEnumerateViewConfigurationViews(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, view_count, &view_count, mOpenXRConfigViews.data());
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrEnumerateViewConfigurationViews failed " << result);
+		}
+		for (auto openXRConfigViews : mOpenXRConfigViews)
+		{
+			XrSwapchainCreateInfo swapchain_info = { XR_TYPE_SWAPCHAIN_CREATE_INFO };
+			XrSwapchain xrSwapchain;
+			swapchain_info.arraySize = 1;
+			swapchain_info.mipCount = 1;
+			swapchain_info.faceCount = 1;
+			swapchain_info.format = color_format;
+			swapchain_info.width = openXRConfigViews.recommendedImageRectWidth;
+			swapchain_info.height = openXRConfigViews.recommendedImageRectHeight;
+			swapchain_info.sampleCount = openXRConfigViews.recommendedSwapchainSampleCount;
+			swapchain_info.usageFlags = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT;
+			result = xrCreateSwapchain(mOpenXRSession, &swapchain_info, &xrSwapchain);
+			if (XR_FAILED(result))
+			{
+				APE_LOG_DEBUG("xrCreateSwapchain failed " << result);
+			}
+			else
+			{
+				APE_LOG_DEBUG("xrCreateSwapchain, recommendedImageRectWidth: " << swapchain_info.width);
+				APE_LOG_DEBUG("xrCreateSwapchain, recommendedImageRectHeight: " << swapchain_info.height);
+			}
+			uint32_t surface_count = 0;
+			xrEnumerateSwapchainImages(xrSwapchain, 0, &surface_count, nullptr);
+			std::vector<XrSwapchainImageOpenGLKHR> openXRSwapchainTextures;
+			openXRSwapchainTextures.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR });
+			result = xrEnumerateSwapchainImages(xrSwapchain, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)openXRSwapchainTextures.data());
+			if (XR_FAILED(result))
+			{
+				APE_LOG_DEBUG("xrEnumerateSwapchainImages failed " << result);
+			}
+			for (auto openXRSwapchainTexture : openXRSwapchainTextures)
+			{
+				mOpenXRSwapchainOGLTextures.push_back(openXRSwapchainTexture);
+			}
+			mOpenXRSwapchains.push_back(xrSwapchain);
+		}
+		for (auto openXRSwapchain : mOpenXRSwapchains)
+		{
+			APE_LOG_DEBUG("xrSwapchain: " << openXRSwapchain);
+		}
+		for (auto openXRSwapchainTexture : mOpenXRSwapchainOGLTextures)
+		{
+			APE_LOG_DEBUG("xrSwapchain image: " << openXRSwapchainTexture.image);
+		}
 	}
-	for (auto openXRSwapchain : mOpenXRSwapchains)
-	{
-		APE_LOG_DEBUG("xrSwapchain: " << openXRSwapchain);
+	else if (renderBackend == "DX11") {
+		XrGraphicsRequirementsD3D11KHR requirement = { XR_TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR };
+		result = mOpenXRExtensions.xrGetD3D11GraphicsRequirementsKHR(mOpenXRInstance, mOpenXRSystemID, &requirement);
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrGetD3D11GraphicsRequirementsKHR failed " << result);
+		}
+		uint32_t blend_count = 0;
+		std::vector<XrEnvironmentBlendMode> blend_modes;
+		result = xrEnumerateEnvironmentBlendModes(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, 0, &blend_count, nullptr);
+		blend_modes.resize(blend_count);
+		result = xrEnumerateEnvironmentBlendModes(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, blend_count, &blend_count, blend_modes.data());
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrEnumerateEnvironmentBlendModes failed " << result);
+		}
+		for (size_t i = 0; i < blend_count; i++)
+		{
+			if (blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_ADDITIVE ||
+				blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_OPAQUE ||
+				blend_modes[i] == XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND)
+			{
+				mOpenXRBlend = blend_modes[i];
+				break;
+			}
+		}
+		XrGraphicsBindingD3D11KHR d3d_binding = { XR_TYPE_GRAPHICS_BINDING_D3D11_KHR };
+		d3d_binding.device = (ID3D11Device*)mpCoreConfig->getWindowConfig().device;
+		XrSessionCreateInfo sessionInfo = { XR_TYPE_SESSION_CREATE_INFO };
+		sessionInfo.next = &d3d_binding;
+		sessionInfo.systemId = mOpenXRSystemID;
+		xrCreateSession(mOpenXRInstance, &sessionInfo, &mOpenXRSession);
+		if (XR_FAILED(result) || mOpenXRSession == XR_NULL_HANDLE)
+		{
+			APE_LOG_DEBUG("Couldn't create an OpenXR session, no MR device attached/ready? " << result);
+		}
+		mOpenXRRefSpace = openXRPreferredSpace();
+		XrReferenceSpaceCreateInfo ref_space = { XR_TYPE_REFERENCE_SPACE_CREATE_INFO };
+		ref_space.poseInReferenceSpace = { {0,0,0,1}, {0,0,0} };
+		ref_space.referenceSpaceType = mOpenXRRefSpace;
+		result = xrCreateReferenceSpace(mOpenXRSession, &ref_space, &mOpenXRAppSpace);
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrCreateReferenceSpace failed " << result);
+		}
+		ref_space = { XR_TYPE_REFERENCE_SPACE_CREATE_INFO };
+		ref_space.poseInReferenceSpace = { {0,0,0,1}, {0,0,0} };
+		ref_space.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_VIEW;
+		result = xrCreateReferenceSpace(mOpenXRSession, &ref_space, &mOpenXRHeadSpace);
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrCreateReferenceSpace failed " << result);
+		}
+		DXGI_FORMAT color_format;
+		tex_format_ depth_format;
+		openXRPreferredFormat(color_format, depth_format);
+		uint32_t view_count = 0;
+		xrEnumerateViewConfigurationViews(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, 0, &view_count, nullptr);
+		mOpenXRConfigViews.resize(view_count, { XR_TYPE_VIEW_CONFIGURATION_VIEW });
+		mOpenXRViews.resize(view_count, { XR_TYPE_VIEW });
+		mOpenXRViewPointView.resize(view_count, { });
+		mOpenXRViewPointProjection.resize(view_count, { });
+		result = xrEnumerateViewConfigurationViews(mOpenXRInstance, mOpenXRSystemID, mOpenXRAppConfigView, view_count, &view_count, mOpenXRConfigViews.data());
+		if (XR_FAILED(result))
+		{
+			APE_LOG_DEBUG("xrEnumerateViewConfigurationViews failed " << result);
+		}
+		for (auto openXRConfigViews : mOpenXRConfigViews)
+		{
+			XrSwapchainCreateInfo swapchain_info = { XR_TYPE_SWAPCHAIN_CREATE_INFO };
+			XrSwapchain xrSwapchain;
+			swapchain_info.arraySize = 1;
+			swapchain_info.mipCount = 1;
+			swapchain_info.faceCount = 1;
+			swapchain_info.format = color_format;
+			swapchain_info.width = openXRConfigViews.recommendedImageRectWidth;
+			swapchain_info.height = openXRConfigViews.recommendedImageRectHeight;
+			swapchain_info.sampleCount = openXRConfigViews.recommendedSwapchainSampleCount;
+			swapchain_info.usageFlags = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT;
+			result = xrCreateSwapchain(mOpenXRSession, &swapchain_info, &xrSwapchain);
+			if (XR_FAILED(result))
+			{
+				APE_LOG_DEBUG("xrCreateSwapchain failed " << result);
+			}
+			else
+			{
+				APE_LOG_DEBUG("xrCreateSwapchain, recommendedImageRectWidth: " << swapchain_info.width);
+				APE_LOG_DEBUG("xrCreateSwapchain, recommendedImageRectHeight: " << swapchain_info.height);
+			}
+			uint32_t surface_count = 0;
+			xrEnumerateSwapchainImages(xrSwapchain, 0, &surface_count, nullptr);
+			std::vector<XrSwapchainImageD3D11KHR> openXRSwapchainTextures;
+			openXRSwapchainTextures.resize(surface_count, { XR_TYPE_SWAPCHAIN_IMAGE_D3D11_KHR });
+			result = xrEnumerateSwapchainImages(xrSwapchain, surface_count, &surface_count, (XrSwapchainImageBaseHeader*)openXRSwapchainTextures.data());
+			if (XR_FAILED(result))
+			{
+				APE_LOG_DEBUG("xrEnumerateSwapchainImages failed " << result);
+			}
+			for (auto openXRSwapchainTexture : openXRSwapchainTextures)
+			{
+				mOpenXRSwapchainDX11Textures.push_back(openXRSwapchainTexture);
+			}
+			mOpenXRSwapchains.push_back(xrSwapchain);
+		}
+		for (auto openXRSwapchain : mOpenXRSwapchains)
+		{
+			APE_LOG_DEBUG("xrSwapchain: " << openXRSwapchain);
+		}
+		for (auto openXRSwapchainTexture : mOpenXRSwapchainDX11Textures)
+		{
+			APE_LOG_DEBUG("xrSwapchain image: " << openXRSwapchainTexture.texture);
+		}
 	}
-	for (auto openXRSwapchainTexture : mOpenXRSwapchainTextures)
-	{
-		APE_LOG_DEBUG("xrSwapchain image: " << openXRSwapchainTexture.texture);
-	}
+	
+	
 	APE_LOG_DEBUG("openxr_init OK");
 	APE_LOG_DEBUG("try to set up ApertusVR rendertargets(render2textures) and cameras");
 	if (auto manualTexture = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->createEntity("OpenXRRenderTextureLeft", ape::Entity::TEXTURE_MANUAL, false, "").lock()))

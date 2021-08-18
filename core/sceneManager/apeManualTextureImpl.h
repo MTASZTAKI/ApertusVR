@@ -50,6 +50,10 @@ namespace ape
 
 		void* getGraphicsApiID() override;
 
+		void setContextID(void* id) override;
+
+		void* getContextID() override;
+
 		void setBuffer(const void* buffer) override;
 
 		const void* getBuffer() override;
@@ -84,6 +88,8 @@ namespace ape
 		const void* mpBuffer;
 
 		void* mpGraphicsApiID;
+
+		void* mpContextID;
 
 		std::vector<std::function<void()>> mFunctions;
 	};

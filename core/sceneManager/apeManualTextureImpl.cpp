@@ -31,6 +31,7 @@ ape::ManualTextureImpl::ManualTextureImpl(std::string name, bool replicate, std:
 	mCamera = ape::CameraWeakPtr();
 	mpBuffer = nullptr;
 	mpGraphicsApiID = nullptr;
+	mpContextID = nullptr;
 }
 
 ape::ManualTextureImpl::~ManualTextureImpl()
@@ -81,6 +82,17 @@ void ape::ManualTextureImpl::setGraphicsApiID(void * id)
 void * ape::ManualTextureImpl::getGraphicsApiID()
 {
 	return mpGraphicsApiID;
+}
+
+void ape::ManualTextureImpl::setContextID(void* id)
+{
+	mpContextID = id;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::TEXTURE_MANUAL_CONTEXTID));
+}
+
+void* ape::ManualTextureImpl::getContextID()
+{
+	return mpContextID;
 }
 
 void ape::ManualTextureImpl::setBuffer(const void* buffer)

@@ -85,12 +85,14 @@ set (SOURCES
 include_directories(
 	${OPENXR_HOME}/include
 	${OPENXR_BUILD_DIR}/src
+	${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty
 	)
 
+find_package(OpenGL REQUIRED)
 add_library (apeOpenXRPlugin SHARED ${SOURCES} ${HEADERS})
 
 if (WIN32)
-	target_link_libraries (apeOpenXRPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro MY_OPENXR MY_OPENXR_GFXWRAPPER d3d11 d3dcompiler dxgi)
+	target_link_libraries (apeOpenXRPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro MY_OPENXR MY_OPENXR_GFXWRAPPER d3d11 d3dcompiler dxgi ${OPENGL_LIBRARIES})
 else()
 	target_link_libraries (apeOpenXRPlugin apePluginManager apeSceneManager apeEventManager apeLogManager apeUserInputMacro MY_OPENXR MY_OPENXR_GFXWRAPPER)
 endif()
@@ -101,6 +103,7 @@ if (WIN32)
 	set_property (TARGET apeOpenXRPlugin PROPERTY COMPILE_DEFINITIONS
 	XR_USE_PLATFORM_WIN32
 	XR_USE_GRAPHICS_API_D3D11
+	XR_USE_GRAPHICS_API_OPENGL
 	)
 endif()
 

@@ -1201,23 +1201,33 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 if(node->getChildrenVisibility() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
                                     auto rcm = app.mpRenderableManager;
                                     auto entities = app.mpInstancesMap[event.subjectName].mpInstance->getEntities();
-                                    for (int i = 0; i < app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount(); i++) {
-                                        auto rm = rcm->getInstance(entities[i]);
-                                        if (sourceFileName.find("Warehouse") == std::string::npos)
-                                        {
+                                    if (sourceFileName.find("Warehouse") == std::string::npos)
+                                    {
+                                        for (int i = 0; i < app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount(); i++) {
+                                            auto rm = rcm->getInstance(entities[i]);
+
                                             if (rcm->hasComponent(entities[i])) {
                                                 rcm->setCastShadows(rm, true);
                                                 rcm->setReceiveShadows(rm, true);
                                             }
                                         }
-                                        else {
+                                    }
+                                    else {
+                                        for (int i = 0; i < app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount(); i++) {
+                                            auto rm = rcm->getInstance(entities[i]);
                                             if (rcm->hasComponent(entities[i])) {
                                                 rcm->setCastShadows(rm, false);
                                                 rcm->setReceiveShadows(rm, true);
                                             }
                                         }
-                                        
+                                        if (app.mpTransformManager->hasComponent(filamentAssetRootEntity)) {
+                                            auto transformMatrix = app.mpTransformManager->getTransform(filamentAssetRootTransform);
+                                                transformMatrix[3][1] -= 0.055;
+                                                transformMatrix[3][2] -= 5.1;
+                                                app.mpTransformManager->setTransform(filamentAssetRootTransform, transformMatrix);
+                                        }
                                     }
+                                    
                                     app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
 
                                 }
@@ -1564,6 +1574,26 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 				}
 			}
 		}
+        else if (event.group == ape::Event::Group::TEXTURE_MANUAL) {
+
+            if (auto textureManual = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity(event.subjectName).lock()))
+            {
+                std::string textureManualName = textureManual->getName();
+                switch (event.type)
+                {
+                case ape::Event::Type::TEXTURE_MANUAL_CREATE:
+                    break;
+                case ape::Event::Type::TEXTURE_MANUAL_GRAPHICSAPIID:
+                    break;
+                case ape::Event::Type::TEXTURE_MANUAL_CONTEXTID:
+                    break;
+                case ape::Event::Type::TEXTURE_MANUAL_PARAMETERS:
+                    ape::ManualTextureParameters parameters = textureManual->getParameters();
+                    break;
+                }
+            }
+
+        }
 		}
 		catch (std::exception exp)
 		{
@@ -2504,6 +2534,8 @@ void ape::FilamentApplicationPlugin::Step()
     app.config.title = "Filament";
     app.config.iblDirectory = FilamentApp::getRootAssetsPath() + DEFAULT_IBL;
     utils::Path filename;
+   
+
 //    int num_args = 1;
 //    if (num_args >= 1) {
 //        filename = "/Users/erik/Documents/ApertusVR/ApertusVR/plugins/scene/photorealisticScene/resources/Conveyor.gltf";
@@ -2650,11 +2682,20 @@ void ape::FilamentApplicationPlugin::Step()
             .sunAngularRadius(1.9f)
             .castShadows(true)
             .build(*app.engine, app.sunLight);
+        app.sunLight2 = utils::EntityManager::get().create();
+        LightManager::Builder(LightManager::Type::SUN)
+            .color(filament::Color::toLinear<ACCURATE>(sRGBColor(0.95f, 0.95f, 0.95f)))
+            .intensity(100000)
+            .direction({ -app.updateinfo.lightDirection[0], app.updateinfo.lightDirection[1], -app.updateinfo.lightDirection[2] })
+            .sunAngularRadius(1.9f)
+            .castShadows(true)
+            .build(*app.engine, app.sunLight);
         app.mpScene->addEntity(app.sunLight);
+        //app.mpScene->addEntity(app.sunLight2);
         auto ibl = FilamentApp::get().getIBL();
         auto indirectLight = ibl->getIndirectLight();
 
-        indirectLight->setIntensity(12500);
+        indirectLight->setIntensity(17500);
         
     };
 
@@ -3421,6 +3462,7 @@ void ape::FilamentApplicationPlugin::Step()
         auto keyCode = event.key.keysym.scancode;
         auto a = event.key.keysym.sym;
         auto keyState = SDL_GetModState();
+       
         bool moved = false;
         if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
             if(app.updateinfo.isAdmin || node->getOwner() == mpCoreConfig->getNetworkGUID())
@@ -4093,11 +4135,27 @@ void ape::FilamentApplicationPlugin::Step()
         loadAsset(path);
         loadResources(path);
     });
+    app.config.splitView = false;
     app.config.cameraMode = filament::camutils::Mode::FREE_FLIGHT;
     app.config.title = "VLFT gamification";
-    //app.config.iblDirectory = "";
-    filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput);
-    
+    //app.config.iblDirectory = "";  
+    const int x = SDL_WINDOWPOS_CENTERED;
+    const int y = SDL_WINDOWPOS_CENTERED;
+    uint32_t windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
+    auto mWindow = SDL_CreateWindow("testing", x, y, (int) 1024, (int) 640, windowFlags);
+    auto manualTexture = mpSceneManager->getEntity("OpenXRRenderTextureLeft");
+    mpCoreConfig->setWindowConfig(ape::WindowConfig("testing", "SDL", (void*)mWindow, nullptr, 1024, 640));
+    while (!manualTexture.lock()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        manualTexture = mpSceneManager->getEntity("OpenXRRenderTextureLeft");
+    }
+    if (auto manualTextureLeft = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity("OpenXRRenderTextureLeft").lock())) {
+        while (!manualTextureLeft->getContextID()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        }
+        filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput,1024,640,manualTextureLeft->getContextID());
+    }
+   
     APE_LOG_FUNC_LEAVE();
     //return 0;
 }

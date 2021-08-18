@@ -198,6 +198,8 @@ namespace ape
         std::string mUploadScene;
 
         std::string mUploadAnimations;
+
+        std::string mUploadApeCore;
         
         FILE* mApeVLFTSceneLoaderPluginConfigFile;
         

@@ -424,6 +424,32 @@ void ape::VLFTImgui::uploadGUI(int width, int height) {
             mUploadAnimations = "";
         }
     }
+    if (ImGui::Button("Chose an apeCore json file ", ImVec2(width / 7, height / 15))) {
+        nfdresult_t result = NFD_OpenDialog("json", NULL, &filePath);
+        std::ifstream file(filePath);
+        std::ostringstream tmp;
+        tmp << file.rdbuf();
+        mUploadApeCore = tmp.str();
+    }
+    if (mUploadApeCore != "") {
+        ImGui::SameLine(width / 7 + 25);
+        if (ImGui::Button("Upload", ImVec2(width / 8, height / 15))) {
+            CURL* curl;
+            CURLcode res;
+            std::string readBuffer;
+
+            curl = curl_easy_init();
+            if (curl) {
+                std::string postCommand = "command=uploadCoreJson_" + std::string(uploadRoomName) + "/:" + mUploadApeCore;
+                curl_easy_setopt(curl, CURLOPT_URL, "195.111.2.95:4444");
+                curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postCommand.c_str());
+                res = curl_easy_perform(curl);
+                curl_easy_cleanup(curl);
+                curlData();
+            }
+            mUploadApeCore = "";
+        }
+    }
     ImGui::SetCursorPos(ImVec2(width - (width / 8 + 75), height - (height / 15 + 75)));
     if (ImGui::Button("Back", ImVec2(width / 8, height / 15))) {
         mpMainMenuInfo.uploadRoomGui = false;

@@ -219,6 +219,7 @@ struct App {
     
     LightManager* lightManager;
     Entity sunLight;
+    Entity sunLight2;
     Entity lineEntity;
     
     std::pair<Entity, float> boxEntity;

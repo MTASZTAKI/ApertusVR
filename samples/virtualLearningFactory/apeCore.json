@@ -1,6 +1,7 @@
 {
   "plugins": [
-     "apeFilamentApplicationPlugin"
+    "apeOpenXRPlugin",
+    "apeFilamentApplicationPlugin"
   ],
   "network": {
     "user": "",

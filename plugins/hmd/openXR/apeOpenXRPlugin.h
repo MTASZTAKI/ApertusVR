@@ -47,6 +47,7 @@ SOFTWARE.*/
 #include "apeINode.h"
 #include "apeITextGeometry.h"
 #include "apeUserInputMacro.h"
+#include "apeOpenXRPluginConfig.h"
 
 #define FOR_EACH_EXTENSION_FUNCTION(_)           \
     _(xrCreateSpatialAnchorMSFT)                 \
@@ -55,7 +56,8 @@ SOFTWARE.*/
     _(xrConvertWin32PerformanceCounterToTimeKHR) \
     _(xrConvertTimeToWin32PerformanceCounterKHR) \
     _(xrGetD3D11GraphicsRequirementsKHR)         \
-    _(xrGetVisibilityMaskKHR)
+    _(xrGetVisibilityMaskKHR)					 \
+	_(xrGetOpenGLGraphicsRequirementsKHR)
 
 #define GET_INSTANCE_PROC_ADDRESS(name) (void)xrGetInstanceProcAddr(instance, #name, (PFN_xrVoidFunction*)((PFN_##name*)(&result.name)));
 #define DEFINE_PROC_MEMBER(name) PFN_##name name;
@@ -142,7 +144,13 @@ namespace ape
 
 		std::vector<XrSwapchain> mOpenXRSwapchains;
 
-		std::vector<XrSwapchainImageD3D11KHR> mOpenXRSwapchainTextures;
+		std::vector<XrSwapchainImageD3D11KHR> mOpenXRSwapchainDX11Textures;
+
+		std::vector<XrSwapchainImageOpenGLKHR> mOpenXRSwapchainOGLTextures;
+
+		quicktype::Scene mOpenXRJson;
+
+		std::string renderBackend;
 
 		void eventCallBack(const ape::Event& event);
 

@@ -86,6 +86,11 @@ namespace ape
 
 		virtual void* getGraphicsApiID() = 0;
 
+
+		virtual void setContextID(void* id) = 0;
+
+		virtual void* getContextID() = 0;
+
 		virtual void setBuffer(const void* buffer) = 0;
 
 		virtual const void* getBuffer() = 0;
