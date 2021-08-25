@@ -58,6 +58,9 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mIsStopClicked = false;
     mIsPlayRunning = false;
     mIsAllSpaghettiVisible = false;
+    mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+    mpUserInputMacro->registerCallbackForHmdMovedValue(std::bind(&FilamentApplicationPlugin::hmdMovedEventCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+
     mAnimatedNodeNames = std::set<std::string>();
     mAttachedUsers = std::vector<ape::NodeWeakPtr>();
     mSpaghettiNodeNames = std::set<std::string>();
@@ -91,6 +94,7 @@ void ape::FilamentApplicationPlugin::initKeyMap(){
     mKeyMap["d"] = SDL_SCANCODE_D;
     mKeyMap["e"] = SDL_SCANCODE_E;
     mKeyMap["q"] = SDL_SCANCODE_Q;
+    mKeyMap["o"] = SDL_SCANCODE_O;
     mKeyMap["f2"] = SDL_SCANCODE_F2;
     mKeyMap["f3"] = SDL_SCANCODE_F3;
 }
@@ -1805,7 +1809,7 @@ bool ape::FilamentApplicationPlugin::attach2NewAnimationNode(const std::string& 
 void ape::FilamentApplicationPlugin::initAnimations(){
     APE_LOG_FUNC_ENTER();
     mStartTime = -1.0;
-    mpUserInputMacro = ape::UserInputMacro::getSingletonPtr();
+    
     std::stringstream fileFullPath;
     fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeVLFTAnimationPlayerPlugin.json";
     FILE* apeVLFTAnimationPlayerPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
@@ -2032,6 +2036,12 @@ void ape::FilamentApplicationPlugin::showSpaghetti(std::string name, bool show)
     {
         spaghettiNode->setChildrenVisibility(show);
     }
+}
+
+void ape::FilamentApplicationPlugin::hmdMovedEventCallback(const ape::Vector3& hmdMovedValuePos, const ape::Quaternion& hmdMovedValueOri, const ape::Vector3& hmdMovedValueScl)
+{
+    APE_LOG_DEBUG(hmdMovedValuePos.toString());
+    APE_LOG_DEBUG(hmdMovedValueOri.toString());
 }
 
 void ape::FilamentApplicationPlugin::drawSpaghettiSection(const ape::Vector3& startPosition, const ape::NodeSharedPtr& node, std::string& spaghettiSectionName)
@@ -2651,6 +2661,9 @@ void ape::FilamentApplicationPlugin::Step()
         app.mainCamera = &view->getCamera();
         
         app.currentCamera = 0;
+        if (auto cameraNode = mpSceneManager->createNode("Camera_controller", false, mpCoreConfig->getNetworkGUID()).lock()) {
+            cameraNode->setPosition(ape::Vector3(0, 0, 0));
+        }
         auto mNode = mpSceneManager->createNode("VLFTlogo", false, mpCoreConfig->getNetworkGUID());
         if (auto node = mNode.lock())
         {
@@ -2731,6 +2744,7 @@ void ape::FilamentApplicationPlugin::Step()
 
     auto gui = [this](Engine* engine, View* view) {
         //copy and edit apecoreJson to vfgame2
+
         if (app.updateinfo.lightOn) {
             if (!app.mpScene->hasEntity(app.sunLight)) {
                 app.mpScene->addEntity(app.sunLight);
@@ -3422,15 +3436,15 @@ void ape::FilamentApplicationPlugin::Step()
         
         view->setColorGrading(nullptr);
         processEventDoubleQueue();
-        if(mPostUserName.find("_vlftTeacher") != std::string::npos){
-            if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
+        if (mPostUserName.find("_vlftTeacher") != std::string::npos) {
+            if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
                 vec3<float> camPos, camTarget, camUp;
                 mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
                 app.mainCamera->lookAt(camPos, camTarget, camUp);
             }
         }
-        else if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
-            if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
+        else if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
+            if (node->getOwner() == mpCoreConfig->getNetworkGUID()) {
                 vec3<float> camPos, camTarget, camUp;
                 mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
                 app.mainCamera->lookAt(camPos, camTarget, camUp);
@@ -3830,20 +3844,20 @@ void ape::FilamentApplicationPlugin::Step()
                     }
                 }
         }
-        if(!app.updateinfo.inSettings && app.updateinfo.inRoom){
+        if (!app.updateinfo.inSettings && app.updateinfo.inRoom) {
             vec3<float> camPos, camTarget, camUp;
             manipulator->getLookAt(&camPos, &camTarget, &camUp);
-            if(!app.updateinfo.isAdmin){
-                if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
-                    if(node->getOwner() == mpCoreConfig->getNetworkGUID()){
+            if (!app.updateinfo.isAdmin) {
+                if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
+                    if (node->getOwner() == mpCoreConfig->getNetworkGUID()) {
                         //mpUserInputMacro->getUserNode();
                         //node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1));
                         auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
-                        modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
+                        modelMatrix[3][0] = modelMatrix[3][1] = modelMatrix[3][2] = 0;
                         auto modelQuat = modelMatrix.toQuaternion();
                         //if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
-                            node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
-                            node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+                        node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                        node->setOrientation(ape::Quaternion(modelQuat.w, modelQuat.x, modelQuat.y, modelQuat.z));
                         //}
 
                         for (auto x : app.worldMap.playerTriangles) {
@@ -3851,8 +3865,8 @@ void ape::FilamentApplicationPlugin::Step()
                                 auto playerPos = otherplayer->getDerivedPosition();
                                 auto playerTM = app.mpTransformManager->getInstance(x.second);
                                 auto playerTransform = app.mpTransformManager->getTransform(playerTM);
-                                if (abs(camPos.x - playerPos.getX()) < 25 && abs(camPos.z- playerPos.getZ()) < 25) {
-                                    playerTransform[3][0] = (playerPos.getX()-camPos.x) / 2000;
+                                if (abs(camPos.x - playerPos.getX()) < 25 && abs(camPos.z - playerPos.getZ()) < 25) {
+                                    playerTransform[3][0] = (playerPos.getX() - camPos.x) / 2000;
                                     playerTransform[3][1] = (camPos.z - playerPos.getZ()) / 2000;
 
                                     auto newTransform = filament::math::mat4f(1, 0, 0, 0,
@@ -3861,22 +3875,22 @@ void ape::FilamentApplicationPlugin::Step()
                                         playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
                                     app.mpTransformManager->setTransform(playerTM, newTransform);
                                 }
-                               
+
                             }
                         }
-                        
+
                     }
                 }
             }
-            else{
-                if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
+            else {
+                if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
                     //node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1));
                     auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
-                    modelMatrix[3][0] = modelMatrix[3][1] =modelMatrix[3][2] = 0;
+                    modelMatrix[3][0] = modelMatrix[3][1] = modelMatrix[3][2] = 0;
                     auto modelQuat = modelMatrix.toQuaternion();
                     //if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
-                        node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
-                        node->setOrientation(ape::Quaternion(modelQuat.w,modelQuat.x,modelQuat.y,modelQuat.z));
+                    node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                    node->setOrientation(ape::Quaternion(modelQuat.w, modelQuat.x, modelQuat.y, modelQuat.z));
                     //}
                     for (auto x : app.worldMap.playerTriangles) {
                         if (auto otherplayer = mpSceneManager->getNode(x.first).lock()) {
@@ -4139,22 +4153,8 @@ void ape::FilamentApplicationPlugin::Step()
     app.config.cameraMode = filament::camutils::Mode::FREE_FLIGHT;
     app.config.title = "VLFT gamification";
     //app.config.iblDirectory = "";  
-    const int x = SDL_WINDOWPOS_CENTERED;
-    const int y = SDL_WINDOWPOS_CENTERED;
-    uint32_t windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
-    auto mWindow = SDL_CreateWindow("testing", x, y, (int) 1024, (int) 640, windowFlags);
-    auto manualTexture = mpSceneManager->getEntity("OpenXRRenderTextureLeft");
-    mpCoreConfig->setWindowConfig(ape::WindowConfig("testing", "SDL", (void*)mWindow, nullptr, 1024, 640));
-    while (!manualTexture.lock()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
-        manualTexture = mpSceneManager->getEntity("OpenXRRenderTextureLeft");
-    }
-    if (auto manualTextureLeft = std::static_pointer_cast<ape::IManualTexture>(mpSceneManager->getEntity("OpenXRRenderTextureLeft").lock())) {
-        while (!manualTextureLeft->getContextID()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));
-        }
-        filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput,1024,640,manualTextureLeft->getContextID());
-    }
+    filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput,1024,640);
+
    
     APE_LOG_FUNC_LEAVE();
     //return 0;

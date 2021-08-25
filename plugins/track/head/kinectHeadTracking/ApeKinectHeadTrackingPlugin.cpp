@@ -368,14 +368,27 @@ void ape::KinectHeadTrackingPlugin::getHeadPositionFromBodyData(IBody* pBody)
 			if (SUCCEEDED(hr) && bTracked)
 			{
 				Joint joints[JointType_Count];
-				hr = pBody->GetJoints(_countof(joints), joints);
+				JointOrientation jointsOri[JointType_Count];
+				/*hr = pBody->GetJoints(_countof(joints), joints);
 				if (SUCCEEDED(hr))
 				{
 					if (joints[JointType_Head].TrackingState == 2)
 					{
 						ape::Vector3 positionFromSensor(joints[JointType_Head].Position.X, joints[JointType_Head].Position.Y, joints[JointType_Head].Position.Z);
+						APE_LOG_DEBUG(positionFromSensor.toString());
 						mTrackedViewerPosition = ((mTrackerConfig.rotation * positionFromSensor) * mTrackerConfig.scale) + mTrackerConfig.translate;
 						mpapeUserInputMacro->updateOverLayText(mTrackedViewerPosition.toString());
+					}
+				}*/
+				hr = pBody->GetJointOrientations(_countof(jointsOri), jointsOri);
+				if (SUCCEEDED(hr))
+				{
+					if (true)
+					{
+						ape::Quaternion oriFromSensor(jointsOri[JointType_Head].Orientation.w, jointsOri[JointType_Head].Orientation.x, jointsOri[JointType_Head].Orientation.y, jointsOri[JointType_Head].Orientation.z);
+						APE_LOG_DEBUG(oriFromSensor.toString());
+						//mTrackedViewerPosition = ((mTrackerConfig.rotation * positionFromSensor) * mTrackerConfig.scale) + mTrackerConfig.translate;
+						//mpapeUserInputMacro->updateOverLayText(mTrackedViewerPosition.toString());
 					}
 				}
 			}

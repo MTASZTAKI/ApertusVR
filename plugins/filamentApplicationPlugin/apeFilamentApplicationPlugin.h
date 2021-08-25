@@ -491,6 +491,8 @@ namespace ape
         void stopScreenCast();
         
         void showSpaghetti(std::string name, bool show);
+
+        void hmdMovedEventCallback(const ape::Vector3& hmdMovedValuePos, const ape::Quaternion& hmdMovedValueOri, const ape::Vector3& hmdMovedValueScl);
         
         bool attach2NewAnimationNode(const std::string& parentNodeName, const ape::NodeSharedPtr& node);
         

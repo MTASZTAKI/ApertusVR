@@ -373,10 +373,10 @@ void ape::OpenXRPlugin::Init()
 	mpApeUserInputMacro = ape::UserInputMacro::getSingletonPtr();
 
 	//if (renderBackend == "DX11") {
-		APE_LOG_DEBUG("waiting for main window");
+		/*APE_LOG_DEBUG("waiting for main window");
 		while (mpCoreConfig->getWindowConfig().handle == nullptr && mpCoreConfig->getWindowConfig().device == nullptr)
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		APE_LOG_DEBUG("main window was found");
+		APE_LOG_DEBUG("main window was found");*/
 	//}
 	
 
