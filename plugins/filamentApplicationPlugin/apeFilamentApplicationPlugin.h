@@ -251,6 +251,15 @@ struct App {
     bool actualSize = false;
     bool firstRun = true;
     bool setManpipulator = false;
+    bool playVR = false;
+    bool vrPlaying = false;
+    int vrCnt = 0;
+    float vrAnimTime = 0.0f;
+
+    std::vector<ape::Vector3> vrPos = std::vector<ape::Vector3>();
+    ape::Vector3 prevRot;
+    ape::Vector3 prevPos;
+    std::vector<ape::Quaternion> vrRot = std::vector<ape::Quaternion>();
 
     struct ViewOptions {
         float cameraAperture = 16.0f;

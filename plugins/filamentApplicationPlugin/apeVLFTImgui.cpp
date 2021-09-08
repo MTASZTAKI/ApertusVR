@@ -217,6 +217,7 @@ void ape::VLFTImgui::connectToRoom(){
             mpMainMenuInfo.inRoomGui = true;
             mpUpdateInfo->inRoom = true;
             mpUpdateInfo->resourcesUpdated = true;
+            mpUpdateInfo->isMapVisible = true;
         }
         else if(mpMainMenuInfo.singlePlayer){
             mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
@@ -258,6 +259,7 @@ void ape::VLFTImgui::connectToRoom(){
             //mpSceneNetwork->
             mpMainMenuInfo.inRoomGui = true;
             mpUpdateInfo->inRoom = true;
+            mpUpdateInfo->isMapVisible = true;
         }
         else if(mpMainMenuInfo.singlePlayer){
             
@@ -545,51 +547,65 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
     ImGui::SetCursorPos(ImVec2(width/3,height/4));
     ImGui::Text("Forward");
     ImGui::SameLine(width/3*2);
-    if(ImGui::Button(mpUpdateInfo->keyLabel["w"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
-        mpUpdateInfo->changeKeyCode = "w";
-        mpUpdateInfo->changedKey = true;
+    if(ImGui::Button((mpUpdateInfo->keyLabel["w"] + " ").c_str(),ImVec2(40, 20))){
+        if (!mpUpdateInfo->changedKey) {
+            mpUpdateInfo->changeKeyCode = "w";
+            mpUpdateInfo->changedKey = true;
+        }
     }
     ImGui::SetCursorPosX(width/3);
     ImGui::Text("Backward");
     ImGui::SameLine(width/3*2);
-    if(ImGui::Button(mpUpdateInfo->keyLabel["s"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
-        mpUpdateInfo->changeKeyCode = "s";
-        mpUpdateInfo->changedKey = true;
+    if(ImGui::Button((mpUpdateInfo->keyLabel["s"] + " ").c_str(),ImVec2(40, 20))){
+        if (!mpUpdateInfo->changedKey) {
+            mpUpdateInfo->changeKeyCode = "s";
+            mpUpdateInfo->changedKey = true;
+        }
     }
     ImGui::SetCursorPosX(width/3);
     ImGui::Text("Left");
     ImGui::SameLine(width/3*2);
-    if(ImGui::Button(mpUpdateInfo->keyLabel["a"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
-        mpUpdateInfo->changeKeyCode = "a";
-        mpUpdateInfo->changedKey = true;
+    if(ImGui::Button((mpUpdateInfo->keyLabel["a"] + " ").c_str(),ImVec2(40, 20))){
+        if (!mpUpdateInfo->changedKey) {
+            mpUpdateInfo->changeKeyCode = "a";
+            mpUpdateInfo->changedKey = true;
+        }
     }
     ImGui::SetCursorPosX(width/3);
     ImGui::Text("Right");
     ImGui::SameLine(width/3*2);
-    if(ImGui::Button(mpUpdateInfo->keyLabel["d"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
-        mpUpdateInfo->changeKeyCode = "d";
-        mpUpdateInfo->changedKey = true;
+    if(ImGui::Button((mpUpdateInfo->keyLabel["d"] + " ").c_str(),ImVec2(40, 20))){
+        if (!mpUpdateInfo->changedKey) {
+            mpUpdateInfo->changeKeyCode = "d";
+            mpUpdateInfo->changedKey = true;
+        }
     }
     ImGui::SetCursorPosX(width/3);
     ImGui::Text("Up");
     ImGui::SameLine(width/3*2);
-    if(ImGui::Button(mpUpdateInfo->keyLabel["e"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
-        mpUpdateInfo->changeKeyCode = "e";
-        mpUpdateInfo->changedKey = true;
+    if(ImGui::Button((mpUpdateInfo->keyLabel["e"] + " ").c_str(),ImVec2(40, 20))){
+        if (!mpUpdateInfo->changedKey) {
+            mpUpdateInfo->changeKeyCode = "e";
+            mpUpdateInfo->changedKey = true;
+        }
     }
     ImGui::SetCursorPosX(width/3);
     ImGui::Text("Down");
     ImGui::SameLine(width/3*2);
-    if(ImGui::Button(mpUpdateInfo->keyLabel["q"].c_str(),ImVec2(40, 20)) && !mpUpdateInfo->changedKey){
-        mpUpdateInfo->changeKeyCode = "q";
-        mpUpdateInfo->changedKey = true;
+    if(ImGui::Button((mpUpdateInfo->keyLabel["q"] + " ").c_str(),ImVec2(40, 20))){
+        if (!mpUpdateInfo->changedKey) {
+            mpUpdateInfo->changeKeyCode = "q";
+            mpUpdateInfo->changedKey = true;
+        }
     }
-
+    ImGui::SetCursorPosX(width / 3);
     ImGui::Checkbox("Lights on", &mpUpdateInfo->lightOn);
+    ImGui::SetCursorPosX(width / 3);
     if (ImGui::Button("Change light direction", ImVec2(150, 25))) {
         mpUpdateInfo->changeLightDir = true;
     }
     ImGui::PushItemWidth(75);
+    ImGui::SetCursorPosX(width / 3);
     ImGui::InputFloat("x", &mpUpdateInfo->lightDirection[0]);
     ImGui::SameLine();
     ImGui::InputFloat("y", &mpUpdateInfo->lightDirection[1]);
@@ -601,7 +617,6 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
     if(mpUpdateInfo->leftRoom == false && mpUpdateInfo->inRoom){
         if(ImGui::Button("Leave room",ImVec2(width/8, height/15)))
         {
-           //TODO delete all object;
             mpUpdateInfo->leftRoom = true;
             mpMainMenuInfo.inRoomGui = false;
             mpUpdateInfo->inRoom = false;
@@ -611,7 +626,7 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
             
         }
     }
-    ImGui::SetCursorPos(ImVec2(width-(width/8+25),height-(height/15+25)));
+    ImGui::SetCursorPos(ImVec2(width-(width/8+25)-25,height-(height/15+25)-25));
     if (ImGui::Button("Back",ImVec2(width/8, height/15))){
         mpMainMenuInfo.settingsMenu = false;
         mpUpdateInfo->inSettings = false;

@@ -3189,9 +3189,25 @@ void ape::FilamentApplicationPlugin::Step()
             std::vector<std::string> to_erase;
             delete app.resourceLoader;
             app.resourceLoader = nullptr;
+            if (app.mpScene->hasEntity(app.worldMap.playerMap)) {
+                app.mpScene->remove(app.worldMap.playerMap);
+                for (auto &ply : app.worldMap.playerTriangles) {
+                    if (app.mpScene->hasEntity(ply.second)) {
+                        app.mpScene->remove(ply.second);
+                    }
+                    app.engine->destroy(ply.second);
+                }
+                app.worldMap.playerTriangles.clear();
+                app.engine->destroy(app.worldMap.playerIndexBuffer);
+                app.engine->destroy(app.worldMap.playerVertexBuffer);
+                app.engine->destroy(app.worldMap.mapIndexBuffer);
+                app.engine->destroy(app.worldMap.mapVertexBuffer);
+                app.updateinfo.isMapVisible = false;
+            }
+           
             for(auto instanceList: app.instances){
-                    for(size_t i = 0; i < 10; i++){
-                        if(instanceList.second[i]->getEntityCount() > 0)
+                    for(size_t i = 0; i < instanceList.second.size(); i++){
+                        if(instanceList.first != "default_building" && instanceList.second[i]->getEntityCount() > 0)
                         {
                             instanceList.first;
                             auto entity = instanceList.second[i]->getRoot();
@@ -3436,20 +3452,88 @@ void ape::FilamentApplicationPlugin::Step()
         
         view->setColorGrading(nullptr);
         processEventDoubleQueue();
-        if (mPostUserName.find("_vlftTeacher") != std::string::npos) {
-            if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
-                vec3<float> camPos, camTarget, camUp;
-                mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
-                app.mainCamera->lookAt(camPos, camTarget, camUp);
+        if (!app.vrPlaying) {
+            if (mPostUserName.find("_vlftTeacher") != std::string::npos) {
+                if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
+                    vec3<float> camPos, camTarget, camUp;
+                    mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
+                    app.mainCamera->lookAt(camPos, camTarget, camUp);
+                }
+            }
+            else if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
+                if (node->getOwner() == mpCoreConfig->getNetworkGUID()) {
+                    vec3<float> camPos, camTarget, camUp;
+                    mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
+                    app.mainCamera->lookAt(camPos, camTarget, camUp);
+                }
             }
         }
-        else if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
-            if (node->getOwner() == mpCoreConfig->getNetworkGUID()) {
-                vec3<float> camPos, camTarget, camUp;
-                mCamManipulator->getLookAt(&camPos, &camTarget, &camUp);
-                app.mainCamera->lookAt(camPos, camTarget, camUp);
+
+        if (app.playVR) {
+            app.vrPlaying = true;
+            app.playVR = false;
+            auto camEntity = app.mainCamera->getEntity();
+            auto camTm = app.mpTransformManager->getInstance(camEntity);
+            if (app.mpTransforms.find("Camera_controller") != app.mpTransforms.end()) {
+                app.mpTransformManager->setParent(camTm, app.mpTransforms["Camera_controller"]);
+                auto filaTm = filament::math::mat4f(1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1);
+                app.mpTransformManager->setTransform(camTm, filaTm);
             }
+            std::string line;
+            std::ifstream myfile(mpCoreConfig->getConfigFolderPath()+"/trajectory2.txt");
+            if (myfile.is_open())
+            {
+                while (getline(myfile, line))
+                {
+                    size_t pos = 0;
+                    std::vector<float> lineData = std::vector<float>();
+                    std::string num;
+                    APE_LOG_DEBUG("READ " << line);
+                    while ((pos = line.find(" ")) != std::string::npos && line.length() > 1) {
+                        num = line.substr(0, pos);
+                        lineData.push_back(std::stof(num));
+                        
+                        line.erase(0, pos + 1);
+                    }
+                    if(line != " ")
+                        lineData.push_back(std::stof(line));
+                    app.vrPos.push_back(ape::Vector3(lineData[0]+0.3, lineData[1], lineData[2]+3.6));
+                    if (lineData.size() == 6) {
+                        app.prevRot = ape::Vector3(lineData[5], -lineData[3], lineData[4] + 45);
+                        app.prevPos = ape::Vector3(lineData[0] + 0.3, lineData[1], lineData[2] + 3.6);
+                        if (app.vrPos.size() % 2 == 1) {
+                            ape::Quaternion roll, pitch, yaw;
+                            auto data1 = (lineData[5] + app.prevRot.getX())/2;
+                            auto data2 = (-lineData[3] + app.prevRot.getY()) / 2;
+                            auto data3 = (lineData[4]+45 + app.prevRot.getZ()) / 2;
+                            roll.FromAngleAxis(data1 * F_PI / 180, ape::Vector3(0, 0, 1));
+                            pitch.FromAngleAxis(data2 * F_PI / 180, ape::Vector3 (1, 0, 0));
+                            yaw.FromAngleAxis(data3 * F_PI / 180, ape::Vector3(0, 1, 0));
+                            app.vrRot.push_back(roll* yaw* pitch);
+
+                            auto pos1 = (lineData[0]+0.3 + app.prevPos.getX()) / 2;
+                            auto pos2 = (lineData[1] + app.prevPos.getY()) / 2;
+                            auto pos3 = (lineData[2]+3.6 + app.prevPos.getZ()) / 2;
+                            app.vrPos.push_back(ape::Vector3(pos1, pos2, pos3));
+                        }
+                        ape::Quaternion roll, pitch, yaw;
+                        roll.FromAngleAxis(lineData[5] * F_PI / 180, ape::Vector3(0, 0, 1));
+                        pitch.FromAngleAxis(-lineData[3] * F_PI / 180, ape::Vector3(1, 0, 0));
+                        yaw.FromAngleAxis((lineData[4]+45) * F_PI / 180, ape::Vector3(0, 1, 0));
+                        app.vrRot.push_back(roll*yaw*pitch);
+                    }
+                    else {
+                        app.vrRot.push_back(ape::Quaternion(lineData[6], lineData[3], lineData[4],lineData[5]));
+                    }
+                }
+                myfile.close();
+            }
+
         }
+      
     };
 
     auto postRender = [this](Engine* engine, View* view, Scene* scene, Renderer* renderer) {
@@ -3478,9 +3562,10 @@ void ape::FilamentApplicationPlugin::Step()
         auto keyState = SDL_GetModState();
        
         bool moved = false;
-        if(auto node = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
-            if(app.updateinfo.isAdmin || node->getOwner() == mpCoreConfig->getNetworkGUID())
-                if((!app.updateinfo.inSettings || app.updateinfo.changedKey) && app.updateinfo.inRoom){
+        if(mpSceneManager->getNode(mUserName+mPostUserName).lock() || app.updateinfo.inSettings){
+            auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock();
+            if(app.updateinfo.isAdmin || app.updateinfo.inSettings || node->getOwner() == mpCoreConfig->getNetworkGUID())
+                if((!app.updateinfo.inSettings || app.updateinfo.changedKey) || app.updateinfo.inRoom){
                     switch(event.type){
                         case SDL_MOUSEBUTTONDOWN:{
                             if(!app.updateinfo.inSettings){
@@ -3762,6 +3847,13 @@ void ape::FilamentApplicationPlugin::Step()
                                     moved = true;
                                     manipulator->keyDown(filament::camutils::Manipulator<float>::Key::DOWN);
                                 }
+                                if (keyCode == mKeyMap["o"]) {
+                                    if(!app.vrPlaying)
+                                        app.playVR = true;
+                                    else {
+                                        app.vrCnt = 10000000;
+                                    }
+                                }
                                 if(moved){
                                     
                                     if(app.animationData.animatedKey){
@@ -3844,13 +3936,47 @@ void ape::FilamentApplicationPlugin::Step()
                     }
                 }
         }
-        if (!app.updateinfo.inSettings && app.updateinfo.inRoom) {
-            vec3<float> camPos, camTarget, camUp;
-            manipulator->getLookAt(&camPos, &camTarget, &camUp);
-            if (!app.updateinfo.isAdmin) {
-                if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
-                    if (node->getOwner() == mpCoreConfig->getNetworkGUID()) {
-                        //mpUserInputMacro->getUserNode();
+        if(!app.vrPlaying){
+            if (!app.updateinfo.inSettings && app.updateinfo.inRoom) {
+                vec3<float> camPos, camTarget, camUp;
+                manipulator->getLookAt(&camPos, &camTarget, &camUp);
+                if (!app.updateinfo.isAdmin) {
+                    if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
+                        if (node->getOwner() == mpCoreConfig->getNetworkGUID()) {
+                            //mpUserInputMacro->getUserNode();
+                            //node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1));
+                            auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
+                            modelMatrix[3][0] = modelMatrix[3][1] = modelMatrix[3][2] = 0;
+                            auto modelQuat = modelMatrix.toQuaternion();
+                            //if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
+                            node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
+                            node->setOrientation(ape::Quaternion(modelQuat.w, modelQuat.x, modelQuat.y, modelQuat.z));
+                            //}
+
+                            for (auto x : app.worldMap.playerTriangles) {
+                                if (auto otherplayer = mpSceneManager->getNode(x.first).lock()) {
+                                    auto playerPos = otherplayer->getDerivedPosition();
+                                    auto playerTM = app.mpTransformManager->getInstance(x.second);
+                                    auto playerTransform = app.mpTransformManager->getTransform(playerTM);
+                                    if (abs(camPos.x - playerPos.getX()) < 25 && abs(camPos.z - playerPos.getZ()) < 25) {
+                                        playerTransform[3][0] = (playerPos.getX() - camPos.x) / 2000;
+                                        playerTransform[3][1] = (camPos.z - playerPos.getZ()) / 2000;
+
+                                        auto newTransform = filament::math::mat4f(1, 0, 0, 0,
+                                            0, 1, 0, 0,
+                                            0, 0, 1, 0,
+                                            playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
+                                        app.mpTransformManager->setTransform(playerTM, newTransform);
+                                    }
+
+                                }
+                            }
+
+                        }
+                    }
+                }
+                else {
+                    if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
                         //node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1));
                         auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
                         modelMatrix[3][0] = modelMatrix[3][1] = modelMatrix[3][2] = 0;
@@ -3859,7 +3985,6 @@ void ape::FilamentApplicationPlugin::Step()
                         node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
                         node->setOrientation(ape::Quaternion(modelQuat.w, modelQuat.x, modelQuat.y, modelQuat.z));
                         //}
-
                         for (auto x : app.worldMap.playerTriangles) {
                             if (auto otherplayer = mpSceneManager->getNode(x.first).lock()) {
                                 auto playerPos = otherplayer->getDerivedPosition();
@@ -3875,41 +4000,10 @@ void ape::FilamentApplicationPlugin::Step()
                                         playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
                                     app.mpTransformManager->setTransform(playerTM, newTransform);
                                 }
-
                             }
                         }
 
                     }
-                }
-            }
-            else {
-                if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
-                    //node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z-1));
-                    auto modelMatrix = filament::math::mat4f::lookAt(camPos, camTarget, camUp);
-                    modelMatrix[3][0] = modelMatrix[3][1] = modelMatrix[3][2] = 0;
-                    auto modelQuat = modelMatrix.toQuaternion();
-                    //if(auto camNode = mpSceneManager->getNode(mUserName + mPostUserName+"_cam").lock()){
-                    node->setPosition(ape::Vector3(camPos.x, camPos.y, camPos.z));
-                    node->setOrientation(ape::Quaternion(modelQuat.w, modelQuat.x, modelQuat.y, modelQuat.z));
-                    //}
-                    for (auto x : app.worldMap.playerTriangles) {
-                        if (auto otherplayer = mpSceneManager->getNode(x.first).lock()) {
-                            auto playerPos = otherplayer->getDerivedPosition();
-                            auto playerTM = app.mpTransformManager->getInstance(x.second);
-                            auto playerTransform = app.mpTransformManager->getTransform(playerTM);
-                            if (abs(camPos.x - playerPos.getX()) < 25 && abs(camPos.z - playerPos.getZ()) < 25) {
-                                playerTransform[3][0] = (playerPos.getX() - camPos.x) / 2000;
-                                playerTransform[3][1] = (camPos.z - playerPos.getZ()) / 2000;
-
-                                auto newTransform = filament::math::mat4f(1, 0, 0, 0,
-                                    0, 1, 0, 0,
-                                    0, 0, 1, 0,
-                                    playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
-                                app.mpTransformManager->setTransform(playerTM, newTransform);
-                            }
-                        }
-                    }
-
                 }
             }
             std::vector<std::string> toRemove = std::vector<std::string>();
@@ -3974,6 +4068,36 @@ void ape::FilamentApplicationPlugin::Step()
                     logo->rotate(-0.0034f, ape::Vector3(0, 0, 1), ape::Node::TransformationSpace::LOCAL);
             }
             logoAnimTime = now;
+        }
+
+        if (now - app.vrAnimTime > 0.07 && app.vrPlaying) {
+            int inc = (int((now - app.vrAnimTime) * 100)) / 7;
+            if (app.vrCnt != 0) {
+                app.vrCnt += inc;
+                app.vrAnimTime = app.vrAnimTime + inc * 0.07;
+            }
+            else {
+                app.vrCnt = 500;
+                app.vrAnimTime = now;
+            }
+            APE_LOG_DEBUG(app.vrCnt);
+            if (app.vrCnt < app.vrPos.size()) {
+                if (auto camNode = mpSceneManager->getNode("Camera_controller").lock()) {
+                    camNode->setPosition(app.vrPos[app.vrCnt]);
+                    camNode->setOrientation(app.vrRot[app.vrCnt]);
+                }
+            }
+            
+
+
+            app.vrCnt++;
+            if (app.vrCnt >= app.vrPos.size()) {
+                app.vrPlaying = false;
+                app.vrCnt = 0;
+                app.vrPos.clear();
+                app.vrRot.clear();
+            }
+                
         }
         app.updateinfo.now = now;
         if(app.updateinfo.IsStopClicked && app.updateinfo.pauseTime > 0){
