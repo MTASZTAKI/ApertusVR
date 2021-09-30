@@ -506,14 +506,38 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto w = tangent * tnear*aspectRatio;
                             auto wPrime = tangent * (tnear + zPrime) * aspectRatio;
 
+            #ifdef __APPLE__
                             auto asd = m / w;
                             auto x = xPrime * w / wPrime;
-                            x = x * (width / w)/2+width/2;
+                            auto wScale = width/w/2;
+                            x = x*wScale + width / 2;
+                            
                             auto y = yPrime * m / mPrime;
-                            y = -y * (height / m)/2+height/2;
-                            APE_LOG_DEBUG(zPrime << " zPrime");
+                            auto hScale = height/m/2;
+                            y = -y*hScale + height/2;
+
+                            //APE_LOG_DEBUG(zPrime << " zPrime");
                             if (zPrime < 0.65 || x < 0 || y < 0 || x > width || y > height) {
-                                if(app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
+                                if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
+                                    app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
+                            }
+                            else {
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][0] = x;
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][1] = y-35-200/zPrime;
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][2] = 1.1+(5-zPrime)/5;
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][3] = width;
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][4] = height;
+                            }
+            #else
+                            auto asd = m / w;
+                            auto x = xPrime * w / wPrime;
+                            x = x * (width / w)/2  + width / 2;
+                            auto y = yPrime * m / mPrime;
+                            y = -y * (height / m) + height/2;
+
+                            //APE_LOG_DEBUG(zPrime << " zPrime");
+                            if (zPrime < 0.65 || x < 0 || y < 0 || x > width || y > height) {
+                                if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
                                     app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
                             }
                             else {
@@ -526,7 +550,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][1] = y - height * 0.05;
                                 app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][2] = 1.1+(5-zPrime)/5;
                             }
-                            APE_LOG_DEBUG(x << " calcX, " << y << " calcY");
+            #endif
 
                         }
                         else if (nodeName.find(mUserName + mPostUserName) != std::string::npos) {
@@ -4012,7 +4036,9 @@ void ape::FilamentApplicationPlugin::Step()
                 float tnear = app.mainCamera->getNear() / 2;
                 float fov = app.mainCamera->getFieldOfViewInDegrees(filament::Camera::Fov::VERTICAL);
                 fov = fov * F_PI / 180.0;
-
+                auto otherV = view->getViewport();
+                auto owidth = otherV.width;
+                auto oheight = otherV.height;
                 auto viewport = app.view->getViewport();
                 auto width = viewport.width;
                 auto height = viewport.height;
@@ -4032,13 +4058,36 @@ void ape::FilamentApplicationPlugin::Step()
                 auto mPrime = tangent * (tnear + zPrime);
                 auto w = tangent * tnear * aspectRatio;
                 auto wPrime = tangent * (tnear + zPrime) * aspectRatio;
-
+#ifdef __APPLE__
                 auto asd = m / w;
                 auto x = xPrime * w / wPrime;
-                x = x * (width / w) / 2 + width / 2;
+                auto wScale = width/w/2;
+                x = x*wScale + width / 2;
+                
                 auto y = yPrime * m / mPrime;
-                y = -y * (height / m) / 2 + height / 2;
-                APE_LOG_DEBUG(zPrime << " zPrime");
+                auto hScale = height/m/2;
+                y = -y*hScale + height/2;
+
+                //APE_LOG_DEBUG(zPrime << " zPrime");
+                if (zPrime < 0.65 || x < 0 || y < 0 || x > width || y > height) {
+                    if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
+                        app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
+                }
+                else {
+                    app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][0] = x;
+                    app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][1] = y-35-200/zPrime;
+                    app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][2] = 1.1+(5-zPrime)/5;
+                    app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][3] = width;
+                    app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][4] = height;
+                }
+#else
+                auto asd = m / w;
+                auto x = xPrime * w / wPrime;
+                x = x * (width / w)/2  + width / 2;
+                auto y = yPrime * m / mPrime;
+                y = -y * (height / m) + height/2;
+
+                //APE_LOG_DEBUG(zPrime << " zPrime");
                 if (zPrime < 0.65 || x < 0 || y < 0 || x > width || y > height) {
                     if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
                         app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
@@ -4053,6 +4102,7 @@ void ape::FilamentApplicationPlugin::Step()
                         app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][1] = y - height * 0.05;
                     app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][2] = 1.1+(5-zPrime)/5;
                 }
+#endif
             }
         }
         

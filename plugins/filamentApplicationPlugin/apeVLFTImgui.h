@@ -98,7 +98,7 @@ struct VLFTMainMenuInfo{
 struct updateInfo{
     std::map<std::string, std::string> keyLabel = std::map<std::string, std::string>();
     std::map<std::string, std::string> animationLinks = std::map<std::string, std::string>();
-    std::map<std::string, float[3]> playerNamePositions = std::map<std::string, float[3]>();
+    std::map<std::string, float[5]> playerNamePositions = std::map<std::string, float[5]>();
     std::vector<std::string> stateOfObjects = std::vector<std::string>();
     std::vector<std::string> nameOfState = std::vector<std::string>();
     std::vector<std::string> newMessage = std::vector<std::string>();

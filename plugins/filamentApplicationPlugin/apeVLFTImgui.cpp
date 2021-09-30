@@ -978,12 +978,17 @@ void ape::VLFTImgui::studentPanelGUI(){
 
 void ape::VLFTImgui::drawUserNames()
 {
+    const float winwidth = ImGui::GetIO().DisplaySize.x;
+    const float winheight = ImGui::GetIO().DisplaySize.y;
+    
     for (auto x : mpUpdateInfo->playerNamePositions) {
+        auto wScale = winwidth/x.second[3];
+        auto hScale = winheight/x.second[4];
         auto scale = x.second[2] > 0.6 ? x.second[2] : 0.6;
         auto width = ImGui::CalcTextSize(x.first.c_str()).x * (scale+0.2);
         auto height = ImGui::CalcTextSize(x.first.c_str()).y * (scale + 0.2);
-        ImGui::SetNextWindowPos(ImVec2(x.second[0]-width/2, x.second[1]));
-        ImGui::SetNextWindowSize(ImVec2(width*1.2, height));
+        ImGui::SetNextWindowPos(ImVec2(x.second[0]*wScale-width/2*1.2, x.second[1]*hScale));
+        ImGui::SetNextWindowSize(ImVec2(width*1.2, height*1.2));
         ImGui::Begin(x.first.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar
         | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMouseInputs | ImGuiWindowFlags_NoFocusOnAppearing);
         ImGui::SetWindowFontScale(scale);
@@ -1227,7 +1232,7 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
                 break;
         }
         if(auto node = mpSceneManager->getNode(mpUpdateInfo->selectedItem).lock()){
-            APE_LOG_DEBUG(node->getName());
+            //APE_LOG_DEBUG(node->getName());
             stateText += statesMap[mpUpdateInfo->rootOfSelected];
             auto pos = node->getDerivedPosition();
             positionText = "Position: " + convertApeVec3ToString(pos, 2);
