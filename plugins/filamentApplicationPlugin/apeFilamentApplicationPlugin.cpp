@@ -3189,7 +3189,21 @@ void ape::FilamentApplicationPlugin::Step()
             app.updateinfo.logMovements = false;
         }
         if(app.updateinfo.leftRoom){
-            
+            if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
+            {
+                textNode->setCaption(mUserName + " left the room");
+            }
+            for (auto attachedUserWP : mAttachedUsers)
+            {
+                if (auto attachedUser = attachedUserWP.lock())
+                {
+                    if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
+                    {
+                        attachedUser->setOwner(attachedUser->getCreator());
+                    }
+                }
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
             app.updateinfo.leftRoom = false;
             app.updateinfo.callLeave = true;
             if(auto mNode = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
@@ -4307,10 +4321,7 @@ void ape::FilamentApplicationPlugin::Step()
     app.config.title = "VLFT gamification";
     //app.config.iblDirectory = "";  
     filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput,1024,640);
-    if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
-    {
-        textNode->setCaption(mUserName + " left the room");
-    }
+    
    
     APE_LOG_FUNC_LEAVE();
     //return 0;
@@ -4318,7 +4329,27 @@ void ape::FilamentApplicationPlugin::Step()
 
 void ape::FilamentApplicationPlugin::Stop()
 {
-
+    APE_LOG_FUNC_ENTER()
+    APE_LOG_DEBUG("LEFT ROOM")
+    if(app.updateinfo.inRoom){
+    if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
+    {
+        textNode->setCaption(mUserName + " left the room");
+    }
+    for (auto attachedUserWP : mAttachedUsers)
+    {
+        if (auto attachedUser = attachedUserWP.lock())
+        {
+            if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
+            {
+                attachedUser->setOwner(attachedUser->getCreator());
+            }
+        }
+    }
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        
+    }
+    APE_LOG_FUNC_LEAVE();
 }
 
 void ape::FilamentApplicationPlugin::Suspend()
