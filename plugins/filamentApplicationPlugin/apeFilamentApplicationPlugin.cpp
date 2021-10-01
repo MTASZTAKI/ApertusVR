@@ -1394,8 +1394,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 app.updateinfo.newChatMessage = true;
                                 if (newCaption.find(":") == std::string::npos && newCaption.find("left the room") != std::string::npos) {
                                     if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
-                                        if (node->getOwner() == mpCoreConfig->getNetworkGUID() && name.find("_vlftTeacher") == std::string::npos) {
-                                            node->setOwner(mpCoreConfig->getNetworkGUID());
+                                        if (name.find("_vlftTeacher") != std::string::npos) {
+                                            node->detachFromParentNode();
+                                            node->setPosition(ape::Vector3(0, 1.5, 0));
+                                            node->setOrientation(ape::Quaternion(0, 0, 1, 0));
                                         }
                                     }
                                 }
@@ -3329,7 +3331,7 @@ void ape::FilamentApplicationPlugin::Step()
                         }
                     }
                 }
-                mAttachedUsers = std::vector<ape::NodeWeakPtr>();
+                mAttachedUsers.clear();
                 app.updateinfo.usersAttached = false;
             }
             app.updateinfo.attachUsers = false;
