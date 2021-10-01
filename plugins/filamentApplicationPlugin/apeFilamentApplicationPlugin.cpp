@@ -1355,8 +1355,14 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                     }
                 }
-                if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end())
+                if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end()) {
                     app.mpInstancesMap.erase(event.subjectName);
+                    app.playerNamesToShow.erase(event.subjectName);
+                    auto nodeName = event.subjectName;
+                    if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
+                        app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
+                }
+                   
             }
         }
         else if (event.group == ape::Event::Group::GEOMETRY_TEXT){
@@ -1383,8 +1389,16 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         break;
                         case ape::Event::Type::GEOMETRY_TEXT_CAPTION:{
                             if(name != mUserName+mPostUserName+"_text" && name.find("_text") != std::string::npos){
-                                app.updateinfo.newMessage.push_back(textGeometry->getCaption());
+                                auto newCaption = textGeometry->getCaption();
+                                app.updateinfo.newMessage.push_back(newCaption);
                                 app.updateinfo.newChatMessage = true;
+                                if (newCaption.find(":") == std::string::npos && newCaption.find("left the room") != std::string::npos) {
+                                    if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
+                                        if (node->getOwner() == mpCoreConfig->getNetworkGUID() && name.find("_vlftTeacher") == std::string::npos) {
+                                            node->setOwner(mpCoreConfig->getNetworkGUID());
+                                        }
+                                    }
+                                }
                             }
                             else if(name != mUserName + mPostUserName + "_StateText" && name.find("_StateText") != std::string::npos) {
                                 //name != mUserName + mPostUserName + "_StateText" &&
@@ -3238,6 +3252,9 @@ void ape::FilamentApplicationPlugin::Step()
             app.mpLoadedAssets.clear();
             for(auto item: to_erase){
                 app.mpInstancesMap.erase(item);
+                app.playerNamesToShow.erase(item);
+                if (app.updateinfo.playerNamePositions.find(item.substr(0, item.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
+                    app.updateinfo.playerNamePositions.erase(item.substr(0, item.find("_vlft")));
             }
             to_erase.clear();
             app.updateinfo.leaveWait = true;
@@ -4290,7 +4307,10 @@ void ape::FilamentApplicationPlugin::Step()
     app.config.title = "VLFT gamification";
     //app.config.iblDirectory = "";  
     filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput,1024,640);
-
+    if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
+    {
+        textNode->setCaption(mUserName + " left the room");
+    }
    
     APE_LOG_FUNC_LEAVE();
     //return 0;
