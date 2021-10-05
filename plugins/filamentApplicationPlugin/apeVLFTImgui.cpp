@@ -766,22 +766,29 @@ void ape::VLFTImgui::loginGUI(){
     ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
     ImGui::Begin("Login", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::Checkbox("Teacher", &mpUpdateInfo->isAdmin);
-    static char email[255] = u8"";
+    static char emailT[255] = u8"Teacher";
+    static char emailS[255] = u8"Student";
     ImGui::SetCursorPos(ImVec2(width/2-105, height/2-120));
     if(mpUpdateInfo->wrongPassword){
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Incorrect password or email!");
     }
     ImGui::SetCursorPos(ImVec2(width/2-120, height/2-90));
     ImGui::PushItemWidth(200);
-    ImGui::InputText(u8"email", email, IM_ARRAYSIZE(email));
-    static char password[255] = u8"";
+    if(mpUpdateInfo->isAdmin)
+        ImGui::InputText(u8"email", emailT, IM_ARRAYSIZE(emailT));
+    else
+        ImGui::InputText(u8"email", emailS, IM_ARRAYSIZE(emailS));
+    static char password[255] = u8"apertusvr2020";
     if(mpUpdateInfo->isAdmin){
         ImGui::SetCursorPos(ImVec2(width/2-120, height/2-60));
         ImGui::PushItemWidth(200);
         ImGui::InputText(u8"password", password, IM_ARRAYSIZE(password),ImGuiInputTextFlags_Password);
         ImGui::SetCursorPos(ImVec2(width/2-70, height/2-25));
         if(ImGui::Button("Log in", ImVec2(100,30))){
-            mpUpdateInfo->userName = email;
+            if (mpUpdateInfo->isAdmin)
+                mpUpdateInfo->userName = emailT;
+            else
+                mpUpdateInfo->userName = emailS;
             mpUpdateInfo->password = password;
             mpUpdateInfo->checkLogin = true;
         }
@@ -789,7 +796,10 @@ void ape::VLFTImgui::loginGUI(){
     else{
         ImGui::SetCursorPos(ImVec2(width/2-70, height/2-25));
         if(ImGui::Button("Log in", ImVec2(100,30))){
-            mpUpdateInfo->userName = email;
+            if (mpUpdateInfo->isAdmin)
+                mpUpdateInfo->userName = emailT;
+            else
+                mpUpdateInfo->userName = emailS;
             mpUpdateInfo->checkLogin = true;
         }
     }
