@@ -1307,6 +1307,12 @@ void ape::VLFTImgui::manipulatorPanelGUI(){
             mpUpdateInfo->orientation = ape::Quaternion(ape::Radian(rotAngle), Vector3(upX, upY, upZ));
             mpUpdateInfo->setRotation = true;
         }
+        ImGui::SameLine();
+        if (ImGui::Button("Rotate", ImVec2(110, 25)) && mpUpdateInfo->selectedItem != "") {
+            mpUpdateInfo->orientation = ape::Quaternion(ape::Radian(rotAngle), Vector3(upX, upY, upZ));
+            mpUpdateInfo->setRotation = true;
+            mpUpdateInfo->rotate = true;
+        }
     }
     
     if(ImGui::Button("Delete",ImVec2(110,25)) && mpUpdateInfo->pickedItem == "")

@@ -121,6 +121,7 @@ struct updateInfo{
     bool IsPlayClicked = false;
     bool setPosition = false;
     bool setRotation = false;
+    bool rotate = false;
     bool inRoom = false;
     bool inSettings = false;
     bool sendMessage = false;

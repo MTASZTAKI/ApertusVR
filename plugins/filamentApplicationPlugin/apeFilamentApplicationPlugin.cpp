@@ -3312,16 +3312,18 @@ void ape::FilamentApplicationPlugin::Step()
                         {
                             std::string nodeName = nodeSP->getName();
                             std::size_t pos = nodeName.find("_vlftStudent");
+                            std::size_t pos2 = nodeName.find("_TextNode");
                             if (pos != std::string::npos)
                             {
-                                nodeSP->setInitalState();
-                                nodeSP->setOwner(mpCoreConfig->getNetworkGUID());
-                                if(auto userNode = mpSceneManager->getNode(mUserName+mPostUserName).lock())
-                                    nodeSP->setParentNode(userNode);
-                                nodeSP->setPosition(ape::Vector3(0, -0.65, 0.05));
-                                nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
-                                mAttachedUsers.push_back(nodeSP);
-
+                                if (pos2 == std::string::npos) {
+                                    nodeSP->setInitalState();
+                                    nodeSP->setOwner(mpCoreConfig->getNetworkGUID());
+                                    if (auto userNode = mpSceneManager->getNode(mUserName + mPostUserName).lock())
+                                        nodeSP->setParentNode(userNode);
+                                    nodeSP->setPosition(ape::Vector3(0, -0.65, 0.05));
+                                    nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
+                                    mAttachedUsers.push_back(nodeSP);
+                                }
                             }
                         }
                     }
@@ -3374,7 +3376,12 @@ void ape::FilamentApplicationPlugin::Step()
                 app.updateinfo.setRotation = false;
                 app.updateinfo.switchOwner = true;
                 mNodeToSwitchOwner.push_back(app.rootOfSelected.second);
-                clone->setOrientation(app.updateinfo.orientation);
+                if (app.updateinfo.rotate) {
+                    clone->setOrientation(clone->getOrientation() * app.updateinfo.orientation);
+                    app.updateinfo.rotate = false;
+                }
+                else
+                    clone->setOrientation(app.updateinfo.orientation);
             }
 //            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
 //            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
@@ -3393,14 +3400,13 @@ void ape::FilamentApplicationPlugin::Step()
         }
         if(app.updateinfo.deleteSelected){
             if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
+                auto owner = clone->getOwner();
+                clone->setOwner(mpCoreConfig->getNetworkGUID());
                 clone->setChildrenVisibility(false);
                 clone->setVisible(false);
+                app.updateinfo.switchOwner = true;
+                mNodeToSwitchOwner.push_back(app.rootOfSelected.second);
             }
-//            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
-//            scene->removeEntities(instance->getEntities(), instance->getEntityCount());
-//            scene->remove(app.boxEntity.first);
-//            app.updateinfo.selectedItem = "";
-//            app.updateinfo.rootOfSelected = "";
             app.updateinfo.deleteSelected = false;
         }
         if(app.updateinfo.drop){
