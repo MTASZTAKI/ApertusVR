@@ -3201,6 +3201,11 @@ void ape::FilamentApplicationPlugin::Step()
                     stateNode->setOwner(mpCoreConfig->getNetworkGUID());
                 }
             }
+            if (auto textNode = mpSceneManager->getNode(mUserName + mPostUserName+"_TextNode").lock()) {
+                if (textNode->getOwner() != mpCoreConfig->getNetworkGUID()) {
+                    textNode->setOwner(mpCoreConfig->getNetworkGUID());
+                }
+            }
             if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
             {
                 textNode->setCaption(mUserName + " left the room");
@@ -3218,20 +3223,16 @@ void ape::FilamentApplicationPlugin::Step()
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
             app.updateinfo.leftRoom = false;
             app.updateinfo.callLeave = true;
-            if(auto mNode = mpSceneManager->getNode(mUserName+mPostUserName).lock()){
-                mNode->setOwner(mNode->getCreator());
-            }
-            if(auto mNode = mpSceneManager->getNode(mUserName+mPostUserName+"_TextNode").lock()){
-                mNode->setOwner(mNode->getCreator());
-            }
+
             
             mpSceneManager->deleteEntity(mUserName+mPostUserName+"characterModel");
             mpSceneManager->deleteEntity(mUserName+mPostUserName);
             mpSceneManager->deleteNode(mUserName+mPostUserName);
             mpSceneManager->deleteEntity(mUserName+mPostUserName + "_text");
-            mpSceneManager->deleteNode(mUserName+mPostUserName + "_TextNode");
             mpSceneManager->deleteEntity(mUserName + mPostUserName + "_StateText");
             mpSceneManager->deleteNode(mUserName + mPostUserName + "_StateNode");
+            mpSceneManager->deleteNode(mUserName + mPostUserName + "_TextNode");
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
             //mpSceneManager->deleteNode(mUserName+mPostUserName+"_cam");
             std::vector<std::string> to_erase;
             delete app.resourceLoader;
@@ -4352,22 +4353,21 @@ void ape::FilamentApplicationPlugin::Stop()
     APE_LOG_FUNC_ENTER()
     APE_LOG_DEBUG("LEFT ROOM")
     if(app.updateinfo.inRoom){
-    if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
-    {
-        textNode->setCaption(mUserName + " left the room");
-    }
-    for (auto attachedUserWP : mAttachedUsers)
-    {
-        if (auto attachedUser = attachedUserWP.lock())
+        if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
         {
-            if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
+            textNode->setCaption(mUserName + " left the room");
+        }
+        for (auto attachedUserWP : mAttachedUsers)
+        {
+            if (auto attachedUser = attachedUserWP.lock())
             {
-                attachedUser->setOwner(attachedUser->getCreator());
+                if (attachedUser->getOwner() == mpCoreConfig->getNetworkGUID())
+                {
+                    attachedUser->setOwner(attachedUser->getCreator());
+                }
             }
         }
-    }
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        
     }
     APE_LOG_FUNC_LEAVE();
 }
