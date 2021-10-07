@@ -3191,6 +3191,10 @@ void ape::FilamentApplicationPlugin::Step()
             app.updateinfo.logMovements = false;
         }
         if(app.updateinfo.leftRoom){
+            mEventDoubleQueue.swap();
+           
+            while (!mEventDoubleQueue.emptyPop())
+                mEventDoubleQueue.pop();
             if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
                 if (node->getOwner() != mpCoreConfig->getNetworkGUID()) {
                     node->setOwner(mpCoreConfig->getNetworkGUID());
@@ -3272,9 +3276,9 @@ void ape::FilamentApplicationPlugin::Step()
             app.geometryNameMap.clear();
             
             for(auto instance: app.mpInstancesMap){
-                    if(app.asset.find(instance.first) != app.asset.end()){
+                    if(app.asset.find(instance.second.assetName) != app.asset.end()){
                         app.loader->destroyAsset(app.asset[instance.second.assetName]);
-                        app.asset.erase(instance.first);
+                        app.asset.erase(instance.second.assetName);
                     }
                     to_erase.push_back(instance.first);
             }
@@ -3286,6 +3290,7 @@ void ape::FilamentApplicationPlugin::Step()
                     app.updateinfo.playerNamePositions.erase(item.substr(0, item.find("_vlft")));
             }
             to_erase.clear();
+            app.playerAnimations.clear();
             app.updateinfo.leaveWait = true;
             app.updateinfo.leaveTime = app.updateinfo.now;
         }
@@ -3407,6 +3412,12 @@ void ape::FilamentApplicationPlugin::Step()
                 clone->setVisible(false);
                 app.updateinfo.switchOwner = true;
                 mNodeToSwitchOwner.push_back(app.rootOfSelected.second);
+                if (app.mpScene->hasEntity(app.boxEntity.first)) {
+                    app.mpScene->remove(app.boxEntity.first);
+                }
+                app.boxEntity.second = 1000000.0;
+
+               
             }
             app.updateinfo.deleteSelected = false;
         }
@@ -3508,7 +3519,13 @@ void ape::FilamentApplicationPlugin::Step()
         }*/
         
         view->setColorGrading(nullptr);
-        processEventDoubleQueue();
+        if(!app.updateinfo.leaveWait)
+            processEventDoubleQueue();
+        else {
+            mEventDoubleQueue.swap();
+            while (!mEventDoubleQueue.emptyPop())
+                mEventDoubleQueue.pop();
+        }
         if (!app.vrPlaying) {
             if (mPostUserName.find("_vlftTeacher") != std::string::npos) {
                 if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {

@@ -260,6 +260,7 @@ void ape::VLFTImgui::connectToRoom(){
             mpMainMenuInfo.inRoomGui = true;
             mpUpdateInfo->inRoom = true;
             mpUpdateInfo->isMapVisible = true;
+            mpMainMenuInfo.inSinglePlayerMode = false;
         }
         else if(mpMainMenuInfo.singlePlayer){
             
@@ -836,9 +837,11 @@ void ape::VLFTImgui::update(){
     }
     else{
         if(mpUpdateInfo->callLeave && (mpUpdateInfo->now - mpUpdateInfo->leaveTime) > 0.5){
-            if(mpMainMenuInfo.multiPlayer)
+            if (!mpMainMenuInfo.inSinglePlayerMode) {
                 mpSceneNetwork->leave();
-            auto nodes = mpSceneManager->getNodes();
+                //std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            }
+            /*auto nodes = mpSceneManager->getNodes();
             for (auto node : nodes)
             {
                 mpSceneManager->deleteNode(node.first);
@@ -846,7 +849,7 @@ void ape::VLFTImgui::update(){
             auto apeEntities = mpSceneManager->getEntities();
             for (auto apeEntity : apeEntities){
                 mpSceneManager->deleteEntity(apeEntity.first);
-            }
+            }*/
             mpUpdateInfo->callLeave = false;
         }
         if(mpUpdateInfo->leaveWait)

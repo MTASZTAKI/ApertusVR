@@ -167,7 +167,7 @@ void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
 
 void ape::SceneNetworkImpl::init()
 {
-    mDestructionBegun= false;
+	mDestructionBegun = false;
 	ape::NetworkConfig::NatPunchThroughConfig natPunchThroughServerConfig = mpCoreConfig->getNetworkConfig().natPunchThroughConfig;
 	mNATServerIP = natPunchThroughServerConfig.ip;
 	mNATServerPort = natPunchThroughServerConfig.port;
@@ -298,7 +298,7 @@ void ape::SceneNetworkImpl::connect2ReplicaHost(std::string guid)
 void ape::SceneNetworkImpl::leave()
 {
     mDestructionBegun = true;
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(400));
     if (mpRakReplicaPeer)
     {
         mpRakReplicaPeer->DetachPlugin(mpNatPunchthroughClient);
@@ -307,7 +307,8 @@ void ape::SceneNetworkImpl::leave()
         APE_LOG_DEBUG("Replica destroy");
         RakNet::RakPeerInterface::DestroyInstance(mpRakReplicaPeer);
         mpRakReplicaPeer = nullptr;
-       
+		mpReplicaManager3.reset();
+		delete mpRakStreamPeer;
     }
     RakNet::NetworkIDManager::DestroyInstance(mpNetworkIDManager);
     mpNetworkIDManager = nullptr;
