@@ -1362,6 +1362,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
                         app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
                 }
+
+                if (app.mpScene->hasEntity(app.worldMap.playerTriangles[event.subjectName])) {
+                    app.mpScene->remove(app.worldMap.playerTriangles[event.subjectName]));
+                    app.worldMap.playerTriangles.erase(event.subjectName);
+                }
                    
             }
         }
