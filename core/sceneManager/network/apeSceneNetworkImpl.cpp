@@ -298,18 +298,27 @@ void ape::SceneNetworkImpl::connect2ReplicaHost(std::string guid)
 void ape::SceneNetworkImpl::leave()
 {
     mDestructionBegun = true;
-    std::this_thread::sleep_for(std::chrono::milliseconds(400));
+	APE_LOG_DEBUG("Destruction wait START");
+    //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	APE_LOG_DEBUG("Destruction wait STOP");
     if (mpRakReplicaPeer)
     {
         mpRakReplicaPeer->DetachPlugin(mpNatPunchthroughClient);
+		mpRakReplicaPeer->DetachPlugin(mpReplicaManager3.get());
         APE_LOG_DEBUG("Replica shutdown");
         mpRakReplicaPeer->Shutdown(100);
         APE_LOG_DEBUG("Replica destroy");
         RakNet::RakPeerInterface::DestroyInstance(mpRakReplicaPeer);
         mpRakReplicaPeer = nullptr;
-		mpReplicaManager3.reset();
-		delete mpRakStreamPeer;
     }
+	if (mpRakStreamPeer) {
+		mpRakStreamPeer->Shutdown(100);
+		RakNet::RakPeerInterface::DestroyInstance(mpRakStreamPeer);
+		mpRakStreamPeer = nullptr;
+	}
+	mpReplicaManager3.get()->~ReplicaManager3();
+	mpReplicaManager3.reset();
+	mpReplicaManager3 = nullptr;
     RakNet::NetworkIDManager::DestroyInstance(mpNetworkIDManager);
     mpNetworkIDManager = nullptr;
     if (mpNatPunchthroughClient){
@@ -317,6 +326,7 @@ void ape::SceneNetworkImpl::leave()
         mpNatPunchthroughClient = nullptr;
         mIsConnectedToNATServer = false;
     }
+
    
 }
 
@@ -403,6 +413,7 @@ std::string ape::SceneNetworkImpl::getCurrentRoomName()
 
 void ape::SceneNetworkImpl::runReplicaPeerListen()
 {
+	APE_LOG_DEBUG("runReplicaPeerListen");
 	while (!mDestructionBegun)
 	{
         //mRackReplicaPeerMutex.lock();
@@ -419,6 +430,8 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 	RakNet::Packet *packet;
 	for (packet = mpRakReplicaPeer->Receive(); packet; mpRakReplicaPeer->DeallocatePacket(packet), packet = mpRakReplicaPeer->Receive())
 	{
+		if (mDestructionBegun)
+			break;
 		switch (packet->data[0])
 		{
 			case ID_NEW_INCOMING_CONNECTION:

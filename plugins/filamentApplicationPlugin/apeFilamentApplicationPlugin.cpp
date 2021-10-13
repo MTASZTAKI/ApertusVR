@@ -1364,7 +1364,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 }
 
                 if (app.mpScene->hasEntity(app.worldMap.playerTriangles[event.subjectName])) {
-                    app.mpScene->remove(app.worldMap.playerTriangles[event.subjectName]));
+                    app.mpScene->remove(app.worldMap.playerTriangles[event.subjectName]);
                     app.worldMap.playerTriangles.erase(event.subjectName);
                 }
                    
@@ -3050,16 +3050,18 @@ void ape::FilamentApplicationPlugin::Step()
             app.worldMap.mapMaterial = filament::Material::Builder()
                 .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
                 .build(*engine);
-            app.worldMap.playerMap = EntityManager::get().create();
-            auto mat = app.worldMap.mapMaterial->getDefaultInstance();
-            RenderableManager::Builder(1)
-                .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-                .material(0, mat)
-                .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
-                .culling(true)
-                .receiveShadows(false)
-                .castShadows(false)
-                .build(*engine, app.worldMap.playerMap);
+            if(!app.mpEntityManager->isAlive(app.worldMap.playerMap)){
+                app.worldMap.playerMap = EntityManager::get().create();
+                auto mat = app.worldMap.mapMaterial->getDefaultInstance();
+                RenderableManager::Builder(1)
+                    .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+                    .material(0, mat)
+                    .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
+                    .culling(true)
+                    .receiveShadows(false)
+                    .castShadows(false)
+                    .build(*engine, app.worldMap.playerMap);
+            }
             app.mpScene->addEntity(app.worldMap.playerMap);
 
             auto camEntity = app.mainCamera->getEntity();

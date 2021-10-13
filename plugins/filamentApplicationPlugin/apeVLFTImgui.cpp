@@ -624,7 +624,13 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
             mpMainMenuInfo.adminMenu = true;
             mpMainMenuInfo.settingsMenu = false;
             mpUpdateInfo->inSettings = false;
-            
+            mpUpdateInfo->playerNamePositions.clear();
+            mpUpdateInfo->stateOfObjects.clear();
+            mpUpdateInfo->nameOfState.clear();
+            mpUpdateInfo->newMessage.clear();
+            mpUpdateInfo->timeOfState.clear();
+            chatMessages.clear();
+            chatMessages.push_back("Write messages here for others to see");
         }
     }
     ImGui::SetCursorPos(ImVec2(width-(width/8+25)-25,height-(height/15+25)-25));
@@ -1035,7 +1041,7 @@ void ape::VLFTImgui::infoPanelGUI() {
         ImGui::SetScrollHere(1.0f);
     }
     std::string chatText = u8"";
-    for(size_t i = 0; i < chatMessages.size()-1; i++){
+    for(int i = 0; i < ((int)chatMessages.size()-1); i++){
         if(chatMessages[i].size() >0)
             chatText += chatMessages[i] + "\n";
     }
