@@ -76,7 +76,7 @@ void ape::Replica::SerializeDestruction( RakNet::BitStream *destructionBitstream
 {
 	mVariableDeltaSerializer.RemoveRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
 	destructionBitstream->Write(mObjectType + RakNet::RakString("SerializeDestruction"));
-	APE_LOG_DEBUG("SerializeDestruction");
+	APE_LOG_DEBUG("SerializeDestruction " << mReplicaName);
 }
 
 bool ape::Replica::DeserializeDestruction( RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection )
@@ -98,7 +98,7 @@ RakNet::RM3ActionOnPopConnection ape::Replica::QueryActionOnPopConnection( RakNe
 
 void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 {
-	APE_LOG_DEBUG("DeallocReplica");
+	APE_LOG_DEBUG(mReplicaName<<" DeallocReplica");
 //	if (mIsHost)
 //		BroadcastDestruction();
 	if (mObjectType == "Node")

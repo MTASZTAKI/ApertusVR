@@ -299,7 +299,7 @@ void ape::SceneNetworkImpl::leave()
 {
     mDestructionBegun = true;
 	APE_LOG_DEBUG("Destruction wait START");
-    //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	APE_LOG_DEBUG("Destruction wait STOP");
     if (mpRakReplicaPeer)
     {
@@ -322,6 +322,7 @@ void ape::SceneNetworkImpl::leave()
     RakNet::NetworkIDManager::DestroyInstance(mpNetworkIDManager);
     mpNetworkIDManager = nullptr;
     if (mpNatPunchthroughClient){
+		mpNatPunchthroughClient->Clear();
         RakNet::NatPunchthroughClient::DestroyInstance(mpNatPunchthroughClient);
         mpNatPunchthroughClient = nullptr;
         mIsConnectedToNATServer = false;
@@ -428,6 +429,7 @@ void ape::SceneNetworkImpl::runReplicaPeerListen()
 void ape::SceneNetworkImpl::listenReplicaPeer()
 {
 	RakNet::Packet *packet;
+	if (!mDestructionBegun)
 	for (packet = mpRakReplicaPeer->Receive(); packet; mpRakReplicaPeer->DeallocatePacket(packet), packet = mpRakReplicaPeer->Receive())
 	{
 		if (mDestructionBegun)
@@ -613,6 +615,8 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 				//APE_LOG_DEBUG("Unknown message type" << packet->data[0]);
 			}
 		}
+		if (mDestructionBegun)
+			break;
 	}
 }
 

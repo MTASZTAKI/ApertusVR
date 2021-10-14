@@ -718,13 +718,13 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     
                                 }
                                 if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
-                                    APE_LOG_DEBUG("FoundTM: " << nodeName);
+                                    //APE_LOG_DEBUG("FoundTM: " << nodeName);
                                     if(app.mpEntities.find(nodeName) != app.mpEntities.end() && !app.mpScene->hasEntity(app.mpEntities[nodeName]))
                                     {
-                                        APE_LOG_DEBUG("FoundEnt: " << nodeName);
+                                        //APE_LOG_DEBUG("FoundEnt: " << nodeName);
                                         app.mpScene->addEntity(app.mpEntities[nodeName]);
                                         if(app.mpTransformManager->hasComponent(app.mpEntities[nodeName])){
-                                            APE_LOG_DEBUG("HasTM: " << nodeName);
+                                            //APE_LOG_DEBUG("HasTM: " << nodeName);
                                             std::vector<utils::Entity> children;
                                             size_t cnt = app.mpTransformManager->getChildCount(app.mpTransforms[nodeName]);
                                             if(cnt > 0){
@@ -742,13 +742,13 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
                                     if(idGltfMap.find(nodeName) != idGltfMap.end())
                                         subNodeName = idGltfMap[nodeName].substr( idGltfMap[nodeName].find_last_of(".")+1);
-                                    APE_LOG_DEBUG("Search: " << cloneName << " " << subNodeName);
+                                    //APE_LOG_DEBUG("Search: " << cloneName << " " << subNodeName);
                                     if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
                                         int entitiyIndex = app.mpInstancesMap[cloneName].index;
                                         std::vector<utils::Entity> entities;
                                         entities.resize(10);
                                         int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
-                                        APE_LOG_DEBUG("Get entitites: " << cloneName << " " << subNodeName << " " << cnt);
+                                        //APE_LOG_DEBUG("Get entitites: " << cloneName << " " << subNodeName << " " << cnt);
                                         if(cnt > 0 )
                                         {
                                             if(!app.mpScene->hasEntity(entities[entitiyIndex]))
@@ -952,20 +952,20 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 {
                                     APE_LOG_DEBUG("Unable to open " << filePath.str());
                                 }
-                                else
+                                /*else
                                 {
                                     APE_LOG_DEBUG(filePath.str() << " was opened");
-                                }
+                                }*/
                                 std::ifstream inBin(filePath.str().c_str(), std::ifstream::binary | std::ifstream::in);
                                 std::vector<uint8_t> buffer(static_cast<unsigned long>(contentSize));
                                 if (!inBin.read((char*)buffer.data(), contentSize))
                                 {
                                     APE_LOG_DEBUG("Unable to read " << filePath.str());
                                 }
-                                else
+                               /* else
                                 {
                                     APE_LOG_DEBUG(filePath.str() << " was read");
-                                }
+                                }*/
                                     if (app.asset.find(geometryName) != app.asset.end())
                                     {
                                         app.mpScene->removeEntities(app.asset[geometryName]->getEntities(), app.asset[geometryName]->getEntityCount());
@@ -985,7 +985,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     else
                                     {
 
-                                        APE_LOG_DEBUG(filePath.str() << " was parsed");
+                                        //APE_LOG_DEBUG(filePath.str() << " was parsed");
                                         
                                         gltfio::ResourceConfiguration resourceConfiguration;
                                         resourceConfiguration.engine = app.engine;
@@ -998,7 +998,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         app.resourceLoader = new gltfio::ResourceLoader(resourceConfiguration);
                                         if (app.resourceLoader->loadResources(app.asset[geometryName]))
                                         {
-                                            APE_LOG_DEBUG("resources load OK "<<fileName);
+                                            //APE_LOG_DEBUG("resources load OK "<<fileName);
         //                                    auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[geometryName]);
         //                                    auto filamentTransform = filament::math::mat4f(
         //                                       1/1000,0,0,0,
@@ -1336,7 +1336,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME:
                     {
-                        APE_LOG_ERROR("GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME "<<event.subjectName);
+                        APE_LOG_DEBUG("GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME "<<event.subjectName);
                     }
                     break;
                 }
@@ -1627,7 +1627,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 		}
 		catch (std::exception exp)
 		{
-			APE_LOG_DEBUG("");
+			//APE_LOG_DEBUG("");
 		}
 		mEventDoubleQueue.pop();
 	}
