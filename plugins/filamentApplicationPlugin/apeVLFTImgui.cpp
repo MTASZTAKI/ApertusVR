@@ -196,6 +196,10 @@ bool ape::VLFTImgui::downloadConfig(std::string url, std::string location){
 void ape::VLFTImgui::connectToRoom(){
     
     std::string roomName;
+    if (!mpSceneNetwork) {
+        mpSceneManager->createSceneNetwork();
+        mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
+    }
     if(mPreChosenRoomName != ""){
         roomName = mPreChosenRoomName;
         std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
@@ -844,7 +848,8 @@ void ape::VLFTImgui::update(){
     else{
         if(mpUpdateInfo->callLeave && (mpUpdateInfo->now - mpUpdateInfo->leaveTime) > 0.5){
             if (!mpMainMenuInfo.inSinglePlayerMode) {
-                mpSceneNetwork->leave();
+                mpSceneManager->destroySceneNetwork();
+                mpSceneNetwork = nullptr;
                 //std::this_thread::sleep_for(std::chrono::milliseconds(200));
             }
             /*auto nodes = mpSceneManager->getNodes();

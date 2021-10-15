@@ -64,6 +64,10 @@ namespace ape
 
 		void deleteEntity(std::string name) override;
 
+		void destroySceneNetwork() override;
+
+		void createSceneNetwork() override;
+
 	private:
 		ape::IEventManager* mpEventManager;
 

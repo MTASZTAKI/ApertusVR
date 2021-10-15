@@ -101,6 +101,18 @@ ape::NodeWeakPtr ape::SceneManagerImpl::createNode(std::string name, bool replic
 	return node;
 }
 
+void ape::SceneManagerImpl::destroySceneNetwork()
+{
+	mNodes.clear();
+	mEntities.clear();
+	delete  (ape::SceneNetworkImpl*)mpSceneNetwork;
+}
+
+void ape::SceneManagerImpl::createSceneNetwork()
+{
+	mpSceneNetwork = new ape::SceneNetworkImpl();
+}
+
 void ape::SceneManagerImpl::deleteNode(std::string name)
 {
 	auto node = std::static_pointer_cast<ape::NodeImpl>(mNodes[name]);

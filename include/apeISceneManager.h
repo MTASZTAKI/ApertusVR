@@ -60,6 +60,10 @@ namespace ape
 		virtual void deleteNode(std::string name) = 0;
 
 		virtual void deleteEntity(std::string name) = 0;
+
+		virtual void destroySceneNetwork() = 0;
+
+		virtual void createSceneNetwork() = 0;
 	};
 }
 

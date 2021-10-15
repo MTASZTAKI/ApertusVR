@@ -101,7 +101,7 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 ape::SceneNetworkImpl::~SceneNetworkImpl()
 {
    // mRackReplicaPeerMutex.lock();
-    mDestructionBegun = true;
+	leave();
     //mRunReplicaPeerListenThread.join();
 	if (mpRakReplicaPeer)
 	{
@@ -303,6 +303,9 @@ void ape::SceneNetworkImpl::leave()
 	APE_LOG_DEBUG("Destruction wait STOP");
     if (mpRakReplicaPeer)
     {
+		RakNet::AddressOrGUID rakNatAddress(mNATServerAddress);
+		mpRakReplicaPeer->CloseConnection(mReplicaHostGuid, true);
+		mpRakReplicaPeer->CloseConnection(rakNatAddress, true);
         mpRakReplicaPeer->DetachPlugin(mpNatPunchthroughClient);
 		mpRakReplicaPeer->DetachPlugin(mpReplicaManager3.get());
         APE_LOG_DEBUG("Replica shutdown");
@@ -316,9 +319,7 @@ void ape::SceneNetworkImpl::leave()
 		RakNet::RakPeerInterface::DestroyInstance(mpRakStreamPeer);
 		mpRakStreamPeer = nullptr;
 	}
-	mpReplicaManager3.get()->~ReplicaManager3();
-	mpReplicaManager3.reset();
-	mpReplicaManager3 = nullptr;
+	
     RakNet::NetworkIDManager::DestroyInstance(mpNetworkIDManager);
     mpNetworkIDManager = nullptr;
     if (mpNatPunchthroughClient){
@@ -330,6 +331,9 @@ void ape::SceneNetworkImpl::leave()
 	mIsConnectedToNATServer = false;
 	mIsNATPunchthrough2HostSucceeded = false;
 	mIsNATPunchthrough2HostResponded = false;
+
+	mpReplicaManager3.reset();
+	mpReplicaManager3 = nullptr;
    
 }
 

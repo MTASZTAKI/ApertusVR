@@ -102,6 +102,7 @@ void ape::FilamentApplicationPlugin::initKeyMap(){
 void ape::FilamentApplicationPlugin::eventCallBack(const ape::Event& event)
 {
 	mEventDoubleQueue.push(event);
+    APE_LOG_DEBUG(event.subjectName);
 }
 
 void ape::FilamentApplicationPlugin::processEventDoubleQueue()
