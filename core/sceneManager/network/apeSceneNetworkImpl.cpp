@@ -312,7 +312,7 @@ void ape::SceneNetworkImpl::leave()
         mpRakReplicaPeer = nullptr;
     }
 	if (mpRakStreamPeer) {
-		mpRakStreamPeer->Shutdown(100);
+		mpRakStreamPeer->Shutdown(500);
 		RakNet::RakPeerInterface::DestroyInstance(mpRakStreamPeer);
 		mpRakStreamPeer = nullptr;
 	}
@@ -327,7 +327,9 @@ void ape::SceneNetworkImpl::leave()
         mpNatPunchthroughClient = nullptr;
         mIsConnectedToNATServer = false;
     }
-
+	mIsConnectedToNATServer = false;
+	mIsNATPunchthrough2HostSucceeded = false;
+	mIsNATPunchthrough2HostResponded = false;
    
 }
 

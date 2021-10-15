@@ -4303,7 +4303,7 @@ void ape::FilamentApplicationPlugin::Step()
                 animator->updateBoneMatrices();
             }
         }
-        if(app.updateinfo.inRoom && app.instances.find(mUserName+mPostUserName+"characterModel") != app.instances.end()){
+        if(app.updateinfo.inRoom && app.instances.find(mUserName+mPostUserName+"characterModel") != app.instances.end() && app.instanceCount[mUserName + mPostUserName + "characterModel"] > 0){
             auto animator = app.instances[mUserName+mPostUserName+"characterModel"][0]->getAnimator();
             double timeDiff;
             if(!app.animationData.animatedClick){
