@@ -4157,7 +4157,7 @@ void ape::FilamentApplicationPlugin::Step()
                                             0, 1, 0, 0,
                                             0, 0, 1, 0,
                                             playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
-                                        app.mpTransformManager->setTransform(playerTM, newTransform);
+                                        app.mpTransformManager->setTransform(playerTM, playerTransform);
                                     }
 
                                 }
@@ -4189,7 +4189,7 @@ void ape::FilamentApplicationPlugin::Step()
                                         0, 1, 0, 0,
                                         0, 0, 1, 0,
                                         playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
-                                    app.mpTransformManager->setTransform(playerTM, newTransform);
+                                    app.mpTransformManager->setTransform(playerTM, playerTransform);
                                 }
                             }
                         }
