@@ -102,7 +102,7 @@ void ape::FilamentApplicationPlugin::initKeyMap(){
 void ape::FilamentApplicationPlugin::eventCallBack(const ape::Event& event)
 {
 	mEventDoubleQueue.push(event);
-    APE_LOG_DEBUG(event.subjectName);
+    //APE_LOG_DEBUG(event.subjectName);
 }
 
 void ape::FilamentApplicationPlugin::processEventDoubleQueue()
@@ -581,23 +581,132 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
                             app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
                         if (nodeName.find_first_of(".") != std::string::npos)
-                            {
-                                std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
-                                std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
-                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
-                                    int entitiyIndex = app.mpInstancesMap[cloneName].index;
-                                    std::vector<utils::Entity> entities;
-                                    entities.resize(10);
-                                    int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
-                                    if(cnt > 0 ){
-                                        if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
-                                            auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
-                                            app.mpTransformManager->setTransform(entityTransform,filamentTransform);
-                                        }
-
+                        {
+                            std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
+                            std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
+                            if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
+                                int entitiyIndex = app.mpInstancesMap[cloneName].index;
+                                std::vector<utils::Entity> entities;
+                                entities.resize(10);
+                                int cnt = app.asset[app.mpInstancesMap[cloneName].assetName]->getEntitiesByName(subNodeName.c_str(), entities.data(), 10);
+                                if(cnt > 0 ){
+                                    if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
+                                        auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
+                                        app.mpTransformManager->setTransform(entityTransform,filamentTransform);
                                     }
+
                                 }
                             }
+                        }
+
+                        if (app.worldMap.playerTriangles.find(nodeName) != app.worldMap.playerTriangles.end() && nodeName.find(mUserName + mPostUserName) == std::string::npos) {
+                            auto cam = app.mainCamera->getPosition();
+                            auto camWorld = app.mainCamera->getModelMatrix();
+                            auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
+                            if (abs(nodeWorldTransforms[3][0] - cam.x) < 25 && abs(cam.z - nodeWorldTransforms[3][2]) < 25) {
+                                auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
+                                auto playerTransform = app.mpTransformManager->getTransform(playerTM);
+                                playerTransform[3][0] = (nodeWorldTransforms[3][0] - cam.x) / 2000;
+                                playerTransform[3][1] = (cam.z - nodeWorldTransforms[3][2]) / 2000;
+                                double yaw = 0.0;
+                                if (nodeWorldTransforms[0][0] == 1.0f || nodeWorldTransforms[0][0] == -1.0f)
+                                {
+                                    yaw = atan2f(nodeWorldTransforms[0][2], nodeWorldTransforms[2][3]);
+                                }
+                                else
+                                {
+                                    yaw = atan2(-nodeWorldTransforms[2][0], nodeWorldTransforms[0][0]);
+                                }
+                                double camYaw = 0.0;
+                                if (camWorld[0][0] == 1.0f || camWorld[0][0] == -1.0f)
+                                {
+                                    camYaw = atan2f(camWorld[0][2], camWorld[2][3]);
+                                }
+                                else
+                                {
+                                    camYaw = atan2(-camWorld[2][0], camWorld[0][0]);
+                                }
+                                auto rot = math::mat4f::eulerYXZ(0, 0, -yaw);
+                                auto newTransform = filament::math::mat4f(1, 0, 0, 0,
+                                    0, 1, 0, 0,
+                                    0, 0, 1, 0,
+                                    playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
+                                app.mpTransformManager->setTransform(playerTM, newTransform * rot);
+
+                            }
+                            float tnear = app.mainCamera->getNear() / 2;
+                            float fov = app.mainCamera->getFieldOfViewInDegrees(filament::Camera::Fov::VERTICAL);
+                            fov = fov * F_PI / 180.0;
+
+                            auto viewport = app.view->getViewport();
+                            auto width = viewport.width;
+                            auto height = viewport.height;
+
+                            // Compute the tangent of the field-of-view angle as well as the aspect ratio.
+                            float tangent = tan(fov / 2.0);
+                            float aspectRatio = (float)width / height;
+                            //auto &nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
+                            auto camPos = app.mainCamera->getModelMatrix();
+
+                            auto worldToLocalTM = inverse(camPos) * nodeWorldTransforms;
+                            auto xPrime = worldToLocalTM[3][0];
+                            auto yPrime = worldToLocalTM[3][1];
+                            auto zPrime = -worldToLocalTM[3][2];
+
+                            auto m = tangent * tnear;
+                            auto mPrime = tangent * (tnear + zPrime);
+                            auto w = tangent * tnear * aspectRatio;
+                            auto wPrime = tangent * (tnear + zPrime) * aspectRatio;
+
+                            auto asd = m / w;
+                            auto x = xPrime * w / wPrime;
+                            auto wScale = width / w / 2;
+                            x = x * wScale + width / 2;
+
+                            auto y = yPrime * m / mPrime;
+                            auto hScale = height / m / 2;
+                            y = -y * hScale + height / 2;
+
+                            //APE_LOG_DEBUG(zPrime << " zPrime");
+                            if (zPrime > 21 || zPrime < 0.65 || x < 0 || y < 0 || x > width || y > height) {
+                                if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
+                                    app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
+                            }
+                            else {
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][0] = x;
+                                float yOffset = 10;
+#ifdef __APPLE__
+                                yOffset = 35;
+#endif
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][1] = y - yOffset - 200 / zPrime;
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][2] = 1.1 + (5 - zPrime) / 5;
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][3] = width;
+                                app.updateinfo.playerNamePositions[nodeName.substr(0, nodeName.find("_vlft"))][4] = height;
+
+                            }
+
+                        }
+                        else if (nodeName.find(mUserName + mPostUserName) != std::string::npos) {
+                            auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
+                            auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
+                            auto playerTransform = app.mpTransformManager->getTransform(playerTM);
+                            double yaw = 0.0;
+                            if (nodeWorldTransforms[0][0] == 1.0f || nodeWorldTransforms[0][0] == -1.0f)
+                            {
+                                yaw = atan2f(nodeWorldTransforms[0][2], nodeWorldTransforms[2][3]);
+                            }
+                            else
+                            {
+                                yaw = atan2(-nodeWorldTransforms[2][0], nodeWorldTransforms[0][0]);
+                            }
+                            double camYaw = 0.0;
+                            auto rot = math::mat4f::eulerYXZ(0, 0, -yaw);
+                            auto newTransform = filament::math::mat4f(1, 0, 0, 0,
+                                0, 1, 0, 0,
+                                0, 0, 1, 0,
+                                0, 0, playerTransform[3][2], 1);
+                            app.mpTransformManager->setTransform(playerTM, rot * newTransform);
+                        }
 					}
 						break;
 					case ape::Event::Type::NODE_SCALE:
@@ -2639,7 +2748,7 @@ void ape::FilamentApplicationPlugin::Step()
         }
         if ( app.resourceLoader->asyncBeginLoad(app.logo))
         {
-            APE_LOG_DEBUG("resources load OK");
+            //APE_LOG_DEBUG("resources load OK");
             app.mpScene->addEntities(app.logo->getEntities(), app.logo->getEntityCount());
         }
        
@@ -3573,7 +3682,7 @@ void ape::FilamentApplicationPlugin::Step()
                     size_t pos = 0;
                     std::vector<float> lineData = std::vector<float>();
                     std::string num;
-                    APE_LOG_DEBUG("READ " << line);
+                    //APE_LOG_DEBUG("READ " << line);
                     while ((pos = line.find(" ")) != std::string::npos && line.length() > 1) {
                         num = line.substr(0, pos);
                         lineData.push_back(std::stof(num));
@@ -3666,7 +3775,7 @@ void ape::FilamentApplicationPlugin::Step()
                                     math::vec3<float> right = normalize(cross(gaze, math::vec3<float>(0,1,0)));
                                     upward = cross(right, gaze);
                                     fov = fov * F_PI / 180.0;
-                                    APE_LOG_DEBUG(x << " x, " << y << " y");
+                                    //APE_LOG_DEBUG(x << " x, " << y << " y");
                                     // Remap the grid coordinate into [-1, +1] and shift it to the pixel center.
                                     float u = 2.0 * (0.5+x) / width - 1.0;
                                     float v = 1.0-2.0 * (0.5+y) / height;
