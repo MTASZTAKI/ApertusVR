@@ -453,6 +453,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto camWorld = app.mainCamera->getModelMatrix();
                             auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
                             if (abs(nodeWorldTransforms[3][0] - cam.x) < 25 && abs(cam.z - nodeWorldTransforms[3][2]) < 25) {
+                                if (!app.mpScene->hasEntity(app.worldMap.playerTriangles[nodeName]))
+                                    app.mpScene->addEntity(app.worldMap.playerTriangles[nodeName]);
+
                                 auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
                                 auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                 playerTransform[3][0] = (nodeWorldTransforms[3][0] - cam.x)/2000;
@@ -482,6 +485,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
                                 app.mpTransformManager->setTransform(playerTM, newTransform*rot);
 
+                            }
+                            else {
+                                if (app.mpScene->hasEntity(app.worldMap.playerTriangles[nodeName]))
+                                    app.mpScene->remove(app.worldMap.playerTriangles[nodeName]);
                             }
                             float tnear = app.mainCamera->getNear()/2;
                             float fov = app.mainCamera->getFieldOfViewInDegrees(filament::Camera::Fov::VERTICAL);
@@ -604,6 +611,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto camWorld = app.mainCamera->getModelMatrix();
                             auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
                             if (abs(nodeWorldTransforms[3][0] - cam.x) < 25 && abs(cam.z - nodeWorldTransforms[3][2]) < 25) {
+                                if (!app.mpScene->hasEntity(app.worldMap.playerTriangles[nodeName]))
+                                    app.mpScene->addEntity(app.worldMap.playerTriangles[nodeName]);
                                 auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
                                 auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                 playerTransform[3][0] = (nodeWorldTransforms[3][0] - cam.x) / 2000;
@@ -633,6 +642,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
                                 app.mpTransformManager->setTransform(playerTM, newTransform * rot);
 
+                            }
+                            else {
+                                if (app.mpScene->hasEntity(app.worldMap.playerTriangles[nodeName]))
+                                    app.mpScene->remove(app.worldMap.playerTriangles[nodeName]);
                             }
                             float tnear = app.mainCamera->getNear() / 2;
                             float fov = app.mainCamera->getFieldOfViewInDegrees(filament::Camera::Fov::VERTICAL);
@@ -4150,6 +4163,8 @@ void ape::FilamentApplicationPlugin::Step()
                                     auto playerTM = app.mpTransformManager->getInstance(x.second);
                                     auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                     if (abs(camPos.x - playerPos.getX()) < 25 && abs(camPos.z - playerPos.getZ()) < 25) {
+                                        if (!app.mpScene->hasEntity(x.second))
+                                            app.mpScene->addEntity(x.second);
                                         playerTransform[3][0] = (playerPos.getX() - camPos.x) / 2000;
                                         playerTransform[3][1] = (camPos.z - playerPos.getZ()) / 2000;
 
@@ -4158,6 +4173,10 @@ void ape::FilamentApplicationPlugin::Step()
                                             0, 0, 1, 0,
                                             playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
                                         app.mpTransformManager->setTransform(playerTM, playerTransform);
+                                    }
+                                    else {
+                                        if (app.mpScene->hasEntity(x.second))
+                                            app.mpScene->remove(x.second);
                                     }
 
                                 }
@@ -4182,6 +4201,8 @@ void ape::FilamentApplicationPlugin::Step()
                                 auto playerTM = app.mpTransformManager->getInstance(x.second);
                                 auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                 if (abs(camPos.x - playerPos.getX()) < 25 && abs(camPos.z - playerPos.getZ()) < 25) {
+                                    if (!app.mpScene->hasEntity(x.second))
+                                        app.mpScene->addEntity(x.second);
                                     playerTransform[3][0] = (playerPos.getX() - camPos.x) / 2000;
                                     playerTransform[3][1] = (camPos.z - playerPos.getZ()) / 2000;
 
@@ -4190,6 +4211,10 @@ void ape::FilamentApplicationPlugin::Step()
                                         0, 0, 1, 0,
                                         playerTransform[3][0], playerTransform[3][1], playerTransform[3][2], 1);
                                     app.mpTransformManager->setTransform(playerTM, playerTransform);
+                                }
+                                else {
+                                    if (app.mpScene->hasEntity(x.second))
+                                        app.mpScene->remove(x.second);
                                 }
                             }
                         }
