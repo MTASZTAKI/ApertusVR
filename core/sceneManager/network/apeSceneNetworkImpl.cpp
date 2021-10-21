@@ -100,8 +100,10 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 
 ape::SceneNetworkImpl::~SceneNetworkImpl()
 {
+	//mDestructionBegun = true;
+	//mRunReplicaPeerListenThread.join();
    // mRackReplicaPeerMutex.lock();
-	leave();
+	//leave();
     //mRunReplicaPeerListenThread.join();
 	if (mpRakReplicaPeer)
 	{
@@ -168,6 +170,7 @@ void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)
 void ape::SceneNetworkImpl::init()
 {
 	mDestructionBegun = false;
+	mListenReplicaIsRunning = false;
 	ape::NetworkConfig::NatPunchThroughConfig natPunchThroughServerConfig = mpCoreConfig->getNetworkConfig().natPunchThroughConfig;
 	mNATServerIP = natPunchThroughServerConfig.ip;
 	mNATServerPort = natPunchThroughServerConfig.port;
@@ -224,7 +227,7 @@ void ape::SceneNetworkImpl::init()
 	}
 	APE_LOG_DEBUG("runReplicaPeerListenThread");
 	mRunReplicaPeerListenThread = std::thread((std::bind(&SceneNetworkImpl::runReplicaPeerListen, this)));
-    mRunReplicaPeerListenThread.detach();
+    //mRunReplicaPeerListenThread.detach();
 	if (mpCoreConfig->getNetworkConfig().selected == ape::NetworkConfig::LAN && mpCoreConfig->getNetworkConfig().lanConfig.hostStreamPort.length())
 	{
 		mpRakStreamPeer = RakNet::RakPeerInterface::GetInstance();
@@ -299,7 +302,8 @@ void ape::SceneNetworkImpl::leave()
 {
     mDestructionBegun = true;
 	APE_LOG_DEBUG("Destruction wait START");
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	//while(mListenReplicaIsRunning)
+	//	std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	APE_LOG_DEBUG("Destruction wait STOP");
     if (mpRakReplicaPeer)
     {
@@ -420,26 +424,29 @@ std::string ape::SceneNetworkImpl::getCurrentRoomName()
 
 void ape::SceneNetworkImpl::runReplicaPeerListen()
 {
-	APE_LOG_DEBUG("runReplicaPeerListen");
+	APE_LOG_DEBUG("begin runReplicaPeerListen");
+	int cnt2 = 0;
 	while (!mDestructionBegun)
 	{
+		cnt2++;
         //mRackReplicaPeerMutex.lock();
+		mListenReplicaIsRunning = true;
         listenReplicaPeer();
+		mListenReplicaIsRunning = false;
         //mRackReplicaPeerMutex.unlock();
-        std::this_thread::sleep_for (std::chrono::milliseconds(10));
+        //std::this_thread::sleep_for (std::chrono::milliseconds(10));
 		
 	}
-    APE_LOG_DEBUG("Replica destruction");
+    APE_LOG_DEBUG("runReplicaPeerListen destruction");
 }
 
 void ape::SceneNetworkImpl::listenReplicaPeer()
 {
 	RakNet::Packet *packet;
-	if (!mDestructionBegun)
+	int cnt = 0;
 	for (packet = mpRakReplicaPeer->Receive(); packet; mpRakReplicaPeer->DeallocatePacket(packet), packet = mpRakReplicaPeer->Receive())
 	{
-		if (mDestructionBegun)
-			break;
+		cnt++;
 		switch (packet->data[0])
 		{
 			case ID_NEW_INCOMING_CONNECTION:
@@ -621,8 +628,10 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 				//APE_LOG_DEBUG("Unknown message type" << packet->data[0]);
 			}
 		}
-		if (mDestructionBegun)
+		if (mDestructionBegun) {
+			mpRakReplicaPeer->DeallocatePacket(packet);
 			break;
+		}
 	}
 }
 

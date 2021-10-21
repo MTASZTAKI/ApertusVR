@@ -101,9 +101,7 @@ namespace ape
         
         std::mutex mRackReplicaPeerMutex;
 
-        std::thread mRunReplicaPeerListenThread;
-        
-        bool mDestructionBegun;
+		bool mListenReplicaIsRunning;
         
 		ape::SceneNetwork::ParticipantType mParticipantType;
 
@@ -150,6 +148,10 @@ namespace ape
 		std::string getGUID();
 
 		ape::SceneNetwork::ParticipantType getParticipantType() override;
+
+		std::thread mRunReplicaPeerListenThread;
+
+		std::atomic<bool> mDestructionBegun;
 
 		bool isRoomRunning(std::string roomName) override;
 

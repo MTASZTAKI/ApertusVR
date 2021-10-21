@@ -828,7 +828,7 @@ void ape::VLFTImgui::waitWindow(){
     ImGui::Begin("Waiting", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     std::string waitFor = "Leave room in ";
     std::stringstream posStream;
-    double timeToWait = 30.0 - (mpUpdateInfo->now - mpUpdateInfo->leaveTime);
+    double timeToWait = 1.0 - (mpUpdateInfo->now - mpUpdateInfo->leaveTime);
     posStream << std::fixed << std::setprecision(2) << timeToWait << " seconds";
     waitFor += posStream.str();
     ImGui::Text("%s", waitFor.c_str());

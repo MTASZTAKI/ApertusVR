@@ -946,6 +946,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     }
                     app.engine->destroy(app.mpEntities[event.subjectName]);
                 }
+                APE_LOG_DEBUG("Node deleted: " << event.subjectName);
                
 			}
 		}
@@ -3198,7 +3199,7 @@ void ape::FilamentApplicationPlugin::Step()
             app.mpTransformManager->setTransform(mapTM, mapTransform);
 
 
-            auto vb = VertexBuffer::Builder()
+            app.worldMap.referenceVertexBuffer = VertexBuffer::Builder()
                 .vertexCount(1)
                 .bufferCount(1)
                 .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3, 0, 16)
@@ -3206,14 +3207,14 @@ void ape::FilamentApplicationPlugin::Step()
                 .normalized(VertexAttribute::COLOR)
                 .build(*engine);
             LineVertex rfPoint[1] = { { {0,0,0}, 0xffff0000u } };
-            vb->setBufferAt(*engine, 0,
+            app.worldMap.referenceVertexBuffer->setBufferAt(*engine, 0,
                 VertexBuffer::BufferDescriptor(rfPoint, 16, nullptr));
-            auto ib = IndexBuffer::Builder()
+            app.worldMap.referenceIndexBuffer = IndexBuffer::Builder()
                 .indexCount(6)
                 .bufferType(IndexBuffer::IndexType::USHORT)
                 .build(*engine);
             uint16_t rfIndices[1] = { 0 };
-            ib->setBuffer(*engine,
+            app.worldMap.referenceIndexBuffer->setBuffer(*engine,
                 IndexBuffer::BufferDescriptor(rfIndices, 2, nullptr));
             app.worldMap.mapMaterial = filament::Material::Builder()
                 .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
@@ -3223,7 +3224,7 @@ void ape::FilamentApplicationPlugin::Step()
            RenderableManager::Builder(1)
                 .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
                 .material(0, app.worldMap.mapMaterial->getDefaultInstance())
-                .geometry(0, RenderableManager::PrimitiveType::POINTS, vb, ib, 0, 1)
+                .geometry(0, RenderableManager::PrimitiveType::POINTS, app.worldMap.referenceVertexBuffer, app.worldMap.referenceIndexBuffer, 0, 1)
                 .culling(true)
                 .receiveShadows(false)
                 .castShadows(false)
@@ -3384,6 +3385,8 @@ void ape::FilamentApplicationPlugin::Step()
                 app.engine->destroy(app.worldMap.playerVertexBuffer);
                 app.engine->destroy(app.worldMap.mapIndexBuffer);
                 app.engine->destroy(app.worldMap.mapVertexBuffer);
+                app.engine->destroy(app.worldMap.referenceVertexBuffer);
+                app.engine->destroy(app.worldMap.referenceIndexBuffer);
                 app.updateinfo.isMapVisible = false;
             }
            

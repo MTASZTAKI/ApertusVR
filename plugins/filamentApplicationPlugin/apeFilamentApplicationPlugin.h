@@ -307,6 +307,8 @@ struct App {
         filament::IndexBuffer* mapIndexBuffer;
         filament::VertexBuffer* playerVertexBuffer;
         filament::IndexBuffer* playerIndexBuffer;
+        filament::VertexBuffer* referenceVertexBuffer;
+        filament::IndexBuffer* referenceIndexBuffer;
     } worldMap;
     
     AnimationData animationData;
