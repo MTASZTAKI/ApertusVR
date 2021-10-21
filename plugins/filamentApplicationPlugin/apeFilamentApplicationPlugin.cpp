@@ -3174,18 +3174,16 @@ void ape::FilamentApplicationPlugin::Step()
             app.worldMap.mapMaterial = filament::Material::Builder()
                 .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
                 .build(*engine);
-            if(!app.mpEntityManager->isAlive(app.worldMap.playerMap)){
-                app.worldMap.playerMap = EntityManager::get().create();
-                auto mat = app.worldMap.mapMaterial->getDefaultInstance();
-                RenderableManager::Builder(1)
-                    .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-                    .material(0, mat)
-                    .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
-                    .culling(true)
-                    .receiveShadows(false)
-                    .castShadows(false)
-                    .build(*engine, app.worldMap.playerMap);
-            }
+            app.worldMap.playerMap = EntityManager::get().create();
+            auto mat = app.worldMap.mapMaterial->getDefaultInstance();
+            RenderableManager::Builder(1)
+                .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+                .material(0, mat)
+                .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
+                .culling(true)
+                .receiveShadows(false)
+                .castShadows(false)
+                .build(*engine, app.worldMap.playerMap);
             app.mpScene->addEntity(app.worldMap.playerMap);
 
             auto camEntity = app.mainCamera->getEntity();
@@ -3381,12 +3379,14 @@ void ape::FilamentApplicationPlugin::Step()
                     app.engine->destroy(ply.second);
                 }
                 app.worldMap.playerTriangles.clear();
+                app.engine->destroy(app.worldMap.playerMap);
                 app.engine->destroy(app.worldMap.playerIndexBuffer);
                 app.engine->destroy(app.worldMap.playerVertexBuffer);
                 app.engine->destroy(app.worldMap.mapIndexBuffer);
                 app.engine->destroy(app.worldMap.mapVertexBuffer);
                 app.engine->destroy(app.worldMap.referenceVertexBuffer);
                 app.engine->destroy(app.worldMap.referenceIndexBuffer);
+                app.engine->destroy(app.worldMap.mapReferencePoint);
                 app.updateinfo.isMapVisible = false;
             }
            
