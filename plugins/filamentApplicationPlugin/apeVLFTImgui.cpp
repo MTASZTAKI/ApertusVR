@@ -833,8 +833,11 @@ void ape::VLFTImgui::waitWindow(){
     waitFor += posStream.str();
     ImGui::Text("%s", waitFor.c_str());
     ImGui::End();
-    if(timeToWait <= 0.0)
+    if (timeToWait <= 0.0) {
+        mpSceneManager->createSceneNetwork();
+        mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
         mpUpdateInfo->leaveWait = false;
+    }
 }
 
 void ape::VLFTImgui::update(){
@@ -845,9 +848,6 @@ void ape::VLFTImgui::update(){
         if(mpUpdateInfo->callLeave && (mpUpdateInfo->now - mpUpdateInfo->leaveTime) > 0.5){
             if (!mpMainMenuInfo.inSinglePlayerMode) {
                 mpSceneManager->destroySceneNetwork();
-                mpSceneManager->createSceneNetwork();
-                mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
-                //std::this_thread::sleep_for(std::chrono::milliseconds(200));
             }
             /*auto nodes = mpSceneManager->getNodes();
             for (auto node : nodes)

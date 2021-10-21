@@ -3174,16 +3174,18 @@ void ape::FilamentApplicationPlugin::Step()
             app.worldMap.mapMaterial = filament::Material::Builder()
                 .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
                 .build(*engine);
-            app.worldMap.playerMap = EntityManager::get().create();
-            auto mat = app.worldMap.mapMaterial->getDefaultInstance();
-            RenderableManager::Builder(1)
-                .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
-                .material(0, mat)
-                .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
-                .culling(true)
-                .receiveShadows(false)
-                .castShadows(false)
-                .build(*engine, app.worldMap.playerMap);
+            if(!app.mpEntityManager->isAlive(app.worldMap.playerMap)){
+                app.worldMap.playerMap = EntityManager::get().create();
+                auto mat = app.worldMap.mapMaterial->getDefaultInstance();
+                RenderableManager::Builder(1)
+                    .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
+                    .material(0, mat)
+                    .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
+                    .culling(true)
+                    .receiveShadows(false)
+                    .castShadows(false)
+                    .build(*engine, app.worldMap.playerMap);
+            }
             app.mpScene->addEntity(app.worldMap.playerMap);
 
             auto camEntity = app.mainCamera->getEntity();
@@ -3370,7 +3372,7 @@ void ape::FilamentApplicationPlugin::Step()
             std::vector<std::string> to_erase;
             delete app.resourceLoader;
             app.resourceLoader = nullptr;
-            if (app.mpScene->hasEntity(app.worldMap.playerMap)) {
+            if (app.mpEntityManager->isAlive(app.worldMap.playerMap)) {
                 app.mpScene->remove(app.worldMap.playerMap);
                 for (auto &ply : app.worldMap.playerTriangles) {
                     if (app.mpScene->hasEntity(ply.second)) {
@@ -3380,31 +3382,46 @@ void ape::FilamentApplicationPlugin::Step()
                 }
                 app.worldMap.playerTriangles.clear();
                 app.engine->destroy(app.worldMap.playerMap);
+
+                if (app.mpScene->hasEntity(app.worldMap.mapReferencePoint))
+                    app.mpScene->remove(app.worldMap.mapReferencePoint);
+                app.engine->destroy(app.worldMap.mapReferencePoint);
+
+                app.engine->destroy(app.worldMap.mapMaterial);
                 app.engine->destroy(app.worldMap.playerIndexBuffer);
                 app.engine->destroy(app.worldMap.playerVertexBuffer);
                 app.engine->destroy(app.worldMap.mapIndexBuffer);
                 app.engine->destroy(app.worldMap.mapVertexBuffer);
                 app.engine->destroy(app.worldMap.referenceVertexBuffer);
                 app.engine->destroy(app.worldMap.referenceIndexBuffer);
-                app.engine->destroy(app.worldMap.mapReferencePoint);
+
                 app.updateinfo.isMapVisible = false;
             }
            
             for(auto instanceList: app.instances){
-                    for(size_t i = 0; i < instanceList.second.size(); i++){
-                        if(instanceList.first != "default_building" && instanceList.second[i]->getEntityCount() > 0)
+                if (instanceList.first == "default_building" && instanceList.second[0]->getEntityCount() > 0) {
+                    instanceList.first;
+                    auto entity = instanceList.second[0]->getRoot();
+                    if (app.mpScene->hasEntity(entity))
+                        app.mpScene->removeEntities(instanceList.second[0]->getEntities(), instanceList.second[0]->getEntityCount());
+                }
+                else {
+                    for (size_t i = 0; i < instanceList.second.size(); i++) {
+                        if (instanceList.second[i]->getEntityCount() > 0)
                         {
                             instanceList.first;
                             auto entity = instanceList.second[i]->getRoot();
-                            if(app.mpScene->hasEntity(entity))
+                            if (app.mpScene->hasEntity(entity))
                                 app.mpScene->removeEntities(instanceList.second[i]->getEntities(), instanceList.second[i]->getEntityCount());
                         }
                     }
+                }
                 to_erase.push_back(instanceList.first);
             }
             for(auto item: to_erase){
                 app.instances.erase(item);
             }
+            app.instanceCount.clear();
             to_erase.clear();
             app.geometryNameMap.clear();
             
@@ -3415,15 +3432,27 @@ void ape::FilamentApplicationPlugin::Step()
                     }
                     to_erase.push_back(instance.first);
             }
-            app.mpLoadedAssets.clear();
-            for(auto item: to_erase){
+            for (auto item : to_erase) {
                 app.mpInstancesMap.erase(item);
                 app.playerNamesToShow.erase(item);
                 if (app.updateinfo.playerNamePositions.find(item.substr(0, item.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
                     app.updateinfo.playerNamePositions.erase(item.substr(0, item.find("_vlft")));
             }
             to_erase.clear();
+            for (auto asset : app.asset) {
+                app.loader->destroyAsset(app.asset[asset.first]);
+                to_erase.push_back(asset.first);
+            }
+            for (auto item : to_erase) {
+                app.asset.erase(item);
+            }
+            app.mpLoadedAssets.clear();
+          
             app.playerAnimations.clear();
+            mAnimatedNodeNames.clear();
+            mParsedAnimations.clear();
+            app.mpTransforms.clear();
+            app.mpEntities.clear();
             app.updateinfo.leaveWait = true;
             app.updateinfo.leaveTime = app.updateinfo.now;
         }

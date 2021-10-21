@@ -103,8 +103,8 @@ ape::NodeWeakPtr ape::SceneManagerImpl::createNode(std::string name, bool replic
 
 void ape::SceneManagerImpl::destroySceneNetwork()
 {
-	//mNodes.clear();
-	//mEntities.clear();
+	mNodes.clear();
+	mEntities.clear();
 	((ape::SceneNetworkImpl*)mpSceneNetwork)->mDestructionBegun = true;
 	if(((ape::SceneNetworkImpl*)mpSceneNetwork)->mRunReplicaPeerListenThread.joinable())
 		((ape::SceneNetworkImpl*)mpSceneNetwork)->mRunReplicaPeerListenThread.join();

@@ -107,6 +107,37 @@ ape::SceneNetworkImpl::~SceneNetworkImpl()
     //mRunReplicaPeerListenThread.join();
 	if (mpRakReplicaPeer)
 	{
+		RakNet::AddressOrGUID rakNatAddress(mNATServerAddress);
+		mpRakReplicaPeer->CloseConnection(mReplicaHostGuid, true);
+		mpRakReplicaPeer->CloseConnection(rakNatAddress, true);
+		mpRakReplicaPeer->DetachPlugin(mpNatPunchthroughClient);
+		mpRakReplicaPeer->DetachPlugin(mpReplicaManager3.get());
+		APE_LOG_DEBUG("Replica shutdown");
+		mpRakReplicaPeer->Shutdown(100);
+		APE_LOG_DEBUG("Replica destroy");
+		RakNet::RakPeerInterface::DestroyInstance(mpRakReplicaPeer);
+		mpRakReplicaPeer = nullptr;
+	}
+	if (mpRakStreamPeer) {
+		mpRakStreamPeer->Shutdown(500);
+		RakNet::RakPeerInterface::DestroyInstance(mpRakStreamPeer);
+		mpRakStreamPeer = nullptr;
+	}
+
+	RakNet::NetworkIDManager::DestroyInstance(mpNetworkIDManager);
+	mpNetworkIDManager = nullptr;
+	if (mpNatPunchthroughClient) {
+		mpNatPunchthroughClient->Clear();
+		RakNet::NatPunchthroughClient::DestroyInstance(mpNatPunchthroughClient);
+		mpNatPunchthroughClient = nullptr;
+		mIsConnectedToNATServer = false;
+	}
+	mIsConnectedToNATServer = false;
+	mIsNATPunchthrough2HostSucceeded = false;
+	mIsNATPunchthrough2HostResponded = false;
+
+	/*if (mpRakReplicaPeer)
+	{
        
 		mpRakReplicaPeer->Shutdown(100);
 		RakNet::RakPeerInterface::DestroyInstance(mpRakReplicaPeer);
@@ -115,7 +146,7 @@ ape::SceneNetworkImpl::~SceneNetworkImpl()
 	}
 
 	if (mpNatPunchthroughClient)
-		RakNet::NatPunchthroughClient::DestroyInstance(mpNatPunchthroughClient);
+		RakNet::NatPunchthroughClient::DestroyInstance(mpNatPunchthroughClient);*/
 
 	if (mpLobbyManager)
 	{
@@ -444,6 +475,7 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 {
 	RakNet::Packet *packet;
 	int cnt = 0;
+	//if(mpRakReplicaPeer->IsActive())
 	for (packet = mpRakReplicaPeer->Receive(); packet; mpRakReplicaPeer->DeallocatePacket(packet), packet = mpRakReplicaPeer->Receive())
 	{
 		cnt++;
