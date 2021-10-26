@@ -54,6 +54,8 @@ namespace ape
 
 		ape::NodeWeakPtr createNode(std::string name, bool replicate, std::string ownerID) override;
 
+		void callDestroySceneManagerImpl();
+
 		ape::EntityWeakPtrNameMap getEntities() override;
 
 		ape::EntityWeakPtr getEntity(std::string name) override;

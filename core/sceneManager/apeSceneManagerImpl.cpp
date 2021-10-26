@@ -103,11 +103,25 @@ ape::NodeWeakPtr ape::SceneManagerImpl::createNode(std::string name, bool replic
 
 void ape::SceneManagerImpl::destroySceneNetwork()
 {
-	mNodes.clear();
-	mEntities.clear();
 	((ape::SceneNetworkImpl*)mpSceneNetwork)->mDestructionBegun = true;
-	if(((ape::SceneNetworkImpl*)mpSceneNetwork)->mRunReplicaPeerListenThread.joinable())
+	/*std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	((ape::SceneNetworkImpl*)mpSceneNetwork)->leave();*/
+	//for (auto mnode : mNodes) {
+	//	auto node = std::static_pointer_cast<ape::NodeImpl>(mnode.second);
+	//	((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(mnode.first, ape::Event::Type::NODE_DELETE));
+	//	if (node->isReplicated())
+	//	{
+	//		if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+	//			replicaManager->Dereference(node.get());
+	//	}
+	//}
+	//mNodes.clear();
+	//mEntities.clear();
+	//std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	if (((ape::SceneNetworkImpl*)mpSceneNetwork)->mRunReplicaPeerListenThread.joinable())
 		((ape::SceneNetworkImpl*)mpSceneNetwork)->mRunReplicaPeerListenThread.join();
+	if (((ape::SceneNetworkImpl*)mpSceneNetwork)->mConnectToRoomThread.joinable())
+		((ape::SceneNetworkImpl*)mpSceneNetwork)->mConnectToRoomThread.join();
 	delete  (ape::SceneNetworkImpl*)mpSceneNetwork;
 	
 }
@@ -469,202 +483,204 @@ ape::EntityWeakPtr ape::SceneManagerImpl::createEntity(std::string name, ape::En
 
 void ape::SceneManagerImpl::deleteEntity(std::string name)
 {
+	if (mEntities.find(name) == mEntities.end())
+		return;
     ape::Entity::Type type = mEntities[name]->getType();
 	switch (type) 
 	{
 		case ape::Entity::LIGHT:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::LIGHT_DELETE));
-//			auto entity = std::static_pointer_cast<ape::LightImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::LightImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_TEXT:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_TEXT_DELETE));
-//			auto entity = std::static_pointer_cast<ape::TextGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::TextGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_FILE:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_FILE_DELETE));
-//			auto entity = std::static_pointer_cast<ape::FileGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::FileGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_PLANE:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_PLANE_DELETE));
-//			auto entity = std::static_pointer_cast<ape::PlaneGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::PlaneGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_BOX:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_BOX_DELETE));
-//			auto entity = std::static_pointer_cast<ape::BoxGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::BoxGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_CONE:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_CONE_DELETE));
-//			auto entity = std::static_pointer_cast<ape::ConeGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::ConeGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_CYLINDER:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_CYLINDER_DELETE));
-//			auto entity = std::static_pointer_cast<ape::CylinderGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::CylinderGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_SPHERE:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_SPHERE_DELETE));
-//			auto entity = std::static_pointer_cast<ape::SphereGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::SphereGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_TORUS:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_TORUS_DELETE));
-//			auto entity = std::static_pointer_cast<ape::TorusGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::TorusGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_TUBE:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_TUBE_DELETE));
-//			auto entity = std::static_pointer_cast<ape::TubeGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::TubeGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_INDEXEDFACESET:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_INDEXEDFACESET_DELETE));
-//			auto entity = std::static_pointer_cast<ape::IndexedFaceSetGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::IndexedFaceSetGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_INDEXEDLINESET:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_INDEXEDLINESET_DELETE));
-//			auto entity = std::static_pointer_cast<ape::IndexedLineSetGeometryImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Bro
-//			}
+			auto entity = std::static_pointer_cast<ape::IndexedLineSetGeometryImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::GEOMETRY_CLONE:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::GEOMETRY_CLONE_DELETE));
-//			auto entity = std::static_pointer_cast<ape::CloneGeometryImpl>(mEntities[name]);
-//			if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//				replicaManager->Dereference(entity.get());
+			auto entity = std::static_pointer_cast<ape::CloneGeometryImpl>(mEntities[name]);
+			if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+				replicaManager->Dereference(entity.get());
 		}
 			break;
 		case ape::Entity::MATERIAL_FILE:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::MATERIAL_FILE_DELETE));
-//			auto entity = std::static_pointer_cast<ape::FileMaterialImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::FileMaterialImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::MATERIAL_MANUAL:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::MATERIAL_MANUAL_DELETE));
-//			auto entity = std::static_pointer_cast<ape::ManualMaterialImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::ManualMaterialImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::TEXTURE_MANUAL:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::TEXTURE_MANUAL_DELETE));
-//			auto entity = std::static_pointer_cast<ape::ManualTextureImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::ManualTextureImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::BROWSER:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::BROWSER_DELETE));
-//			auto entity = std::static_pointer_cast<ape::BrowserImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::BrowserImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::RIGIDBODY:
 		{
 			((ape::EventManagerImpl*)mpEventManager)->fireEvent(ape::Event(name, ape::Event::Type::RIGIDBODY_DELETE));
-//			auto entity = std::static_pointer_cast<ape::BrowserImpl>(mEntities[name]);
-//			if (entity->isReplicated())
-//			{
-//				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
-//					replicaManager->Dereference(entity.get());
-//			}
+			auto entity = std::static_pointer_cast<ape::BrowserImpl>(mEntities[name]);
+			if (entity->isReplicated())
+			{
+				if (auto replicaManager = ((ape::SceneNetworkImpl*)mpSceneNetwork)->getReplicaManager().lock())
+					replicaManager->Dereference(entity.get());
+			}
 		}
 			break;
 		case ape::Entity::TEXTURE_UNIT:

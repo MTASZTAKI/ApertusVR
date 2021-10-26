@@ -1922,6 +1922,7 @@ void ape::FilamentApplicationPlugin::Init()
 void ape::FilamentApplicationPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
+    Step();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -2686,6 +2687,8 @@ void ape::FilamentApplicationPlugin::stopScreenCast() {
 #endif
 }
 
+
+
 void ape::FilamentApplicationPlugin::Step()
 {
 
@@ -3216,9 +3219,9 @@ void ape::FilamentApplicationPlugin::Step()
             uint16_t rfIndices[1] = { 0 };
             app.worldMap.referenceIndexBuffer->setBuffer(*engine,
                 IndexBuffer::BufferDescriptor(rfIndices, 2, nullptr));
-            app.worldMap.mapMaterial = filament::Material::Builder()
+           /* app.worldMap.mapMaterial = filament::Material::Builder()
                 .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
-                .build(*engine);
+                .build(*engine);*/
 
            app.worldMap.mapReferencePoint = EntityManager::get().create();
            RenderableManager::Builder(1)
@@ -3355,7 +3358,7 @@ void ape::FilamentApplicationPlugin::Step()
                     }
                 }
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(200));
             app.updateinfo.leftRoom = false;
             app.updateinfo.callLeave = true;
 
@@ -3367,8 +3370,27 @@ void ape::FilamentApplicationPlugin::Step()
             mpSceneManager->deleteEntity(mUserName + mPostUserName + "_StateText");
             mpSceneManager->deleteNode(mUserName + mPostUserName + "_StateNode");
             mpSceneManager->deleteNode(mUserName + mPostUserName + "_TextNode");
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(200));
             //mpSceneManager->deleteNode(mUserName+mPostUserName+"_cam");
+
+            for (auto spa : app.spaghettiLines) {
+                app.engine->destroy(spa.second.mat);
+                app.engine->destroy(spa.second.lineEntity);
+                app.engine->destroy(spa.second.lineIndexBuffer);
+                app.engine->destroy(spa.second.lineVertexBuffer);
+            }
+            app.spaghettiLines.clear();
+            if (app.mpScene->hasEntity(app.boxEntity.first)) {
+                app.mpScene->remove(app.boxEntity.first);
+            }
+            if (app.mpEntityManager->isAlive(app.boxEntity.first)) {
+                app.engine->destroy(app.boxEntity.first);
+                app.mpEntityManager->destroy(app.boxEntity.first);
+                if (app.mpTransformManager->hasComponent(app.boxEntity.first))
+                    app.mpTransformManager->destroy(app.boxEntity.first);
+                app.engine->destroy(app.boxVertexBuffer);
+                app.engine->destroy(app.boxIndexBuffer);
+            }
             std::vector<std::string> to_erase;
             delete app.resourceLoader;
             app.resourceLoader = nullptr;
@@ -3446,13 +3468,23 @@ void ape::FilamentApplicationPlugin::Step()
             for (auto item : to_erase) {
                 app.asset.erase(item);
             }
+            to_erase.clear();
             app.mpLoadedAssets.clear();
           
             app.playerAnimations.clear();
             mAnimatedNodeNames.clear();
             mParsedAnimations.clear();
+            for (auto entity : app.mpEntities) {
+                app.mpTransformManager->destroy(entity.second);
+                to_erase.push_back(entity.first);
+            }
+            for (auto item : to_erase) {
+                app.engine->destroy(app.mpEntities[item]);
+            }
+            to_erase.clear();
             app.mpTransforms.clear();
             app.mpEntities.clear();
+            idGltfMap.clear();
             app.updateinfo.leaveWait = true;
             app.updateinfo.leaveTime = app.updateinfo.now;
         }
@@ -4558,7 +4590,7 @@ void ape::FilamentApplicationPlugin::Stop()
                 }
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
     APE_LOG_FUNC_LEAVE();
 }

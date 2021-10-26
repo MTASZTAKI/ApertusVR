@@ -56,7 +56,8 @@ void ape::System::Start(const char* configFolderPath, bool isBlocking, std::func
 		gpPluginManagerImpl->detachThreads();
     
     std::this_thread::sleep_for(std::chrono::milliseconds(step_interval));
-    gpPluginManagerImpl->callStepFunc();
+    
+	gpPluginManagerImpl->callStepFunc();
         
 }
 

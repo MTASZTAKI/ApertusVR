@@ -151,11 +151,15 @@ namespace ape
 
 		std::thread mRunReplicaPeerListenThread;
 
+		std::thread mConnectToRoomThread;
+
 		std::atomic<bool> mDestructionBegun;
 
 		bool isRoomRunning(std::string roomName) override;
 
 	    void connectToRoom(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
+
+		void connectToRoomThread(std::string roomName, std::vector<std::string> configURLs, std::vector<std::string> configLocations);
 
 		void downloadConfigs(std::vector<std::string> configURLs, std::vector<std::string> configLocations) override;
         

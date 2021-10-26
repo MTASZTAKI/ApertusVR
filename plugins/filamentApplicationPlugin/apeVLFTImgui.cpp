@@ -257,6 +257,7 @@ void ape::VLFTImgui::connectToRoom(){
             locations.push_back(locationAnimationConfig);
             mpSceneNetwork->connectToRoom(roomName, urls, locations);
             //mpSceneNetwork->
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             mpMainMenuInfo.inRoomGui = true;
             mpUpdateInfo->inRoom = true;
             mpUpdateInfo->isMapVisible = true;

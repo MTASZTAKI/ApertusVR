@@ -1646,8 +1646,12 @@ SendSerializeIfChangedResult Connection_RM3::SendSerializeIfChanged(LastSerializ
 		else
 			sp->lastSentBitstream[i]=&replica->lastSentSerialization.bitStream[i];
 	}
+	RM3SerializationResult serializationResult;
 
-	RM3SerializationResult serializationResult = replica->Serialize(sp);
+	if(replica)
+		serializationResult = replica->Serialize(sp);
+	else
+		return SSICR_DID_NOT_SEND_DATA;
 
 	if (serializationResult==RM3SR_NEVER_SERIALIZE_FOR_THIS_CONNECTION)
 	{

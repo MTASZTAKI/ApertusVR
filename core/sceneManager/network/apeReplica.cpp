@@ -99,8 +99,8 @@ RakNet::RM3ActionOnPopConnection ape::Replica::QueryActionOnPopConnection( RakNe
 void ape::Replica::DeallocReplica( RakNet::Connection_RM3 *sourceConnection )
 {
 	APE_LOG_DEBUG(mReplicaName<<" DeallocReplica");
-//	if (mIsHost)
-//		BroadcastDestruction();
+	if (mIsHost)
+		BroadcastDestruction();
 	if (mObjectType == "Node")
 		mpSceneManager->deleteNode(mReplicaName);
 	else
