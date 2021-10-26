@@ -113,7 +113,7 @@ int main(int argc, const char * argv[]) {
         {
            
             signal(SIGINT, my_handler);
-            ape::System::Start(inPath.c_str(), true);
+            ape::System::Start(inPath.c_str(), false);
         }
 //    while (ape::ICoreConfig::getSingletonPtr()->getWindowConfig().handle == nullptr)
 //        std::this_thread::sleep_for(std::chrono::milliseconds(100));

@@ -945,7 +945,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         app.mpTransforms.erase(event.subjectName);
                     }
                     app.engine->destroy(app.mpEntities[event.subjectName]);
+
                 }
+                
                 APE_LOG_DEBUG("Node deleted: " << event.subjectName);
                
 			}
@@ -1480,6 +1482,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     }
                 }
                 if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end()) {
+                    app.instanceCount[app.mpInstancesMap[event.subjectName].assetName]--;
                     app.mpInstancesMap.erase(event.subjectName);
                     app.playerNamesToShow.erase(event.subjectName);
                     auto nodeName = event.subjectName;
@@ -1922,7 +1925,7 @@ void ape::FilamentApplicationPlugin::Init()
 void ape::FilamentApplicationPlugin::Run()
 {
 	APE_LOG_FUNC_ENTER();
-    Step();
+    //Step();
 	APE_LOG_FUNC_LEAVE();
 }
 
