@@ -115,8 +115,6 @@ void ape::SceneManagerImpl::destroySceneNetwork()
 	//			replicaManager->Dereference(node.get());
 	//	}
 	//}
-	//mNodes.clear();
-	//mEntities.clear();
 	//std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	if (((ape::SceneNetworkImpl*)mpSceneNetwork)->mRunReplicaPeerListenThread.joinable())
 		((ape::SceneNetworkImpl*)mpSceneNetwork)->mRunReplicaPeerListenThread.join();
@@ -128,6 +126,8 @@ void ape::SceneManagerImpl::destroySceneNetwork()
 
 void ape::SceneManagerImpl::createSceneNetwork()
 {
+	mNodes.clear();
+	mEntities.clear();
 	mpSceneNetwork = new ape::SceneNetworkImpl();
 }
 

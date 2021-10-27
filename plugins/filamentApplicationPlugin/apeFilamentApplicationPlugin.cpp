@@ -3351,6 +3351,7 @@ void ape::FilamentApplicationPlugin::Step()
             {
                 textNode->setCaption(mUserName + " left the room");
             }
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
             for (auto attachedUserWP : mAttachedUsers)
             {
                 if (auto attachedUser = attachedUserWP.lock())
