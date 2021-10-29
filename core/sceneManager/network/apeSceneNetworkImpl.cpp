@@ -481,14 +481,8 @@ void ape::SceneNetworkImpl::runReplicaPeerListen()
 void ape::SceneNetworkImpl::listenReplicaPeer()
 {
 	RakNet::Packet *packet;
-	int cnt = 0;
-	//if(mpRakReplicaPeer->IsActive())
-	auto t1 = std::chrono::high_resolution_clock::now();
 	for (packet = mpRakReplicaPeer->Receive(); packet; mpRakReplicaPeer->DeallocatePacket(packet), packet = mpRakReplicaPeer->Receive())
 	{
-		cnt++;
-		auto t2 = std::chrono::high_resolution_clock::now();
-		APE_LOG_DEBUG("ListencReplicaPeer receive time"<<std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1000.0f);
 		switch (packet->data[0])
 		{
 			case ID_NEW_INCOMING_CONNECTION:
@@ -674,7 +668,6 @@ void ape::SceneNetworkImpl::listenReplicaPeer()
 			mpRakReplicaPeer->DeallocatePacket(packet);
 			break;
 		}
-		t1 = std::chrono::high_resolution_clock::now();
 	}
 }
 

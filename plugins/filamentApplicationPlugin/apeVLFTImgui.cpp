@@ -983,33 +983,37 @@ void ape::VLFTImgui::leftPanelGUI() {
 }
 
 void ape::VLFTImgui::studentPanelGUI(){
-    const float width = ImGui::GetIO().DisplaySize.x;
-    const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-135, height/3+150));
-    ImGui::SetNextWindowSize(ImVec2(135, 105), ImGuiCond_Once);
-    ImGui::Begin("Student control", nullptr);
-    if(mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode){
-        if(!mpUpdateInfo->usersAttached){
-            if(ImGui::Button("Attach users",ImVec2(115,25))){
-                mpUpdateInfo->attachUsers = true;
+    if (!mpMainMenuInfo.inSinglePlayerMode) {
+        const float width = ImGui::GetIO().DisplaySize.x;
+        const float height = ImGui::GetIO().DisplaySize.y;
+        ImGui::SetNextWindowPos(ImVec2(width - 135, height / 3 + 150));
+        ImGui::SetNextWindowSize(ImVec2(135, 105), ImGuiCond_Once);
+        ImGui::Begin("Student control", nullptr);
+        if (mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode) {
+            if (!mpUpdateInfo->usersAttached) {
+                if (ImGui::Button("Attach users", ImVec2(115, 25))) {
+                    mpUpdateInfo->attachUsers = true;
+                }
+            }
+            else {
+                if (ImGui::Button("Detach users", ImVec2(115, 25))) {
+                    mpUpdateInfo->attachUsers = true;
+                }
+            }
+            if (!mpUpdateInfo->mIsStudentsMovementLogging) {
+                if (ImGui::Button("Log movements", ImVec2(115, 25))) {
+                    mpUpdateInfo->logMovements = true;
+                }
+            }
+            else {
+                if (ImGui::Button("Stop logging", ImVec2(115, 25))) {
+                    mpUpdateInfo->logMovements = true;
+                }
             }
         }
-        else{
-            if(ImGui::Button("Detach users",ImVec2(115,25))){
-                mpUpdateInfo->attachUsers = true;
-            }
-        }
-        if(!mpUpdateInfo->mIsStudentsMovementLogging){
-            if(ImGui::Button("Log movements",ImVec2(115,25))){
-                mpUpdateInfo->logMovements = true;
-            }
-        }else{
-            if(ImGui::Button("Stop logging",ImVec2(115,25))){
-                mpUpdateInfo->logMovements = true;
-            }
-        }
+        ImGui::End();
     }
-    ImGui::End();
+   
 }
 
 void ape::VLFTImgui::drawUserNames()
