@@ -116,6 +116,9 @@ SOFTWARE.*/
 #include "NativeWindowHelper.h"
 #else
 #include <Windows.h>
+#include <process.h>
+#include <winbase.h>
+#include <Tlhelp32.h>
 #include <gdiplus.h>
 #endif
 

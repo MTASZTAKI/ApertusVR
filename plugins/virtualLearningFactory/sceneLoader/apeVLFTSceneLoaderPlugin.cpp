@@ -17,12 +17,15 @@ ape::VLFTSceneLoaderPlugin::VLFTSceneLoaderPlugin()
 	mpSceneMakerMacro = new ape::SceneMakerMacro();
 	mModelsIDs = std::multimap<std::string, std::string>();
 	mFileGeometryNamesScales = std::map<std::string, ape::Vector3>();
+	mStopCalled = false;
 	APE_LOG_FUNC_LEAVE();
 }
 
 ape::VLFTSceneLoaderPlugin::~VLFTSceneLoaderPlugin()
 {
 	APE_LOG_FUNC_ENTER();
+	mApeEntities.clear();
+	mApeNodes.clear();
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -84,12 +87,14 @@ void ape::VLFTSceneLoaderPlugin::parseRepresentations()
                     parseGltfModel(filePath);
 					if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
 					{
+						mApeNodes.push_back(asset.get_id());
 						float unitScale = *representation.get_unit() / 0.01f;
                         if(mpSceneManager->getEntity(asset.get_id()).lock()){
                             ;
                         }
 						else if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(asset.get_id(), ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 						{
+							mApeEntities.push_back(asset.get_id());
 							fileGeometry->setUnitScale(unitScale);
 							fileGeometry->setFileName(filePath);
                             fileGeometry->setParentNode(node);
@@ -139,6 +144,7 @@ void ape::VLFTSceneLoaderPlugin::cloneGeometry(ape::FileGeometrySharedPtr fileGe
 {
 	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(id, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 	{
+		mApeEntities.push_back(id);
 		geometryClone->setSourceGeometry(fileGeometry);
 		geometryClone->setParentNode(parentNode);
 	}
@@ -185,6 +191,7 @@ void ape::VLFTSceneLoaderPlugin::parseModelsAndNodes()
 		
             if (auto node = mpSceneManager->createNode(asset.get_id(), true, mpCoreConfig->getNetworkGUID()).lock())
             {
+				mApeNodes.push_back(asset.get_id());
                 //if (exists) {
                 //    std::weak_ptr<std::vector<double>> positionWP = asset.get_position();
                 //    if(positionWP.lock()){
@@ -347,7 +354,7 @@ void ape::VLFTSceneLoaderPlugin::Run()
 	parseVisibleNodes();
 	setInitialState();
 	fclose(mApeVLFTSceneLoaderPluginConfigFile);
-	while (true)
+	while (!mStopCalled)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
@@ -363,6 +370,12 @@ void ape::VLFTSceneLoaderPlugin::Step()
 void ape::VLFTSceneLoaderPlugin::Stop()
 {
 	APE_LOG_FUNC_ENTER();
+	mStopCalled = true;
+	mGltfModel.clear();
+	for (auto item : mApeEntities)
+		mpSceneManager->deleteEntity(item);
+	for (auto item : mApeNodes)
+		mpSceneManager->deleteNode(item);
 	APE_LOG_FUNC_LEAVE();
 }
 

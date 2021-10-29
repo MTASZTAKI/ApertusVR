@@ -54,7 +54,7 @@ namespace ape
 	private:
 		std::vector<std::thread> mThreadVector;
 
-		std::vector<ape::IPlugin*> mPluginVector;
+		std::map < std::string, ape::IPlugin*> mPluginMap;
 
 		InternalPluginManager* mpInternalPluginManager;
 
@@ -72,6 +72,8 @@ namespace ape
 		~PluginManagerImpl();
 
 	    void loadPlugin(std::string name) override;
+
+		void stopPlugin(std::string name) override;
 
 		void CreatePlugins();
 

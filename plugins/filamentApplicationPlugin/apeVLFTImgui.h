@@ -139,6 +139,7 @@ struct updateInfo{
     bool screenCast = false;
     bool takeScreenshot = false;
     bool screenCaptureOn = false;
+    bool stoppingScreenCast = false;
     bool wrongPassword = false;
     bool switchOwner = false;
     bool leaveWait = false;

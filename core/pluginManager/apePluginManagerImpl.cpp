@@ -29,7 +29,7 @@ ape::PluginManagerImpl::PluginManagerImpl()
 	msSingleton = this;
 	mpCoreConfig = ape::ICoreConfig::getSingletonPtr();
 	mThreadVector = std::vector<std::thread>();
-	mPluginVector = std::vector<ape::IPlugin*>();
+	mPluginMap = std::map<std::string,ape::IPlugin*>();
 	mPluginCount = 0;
 }
 
@@ -43,7 +43,7 @@ void ape::PluginManagerImpl::loadPlugin(std::string name)
 	if (mpInternalPluginManager->Load(name))
 	{
 		ape::IPlugin* plugin = ape::PluginFactory::CreatePlugin(name);
-		mPluginVector.push_back(plugin);
+		mPluginMap[name] = plugin;
 		mPluginCount++;
 		APE_LOG_DEBUG("Plugin loaded: " << name);
 		std::thread pluginThread = std::thread(&PluginManagerImpl::InitAndRunPlugin, this, plugin);
@@ -57,9 +57,17 @@ void ape::PluginManagerImpl::loadPlugin(std::string name)
 	}
 }
 
+void ape::PluginManagerImpl::stopPlugin(std::string name)
+{
+	mPluginMap[name]->Stop();
+	ape::PluginFactory::UnregisterPlugin(name, mPluginMap[name]);
+	mPluginMap.erase(name);
+	mPluginCount--;
+}
+
 void ape::PluginManagerImpl::CreatePlugin(std::string pluginname)
 {
-	mPluginVector.push_back(ape::PluginFactory::CreatePlugin(pluginname));
+	mPluginMap[pluginname]= ape::PluginFactory::CreatePlugin(pluginname);
 }
 
 void ape::PluginManagerImpl::CreatePlugins()
@@ -83,9 +91,9 @@ void ape::PluginManagerImpl::CreatePlugins()
 }
 
 void ape::PluginManagerImpl::callStepFunc(){
-    for (auto const& plugin : mPluginVector)
+    for (auto const& plugin : mPluginMap)
     {
-            plugin->Step();
+            plugin.second->Step();
     }
     
 }
@@ -112,17 +120,17 @@ void ape::PluginManagerImpl::InitAndRunPlugin(ape::IPlugin* plugin)
 
 void ape::PluginManagerImpl::StopPlugins()
 {
-	for (auto const& plugin : mPluginVector)
+	for (auto const& plugin : mPluginMap)
 	{
-		plugin->Stop();
+		plugin.second->Stop();
 	}
 }
 
 void ape::PluginManagerImpl::InitAndRunPlugins()
 {
-	for (std::vector<ape::IPlugin*>::iterator it = mPluginVector.begin(); it != mPluginVector.end(); ++it)
+	for (std::map<std::string, ape::IPlugin*>::iterator it = mPluginMap.begin(); it != mPluginMap.end(); ++it)
 	{
-		mThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (*it)));
+		mThreadVector.push_back(std::thread(&PluginManagerImpl::InitAndRunPlugin, this, (it->second)));
 	}
 }
 

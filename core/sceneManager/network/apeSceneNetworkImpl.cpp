@@ -53,7 +53,7 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 		mLobbyServerSessionName = lobbyServerConfig.roomName;
 	APE_LOG_DEBUG("mLobbyServerSessionName: " << mLobbyServerSessionName);
 	mpLobbyManager = new LobbyManager(mLobbyServerIP, mLobbyServerPort, mLobbyServerSessionName);
-
+	mpNetworkIDManager = nullptr;
 //	if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
 //	{
 //		APE_LOG_DEBUG("use lobbyManager to update the resources...");
@@ -100,12 +100,13 @@ ape::SceneNetworkImpl::SceneNetworkImpl()
 
 ape::SceneNetworkImpl::~SceneNetworkImpl()
 {
-	//mDestructionBegun = true;
-	//mRunReplicaPeerListenThread.join();
-   // mRackReplicaPeerMutex.lock();
-	//leave();
-    //mRunReplicaPeerListenThread.join();
-
+	if (!mDestructionBegun) {
+		mDestructionBegun = true;
+		if (mRunReplicaPeerListenThread.joinable())
+			mRunReplicaPeerListenThread.join();
+		if (mConnectToRoomThread.joinable())
+			mConnectToRoomThread.join();
+	}
 	if (mpRakReplicaPeer)
 	{
 		APE_LOG_DEBUG("Replica shutdown");
@@ -125,8 +126,8 @@ ape::SceneNetworkImpl::~SceneNetworkImpl()
 		RakNet::RakPeerInterface::DestroyInstance(mpRakStreamPeer);
 		mpRakStreamPeer = nullptr;
 	}
-
-	RakNet::NetworkIDManager::DestroyInstance(mpNetworkIDManager);
+	if(mpNetworkIDManager)
+		RakNet::NetworkIDManager::DestroyInstance(mpNetworkIDManager);
 	mpNetworkIDManager = nullptr;
 	if (mpNatPunchthroughClient) {
 		mpNatPunchthroughClient->Clear();

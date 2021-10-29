@@ -37,7 +37,7 @@ void ape::PluginFactory::UnregisterPlugin(const std::string &type, ape::IPlugin 
 	CallbackMap::iterator it = mPluginCallbackMap.find(type);
 	if (it != mPluginCallbackMap.end())
 		it->second.destroyCb(plugin);
-	mPluginCallbackMap.erase(type);
+	//mPluginCallbackMap.erase(type);
 }
 
 ape::IPlugin* ape::PluginFactory::CreatePlugin(const std::string &type)

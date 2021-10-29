@@ -229,6 +229,7 @@ void ape::VLFTImgui::connectToRoom(){
 //            urls.push_back(urlSceneConfig);
 //            locations.push_back(locationSceneConfig);
             //mpSceneNetwork->downloadConfigs(urls, locations);
+            
             mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
             mpMainMenuInfo.inRoomGui = true;
             mpMainMenuInfo.inSinglePlayerMode = true;
@@ -290,7 +291,7 @@ void ape::VLFTImgui::connectToRoom(){
 void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height){
     if(mpMainMenuInfo.singlePlayer){
         if (ImGui::Button("Start",ImVec2(width/8, height/15))){
-            if(mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
+            if(mpMainMenuInfo.current_selected != -1)
                 connectToRoom();
         }
     }
@@ -835,8 +836,10 @@ void ape::VLFTImgui::waitWindow(){
     ImGui::Text("%s", waitFor.c_str());
     ImGui::End();
     if (timeToWait <= 0.0) {
-        mpSceneManager->createSceneNetwork();
-        mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
+        if (!mpMainMenuInfo.inSinglePlayerMode) {
+            mpSceneManager->createSceneNetwork();
+            mpSceneNetwork = ape::ISceneNetwork::getSingletonPtr();
+        }
         mpUpdateInfo->leaveWait = false;
     }
 }
@@ -850,15 +853,18 @@ void ape::VLFTImgui::update(){
             if (!mpMainMenuInfo.inSinglePlayerMode) {
                 mpSceneManager->destroySceneNetwork();
             }
-            /*auto nodes = mpSceneManager->getNodes();
-            for (auto node : nodes)
-            {
-                mpSceneManager->deleteNode(node.first);
+            else {
+                mpPluginManager->stopPlugin("apeVLFTSceneLoaderPlugin");
+                auto nodes = mpSceneManager->getNodes();
+                for (auto node : nodes)
+                {
+                    mpSceneManager->deleteNode(node.first);
+                }
+                auto apeEntities = mpSceneManager->getEntities();
+                for (auto apeEntity : apeEntities) {
+                    mpSceneManager->deleteEntity(apeEntity.first);
+                }
             }
-            auto apeEntities = mpSceneManager->getEntities();
-            for (auto apeEntity : apeEntities){
-                mpSceneManager->deleteEntity(apeEntity.first);
-            }*/
             mpUpdateInfo->callLeave = false;
         }
         if(mpUpdateInfo->leaveWait)
@@ -936,9 +942,17 @@ void ape::VLFTImgui::leftPanelGUI() {
         }
     }
     else {
-        if (ImGui::Button("Stop screen cast", ImVec2(115, 25))) {
-            mpUpdateInfo->screenCast = true;
+        if (mpUpdateInfo->stoppingScreenCast) {
+            if (ImGui::Button("Saving video", ImVec2(115, 25))) {
+                ;
+            }
         }
+        else {
+            if (ImGui::Button("Stop screen cast", ImVec2(115, 25))) {
+                mpUpdateInfo->screenCast = true;
+            }
+        }
+       
     }
     if(ImGui::Button("Settings",ImVec2(115,25))){
         mpMainMenuInfo.settingsMenu = true;

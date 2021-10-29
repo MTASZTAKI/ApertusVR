@@ -77,6 +77,12 @@ namespace ape
 
 		std::map<std::string,tinygltf::Model> mGltfModel;
 
+		std::vector<std::string> mApeNodes;
+
+		std::vector<std::string> mApeEntities;
+
+		bool mStopCalled;
+
 		void parseGltfModel(std::string filePath);
 
 		void parseRepresentations();

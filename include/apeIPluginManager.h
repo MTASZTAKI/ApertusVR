@@ -48,6 +48,7 @@ namespace ape
 
 	public:
 		virtual void loadPlugin(std::string name) = 0;
+		virtual void stopPlugin(std::string name) = 0;
 	};
 }
 

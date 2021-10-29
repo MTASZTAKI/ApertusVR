@@ -175,7 +175,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         auto filaTm = filament::math::mat4f(1,0,0,0,
                                                               0,1,0,0,
                                                               0,0,1,0,
-                                                              0,-0.45,-0.05,1);
+                                                              0,-0.0,-0.05,1);
                                         app.mpTransformManager->setTransform(camTm, filaTm);
                                         //app.mainCamera->setModelMatrix(filaTm);
                                     }
@@ -453,7 +453,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto camWorld = app.mainCamera->getModelMatrix();
                             auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
                             if (abs(nodeWorldTransforms[3][0] - cam.x) < 25 && abs(cam.z - nodeWorldTransforms[3][2]) < 25) {
-                                if (!app.mpScene->hasEntity(app.worldMap.playerTriangles[nodeName]))
+                                if (!app.mpScene->hasEntity(app.worldMap.playerTriangles[nodeName]) && app.updateinfo.isMapVisible)
                                     app.mpScene->addEntity(app.worldMap.playerTriangles[nodeName]);
 
                                 auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
@@ -1486,8 +1486,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     app.mpInstancesMap.erase(event.subjectName);
                     app.playerNamesToShow.erase(event.subjectName);
                     auto nodeName = event.subjectName;
-                    if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end())
+                    if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
                         app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
+                        app.updateinfo.newMessage.push_back(nodeName.substr(0, nodeName.find("_vlft"))+" left the room");
+                        app.updateinfo.newChatMessage = true;
+                    }
                 }
 
                 if (app.mpScene->hasEntity(app.worldMap.playerTriangles[event.subjectName])) {
@@ -2595,8 +2598,10 @@ void ape::FilamentApplicationPlugin::screenCast()
     std::stringstream command;
     command << "/c ffmpeg -f gdigrab -framerate 30 -i desktop ../../screencasts/" << uuid.count() << ".mkv";
     STARTUPINFO info = { sizeof(info) };
+    info.cb = sizeof(STARTUPINFO);
+    info.wShowWindow = SW_SHOW; 
     memset(&mScreenCastProcessInfo, 0, sizeof(mScreenCastProcessInfo));
-    CreateProcess("C:\\windows\\system32\\cmd.exe", LPTSTR((LPCTSTR)command.str().c_str()), NULL, NULL, TRUE, 0, NULL, NULL, &info, &mScreenCastProcessInfo);
+    CreateProcess("C:\\windows\\system32\\cmd.exe", LPTSTR((LPCTSTR)command.str().c_str()), NULL, NULL, FALSE, DETACHED_PROCESS, NULL, NULL, &info, &mScreenCastProcessInfo);
     
 }
 #endif
@@ -2651,8 +2656,9 @@ void ape::FilamentApplicationPlugin::startScreenCast() {
     std::thread systemThread(systemCommand);
     systemThread.detach();
 #else
-    auto screenCastThread = std::thread(&FilamentApplicationPlugin::screenCast, this);
-    screenCastThread.detach();
+    screenCast();
+    //auto screenCastThread = std::thread(&FilamentApplicationPlugin::screenCast, this);
+    //screenCastThread.detach();
 #endif
 }
 
@@ -2663,21 +2669,57 @@ void ape::FilamentApplicationPlugin::stopScreenCast() {
     system(sysCommand.c_str());
     app.updateinfo.screenCaptureOn = false;
 #else
+    app.updateinfo.stoppingScreenCast = true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     std::cout << "STOP CAST" << std::endl;
-    auto succ = TerminateProcess(mScreenCastProcessInfo.hProcess, 2);
+    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+    PROCESSENTRY32 pEntry;
+    pEntry.dwSize = sizeof(pEntry);
+    BOOL hRes = Process32First(hSnapShot, &pEntry);
+    while (hRes)
+    {
+        if (strcmp(pEntry.szExeFile, "ffmpeg.exe") == 0)
+        {
+            HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0,
+                (DWORD)pEntry.th32ProcessID);
+            if (hProcess != NULL)
+            {
+                TerminateProcess(hProcess, 2);
+                CloseHandle(hProcess);
+            }
+        }
+        hRes = Process32Next(hSnapShot, &pEntry);
+    }
+    CloseHandle(hSnapShot);
+    CloseHandle(mScreenCastProcessInfo.hProcess);
+    CloseHandle(mScreenCastProcessInfo.hThread);
+    /*auto succ = TerminateProcess(mScreenCastProcessInfo.hProcess, 2);
     if (succ) {
 
-        const DWORD result = WaitForSingleObject(mScreenCastProcessInfo.hProcess, 500);
+        const DWORD result = WaitForSingleObject(mScreenCastProcessInfo.hProcess, 100);
         if (result == WAIT_OBJECT_0)
             std::cout << "SUCCESS" << std::endl;
         else
             std::cout << "FAIL" << std::endl;
-        CloseHandle(mScreenCastProcessInfo.hProcess);
+        ResumeThread(mScreenCastProcessInfo.hThread);
         CloseHandle(mScreenCastProcessInfo.hThread);
+        CloseHandle(mScreenCastProcessInfo.hProcess);
+        auto succ2 = TerminateProcess(mScreenCastProcessInfo.hProcess, 2);
+        if (succ2) {
+
+            const DWORD result = WaitForSingleObject(mScreenCastProcessInfo.hProcess, 100);
+            if (result == WAIT_OBJECT_0)
+                std::cout << "SUCCESS" << std::endl;
+            else
+                std::cout << "FAIL" << std::endl;
+            CloseHandle(mScreenCastProcessInfo.hProcess);
+            CloseHandle(mScreenCastProcessInfo.hThread);
+
+        }
     }
     else
-        std::cout << "TERMINATE FAIL" << std::endl;
-    /* HANDLE ps = OpenProcess(SYNCHRONIZE | PROCESS_TERMINATE, FALSE, mScreenCastProcessInfo.dwProcesfsId);
+        std::cout << "TERMINATE FAIL" << std::endl;*/
+    /*HANDLE ps = OpenProcess(SYNCHRONIZE | PROCESS_TERMINATE, FALSE, mScreenCastProcessInfo.dwProcesfsId);
 
      std::cout << "ps" << std::endl;
      if (ps != INVALID_HANDLE_VALUE) {
@@ -2686,6 +2728,7 @@ void ape::FilamentApplicationPlugin::stopScreenCast() {
          std::cout << "stopped" << std::endl;
      }else
          std::cout << "no process" << std::endl;*/
+    app.updateinfo.stoppingScreenCast = false;
     app.updateinfo.screenCaptureOn = false;
 #endif
 }
@@ -2960,7 +3003,8 @@ void ape::FilamentApplicationPlugin::Step()
                 startScreenCast();
             }
             else {
-                stopScreenCast();
+                auto screenCastThread = std::thread(&FilamentApplicationPlugin::stopScreenCast, this);
+                screenCastThread.detach();
             }
             app.updateinfo.screenCast = false;
         }
@@ -3404,13 +3448,26 @@ void ape::FilamentApplicationPlugin::Step()
                     if (app.mpScene->hasEntity(ply.second)) {
                         app.mpScene->remove(ply.second);
                     }
+                    if (app.mpTransformManager->hasComponent(ply.second))
+                        app.mpTransformManager->destroy(ply.second);
+                    app.mpEntityManager->destroy(ply.second);
                     app.engine->destroy(ply.second);
                 }
                 app.worldMap.playerTriangles.clear();
+
+                if (app.mpScene->hasEntity(app.worldMap.playerMap))
+                    app.mpScene->remove(app.worldMap.playerMap);
+                if (app.mpTransformManager->hasComponent(app.worldMap.playerMap))
+                    app.mpTransformManager->destroy(app.worldMap.playerMap);
+                app.mpEntityManager->destroy(app.worldMap.playerMap);
                 app.engine->destroy(app.worldMap.playerMap);
+              
 
                 if (app.mpScene->hasEntity(app.worldMap.mapReferencePoint))
                     app.mpScene->remove(app.worldMap.mapReferencePoint);
+                if (app.mpTransformManager->hasComponent(app.worldMap.mapReferencePoint))
+                    app.mpTransformManager->destroy(app.worldMap.mapReferencePoint);
+                app.mpEntityManager->destroy(app.worldMap.mapReferencePoint);
                 app.engine->destroy(app.worldMap.mapReferencePoint);
 
                 app.engine->destroy(app.worldMap.mapMaterial);
@@ -3524,7 +3581,7 @@ void ape::FilamentApplicationPlugin::Step()
                                     nodeSP->setOwner(mpCoreConfig->getNetworkGUID());
                                     if (auto userNode = mpSceneManager->getNode(mUserName + mPostUserName).lock())
                                         nodeSP->setParentNode(userNode);
-                                    nodeSP->setPosition(ape::Vector3(0, -0.65, 0.05));
+                                    nodeSP->setPosition(ape::Vector3(0, 0, 0.05));
                                     nodeSP->setOrientation(ape::Quaternion(1, 0, 0, 0));
                                     mAttachedUsers.push_back(nodeSP);
                                 }
@@ -4192,7 +4249,8 @@ void ape::FilamentApplicationPlugin::Step()
                                         startScreenCast();
                                     }
                                     else {
-                                        stopScreenCast();
+                                        auto screenCastThread = std::thread(&FilamentApplicationPlugin::stopScreenCast, this);
+                                        screenCastThread.detach();
                                     }
                                    
                                 }
@@ -4231,7 +4289,7 @@ void ape::FilamentApplicationPlugin::Step()
                                     auto playerTM = app.mpTransformManager->getInstance(x.second);
                                     auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                     if (abs(camPos.x - playerPos.getX()) < 25 && abs(camPos.z - playerPos.getZ()) < 25) {
-                                        if (!app.mpScene->hasEntity(x.second))
+                                        if (!app.mpScene->hasEntity(x.second) && app.updateinfo.isMapVisible)
                                             app.mpScene->addEntity(x.second);
                                         playerTransform[3][0] = (playerPos.getX() - camPos.x) / 2000;
                                         playerTransform[3][1] = (camPos.z - playerPos.getZ()) / 2000;
@@ -4269,7 +4327,7 @@ void ape::FilamentApplicationPlugin::Step()
                                 auto playerTM = app.mpTransformManager->getInstance(x.second);
                                 auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                 if (abs(camPos.x - playerPos.getX()) < 25 && abs(camPos.z - playerPos.getZ()) < 25) {
-                                    if (!app.mpScene->hasEntity(x.second))
+                                    if (!app.mpScene->hasEntity(x.second) && app.updateinfo.isMapVisible)
                                         app.mpScene->addEntity(x.second);
                                     playerTransform[3][0] = (playerPos.getX() - camPos.x) / 2000;
                                     playerTransform[3][1] = (camPos.z - playerPos.getZ()) / 2000;
