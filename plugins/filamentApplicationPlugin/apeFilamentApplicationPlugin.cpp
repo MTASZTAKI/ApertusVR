@@ -1446,7 +1446,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[event.subjectName]);
                                 app.mpTransformManager->setParent(playerTM, mapTM);
                                 if(event.subjectName.find(mUserName+mPostUserName) == std::string::npos)
-                                app.playerNamesToShow.insert(event.subjectName);
+                                    app.playerNamesToShow.insert(event.subjectName);
                                /* auto playerTransform = app.mpTransformManager->getTransform(playerTM);
                                 playerTransform[3][0] = 0.0125;
                                 playerTransform[3][1] = -0.0125;
@@ -3393,7 +3393,7 @@ void ape::FilamentApplicationPlugin::Step()
             }
             if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
             {
-                textNode->setCaption(mUserName + " left the room");
+                ;// textNode->setCaption(mUserName + " left the room");
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
             for (auto attachedUserWP : mAttachedUsers)
@@ -4349,6 +4349,13 @@ void ape::FilamentApplicationPlugin::Step()
                 }
             }
             std::vector<std::string> toRemove = std::vector<std::string>();
+            for (auto playerName : app.updateinfo.playerNamePositions) {
+                if (app.playerNamesToShow.find(playerName.first) == app.playerNamesToShow.end())
+                    toRemove.push_back(playerName.first);
+            }
+            for (auto removePlayer : toRemove) {
+                app.updateinfo.playerNamePositions.erase(removePlayer);
+            }
             for (auto nodeName : app.playerNamesToShow) {
 
                 float tnear = app.mainCamera->getNear() / 2;
