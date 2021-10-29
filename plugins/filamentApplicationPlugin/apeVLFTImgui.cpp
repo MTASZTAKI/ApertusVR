@@ -118,8 +118,12 @@ void ape::VLFTImgui::listRoomNames(bool withState){
         if (ImGui::Selectable(mpMainMenuInfo.roomNames[n].c_str(), mpMainMenuInfo.current_selected == n, ImGuiSelectableFlags_AllowDoubleClick)){
             mpMainMenuInfo.current_selected = n;
             if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)){
-                connectToRoom();
-                mpMainMenuInfo.current_selected = -1;
+                curlData();
+                if (mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
+                {
+                    connectToRoom();
+                    mpMainMenuInfo.current_selected = -1;
+                }
             }
         }
         if(withState){
@@ -297,6 +301,7 @@ void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height
     }
     else{
         if (ImGui::Button("Join",ImVec2(width/8, height/15))){
+            curlData();
             if(mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
                 connectToRoom();
         }
