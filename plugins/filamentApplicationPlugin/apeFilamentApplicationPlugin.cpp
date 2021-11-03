@@ -1362,8 +1362,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                                 app.mpTransformManager->setTransform(filamentAssetRootTransform, transformMatrix);
                                         }
                                     }
-                                    
-                                    app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                                    if(node->isVisible())
+                                        app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
 
                                 }
                                 else if(parentNodeName.find(mUserName+mPostUserName) != std::string::npos){
@@ -1406,7 +1406,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 if(nameInstance)
                                   app.names->setName(nameInstance, event.subjectName.c_str());
                                 if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
-                                    if(node->getChildrenVisibility() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
+                                    if(node->isVisible() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
                                         app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                                     }
                                     else if(parentNodeName.find(mUserName+mPostUserName) != std::string::npos){
@@ -3372,6 +3372,25 @@ void ape::FilamentApplicationPlugin::Step()
             app.updateinfo.logMovements = false;
         }
         if(app.updateinfo.leftRoom){
+            if (app.updateinfo.pickedItem != "")
+            {
+                if (auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()) {
+                    clone->detachFromParentNode();
+                    clone->revertToInitalState();
+                    clone->setOwner(clone->getCreator());
+                }
+                //            auto parentTm = app.mpTransformManager->getInstance(app.parentOfPicked);
+                //            auto instance = app.mpInstancesMap[app.rootOfSelected.second].mpInstance;
+                //            auto tmInstance = app.mpTransformManager->getInstance(instance->getRoot());
+                //            auto parentWorldMatrix = app.mpTransformManager->getTransform(tmInstance);
+                //            parentWorldMatrix[3][1] += 0.4;
+                //            parentWorldMatrix[3][2] += 2.0;
+                //            app.mpTransformManager->setTransform(tmInstance, parentWorldMatrix);
+                //            app.mpTransformManager->setParent(tmInstance,parentTm);
+                app.updateinfo.pickedItem = "";
+                app.updateinfo.drop = false;
+                scene->remove(app.boxEntity.first);
+            }
             mEventDoubleQueue.swap();
            
             while (!mEventDoubleQueue.emptyPop())
@@ -3663,6 +3682,7 @@ void ape::FilamentApplicationPlugin::Step()
             if(auto clone = mpSceneManager->getNode(app.rootOfSelected.second).lock()){
                 auto owner = clone->getOwner();
                 clone->setOwner(mpCoreConfig->getNetworkGUID());
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 clone->setChildrenVisibility(false);
                 clone->setVisible(false);
                 app.updateinfo.switchOwner = true;
@@ -3693,14 +3713,6 @@ void ape::FilamentApplicationPlugin::Step()
               app.updateinfo.pickedItem = "";
               app.updateinfo.drop = false;
               scene->remove(app.boxEntity.first);
-        }
-        if(app.updateinfo.sendMessage){
-            if(auto textNode =std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName+mPostUserName+"_text").lock()))
-            {
-                textNode->setCaption(app.updateinfo.messageToSend);
-            }
-            app.updateinfo.sendMessage = false;
-            
         }
         else if(app.updateinfo.pickUp || app.updateinfo.pickedItem != "" ){
             if(app.updateinfo.selectedItem != ""){
@@ -3761,7 +3773,14 @@ void ape::FilamentApplicationPlugin::Step()
                 }
             }
         }
-       
+        if (app.updateinfo.sendMessage) {
+            if (auto textNode = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "_text").lock()))
+            {
+                textNode->setCaption(app.updateinfo.messageToSend);
+            }
+            app.updateinfo.sendMessage = false;
+
+        }
         
         
         camera.setExposure(
