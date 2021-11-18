@@ -65,6 +65,8 @@ SOFTWARE.*/
 #include "RPC4Plugin.h"
 #include "HTTPConnection2.h"
 #include "DS_List.h"
+#include <atomic>
+
 
 namespace ape
 {

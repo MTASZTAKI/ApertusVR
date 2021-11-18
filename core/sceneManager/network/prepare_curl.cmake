@@ -47,6 +47,7 @@ if (WIN32)
 				RESULT_VARIABLE error OUTPUT_VARIABLE output ERROR_VARIABLE output)
 			reportError(output if error)
 		endforeach ()
+		set(CURL_READY TRUE)
 	endif ()
 
 	# use curl
