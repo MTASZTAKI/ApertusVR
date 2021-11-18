@@ -3165,6 +3165,9 @@ void ape::FilamentApplicationPlugin::Step()
                 logo->setVisible(false);
                 logo->setChildrenVisibility(false);
             }
+            while(mpCoreConfig->getNetworkGUID() == ""){
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            }
             if(app.updateinfo.isAdmin)
                 mPostUserName = "_vlftTeacher"+ mpCoreConfig->getNetworkGUID();
             else
