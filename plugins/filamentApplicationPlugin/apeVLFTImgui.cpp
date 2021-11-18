@@ -935,9 +935,9 @@ void ape::VLFTImgui::leftPanelGUI() {
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowPos(ImVec2(width-135, height/3-20));
     ImGui::SetNextWindowSize(ImVec2(130, 170));
-    ImGui::Begin("Record", nullptr);
+    ImGui::Begin("Utilities", nullptr);
     ImGui::Checkbox("Show map", &mpUpdateInfo->isMapVisible);
-    ImGui::Checkbox("show headers", &mpMainMenuInfo.showStates);
+    ImGui::Checkbox("Show headers", &mpMainMenuInfo.showStates);
     if (ImGui::Button("Screenshot", ImVec2(115, 25))) {
         mpUpdateInfo->takeScreenshot = true;
     }
@@ -1297,8 +1297,8 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
     const float textWidth = ImGui::CalcTextSize("Group Information").x;
     ImGui::SetCursorPosX((width-25-textWidth)/2);
     ImGui::Text("Group Information");
-    ImGui::Text("%s", rootIDText.c_str());
-    ImGui::Text("%s", rootPosText.c_str());
+    //ImGui::Text("%s", rootIDText.c_str());
+    //ImGui::Text("%s", rootPosText.c_str());
     ImGui::TextWrapped("%s", desrcText.c_str());
     ImGui::Text("%s", stateText.c_str());
     ImGui::Text("%s", logText.c_str());
