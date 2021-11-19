@@ -2901,13 +2901,13 @@ void ape::FilamentApplicationPlugin::Step()
             .direction({ -app.updateinfo.lightDirection[0], app.updateinfo.lightDirection[1], -app.updateinfo.lightDirection[2] })
             .sunAngularRadius(1.9f)
             .castShadows(true)
-            .build(*app.engine, app.sunLight);
+            .build(*app.engine, app.sunLight2);
         app.mpScene->addEntity(app.sunLight);
         //app.mpScene->addEntity(app.sunLight2);
         auto ibl = FilamentApp::get().getIBL();
         auto indirectLight = ibl->getIndirectLight();
 
-        indirectLight->setIntensity(17500);
+        indirectLight->setIntensity(18500);
         
     };
 
@@ -2930,13 +2930,30 @@ void ape::FilamentApplicationPlugin::Step()
 
    
     auto resize = [this](Engine* engine, View* view) {
+        const Viewport& vp = view->getViewport();
+        auto mapTM = app.mpTransformManager->getInstance(app.worldMap.playerMap);
+        auto mapTransform = app.mpTransformManager->getTransform(mapTM);
+        if (vp.width > 1300) {
+            float wTmp = 1 + float(vp.width) / 50000.0f;
+            float hTmp = 1 + float(vp.height) / 35000.0f;
+            mapTransform[3][0] = wTmp * wTmp - 1;
+            mapTransform[3][1] = hTmp * hTmp - 1;
+            mapTransform[3][2] = -0.10015;
+            app.mpTransformManager->setTransform(mapTM, mapTransform);
+        }
+        else {
+            mapTransform[3][0] = 0.0433;
+            mapTransform[3][1] = 0.0423;
+            mapTransform[3][2] = -0.10015;
+            app.mpTransformManager->setTransform(mapTM, mapTransform);
+        }
         filament::Camera& camera = view->getCamera();
         if (&camera == app.mainCamera) {
             // Don't adjut the aspect ratio of the main camera, this is done inside of
             // FilamentApp.cpp
             return;
         }
-        const Viewport& vp = view->getViewport();
+        //const Viewport& vp = view->getViewport();
         double aspectRatio = (double) vp.width / vp.height;
         camera.setScaling(double4 {1.0 / aspectRatio, 1.0, 1.0, 1.0});
     };

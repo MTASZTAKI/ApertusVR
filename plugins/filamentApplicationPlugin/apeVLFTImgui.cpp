@@ -36,7 +36,8 @@ void ape::VLFTImgui::updateResources(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
-    ImGui::Begin("ResouceUpdate", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    //ImGui::Begin("ResouceUpdate", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Begin("ResouceUpdate", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
     ImGui::SetWindowFontScale(1.5);
     ImGui::SetCursorPos(ImVec2(width/2-150, height/2-90));
     ImGui::Text("Resources are being updated");
@@ -655,7 +656,7 @@ void ape::VLFTImgui::adminRoomGUI(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
-    ImGui::Begin("Admin", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Begin("Admin", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize| ImGuiWindowFlags_NoMove);
    
     ImGui::GetStyle().Alpha = 0.95;
     if(mpMainMenuInfo.mainMenu){
@@ -778,7 +779,7 @@ void ape::VLFTImgui::loginGUI(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
-    ImGui::Begin("Login", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Begin("Login", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize| ImGuiWindowFlags_NoMove);
     ImGui::Checkbox("Teacher", &mpUpdateInfo->isAdmin);
     static char emailT[255] = u8"Teacher";
     static char emailS[255] = u8"Student";
@@ -832,7 +833,7 @@ void ape::VLFTImgui::waitWindow(){
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(200, 50));
     ImGui::SetNextWindowPos(ImVec2(width/2-100, height/2-25));
-    ImGui::Begin("Waiting", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Begin("Waiting", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize| ImGuiWindowFlags_NoMove);
     std::string waitFor = "Leave room in ";
     std::stringstream posStream;
     double timeToWait = 1.0 - (mpUpdateInfo->now - mpUpdateInfo->leaveTime);
@@ -899,7 +900,7 @@ void ape::VLFTImgui::update(){
 }
 
 void ape::VLFTImgui::statePanelGUI(){
-    ImGui::SetNextWindowPos(ImVec2(122, 0));
+    ImGui::SetNextWindowPos(ImVec2(122, 0),ImGuiCond_Appearing);
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(270, 100), ImGuiCond_Once);
@@ -933,7 +934,7 @@ void ape::VLFTImgui::statePanelGUI(){
 void ape::VLFTImgui::leftPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-135, height/3-20));
+    ImGui::SetNextWindowPos(ImVec2(width-135, height/3-20),ImGuiCond_Appearing);
     ImGui::SetNextWindowSize(ImVec2(130, 170));
     ImGui::Begin("Utilities", nullptr);
     ImGui::Checkbox("Show map", &mpUpdateInfo->isMapVisible);
@@ -991,7 +992,7 @@ void ape::VLFTImgui::studentPanelGUI(){
     if (!mpMainMenuInfo.inSinglePlayerMode) {
         const float width = ImGui::GetIO().DisplaySize.x;
         const float height = ImGui::GetIO().DisplaySize.y;
-        ImGui::SetNextWindowPos(ImVec2(width - 135, height / 3 + 150));
+        ImGui::SetNextWindowPos(ImVec2(width - 135, height / 3 + 150),ImGuiCond_Appearing);
         ImGui::SetNextWindowSize(ImVec2(135, 105), ImGuiCond_Once);
         ImGui::Begin("Student control", nullptr);
         if (mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode) {
@@ -1046,7 +1047,7 @@ void ape::VLFTImgui::drawUserNames()
 void ape::VLFTImgui::infoPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(0, 141));
+    ImGui::SetNextWindowPos(ImVec2(0, 141), ImGuiCond_Once);
     ImGui::SetNextWindowSize(ImVec2(250, 260), ImGuiCond_Once);
     ImGui::Begin("Info", nullptr);
     
@@ -1102,7 +1103,7 @@ void ape::VLFTImgui::infoPanelGUI() {
 void ape::VLFTImgui::animationPanelGUI(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
     ImGui::SetNextWindowSize(ImVec2(120, 140), ImGuiCond_Once);
     ImGui::Begin("Animation", nullptr);
     std::string playText="Play";
@@ -1145,7 +1146,7 @@ void ape::VLFTImgui::animationPanelGUI(){
 void ape::VLFTImgui::screenshotPanelGUI(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-135, 0));
+    ImGui::SetNextWindowPos(ImVec2(width-135, 0), ImGuiCond_Appearing);
     ImGui::SetNextWindowSize(ImVec2(130, 150), ImGuiCond_Appearing);
     ImGui::Begin("Screenshot", nullptr);
     if (ImGui::Button("Screenshot", ImVec2(115, 25))) {
@@ -1313,7 +1314,7 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
 }
 
 void ape::VLFTImgui::manipulatorPanelGUI(){
-    ImGui::SetNextWindowPos(ImVec2(0, 400));
+    ImGui::SetNextWindowPos(ImVec2(0, 400),ImGuiCond_Appearing);
     ImGui::SetNextWindowSize(ImVec2(250, 245), ImGuiCond_Once);
     ImGui::Begin("Manipulator", nullptr);
     const float width = ImGui::GetWindowWidth();
