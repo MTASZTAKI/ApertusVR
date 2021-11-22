@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     {
        
         signal(SIGINT, my_handler);
-        ape::System::Start(inPath.c_str(), false);
+        ape::System::Start(inPath.c_str(), true);
     }
     else
     {

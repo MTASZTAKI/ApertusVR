@@ -146,7 +146,7 @@ struct updateInfo{
     bool callLeave = false;
     bool initRun = false;
     bool resourcesUpdated = false;
-    bool inSinlgePlayer = false;
+    bool inSinglePlayer = false;
     bool spaghettiVisible = false;
     bool isMapVisible = true;
     bool lightOn = true;

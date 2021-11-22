@@ -285,12 +285,29 @@ struct App {
         std::vector<filament::math::float2> playerPositions[10];
         std::map<std::string, utils::Entity> playerTriangles;
         std::vector<uint32_t> playerColors[10];
-        LineVertex mapVertices[4] = {
+        LineVertex mapVertices[16] = {
             {{0, 0, 0}, 0x11111111u},
-            {{0.025,-0.025, 0}, 0x11111111u},
-            {{0,-0.025, 0}, 0x11111111u},
+            {{0.025,-0.001, 0}, 0x11111111u},
+            {{0,-0.001, 0}, 0x11111111u},
             {{0.025, 0, 0}, 0x11111111u},
+
+            { {0, -0.024, 0}, 0x11111111u},
+            { {0.025,-0.025, 0}, 0x11111111u },
+            { {0,-0.025, 0}, 0x11111111u },
+            { {0.025, -0.024, 0}, 0x11111111u },
+
+            { {0, 0, 0}, 0x11111111u },
+            { {0.001,-0.025, 0}, 0x11111111u },
+            { {0.001,0, 0}, 0x11111111u },
+            { {0, -0.025, 0}, 0x11111111u },
+
+            { {0.024, 0, 0}, 0x11111111u },
+            { {0.025,-0.025, 0}, 0x11111111u },
+            { {0.025,0, 0}, 0x11111111u },
+            { {0.024, -0.025, 0}, 0x11111111u },
         };
+
+      
 
         LineVertex playerVertices[6] = {
             {{0, 0.00104, 0}, 0xffff0000u },
@@ -301,7 +318,8 @@ struct App {
             {{-0.0008,-0.00025, 0}, 0xffff0000u},
         };
 
-        uint16_t mapIndices[6] = {0,1,2,0,3,1};
+        //uint16_t mapIndices[6] = { 0,1,2,0,3,1};
+        uint16_t mapIndices[24] = {0,1,2,0,3,1, 4,5,6,4,7,5, 8,9,10,8,11,9, 12,13,14,12,15,13 };
         uint16_t playerIndices[6] = { 0,1,2,3,4,5 };
         filament::Material* mapMaterial;
         Entity playerMap;

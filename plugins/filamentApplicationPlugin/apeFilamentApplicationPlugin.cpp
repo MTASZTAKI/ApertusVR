@@ -2281,7 +2281,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                 node->setInitalState();
                 node->setOwner(mpCoreConfig->getNetworkGUID());
                 std::chrono::milliseconds uuid = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-                if(app.updateinfo.inSinlgePlayer)
+                if(app.updateinfo.inSinglePlayer)
                 if (auto spaghettiNode = mpSceneManager->createNode(animatedNodeName + "_spaghettiNode"+std::to_string(uuid.count()), true, mpCoreConfig->getNetworkGUID()).lock())
                 {
                     mSpaghettiNodeNames.insert(spaghettiNode->getName());
@@ -2348,7 +2348,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                     }
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::TRAIL)
                     {
-                        if(app.updateinfo.inSinlgePlayer)
+                        if(app.updateinfo.inSinglePlayer)
                             showSpaghetti(node->getName(), mParsedAnimations[i].trail);
                     }
                     if (mParsedAnimations[i].type == animationQuicktype::EventType::LINK)
@@ -2460,7 +2460,7 @@ void ape::FilamentApplicationPlugin::playAnimations(double now){
                             node->translate(mParsedAnimations[i].translate, ape::Node::TransformationSpace::PARENT);
                         }
                         std::string spaghettiSectionName;
-                        if(app.updateinfo.inSinlgePlayer)
+                        if(app.updateinfo.inSinglePlayer)
                             drawSpaghettiSection(previousPosition, node, spaghettiSectionName);
                         //mspaghettiLineNames[spaghettiSectionName]=mParsedAnimations[i].nodeName;
                     }
@@ -2933,8 +2933,9 @@ void ape::FilamentApplicationPlugin::Step()
         const Viewport& vp = view->getViewport();
         auto mapTM = app.mpTransformManager->getInstance(app.worldMap.playerMap);
         auto mapTransform = app.mpTransformManager->getTransform(mapTM);
-        if (vp.width > 1300) {
-            float wTmp = 1 + float(vp.width) / 50000.0f;
+
+        if (false && vp.width > 1300) {
+            float wTmp = 1 + float(vp.width) / 30000.0f;
             float hTmp = 1 + float(vp.height) / 35000.0f;
             mapTransform[3][0] = wTmp * wTmp - 1;
             mapTransform[3][1] = hTmp * hTmp - 1;
@@ -3182,7 +3183,7 @@ void ape::FilamentApplicationPlugin::Step()
                 logo->setVisible(false);
                 logo->setChildrenVisibility(false);
             }
-            while(mpCoreConfig->getNetworkGUID() == ""){
+            while(mpCoreConfig->getNetworkGUID() == "" && !app.updateinfo.inSinglePlayer){
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
             }
             if(app.updateinfo.isAdmin)
@@ -3227,30 +3228,34 @@ void ape::FilamentApplicationPlugin::Step()
             }
 
             app.worldMap.mapVertexBuffer = VertexBuffer::Builder()
-                .vertexCount(4)
+                .vertexCount(16)
                 .bufferCount(1)
                 .attribute(VertexAttribute::POSITION, 0, VertexBuffer::AttributeType::FLOAT3, 0, 16)
                 .attribute(VertexAttribute::COLOR, 0, VertexBuffer::AttributeType::UBYTE4, 12, 16)
                 .normalized(VertexAttribute::COLOR)
                 .build(*engine);
             app.worldMap.mapVertexBuffer->setBufferAt(*engine, 0,
-                VertexBuffer::BufferDescriptor(app.worldMap.mapVertices, 64, nullptr));
+                VertexBuffer::BufferDescriptor(app.worldMap.mapVertices, 256, nullptr));
             app.worldMap.mapIndexBuffer = IndexBuffer::Builder()
-                .indexCount(6)
+                .indexCount(24)
                 .bufferType(IndexBuffer::IndexType::USHORT)
                 .build(*engine);
             app.worldMap.mapIndexBuffer->setBuffer(*engine,
-                IndexBuffer::BufferDescriptor(app.worldMap.mapIndices, 12, nullptr));
+                IndexBuffer::BufferDescriptor(app.worldMap.mapIndices, 48, nullptr));
             app.worldMap.mapMaterial = filament::Material::Builder()
                 .package(RESOURCES_BAKEDCOLOR_DATA, RESOURCES_BAKEDCOLOR_SIZE)
                 .build(*engine);
             if(!app.mpEntityManager->isAlive(app.worldMap.playerMap)){
                 app.worldMap.playerMap = EntityManager::get().create();
                 auto mat = app.worldMap.mapMaterial->getDefaultInstance();
+                double transmissionFact = 0.5;
+                filament::Material::ParameterInfo parameterInfo;
+                app.worldMap.mapMaterial->getParameters(&parameterInfo, app.worldMap.mapMaterial->getParameterCount());
+                //mat->setParameter("transmissionFactor", transmissionFact);
                 RenderableManager::Builder(1)
                     .boundingBox({ { -1, -1, -1 }, { 1, 1, 1 } })
                     .material(0, mat)
-                    .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 6)
+                    .geometry(0, RenderableManager::PrimitiveType::TRIANGLES, app.worldMap.mapVertexBuffer, app.worldMap.mapIndexBuffer, 0, 24)
                     .culling(true)
                     .receiveShadows(false)
                     .castShadows(false)
