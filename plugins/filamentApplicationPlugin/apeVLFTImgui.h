@@ -99,6 +99,7 @@ struct updateInfo{
     std::map<std::string, std::string> keyLabel = std::map<std::string, std::string>();
     std::map<std::string, std::string> animationLinks = std::map<std::string, std::string>();
     std::map<std::string, float[5]> playerNamePositions = std::map<std::string, float[5]>();
+    std::map<std::string, float[2]> playerMapPositions = std::map<std::string, float[2]>();
     std::vector<std::string> stateOfObjects = std::vector<std::string>();
     std::vector<std::string> nameOfState = std::vector<std::string>();
     std::vector<std::string> newMessage = std::vector<std::string>();
@@ -160,6 +161,7 @@ struct updateInfo{
     int BookmarkID = -1;
     unsigned long long ClickedBookmarkTime = 0;
     float TimeToSleepFactor = 1.0f;
+    float playerRotation = 0.0f;
     std::vector<float> timeOfState= std::vector<float>();
     std::vector<float> lightDirection = { 0.7, -1, -0.8 };
     std::vector<uint16_t> resolution = { 1280,720 };

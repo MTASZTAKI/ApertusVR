@@ -908,12 +908,25 @@ void ape::VLFTImgui::update(){
         else if(!mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
             studentRoomGUI();
         else if(mpMainMenuInfo.inRoomGui){
-            ImGui::GetStyle().Alpha = 0.45;
+            ImGui::GetStyle().Alpha = 0.65;
             const float width = ImGui::GetIO().DisplaySize.x;
             const float height = ImGui::GetIO().DisplaySize.y;
-            ImGui::SetNextWindowPos(ImVec2(width - 210, 3));
-            ImGui::SetNextWindowSize(ImVec2(215, 215));
-            ImGui::Begin("Map_background", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+            ImGui::SetNextWindowPos(ImVec2(width-215, 3));
+            ImGui::SetNextWindowSize(ImVec2(210, 210));
+            ImGui::Begin("Map_of_players", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+            ImDrawList* draw_list = ImGui::GetWindowDrawList();
+            ImU32 col_red = ImGui::GetColorU32(IM_COL32(255, 0, 0, 255));
+            ImU32 col_blue = ImGui::GetColorU32(IM_COL32(0, 0 , 255, 255));
+            const ImVec2 p = ImGui::GetCursorScreenPos();
+            draw_list->AddNgonFilled(ImVec2(p.x+100,p.y+100),10, col_blue, 4);
+            for (auto pos : mpUpdateInfo->playerMapPositions) {
+                float posX = pos.second[0];
+                float posY = -pos.second[1];
+                float newX = posX * cos(-mpUpdateInfo->playerRotation) - posY * sin(-mpUpdateInfo->playerRotation);
+                float newY = posX * sin(-mpUpdateInfo->playerRotation) + posY * cos(-mpUpdateInfo->playerRotation);
+                if(newX > -120 && newY >-120 && newX < 120 && newY < 120)
+                    draw_list->AddNgonFilled(ImVec2(p.x + newX * 5 + 100, p.y + newY * 5 + 100), 10, col_red, 4);
+            }
             ImGui::End();
 
             ImGui::GetStyle().Alpha = 0.95;
