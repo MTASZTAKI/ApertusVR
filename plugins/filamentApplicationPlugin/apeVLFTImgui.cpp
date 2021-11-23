@@ -25,6 +25,12 @@ ape::VLFTImgui::VLFTImgui( )
     mpPluginManager = ape::IPluginManager::getSingletonPtr();
     mpSceneManager = ape::ISceneManager::getSingletonPtr();
     statesMap =  std::map<std::string, std::string>();
+    resolutions.push_back(std::pair(640, 360));
+    resolutions.push_back(std::pair(854, 480));
+    resolutions.push_back(std::pair(1024, 576));
+    resolutions.push_back(std::pair(1280, 720));
+    resolutions.push_back(std::pair(1366, 768));
+    resolutions.push_back(std::pair(1600, 900));
 }
 
 ape::VLFTImgui::~VLFTImgui()
@@ -614,16 +620,34 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
     ImGui::SetCursorPosX(width / 3);
     if (ImGui::Button("Change light direction", ImVec2(150, 25))) {
         mpUpdateInfo->changeLightDir = true;
-    }
-    ImGui::PushItemWidth(75);
+    }    
     ImGui::SetCursorPosX(width / 3);
+    ImGui::PushItemWidth(75);
     ImGui::InputFloat("x", &mpUpdateInfo->lightDirection[0]);
     ImGui::SameLine();
     ImGui::InputFloat("y", &mpUpdateInfo->lightDirection[1]);
     ImGui::SameLine();
     ImGui::InputFloat("z", &mpUpdateInfo->lightDirection[2]);
     ImGui::PopItemWidth();
-
+    ImGui::SetCursorPosX(width / 3);
+    ImGui::Text("Resolution");
+    ImGui::PushItemWidth(150);
+    ImGui::SetCursorPosX(width / 3);
+    if (ImGui::BeginCombo("##combo", current_resolution)) // The second parameter is the label previewed before opening the combo.
+    {
+        for (int n = 0; n < IM_ARRAYSIZE(resoultionDropDown); n++)
+        {
+            bool is_selected = (current_resolution == resoultionDropDown[n]); // You can store your selection however you want, outside or inside your objects
+            if (ImGui::Selectable(resoultionDropDown[n], is_selected))
+                current_resolution = resoultionDropDown[n];
+                mpUpdateInfo->resolution[0] = resolutions[n].first;
+                mpUpdateInfo->resolution[1] = resolutions[n].second;
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+        }
+        ImGui::EndCombo();
+    }
+    ImGui::PopItemWidth();
     ImGui::SetCursorPos(ImVec2(0,height-(height/15+25)));
     if(mpUpdateInfo->leftRoom == false && mpUpdateInfo->inRoom){
         if(ImGui::Button("Leave room",ImVec2(width/8, height/15)))
@@ -884,6 +908,14 @@ void ape::VLFTImgui::update(){
         else if(!mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
             studentRoomGUI();
         else if(mpMainMenuInfo.inRoomGui){
+            ImGui::GetStyle().Alpha = 0.45;
+            const float width = ImGui::GetIO().DisplaySize.x;
+            const float height = ImGui::GetIO().DisplaySize.y;
+            ImGui::SetNextWindowPos(ImVec2(width - 210, 3));
+            ImGui::SetNextWindowSize(ImVec2(215, 215));
+            ImGui::Begin("Map_background", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+            ImGui::End();
+
             ImGui::GetStyle().Alpha = 0.95;
             leftPanelGUI();
             if(mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode){
@@ -899,10 +931,14 @@ void ape::VLFTImgui::update(){
             drawUserNames();
         }
     }
+    mpUpdateInfo->rePositionUI = false;
 }
 
 void ape::VLFTImgui::statePanelGUI(){
     ImGui::SetNextWindowPos(ImVec2(122, 0),ImGuiCond_Appearing);
+    if (mpUpdateInfo->rePositionUI) {
+        ImGui::SetNextWindowPos(ImVec2(122, 0));
+    }
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(270, 100), ImGuiCond_Once);
@@ -936,8 +972,11 @@ void ape::VLFTImgui::statePanelGUI(){
 void ape::VLFTImgui::leftPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(width-135, height/3-20),ImGuiCond_Appearing);
-    ImGui::SetNextWindowSize(ImVec2(130, 170));
+    ImGui::SetNextWindowPos(ImVec2(width-150, height/3-20),ImGuiCond_Appearing);
+    if (mpUpdateInfo->rePositionUI) {
+        ImGui::SetNextWindowPos(ImVec2(width - 135, height / 3 - 20));
+    }
+    ImGui::SetNextWindowSize(ImVec2(135, 170));
     ImGui::Begin("Utilities", nullptr);
     ImGui::Checkbox("Show map", &mpUpdateInfo->isMapVisible);
     ImGui::Checkbox("Show headers", &mpMainMenuInfo.showStates);
@@ -995,6 +1034,9 @@ void ape::VLFTImgui::studentPanelGUI(){
         const float width = ImGui::GetIO().DisplaySize.x;
         const float height = ImGui::GetIO().DisplaySize.y;
         ImGui::SetNextWindowPos(ImVec2(width - 135, height / 3 + 150),ImGuiCond_Appearing);
+        if (mpUpdateInfo->rePositionUI) {
+            ImGui::SetNextWindowPos(ImVec2(width - 135, height / 3 + 150));
+        }
         ImGui::SetNextWindowSize(ImVec2(135, 105), ImGuiCond_Once);
         ImGui::Begin("Student control", nullptr);
         if (mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode) {
@@ -1049,7 +1091,19 @@ void ape::VLFTImgui::drawUserNames()
 void ape::VLFTImgui::infoPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowPos(ImVec2(0, 141), ImGuiCond_Once);
+    if (!mpUpdateInfo->isAdmin) {
+        ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+        if (mpUpdateInfo->rePositionUI) {
+            ImGui::SetNextWindowPos(ImVec2(0, 0));
+        }
+    }
+    else {
+        ImGui::SetNextWindowPos(ImVec2(0, 141), ImGuiCond_Once);
+        if (mpUpdateInfo->rePositionUI) {
+            ImGui::SetNextWindowPos(ImVec2(0,141));
+        }
+    }
+  
     ImGui::SetNextWindowSize(ImVec2(250, 260), ImGuiCond_Once);
     ImGui::Begin("Info", nullptr);
     
@@ -1060,7 +1114,10 @@ void ape::VLFTImgui::infoPanelGUI() {
         chatMessages.insert(chatMessages.end(), mpUpdateInfo->newMessage.begin(), mpUpdateInfo->newMessage.end());
         mpUpdateInfo->newMessage.clear();
     }
-    ImGui::SetNextWindowPos(ImVec2(width-305, height-210));
+    ImGui::SetNextWindowPos(ImVec2(width-305, height-210), ImGuiCond_Once);
+    if (mpUpdateInfo->rePositionUI) {
+        ImGui::SetNextWindowPos(ImVec2(width - 305, height - 210));
+    }
     ImGui::SetNextWindowSize(ImVec2(300, 200), ImGuiCond_Once);
     ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
     ImGui::Begin("Chat", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
@@ -1106,6 +1163,9 @@ void ape::VLFTImgui::animationPanelGUI(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+    if (mpUpdateInfo->rePositionUI) {
+        ImGui::SetNextWindowPos(ImVec2(0,0));
+    }
     ImGui::SetNextWindowSize(ImVec2(120, 140), ImGuiCond_Once);
     ImGui::Begin("Animation", nullptr);
     std::string playText="Play";
@@ -1149,6 +1209,9 @@ void ape::VLFTImgui::screenshotPanelGUI(){
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowPos(ImVec2(width-135, 0), ImGuiCond_Appearing);
+    if (mpUpdateInfo->rePositionUI) {
+        ImGui::SetNextWindowPos(ImVec2(width - 135, 0));
+    }
     ImGui::SetNextWindowSize(ImVec2(130, 150), ImGuiCond_Appearing);
     ImGui::Begin("Screenshot", nullptr);
     if (ImGui::Button("Screenshot", ImVec2(115, 25))) {
@@ -1317,6 +1380,9 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
 
 void ape::VLFTImgui::manipulatorPanelGUI(){
     ImGui::SetNextWindowPos(ImVec2(0, 400),ImGuiCond_Appearing);
+    if (mpUpdateInfo->rePositionUI) {
+        ImGui::SetNextWindowPos(ImVec2(0, 400));
+    }
     ImGui::SetNextWindowSize(ImVec2(250, 245), ImGuiCond_Once);
     ImGui::Begin("Manipulator", nullptr);
     const float width = ImGui::GetWindowWidth();

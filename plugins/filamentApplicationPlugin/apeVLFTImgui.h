@@ -112,6 +112,7 @@ struct updateInfo{
     ape::Vector3 position;
     ape::Quaternion orientation;
     std::vector<bool> playedAnimation = std::vector<bool>();
+    bool rePositionUI = false;
     bool deleteSelected = false;
     bool pickUp = false;
     bool drop = false;
@@ -161,6 +162,7 @@ struct updateInfo{
     float TimeToSleepFactor = 1.0f;
     std::vector<float> timeOfState= std::vector<float>();
     std::vector<float> lightDirection = { 0.7, -1, -0.8 };
+    std::vector<uint16_t> resolution = { 1280,720 };
 };
 
 namespace ape
@@ -206,7 +208,12 @@ namespace ape
         FILE* mApeVLFTSceneLoaderPluginConfigFile;
         
         updateInfo* mpUpdateInfo;
-        
+
+        std::vector<std::pair<uint16_t, uint16_t>> resolutions = std::vector<std::pair<uint16_t, uint16_t>>();
+
+        const char* resoultionDropDown[6] = { "640 x 360", "854 x 480", "1024 x 576", "1280 x 720", "1366 x 768", "1600 x 900"};
+
+        const char* current_resolution = "1280 x 720";
         double posX=0, posY=0, posZ = 0, rotAngle = 0, upX = 0, upY = 0, upZ = 0;
         
         std::vector<std::string> chatMessages;

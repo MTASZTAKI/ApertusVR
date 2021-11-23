@@ -2930,7 +2930,9 @@ void ape::FilamentApplicationPlugin::Step()
 
    
     auto resize = [this](Engine* engine, View* view) {
+        app.updateinfo.rePositionUI = true;
         const Viewport& vp = view->getViewport();
+        
         auto mapTM = app.mpTransformManager->getInstance(app.worldMap.playerMap);
         auto mapTransform = app.mpTransformManager->getTransform(mapTM);
 
@@ -2943,7 +2945,7 @@ void ape::FilamentApplicationPlugin::Step()
             app.mpTransformManager->setTransform(mapTM, mapTransform);
         }
         else {
-            mapTransform[3][0] = 0.0433;
+            mapTransform[3][0] = 0.0515;
             mapTransform[3][1] = 0.0423;
             mapTransform[3][2] = -0.10015;
             app.mpTransformManager->setTransform(mapTM, mapTransform);
@@ -3268,7 +3270,7 @@ void ape::FilamentApplicationPlugin::Step()
             auto mapTM = app.mpTransformManager->getInstance(app.worldMap.playerMap);
             app.mpTransformManager->setParent(mapTM, camTM);
             auto mapTransform = app.mpTransformManager->getTransform(mapTM);
-            mapTransform[3][0] = 0.0433;
+            mapTransform[3][0] = 0.0515;
             mapTransform[3][1] = 0.0423;
             mapTransform[3][2] = -0.10015;
             app.mpTransformManager->setTransform(mapTM, mapTransform);
@@ -4677,7 +4679,7 @@ void ape::FilamentApplicationPlugin::Step()
     app.config.cameraMode = filament::camutils::Mode::FREE_FLIGHT;
     app.config.title = "VLFT gamification";
     //app.config.iblDirectory = "";  
-    filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput,1024,640);
+    filamentApp.run(app.config, setup, cleanup, gui, preRender, postRender, userInput,1280,720);
     
    
     APE_LOG_FUNC_LEAVE();
