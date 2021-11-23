@@ -989,7 +989,7 @@ void ape::VLFTImgui::leftPanelGUI() {
     if (mpUpdateInfo->rePositionUI) {
         ImGui::SetNextWindowPos(ImVec2(width - 135, height / 3 - 20));
     }
-    ImGui::SetNextWindowSize(ImVec2(135, 170));
+    ImGui::SetNextWindowSize(ImVec2(135, 170), ImGuiCond_Appearing);
     ImGui::Begin("Utilities", nullptr);
     ImGui::Checkbox("Show map", &mpUpdateInfo->isMapVisible);
     ImGui::Checkbox("Show headers", &mpMainMenuInfo.showStates);
