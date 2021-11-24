@@ -93,6 +93,7 @@ struct VLFTMainMenuInfo{
     bool uploadRoomGui = false;
     bool showStates = true;
     bool inSinglePlayerMode = false;
+    bool connectToRoom = false;
     float cameraSpeed = 1.0f;
 };
 struct updateInfo{
@@ -153,6 +154,7 @@ struct updateInfo{
     bool isMapVisible = true;
     bool lightOn = true;
     bool changeLightDir = false;
+    bool loadingRoom = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;
@@ -235,6 +237,8 @@ namespace ape
         void leftPanelGUI();
         
         void infoPanelGUI();
+
+        void loadingRoomGUI();
         
         void statePanelGUI();
         

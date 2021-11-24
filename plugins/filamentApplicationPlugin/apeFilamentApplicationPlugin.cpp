@@ -3196,6 +3196,7 @@ void ape::FilamentApplicationPlugin::Step()
             if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
                 logo->setVisible(false);
                 logo->setChildrenVisibility(false);
+                app.updateinfo.loadingRoom = false;
             }
             while(mpCoreConfig->getNetworkGUID() == "" && !app.updateinfo.inSinglePlayer){
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));

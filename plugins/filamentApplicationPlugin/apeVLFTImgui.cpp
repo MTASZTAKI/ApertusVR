@@ -122,8 +122,9 @@ void ape::VLFTImgui::listRoomNames(bool withState){
                 curlData();
                 if (mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
                 {
-                    connectToRoom();
-                    mpMainMenuInfo.current_selected = -1;
+                    loadingRoomGUI();
+                    mpMainMenuInfo.connectToRoom = true;
+                    mpUpdateInfo->loadingRoom = true;
                 }
             }
         }
@@ -198,8 +199,8 @@ bool ape::VLFTImgui::downloadConfig(std::string url, std::string location){
     return false;
 }
 
+
 void ape::VLFTImgui::connectToRoom(){
-    
     std::string roomName;
     if(mPreChosenRoomName != ""){
         roomName = mPreChosenRoomName;
@@ -298,15 +299,22 @@ void ape::VLFTImgui::connectToRoom(){
 void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height){
     if(mpMainMenuInfo.singlePlayer){
         if (ImGui::Button("Start",ImVec2(width/8, height/15))){
-            if(mpMainMenuInfo.current_selected != -1)
-                connectToRoom();
+            if (mpMainMenuInfo.current_selected != -1) {
+                loadingRoomGUI();
+                mpMainMenuInfo.connectToRoom = true;
+                mpUpdateInfo->loadingRoom = true;
+            }
         }
     }
     else{
         if (ImGui::Button("Join",ImVec2(width/8, height/15))){
             curlData();
-            if(mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
-                connectToRoom();
+            if (mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected]) {
+                loadingRoomGUI();
+                mpMainMenuInfo.connectToRoom = true;
+                mpUpdateInfo->loadingRoom = true;
+            }
+              
         }
     }
     
@@ -858,6 +866,14 @@ void ape::VLFTImgui::update(){
         updateResources();
     }
     else{
+        if (mpUpdateInfo->loadingRoom) {
+            loadingRoomGUI();
+        }
+        if (mpMainMenuInfo.connectToRoom) {
+            connectToRoom();
+            mpMainMenuInfo.current_selected = -1;
+            mpMainMenuInfo.connectToRoom = false;
+        }
         if(mpUpdateInfo->callLeave && (mpUpdateInfo->now - mpUpdateInfo->leaveTime) > 0.5){
             if (!mpMainMenuInfo.inSinglePlayerMode) {
                 mpSceneManager->destroySceneNetwork();
@@ -884,7 +900,7 @@ void ape::VLFTImgui::update(){
             adminRoomGUI();
         else if(!mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
             studentRoomGUI();
-        else if(mpMainMenuInfo.inRoomGui){
+        else if(mpMainMenuInfo.inRoomGui && !mpUpdateInfo->loadingRoom){
             ImGui::GetStyle().Alpha = 0.65;
             const float width = ImGui::GetIO().DisplaySize.x;
             const float height = ImGui::GetIO().DisplaySize.y;
@@ -1119,7 +1135,9 @@ void ape::VLFTImgui::infoPanelGUI() {
         }
         ImGui::SetNextWindowSize(ImVec2(300, 200), ImGuiCond_Once);
         ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
-        ImGui::Begin("Chat", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
+        ImGui::GetStyle().Alpha = 0.6;
+        ImGui::Begin("Chat", nullptr, ImGuiWindowFlags_NoTitleBar);
+        ImGui::GetStyle().Alpha = 1;
         ImGui::BeginChild("Chat region", ImVec2(ImGui::GetWindowWidth() - 18, ImGui::GetWindowHeight() - 45), ImGuiWindowFlags_HorizontalScrollbar);
         ImGui::PushTextWrapPos(0.0f);
         if (mpUpdateInfo->sendMessage) {
@@ -1156,7 +1174,24 @@ void ape::VLFTImgui::infoPanelGUI() {
         }
         ImGui::End();
     }
+    ImGui::GetStyle().Alpha = 0.8;
+}
 
+void ape::VLFTImgui::loadingRoomGUI()
+{
+    ImGui::GetStyle().Alpha = 1;
+    const float width = ImGui::GetIO().DisplaySize.x;
+    const float height = ImGui::GetIO().DisplaySize.y;
+    ImGui::SetNextWindowPos(ImVec2(1,1));
+    ImGui::SetNextWindowSize(ImVec2(width-1, height-1));
+    ImGui::SetNextWindowFocus();
+
+    ImGui::Begin("Loading_room", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    char* loadText = "Loading room";
+    ImGui::SetCursorPos(ImVec2(width/2-40,height/2));
+    ImGui::Text(loadText);
+    ImGui::End();
+    ImGui::GetStyle().Alpha = 0.8;
 }
 
 void ape::VLFTImgui::animationPanelGUI(){
