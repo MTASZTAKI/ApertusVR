@@ -688,6 +688,7 @@ void ape::VLFTImgui::adminRoomGUI(){
             mpMainMenuInfo.adminMenu = true;
             mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
+            mpMainMenuInfo.multiPlayer = true;
         }
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/4+36));
         if (ImGui::Button("Settings",ImVec2(width/5, height/12))){

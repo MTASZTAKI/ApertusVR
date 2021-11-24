@@ -1470,6 +1470,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME:
                     {
                         APE_LOG_DEBUG("GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME "<<event.subjectName);
+                        app.updateinfo.loadingRoom = false;
                     }
                     break;
                 }
@@ -3196,7 +3197,6 @@ void ape::FilamentApplicationPlugin::Step()
             if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
                 logo->setVisible(false);
                 logo->setChildrenVisibility(false);
-                app.updateinfo.loadingRoom = false;
             }
             while(mpCoreConfig->getNetworkGUID() == "" && !app.updateinfo.inSinglePlayer){
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
