@@ -25,12 +25,6 @@ ape::VLFTImgui::VLFTImgui( )
     mpPluginManager = ape::IPluginManager::getSingletonPtr();
     mpSceneManager = ape::ISceneManager::getSingletonPtr();
     statesMap =  std::map<std::string, std::string>();
-    resolutions.push_back(std::pair(640, 360));
-    resolutions.push_back(std::pair(854, 480));
-    resolutions.push_back(std::pair(1024, 576));
-    resolutions.push_back(std::pair(1280, 720));
-    resolutions.push_back(std::pair(1366, 768));
-    resolutions.push_back(std::pair(1600, 900));
 }
 
 ape::VLFTImgui::~VLFTImgui()
@@ -492,12 +486,14 @@ void ape::VLFTImgui::studentRoomGUI(){
             mpUpdateInfo->inSinglePlayer = true;
             mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
+            mpMainMenuInfo.multiPlayer = false;
         }
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/12+12));
         if (ImGui::Button("MultiPlayer",ImVec2(width/5, height/12))){
             mpMainMenuInfo.multiPlayer = true;
             mpMainMenuInfo.mainMenu = false;
             mpMainMenuInfo.namesLoaded = false;
+            mpMainMenuInfo.inSinglePlayerMode = false;
         }
         ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/6+24));
         if (ImGui::Button("Settings",ImVec2(width/5, height/12))){
@@ -628,25 +624,6 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
     ImGui::InputFloat("y", &mpUpdateInfo->lightDirection[1]);
     ImGui::SameLine();
     ImGui::InputFloat("z", &mpUpdateInfo->lightDirection[2]);
-    ImGui::PopItemWidth();
-    ImGui::SetCursorPosX(width / 3);
-    ImGui::Text("Resolution");
-    ImGui::PushItemWidth(150);
-    ImGui::SetCursorPosX(width / 3);
-    if (ImGui::BeginCombo("##combo", current_resolution)) // The second parameter is the label previewed before opening the combo.
-    {
-        for (int n = 0; n < IM_ARRAYSIZE(resoultionDropDown); n++)
-        {
-            bool is_selected = (current_resolution == resoultionDropDown[n]); // You can store your selection however you want, outside or inside your objects
-            if (ImGui::Selectable(resoultionDropDown[n], is_selected))
-                current_resolution = resoultionDropDown[n];
-                mpUpdateInfo->resolution[0] = resolutions[n].first;
-                mpUpdateInfo->resolution[1] = resolutions[n].second;
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
-        }
-        ImGui::EndCombo();
-    }
     ImGui::PopItemWidth();
     ImGui::SetCursorPos(ImVec2(0,height-(height/15+25)));
     if(mpUpdateInfo->leftRoom == false && mpUpdateInfo->inRoom){
@@ -931,7 +908,7 @@ void ape::VLFTImgui::update(){
 
             ImGui::GetStyle().Alpha = 0.95;
             leftPanelGUI();
-            if(mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode){
+            if(mpUpdateInfo->isAdmin ||!mpMainMenuInfo.multiPlayer){
                 animationPanelGUI();
                 manipulatorPanelGUI();
                 studentPanelGUI();
@@ -949,8 +926,17 @@ void ape::VLFTImgui::update(){
 
 void ape::VLFTImgui::statePanelGUI(){
     ImGui::SetNextWindowPos(ImVec2(122, 0),ImGuiCond_Appearing);
-    if (mpUpdateInfo->rePositionUI) {
-        ImGui::SetNextWindowPos(ImVec2(122, 0));
+    if (!mpUpdateInfo->isAdmin && mpMainMenuInfo.multiPlayer) {
+        ImGui::SetNextWindowPos(ImVec2(255, 0), ImGuiCond_Appearing);
+        if (mpUpdateInfo->rePositionUI) {
+            ImGui::SetNextWindowPos(ImVec2(255, 0));
+        }
+    }
+    else{
+        ImGui::SetNextWindowPos(ImVec2(122, 0), ImGuiCond_Appearing);
+        if (mpUpdateInfo->rePositionUI) {
+            ImGui::SetNextWindowPos(ImVec2(122, 0));
+        }
     }
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
@@ -1104,14 +1090,14 @@ void ape::VLFTImgui::drawUserNames()
 void ape::VLFTImgui::infoPanelGUI() {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    if (!mpUpdateInfo->isAdmin) {
-        ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+    if (!mpUpdateInfo->isAdmin && mpMainMenuInfo.multiPlayer) {
+        ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
         if (mpUpdateInfo->rePositionUI) {
             ImGui::SetNextWindowPos(ImVec2(0, 0));
         }
     }
     else {
-        ImGui::SetNextWindowPos(ImVec2(0, 141), ImGuiCond_Once);
+        ImGui::SetNextWindowPos(ImVec2(0, 141), ImGuiCond_Appearing);
         if (mpUpdateInfo->rePositionUI) {
             ImGui::SetNextWindowPos(ImVec2(0,141));
         }
@@ -1122,53 +1108,54 @@ void ape::VLFTImgui::infoPanelGUI() {
     
     getInfoAboutObject(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
     ImGui::End();
-    
-    if(mpUpdateInfo->newChatMessage){
-        chatMessages.insert(chatMessages.end(), mpUpdateInfo->newMessage.begin(), mpUpdateInfo->newMessage.end());
-        mpUpdateInfo->newMessage.clear();
-    }
-    ImGui::SetNextWindowPos(ImVec2(width-305, height-210), ImGuiCond_Once);
-    if (mpUpdateInfo->rePositionUI) {
-        ImGui::SetNextWindowPos(ImVec2(width - 305, height - 210));
-    }
-    ImGui::SetNextWindowSize(ImVec2(300, 200), ImGuiCond_Once);
-    ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
-    ImGui::Begin("Chat", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
-    ImGui::BeginChild("Chat region", ImVec2(ImGui::GetWindowWidth()-18, ImGui::GetWindowHeight()-45),ImGuiWindowFlags_HorizontalScrollbar);
-    ImGui::PushTextWrapPos(0.0f);
-    if(mpUpdateInfo->sendMessage){
-        ImGui::SetScrollHere(1.0f);
-    }
-    std::string chatText = u8"";
-    for(int i = 0; i < ((int)chatMessages.size()-1); i++){
-        if(chatMessages[i].size() >0)
-            chatText += chatMessages[i] + "\n";
-    }
-    chatText += chatMessages[chatMessages.size()-1];
-    ImGui::TextWrapped("%s", chatText.c_str());
-    if(messageInBuffer || mpUpdateInfo->newChatMessage){
-        ImGui::SetScrollHere(1.0f);
-        messageInBuffer= false;
-        mpUpdateInfo->newChatMessage = false;
-    }
-    ImGui::PopTextWrapPos();
-    ImGui::EndChild();
-    static char str0[255] = u8"";
-    ImGui::SetCursorPos(ImVec2(8,ImGui::GetWindowHeight()-30));
-    ImGui::PushItemWidth(ImGui::GetWindowWidth()-18);
-    if(ImGui::InputText(u8"", str0, IM_ARRAYSIZE(str0), ImGuiInputTextFlags_EnterReturnsTrue)){
-        
-        if(strlen(str0)!=0){
-            std::string msg = str0;
-            msg = mpUpdateInfo->userName+": "+msg;
-            chatMessages.push_back(msg);
-            mpUpdateInfo->messageToSend = msg;
-            mpUpdateInfo->sendMessage = true;
-            messageInBuffer = true;
+    if (mpMainMenuInfo.multiPlayer) {
+        if (mpUpdateInfo->newChatMessage) {
+            chatMessages.insert(chatMessages.end(), mpUpdateInfo->newMessage.begin(), mpUpdateInfo->newMessage.end());
+            mpUpdateInfo->newMessage.clear();
         }
-        str0[0] = 0;
+        ImGui::SetNextWindowPos(ImVec2(width - 305, height - 210), ImGuiCond_Once);
+        if (mpUpdateInfo->rePositionUI) {
+            ImGui::SetNextWindowPos(ImVec2(width - 305, height - 210));
+        }
+        ImGui::SetNextWindowSize(ImVec2(300, 200), ImGuiCond_Once);
+        ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(500, 500));
+        ImGui::Begin("Chat", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
+        ImGui::BeginChild("Chat region", ImVec2(ImGui::GetWindowWidth() - 18, ImGui::GetWindowHeight() - 45), ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::PushTextWrapPos(0.0f);
+        if (mpUpdateInfo->sendMessage) {
+            ImGui::SetScrollHere(1.0f);
+        }
+        std::string chatText = u8"";
+        for (int i = 0; i < ((int)chatMessages.size() - 1); i++) {
+            if (chatMessages[i].size() > 0)
+                chatText += chatMessages[i] + "\n";
+        }
+        chatText += chatMessages[chatMessages.size() - 1];
+        ImGui::TextWrapped("%s", chatText.c_str());
+        if (messageInBuffer || mpUpdateInfo->newChatMessage) {
+            ImGui::SetScrollHere(1.0f);
+            messageInBuffer = false;
+            mpUpdateInfo->newChatMessage = false;
+        }
+        ImGui::PopTextWrapPos();
+        ImGui::EndChild();
+        static char str0[255] = u8"";
+        ImGui::SetCursorPos(ImVec2(8, ImGui::GetWindowHeight() - 30));
+        ImGui::PushItemWidth(ImGui::GetWindowWidth() - 18);
+        if (ImGui::InputText(u8"", str0, IM_ARRAYSIZE(str0), ImGuiInputTextFlags_EnterReturnsTrue)) {
+
+            if (strlen(str0) != 0) {
+                std::string msg = str0;
+                msg = mpUpdateInfo->userName + ": " + msg;
+                chatMessages.push_back(msg);
+                mpUpdateInfo->messageToSend = msg;
+                mpUpdateInfo->sendMessage = true;
+                messageInBuffer = true;
+            }
+            str0[0] = 0;
+        }
+        ImGui::End();
     }
-    ImGui::End();
 
 }
 

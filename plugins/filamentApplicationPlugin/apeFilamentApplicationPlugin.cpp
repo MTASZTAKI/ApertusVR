@@ -582,15 +582,15 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             }
                         }
                         
-                            auto nodeOrientation= node->getModelMatrix().transpose();
-                            auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
-                            math::mat4f transform;
-                            auto filamentTransform = math::mat4f(
-                                nodeOrientation[0][0], nodeOrientation[0][1], nodeOrientation[0][2], nodeTransforms[0][3],
-                                nodeOrientation[1][0], nodeOrientation[1][1], nodeOrientation[1][2], nodeTransforms[1][3],
-                                nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2], nodeTransforms[2][3],
-                                nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
-                            app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+                        auto nodeOrientation= node->getModelMatrix().transpose();
+                        auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
+                        math::mat4f transform;
+                        auto filamentTransform = math::mat4f(
+                            nodeOrientation[0][0], nodeOrientation[0][1], nodeOrientation[0][2], nodeTransforms[0][3],
+                            nodeOrientation[1][0], nodeOrientation[1][1], nodeOrientation[1][2], nodeTransforms[1][3],
+                            nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2], nodeTransforms[2][3],
+                            nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
+                        app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
                         if (nodeName.find_first_of(".") != std::string::npos)
                         {
                             std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
@@ -609,8 +609,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                         }
-
-                        if (nodeName.find(mUserName + mPostUserName) == std::string::npos) {
+                        if (app.updateinfo.playerMapPositions.find(event.subjectName) != app.updateinfo.playerMapPositions.end() && nodeName.find(mUserName + mPostUserName) == std::string::npos) {
                             auto cam = app.mainCamera->getPosition();
                             //auto camWorld = app.mainCamera->getModelMatrix();
                             auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
@@ -2856,6 +2855,9 @@ void ape::FilamentApplicationPlugin::Step()
       
         app.engine = engine;
         app.view = view;
+        auto asd = view->getSampleCount();
+        view->setSampleCount(4);
+        asd = view->getSampleCount();
         app.mpScene = scene;
         app.config.title = "Filament";
         app.config.iblDirectory = FilamentApp::getRootAssetsPath() + "default_env";
