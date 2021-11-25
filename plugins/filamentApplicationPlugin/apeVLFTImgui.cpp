@@ -483,18 +483,20 @@ void ape::VLFTImgui::studentRoomGUI(){
     ImGui::SetNextWindowPos(ImVec2(20, 20));
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
-    ImGui::Begin("Student", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     if (mpUpdateInfo->loadingRoom) {
+        ImGui::SetNextWindowSize(ImVec2(width / 3 - 40, height / 3 - 40));
+        ImGui::Begin("Admin", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
         ImGui::GetStyle().Alpha = 1;
         //ImGui::SetNextWindowFocus();
         char* loadText = "Loading room";
-        ImGui::SetCursorPos(ImVec2(width / 2 - 60, height / 2));
+        ImGui::SetCursorPos(ImVec2(width / 6 - 60, height / 6 - 40));
         ImGui::Text(loadText);
         ImGui::End();
         ImGui::GetStyle().Alpha = 0.8;
     }
     else {
+        ImGui::SetNextWindowSize(ImVec2(width - 40, height - 40));
+        ImGui::Begin("Student", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
         ImGui::GetStyle().Alpha = 0.8;
         if (mpMainMenuInfo.mainMenu) {
             ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25));
@@ -679,18 +681,21 @@ void ape::VLFTImgui::adminRoomGUI(){
     ImGui::SetNextWindowPos(ImVec2(20, 20));
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
-    ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
-    ImGui::Begin("Admin", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize| ImGuiWindowFlags_NoMove);
+  
     if (mpUpdateInfo->loadingRoom) {
+        ImGui::SetNextWindowSize(ImVec2(width/3 - 40, height/3 - 40));
+        ImGui::Begin("Admin", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
         ImGui::GetStyle().Alpha = 1;
         //ImGui::SetNextWindowFocus();
         char* loadText = "Loading room";
-        ImGui::SetCursorPos(ImVec2(width / 2 - 60, height / 2));
+        ImGui::SetCursorPos(ImVec2(width / 6 - 60, height / 6-40));
         ImGui::Text(loadText);
         ImGui::End();
         ImGui::GetStyle().Alpha = 0.8;
     }
     else {
+        ImGui::SetNextWindowSize(ImVec2(width - 40, height - 40));
+        ImGui::Begin("Admin", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
         ImGui::GetStyle().Alpha = 0.95;
         if (mpMainMenuInfo.mainMenu) {
             ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25));
