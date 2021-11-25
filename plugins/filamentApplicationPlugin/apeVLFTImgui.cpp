@@ -1159,7 +1159,7 @@ void ape::VLFTImgui::infoPanelGUI() {
     
     getInfoAboutObject(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
     ImGui::End();
-    if (mpMainMenuInfo.multiPlayer) {
+    if (!mpUpdateInfo->inSinglePlayer) {
         if (mpUpdateInfo->newChatMessage) {
             chatMessages.insert(chatMessages.end(), mpUpdateInfo->newMessage.begin(), mpUpdateInfo->newMessage.end());
             mpUpdateInfo->newMessage.clear();
