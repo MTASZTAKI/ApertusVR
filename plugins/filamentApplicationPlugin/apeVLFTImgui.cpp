@@ -485,82 +485,95 @@ void ape::VLFTImgui::studentRoomGUI(){
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
     ImGui::Begin("Student", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-    
-    ImGui::GetStyle().Alpha = 0.8;
-    if(mpMainMenuInfo.mainMenu){
-        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25));
-        if (ImGui::Button("SinglePlayer",ImVec2(width/5, height/12))){
-            mpMainMenuInfo.singlePlayer = true;
-            mpUpdateInfo->inSinglePlayer = true;
-            mpMainMenuInfo.mainMenu = false;
-            mpMainMenuInfo.namesLoaded = false;
-            mpMainMenuInfo.multiPlayer = false;
-        }
-        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/12+12));
-        if (ImGui::Button("MultiPlayer",ImVec2(width/5, height/12))){
-            mpMainMenuInfo.multiPlayer = true;
-            mpMainMenuInfo.mainMenu = false;
-            mpMainMenuInfo.namesLoaded = false;
-            mpMainMenuInfo.inSinglePlayerMode = false;
-        }
-        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/6+24));
-        if (ImGui::Button("Settings",ImVec2(width/5, height/12))){
-            mpMainMenuInfo.adminMenu = false;
-            mpMainMenuInfo.mainMenu = false;
-            mpMainMenuInfo.namesLoaded = false;
-            mpMainMenuInfo.settingsMenu = true;
-        }
+    if (mpUpdateInfo->loadingRoom) {
+        ImGui::GetStyle().Alpha = 1;
+        //ImGui::SetNextWindowFocus();
+        char* loadText = "Loading room";
+        ImGui::SetCursorPos(ImVec2(width / 2 - 60, height / 2));
+        ImGui::Text(loadText);
+        ImGui::End();
+        ImGui::GetStyle().Alpha = 0.8;
     }
-    else if(mpMainMenuInfo.singlePlayer){
-        if(!mpMainMenuInfo.namesLoaded){
-            curlData();
-            mpMainMenuInfo.namesLoaded = true;
+    else {
+        ImGui::GetStyle().Alpha = 0.8;
+        if (mpMainMenuInfo.mainMenu) {
+            ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25));
+            if (ImGui::Button("SinglePlayer", ImVec2(width / 5, height / 12))) {
+                mpMainMenuInfo.singlePlayer = true;
+                mpUpdateInfo->inSinglePlayer = true;
+                mpMainMenuInfo.mainMenu = false;
+                mpMainMenuInfo.namesLoaded = false;
+                mpMainMenuInfo.multiPlayer = false;
+            }
+            ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25 + height / 12 + 12));
+            if (ImGui::Button("MultiPlayer", ImVec2(width / 5, height / 12))) {
+                mpMainMenuInfo.multiPlayer = true;
+                mpMainMenuInfo.mainMenu = false;
+                mpMainMenuInfo.namesLoaded = false;
+                mpMainMenuInfo.inSinglePlayerMode = false;
+                mpUpdateInfo->inSinglePlayer = false;
+            }
+            ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25 + height / 6 + 24));
+            if (ImGui::Button("Settings", ImVec2(width / 5, height / 12))) {
+                mpMainMenuInfo.adminMenu = false;
+                mpMainMenuInfo.mainMenu = false;
+                mpMainMenuInfo.namesLoaded = false;
+                mpMainMenuInfo.settingsMenu = true;
+                mpUpdateInfo->inSinglePlayer = false;
+            }
         }
-        if (ImGui::Button("Refresh",ImVec2(width/6, height/14))) {
-            curlData();
+        else if (mpMainMenuInfo.singlePlayer) {
+            if (!mpMainMenuInfo.namesLoaded) {
+                curlData();
+                mpMainMenuInfo.namesLoaded = true;
+            }
+            if (ImGui::Button("Refresh", ImVec2(width / 6, height / 14))) {
+                curlData();
+            }
+            listRoomNames(false);
+            ImGui::SetCursorPos(ImVec2(5, height - (height / 15 + 50)));
+            createJoinButton("Student", width, height);
+            ImGui::SameLine(width - (width / 8 + 48));
+            if (ImGui::Button("Back", ImVec2(width / 8, height / 15))) {
+                mpMainMenuInfo.singlePlayer = false;
+                mpMainMenuInfo.mainMenu = true;
+            }
         }
-        listRoomNames(false);
-        ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
-        createJoinButton("Student", width, height);
-        ImGui::SameLine(width-(width/8+48));
-        if (ImGui::Button("Back",ImVec2(width/8, height/15))){
-            mpMainMenuInfo.singlePlayer = false;
-            mpMainMenuInfo.mainMenu = true;
+        else if (mpMainMenuInfo.multiPlayer) {
+            if (!mpMainMenuInfo.namesLoaded) {
+                curlData();
+                mpMainMenuInfo.namesLoaded = true;
+            }
+            if (ImGui::Button("Refresh", ImVec2(width / 6, height / 14))) {
+                curlData();
+            }
+            listRoomNames(true);
+            ImGui::SetCursorPos(ImVec2(5, height - (height / 15 + 50)));
+            createJoinButton("Teacher", width, height);
+            ImGui::SameLine(width - (width / 8 + 48));
+            if (ImGui::Button("Back", ImVec2(width / 8, height / 15))) {
+                mpMainMenuInfo.multiPlayer = false;
+                mpMainMenuInfo.mainMenu = true;
+            }
         }
-    }
-    else if(mpMainMenuInfo.multiPlayer){
-        if(!mpMainMenuInfo.namesLoaded){
-            curlData();
-            mpMainMenuInfo.namesLoaded = true;
+        else if (mpMainMenuInfo.settingsMenu) {
+            mpMainMenuInfo.mainMenu = createSettingsMenu(width, height);
+
         }
-        if (ImGui::Button("Refresh",ImVec2(width/6, height/14))) {
-            curlData();
+        if (mpUpdateInfo->changedKey) {
+            const float width = ImGui::GetIO().DisplaySize.x;
+            const float height = ImGui::GetIO().DisplaySize.y;
+            ImGui::SetNextWindowSize(ImVec2(200, 50));
+            ImGui::SetNextWindowPos(ImVec2(width / 2 - 100, height / 2 - 25));
+            ImGui::SetNextWindowFocus();
+            ImGui::Begin("Press a key");
+            ImGui::Text("Press a key to set the conrtol");
+            ImGui::End();
         }
-        listRoomNames(true);
-        ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
-        createJoinButton("Teacher", width, height);
-        ImGui::SameLine(width-(width/8+48));
-        if (ImGui::Button("Back",ImVec2(width/8, height/15))){
-            mpMainMenuInfo.multiPlayer = false;
-            mpMainMenuInfo.mainMenu = true;
-        }
-    }
-    else if(mpMainMenuInfo.settingsMenu){
-        mpMainMenuInfo.mainMenu = createSettingsMenu(width, height);
-        
-    }
-    if(mpUpdateInfo->changedKey){
-        const float width = ImGui::GetIO().DisplaySize.x;
-        const float height = ImGui::GetIO().DisplaySize.y;
-        ImGui::SetNextWindowSize(ImVec2(200, 50));
-        ImGui::SetNextWindowPos(ImVec2(width/2-100, height/2-25));
-        ImGui::SetNextWindowFocus();
-        ImGui::Begin("Press a key");
-        ImGui::Text("Press a key to set the conrtol");
+        mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
+
         ImGui::End();
     }
-    mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
-    ImGui::End();
 }
 
 bool ape::VLFTImgui::createSettingsMenu(int width, int height){
@@ -668,121 +681,137 @@ void ape::VLFTImgui::adminRoomGUI(){
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowSize(ImVec2(width-40, height-40));
     ImGui::Begin("Admin", nullptr,ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize| ImGuiWindowFlags_NoMove);
-   
-    ImGui::GetStyle().Alpha = 0.95;
-    if(mpMainMenuInfo.mainMenu){
-        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25));
-        if (ImGui::Button("SinglePlayer",ImVec2(width/5, height/12))){
-            mpMainMenuInfo.singlePlayer = true;
-            mpMainMenuInfo.mainMenu = false;
-            mpMainMenuInfo.namesLoaded = false;
-        }
-        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/12+12));
-        if (ImGui::Button("MultiPlayer",ImVec2(width/5, height/12))){
-            mpMainMenuInfo.multiPlayer = true;
-            mpMainMenuInfo.mainMenu = false;
-            mpMainMenuInfo.namesLoaded = false;
-        }
-        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/6+24));
-        if (ImGui::Button("Admin Room",ImVec2(width/5, height/12))){
-            mpMainMenuInfo.adminMenu = true;
-            mpMainMenuInfo.mainMenu = false;
-            mpMainMenuInfo.namesLoaded = false;
-            mpMainMenuInfo.multiPlayer = true;
-        }
-        ImGui::SetCursorPos(ImVec2(width/2-width/10, height*0.25+height/4+36));
-        if (ImGui::Button("Settings",ImVec2(width/5, height/12))){
-            mpMainMenuInfo.adminMenu = false;
-            mpMainMenuInfo.mainMenu = false;
-            mpMainMenuInfo.namesLoaded = false;
-            mpMainMenuInfo.settingsMenu = true;
-        }
-        ImGui::SetCursorPos(ImVec2(width - width / 5-75, 10));
-        if (ImGui::Button("Upload room", ImVec2(width / 5, height / 12))) {
-            mpMainMenuInfo.adminMenu = false;
-            mpMainMenuInfo.mainMenu = false;
-            mpMainMenuInfo.namesLoaded = false;
-            mpMainMenuInfo.uploadRoomGui = true;
-        }
+    if (mpUpdateInfo->loadingRoom) {
+        ImGui::GetStyle().Alpha = 1;
+        //ImGui::SetNextWindowFocus();
+        char* loadText = "Loading room";
+        ImGui::SetCursorPos(ImVec2(width / 2 - 60, height / 2));
+        ImGui::Text(loadText);
+        ImGui::End();
+        ImGui::GetStyle().Alpha = 0.8;
     }
-    else if(mpMainMenuInfo.singlePlayer){
-        if(!mpMainMenuInfo.namesLoaded){
-            curlData();
-            mpMainMenuInfo.namesLoaded = true;
+    else {
+        ImGui::GetStyle().Alpha = 0.95;
+        if (mpMainMenuInfo.mainMenu) {
+            ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25));
+            if (ImGui::Button("SinglePlayer", ImVec2(width / 5, height / 12))) {
+                mpMainMenuInfo.singlePlayer = true;
+                mpUpdateInfo->inSinglePlayer = true;
+                mpMainMenuInfo.mainMenu = false;
+                mpMainMenuInfo.namesLoaded = false;
+                mpMainMenuInfo.multiPlayer = false;
+            }
+            ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25 + height / 12 + 12));
+            if (ImGui::Button("MultiPlayer", ImVec2(width / 5, height / 12))) {
+                mpMainMenuInfo.multiPlayer = true;
+                mpMainMenuInfo.mainMenu = false;
+                mpMainMenuInfo.namesLoaded = false;
+                mpMainMenuInfo.inSinglePlayerMode = false;
+                mpUpdateInfo->inSinglePlayer = false;
+            }
+            ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25 + height / 6 + 24));
+            if (ImGui::Button("Admin Room", ImVec2(width / 5, height / 12))) {
+                mpMainMenuInfo.adminMenu = true;
+                mpMainMenuInfo.mainMenu = false;
+                mpMainMenuInfo.namesLoaded = false;
+                mpMainMenuInfo.inSinglePlayerMode = false;
+                mpUpdateInfo->inSinglePlayer = false;
+            }
+            ImGui::SetCursorPos(ImVec2(width / 2 - width / 10, height * 0.25 + height / 4 + 36));
+            if (ImGui::Button("Settings", ImVec2(width / 5, height / 12))) {
+                mpMainMenuInfo.adminMenu = false;
+                mpMainMenuInfo.mainMenu = false;
+                mpMainMenuInfo.namesLoaded = false;
+                mpMainMenuInfo.settingsMenu = true;
+            }
+            ImGui::SetCursorPos(ImVec2(width - width / 5 - 75, 10));
+            if (ImGui::Button("Upload room", ImVec2(width / 5, height / 12))) {
+                mpMainMenuInfo.adminMenu = false;
+                mpMainMenuInfo.mainMenu = false;
+                mpMainMenuInfo.namesLoaded = false;
+                mpMainMenuInfo.uploadRoomGui = true;
+            }
         }
-        if (ImGui::Button("Refresh",ImVec2(width/6, height/14))) {
-            curlData();
+        else if (mpMainMenuInfo.singlePlayer) {
+            if (!mpMainMenuInfo.namesLoaded) {
+                curlData();
+                mpMainMenuInfo.namesLoaded = true;
+            }
+            if (ImGui::Button("Refresh", ImVec2(width / 6, height / 14))) {
+                curlData();
+            }
+            listRoomNames(false);
+            ImGui::SetCursorPos(ImVec2(5, height - (height / 15 + 50)));
+            createJoinButton("Student", width, height);
+            ImGui::SameLine(width - (width / 8 + 48));
+            if (ImGui::Button("Back", ImVec2(width / 8, height / 15))) {
+                mpMainMenuInfo.singlePlayer = false;
+                mpMainMenuInfo.mainMenu = true;
+            }
         }
-        listRoomNames(false);
-        ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
-        createJoinButton("Student", width, height);
-        ImGui::SameLine(width-(width/8+48));
-        if (ImGui::Button("Back",ImVec2(width/8, height/15))){
-            mpMainMenuInfo.singlePlayer = false;
-            mpMainMenuInfo.mainMenu = true;
+        else if (mpMainMenuInfo.multiPlayer) {
+            if (!mpMainMenuInfo.namesLoaded) {
+                curlData();
+                mpMainMenuInfo.namesLoaded = true;
+            }
+            if (ImGui::Button("Refresh", ImVec2(width / 6, height / 14))) {
+                curlData();
+            }
+            listRoomNames(true);
+            ImGui::SetCursorPos(ImVec2(5, height - (height / 15 + 50)));
+            createJoinButton("Teacher", width, height);
+            ImGui::SameLine(width - (width / 8 + 48));
+            if (ImGui::Button("Back", ImVec2(width / 8, height / 15))) {
+                mpMainMenuInfo.mainMenu = true;
+                mpMainMenuInfo.multiPlayer = false;
+            }
         }
-    }
-    else if(mpMainMenuInfo.multiPlayer){
-        if(!mpMainMenuInfo.namesLoaded){
-            curlData();
-            mpMainMenuInfo.namesLoaded = true;
+        else if (mpMainMenuInfo.adminMenu) {
+            if (!mpMainMenuInfo.namesLoaded) {
+                curlData();
+                mpMainMenuInfo.namesLoaded = true;
+            }
+            if (ImGui::Button("Refresh", ImVec2(width / 6, height / 14))) {
+                curlData();
+            }
+            listRoomNames(true);
+            ImGui::SetCursorPos(ImVec2(5, height - (height / 15 + 50)));
+            createStartButton(width, height);
+            ImGui::SameLine(width / 8 + 10);
+            createStopButton(width, height);
+            ImGui::SameLine(2 * width / 8 + 15);
+            createJoinButton("Teacher", width, height);
+            ImGui::SameLine(3 * width / 8 + 20);
+            if (ImGui::Button("Upload", ImVec2(width / 8, height / 15))) {
+                ;
+            }
+            ImGui::SameLine(width - (width / 8 + 48));
+            if (ImGui::Button("Back", ImVec2(width / 8, height / 15))) {
+                mpMainMenuInfo.mainMenu = true;
+                mpMainMenuInfo.adminMenu = false;
+            }
         }
-        if (ImGui::Button("Refresh",ImVec2(width/6, height/14))) {
-            curlData();
+        else if (mpMainMenuInfo.uploadRoomGui) {
+            uploadGUI(width, height);
         }
-        listRoomNames(true);
-        ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
-        createJoinButton("Teacher", width, height);
-        ImGui::SameLine(width-(width/8+48));
-        if (ImGui::Button("Back",ImVec2(width/8, height/15))){
-            mpMainMenuInfo.mainMenu = true;
-            mpMainMenuInfo.multiPlayer = false;
+        else if (mpMainMenuInfo.settingsMenu) {
+            mpMainMenuInfo.mainMenu = createSettingsMenu(width, height);
+
         }
-    }
-    else if(mpMainMenuInfo.adminMenu){
-        if(!mpMainMenuInfo.namesLoaded){
-            curlData();
-            mpMainMenuInfo.namesLoaded = true;
+        if (mpUpdateInfo->changedKey) {
+            const float width = ImGui::GetIO().DisplaySize.x;
+            const float height = ImGui::GetIO().DisplaySize.y;
+            ImGui::SetNextWindowSize(ImVec2(200, 50));
+            ImGui::SetNextWindowPos(ImVec2(width / 2 - 100, height / 2 - 25));
+            ImGui::SetNextWindowFocus();
+            ImGui::Begin("Press a key");
+            ImGui::Text("Press a key to set the conrtol");
+            ImGui::End();
         }
-        if (ImGui::Button("Refresh",ImVec2(width/6, height/14))) {
-            curlData();
-        }
-        listRoomNames(true);
-        ImGui::SetCursorPos(ImVec2(5,height-(height/15+50)));
-        createStartButton(width, height);
-        ImGui::SameLine(width/8+10);
-        createStopButton(width, height);
-        ImGui::SameLine(2*width/8+15);
-        createJoinButton("Teacher", width, height);
-        ImGui::SameLine(3*width/8+20);
-        if (ImGui::Button("Upload",ImVec2(width/8, height/15))){
-            ;
-        }
-        ImGui::SameLine(width-(width/8+48));
-        if (ImGui::Button("Back",ImVec2(width/8, height/15))){
-            mpMainMenuInfo.mainMenu = true;
-            mpMainMenuInfo.adminMenu = false;
-        }
-    }
-    else if (mpMainMenuInfo.uploadRoomGui) {
-        uploadGUI(width, height);
-    }
-    else if(mpMainMenuInfo.settingsMenu){
-        mpMainMenuInfo.mainMenu = createSettingsMenu(width, height);
-        
-    }
-    if(mpUpdateInfo->changedKey){
-        const float width = ImGui::GetIO().DisplaySize.x;
-        const float height = ImGui::GetIO().DisplaySize.y;
-        ImGui::SetNextWindowSize(ImVec2(200, 50));
-        ImGui::SetNextWindowPos(ImVec2(width/2-100, height/2-25));
-        ImGui::SetNextWindowFocus();
-        ImGui::Begin("Press a key");
-        ImGui::Text("Press a key to set the conrtol");
+        mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
+
         ImGui::End();
     }
-    mpMainMenuInfo.sideBarWidth = ImGui::GetWindowWidth();
-    ImGui::End();
 }
 
 void ape::VLFTImgui::loginGUI(){
@@ -867,9 +896,9 @@ void ape::VLFTImgui::update(){
         updateResources();
     }
     else{
-        if (mpUpdateInfo->loadingRoom) {
+      /*  if (mpUpdateInfo->loadingRoom) {
             loadingRoomGUI();
-        }
+        }*/
         if (mpMainMenuInfo.connectToRoom) {
             connectToRoom();
             mpMainMenuInfo.current_selected = -1;
@@ -897,9 +926,9 @@ void ape::VLFTImgui::update(){
             waitWindow();
         else if(mpMainMenuInfo.loginMenu)
             loginGUI();
-        else if(mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
+        else if(mpUpdateInfo->isAdmin && (!mpMainMenuInfo.inRoomGui || mpUpdateInfo->loadingRoom))
             adminRoomGUI();
-        else if(!mpUpdateInfo->isAdmin && !mpMainMenuInfo.inRoomGui)
+        else if(!mpUpdateInfo->isAdmin && (!mpMainMenuInfo.inRoomGui || mpUpdateInfo->loadingRoom))
             studentRoomGUI();
         else if(mpMainMenuInfo.inRoomGui && !mpUpdateInfo->loadingRoom){
             ImGui::GetStyle().Alpha = 0.65;
@@ -1180,7 +1209,7 @@ void ape::VLFTImgui::infoPanelGUI() {
 
 void ape::VLFTImgui::loadingRoomGUI()
 {
-    ImGui::GetStyle().Alpha = 1;
+    /*ImGui::GetStyle().Alpha = 1;
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowPos(ImVec2(1,1));
@@ -1192,7 +1221,7 @@ void ape::VLFTImgui::loadingRoomGUI()
     ImGui::SetCursorPos(ImVec2(width/2-40,height/2));
     ImGui::Text(loadText);
     ImGui::End();
-    ImGui::GetStyle().Alpha = 0.8;
+    ImGui::GetStyle().Alpha = 0.8;*/
 }
 
 void ape::VLFTImgui::animationPanelGUI(){

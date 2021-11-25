@@ -3347,6 +3347,8 @@ void ape::FilamentApplicationPlugin::Step()
                 IndexBuffer::BufferDescriptor(app.worldMap.playerIndices, 12, nullptr));*/
 
             app.updateinfo.setUpRoom = false;
+            if(app.updateinfo.inSinglePlayer)
+                app.updateinfo.loadingRoom = false;
         }
         FilamentApp::get().setSidebarWidth(0);
         mpVlftImgui->update();
