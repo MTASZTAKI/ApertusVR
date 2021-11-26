@@ -1036,7 +1036,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 case ape::Event::Type::GEOMETRY_FILE_STOPANIMATION:
                 {
                     if (parentNodeName != mUserName + mPostUserName) {
-                        auto runningAnimation = std::stoi(geometryFile->getRunningAnimation());
+                        auto runningAnimation = std::stoi(geometryFile->getStoppedAnimation());
                         if (runningAnimation == 3) {
                             app.playerAnimations[parentNodeName].mouseDown = false;
                         }

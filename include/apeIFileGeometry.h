@@ -71,6 +71,8 @@ namespace ape
 		virtual void stopAnimation(std::string animationID) = 0;
 
 		virtual std::string getRunningAnimation() = 0;
+
+		virtual std::string getStoppedAnimation() = 0;
 	};
 }
 

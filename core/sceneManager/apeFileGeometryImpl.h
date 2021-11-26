@@ -80,6 +80,8 @@ namespace ape
 
 		std::string getRunningAnimation() override;
 
+		std::string getStoppedAnimation() override;
+
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;
 

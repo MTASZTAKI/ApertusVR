@@ -143,7 +143,7 @@ void ape::FileGeometryImpl::playAnimation(std::string animationID)
 
 void ape::FileGeometryImpl::stopAnimation(std::string animationID)
 {
-	mRunningAnimation = animationID;
+	mStoppedAnimation = animationID;
 	mIsAnimationRunning = false;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));
 }
@@ -151,6 +151,11 @@ void ape::FileGeometryImpl::stopAnimation(std::string animationID)
 std::string ape::FileGeometryImpl::getRunningAnimation()
 {
 	return mRunningAnimation;
+}
+
+std::string ape::FileGeometryImpl::getStoppedAnimation()
+{
+	return mStoppedAnimation;
 }
 
 void ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
@@ -173,6 +178,7 @@ RakNet::RM3SerializationResult ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	//APE_LOG_DEBUG("mIsAnimationRunning " << std::to_string(mIsAnimationRunning));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsAnimationRunning);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mRunningAnimation.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mStoppedAnimation.c_str()));
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -226,6 +232,12 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, runningAnimation))
 	{	
 		mRunningAnimation = runningAnimation.C_String();	
+	}
+
+	RakNet::RakString stoppedAnimation;
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, stoppedAnimation))
+	{
+		mStoppedAnimation = stoppedAnimation.C_String();
 	}
 	
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
