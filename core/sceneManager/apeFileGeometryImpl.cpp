@@ -150,7 +150,10 @@ void ape::FileGeometryImpl::stopAnimation(std::string animationID)
 
 std::string ape::FileGeometryImpl::getRunningAnimation()
 {
-	return mRunningAnimation;
+	if (mIsAnimationRunning)
+		return mRunningAnimation;
+	else
+		return "-1";
 }
 
 void ape::FileGeometryImpl::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
