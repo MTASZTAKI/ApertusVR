@@ -436,7 +436,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     {
                                         if (event.subjectName == student->getName())
                                         {
-                                            std::chrono::milliseconds timeStamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                                            std::chrono::milliseconds timeStamp = std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now().time_since_epoch());
                                             std::stringstream data;
                                             std::size_t pos = event.subjectName.find("_vlftStudent");
                                             std::string studentName = event.subjectName;
@@ -939,6 +939,32 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			}
 			else if (event.type == ape::Event::Type::NODE_DELETE)
 			{
+
+                if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() >= 0) {
+                    auto cloneRoot = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
+                    if (app.mpScene->hasEntity(cloneRoot)) {
+                        app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                    }
+                    else {
+                        int cnt = app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount();
+                        if (cnt > 0 && app.mpScene->hasEntity(app.mpInstancesMap[event.subjectName].mpInstance->getEntities()[0])) {
+                            app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                        }
+                    }
+                }
+                if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end()) {
+                    app.instanceCount[app.mpInstancesMap[event.subjectName].assetName]--;
+                    app.mpInstancesMap.erase(event.subjectName);
+                }
+                if (app.updateinfo.playerNamePositions.find(event.subjectName.substr(0, event.subjectName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
+                    app.updateinfo.playerNamePositions.erase(event.subjectName.substr(0, event.subjectName.find("_vlft")));
+                    app.updateinfo.newMessage.push_back(event.subjectName.substr(0, event.subjectName.find("_vlft")) + " left the room");
+                    app.updateinfo.newChatMessage = true;
+                    app.updateinfo.playerMapPositions.erase(event.subjectName);
+                }
+
+                app.playerNamesToShow.erase(event.subjectName);
+
                 if(app.mpEntities.find(event.subjectName) != app.mpEntities.end()){
                     if(app.mpScene->hasEntity(app.mpEntities[event.subjectName])){
                         app.mpScene->remove(app.mpEntities[event.subjectName]);
@@ -950,7 +976,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     app.engine->destroy(app.mpEntities[event.subjectName]);
 
                 }
-                
+               
                 APE_LOG_DEBUG("Node deleted: " << event.subjectName);
                
 			}
@@ -1492,15 +1518,15 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end()) {
                     app.instanceCount[app.mpInstancesMap[event.subjectName].assetName]--;
                     app.mpInstancesMap.erase(event.subjectName);
-                    app.playerNamesToShow.erase(event.subjectName);
-                    auto nodeName = event.subjectName;
-                    if (app.updateinfo.playerNamePositions.find(nodeName.substr(0, nodeName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
-                        app.updateinfo.playerNamePositions.erase(nodeName.substr(0, nodeName.find("_vlft")));
-                        app.updateinfo.newMessage.push_back(nodeName.substr(0, nodeName.find("_vlft"))+" left the room");
-                        app.updateinfo.newChatMessage = true;
-                    }
                 }
-                app.updateinfo.playerMapPositions.erase(event.subjectName);
+                if (app.updateinfo.playerNamePositions.find(event.subjectName.substr(0, event.subjectName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
+                    app.updateinfo.playerNamePositions.erase(event.subjectName.substr(0, event.subjectName.find("_vlft")));
+                    app.updateinfo.newMessage.push_back(event.subjectName.substr(0, event.subjectName.find("_vlft")) + " left the room");
+                    app.updateinfo.newChatMessage = true;
+                    app.updateinfo.playerMapPositions.erase(event.subjectName);
+                }
+               
+                app.playerNamesToShow.erase(event.subjectName);
              /*   if (app.mpScene->hasEntity(app.worldMap.playerTriangles[event.subjectName])) {
                     app.mpScene->remove(app.worldMap.playerTriangles[event.subjectName]);
                     app.worldMap.playerTriangles.erase(event.subjectName);
