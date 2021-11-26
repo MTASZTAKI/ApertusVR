@@ -1018,6 +1018,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             app.playerAnimations[parentNodeName].mouseDown = true;
                             app.playerAnimations[parentNodeName].animatedClick = false;
                             app.playerAnimations[parentNodeName].mouseStartTime = app.currentTime;
+                            app.playerAnimations[parentNodeName].keysDown = false;
                         }
                         else if (runningAnimation == 0 || runningAnimation == 1) {
                             if (app.playerAnimations[parentNodeName].animatedKey) {
@@ -1025,12 +1026,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 app.playerAnimations[parentNodeName].animatedKey = false;
                                 app.playerAnimations[parentNodeName].keysDown = true;
                                 app.playerAnimations[parentNodeName].keyCurrentAnimation = runningAnimation;
+                                app.playerAnimations[parentNodeName].mouseDown = false;
                             }
-
-                        }
-                        else {
-                            app.playerAnimations[parentNodeName].mouseDown = false;
-                            app.playerAnimations[parentNodeName].keysDown = false;
                         }
 
                     }
@@ -1044,6 +1041,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             app.playerAnimations[parentNodeName].mouseDown = false;
                         }
                         else if (runningAnimation == 0 || runningAnimation == 1) {
+                            app.playerAnimations[parentNodeName].keysDown = false;
+                        }
+                        else {
+                            app.playerAnimations[parentNodeName].mouseDown = false;
                             app.playerAnimations[parentNodeName].keysDown = false;
                         }
                     }
