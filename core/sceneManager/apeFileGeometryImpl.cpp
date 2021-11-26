@@ -33,6 +33,7 @@ ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool replicate, std::s
 	mVisibilityFlag = 0;
 	mIsAnimationRunning = false;
 	mRunningAnimation = "";
+	mStoppedAnimation = "";
 	mUnitScale = 1.0f;
 }
 
@@ -221,23 +222,21 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsAnimationRunning))
 	{
-		//APE_LOG_DEBUG("DESERIALIZE isAnimationRunning");
-		if (mIsAnimationRunning)
-			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
-		else
-			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));
+		;
 	}
 
 	RakNet::RakString runningAnimation;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, runningAnimation))
 	{	
 		mRunningAnimation = runningAnimation.C_String();	
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
 	}
 
 	RakNet::RakString stoppedAnimation;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, stoppedAnimation))
 	{
 		mStoppedAnimation = stoppedAnimation.C_String();
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));
 	}
 	
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
