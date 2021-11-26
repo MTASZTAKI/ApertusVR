@@ -976,7 +976,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     app.engine->destroy(app.mpEntities[event.subjectName]);
 
                 }
-               
+                app.playerAnimations.erase(event.subjectName);
                 APE_LOG_DEBUG("Node deleted: " << event.subjectName);
                
 			}
@@ -1027,6 +1027,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 app.playerAnimations[parentNodeName].keyCurrentAnimation = runningAnimation;
                             }
 
+                        }
+                        else {
+                            app.playerAnimations[parentNodeName].mouseDown = false;
+                            app.playerAnimations[parentNodeName].keysDown = false;
                         }
 
                     }
@@ -1527,6 +1531,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 }
                
                 app.playerNamesToShow.erase(event.subjectName);
+                app.playerAnimations.erase(event.subjectName);
              /*   if (app.mpScene->hasEntity(app.worldMap.playerTriangles[event.subjectName])) {
                     app.mpScene->remove(app.worldMap.playerTriangles[event.subjectName]);
                     app.worldMap.playerTriangles.erase(event.subjectName);
