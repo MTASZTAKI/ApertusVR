@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 	if (argc > 1)
 	{
 		signal(SIGINT, my_handler);
-		ape::System::Start(argv[1], true);
+		ape::System::Start(argv[1], false);
 	}
     else{
         std::string inPath = APE_SOURCE_DIR;
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     {
        
         signal(SIGINT, my_handler);
-        ape::System::Start(inPath.c_str(), true);
+        ape::System::Start(inPath.c_str(), false);
     }
     else
     {

@@ -32,8 +32,8 @@ ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool replicate, std::s
 	mIsSubMeshesMerged = false;
 	mVisibilityFlag = 0;
 	mIsAnimationRunning = false;
-	mRunningAnimation = "";
-	mStoppedAnimation = "";
+	mRunningAnimation = "-1";
+	mStoppedAnimation = "-1";
 	mUnitScale = 1.0f;
 }
 
@@ -222,7 +222,10 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsAnimationRunning))
 	{
-		;
+		/*if(mIsAnimationRunning)
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
+		else
+			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));*/
 	}
 
 	RakNet::RakString runningAnimation;

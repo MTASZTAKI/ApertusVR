@@ -939,10 +939,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			}
 			else if (event.type == ape::Event::Type::NODE_DELETE)
 			{
-
                 if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() >= 0) {
                     auto cloneRoot = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                     if (app.mpScene->hasEntity(cloneRoot)) {
+                        app.names->removeComponent(cloneRoot);
                         app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                     }
                     else {
@@ -1512,6 +1512,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() >= 0){
                     auto cloneRoot= app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                     if(app.mpScene->hasEntity(cloneRoot)){
+                        app.names->removeComponent(cloneRoot);
                         app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
                     }else{
                         int cnt = app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount();
