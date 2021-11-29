@@ -3242,7 +3242,7 @@ void ape::FilamentApplicationPlugin::Step()
                 logo->setVisible(false);
                 logo->setChildrenVisibility(false);
             }
-            while((mpCoreConfig->getNetworkGUID() == ""  || mpCoreConfig->getNetworkGUID() == mPostUserName)&& !app.updateinfo.inSinglePlayer){
+            while((mpCoreConfig->getNetworkGUID() == ""  ||  mPostUserName.find(mpCoreConfig->getNetworkGUID()) != std::string::npos) && !app.updateinfo.inSinglePlayer){
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
             }
             if(app.updateinfo.isAdmin)
