@@ -31,7 +31,8 @@ ape::FileGeometryImpl::FileGeometryImpl(std::string name, bool replicate, std::s
 	mIsExportMesh = false;
 	mIsSubMeshesMerged = false;
 	mVisibilityFlag = 0;
-	mIsAnimationRunning = false;
+	mIsAnimationRunChanged = false;
+	mIsAnimationStopChange = false;
 	mRunningAnimation = "-1";
 	mStoppedAnimation = "-1";
 	mUnitScale = 1.0f;
@@ -138,14 +139,14 @@ float ape::FileGeometryImpl::getUnitScale()
 void ape::FileGeometryImpl::playAnimation(std::string animationID)
 {
 	mRunningAnimation = animationID;
-	mIsAnimationRunning = true;
+	mIsAnimationRunChanged = !mIsAnimationRunChanged;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
 }
 
 void ape::FileGeometryImpl::stopAnimation(std::string animationID)
 {
 	mStoppedAnimation = animationID;
-	mIsAnimationRunning = false;
+	mIsAnimationStopChange = !mIsAnimationStopChange;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));
 }
 
@@ -177,9 +178,10 @@ RakNet::RM3SerializationResult ape::FileGeometryImpl::Serialize(RakNet::Serializ
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsExportMesh);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsSubMeshesMerged);
 	//APE_LOG_DEBUG("mIsAnimationRunning " << std::to_string(mIsAnimationRunning));
-	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsAnimationRunning);
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mRunningAnimation.c_str()));
 	mVariableDeltaSerializer.SerializeVariable(&serializationContext, RakNet::RakString(mStoppedAnimation.c_str()));
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsAnimationRunChanged);
+	mVariableDeltaSerializer.SerializeVariable(&serializationContext, mIsAnimationStopChange);
 	mVariableDeltaSerializer.EndSerialize(&serializationContext);
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY_FORCE_SERIALIZATION;
 }
@@ -220,28 +222,28 @@ void ape::FileGeometryImpl::Deserialize(RakNet::DeserializeParameters *deseriali
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsSubMeshesMerged))
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_MERGESUBMESHES));
 
-	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsAnimationRunning))
-	{
-		/*if(mIsAnimationRunning)
-			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
-		else
-			mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));*/
-	}
-
 	RakNet::RakString runningAnimation;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, runningAnimation))
-	{	
-		mRunningAnimation = runningAnimation.C_String();	
-		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
+	{
+		mRunningAnimation = runningAnimation.C_String();
 	}
 
 	RakNet::RakString stoppedAnimation;
 	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, stoppedAnimation))
 	{
 		mStoppedAnimation = stoppedAnimation.C_String();
+	}
+
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsAnimationRunChanged))
+	{
+		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
+	}
+
+	if (mVariableDeltaSerializer.DeserializeVariable(&deserializationContext, mIsAnimationStopChange))
+	{
 		mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));
 	}
-	
+
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
 

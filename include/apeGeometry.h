@@ -63,7 +63,9 @@ namespace ape
 
 		std::string mStoppedAnimation;
 
-		bool mIsAnimationRunning;
+		bool mIsAnimationRunChanged;
+
+		bool mIsAnimationStopChange;
 
 		std::vector<ape::EntityWeakPtr> mIntersections;
 
