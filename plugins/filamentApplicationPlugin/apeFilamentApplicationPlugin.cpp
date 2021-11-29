@@ -1496,6 +1496,15 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             
                             APE_LOG_ERROR("The clone's sourcefile has not been loaded yet "<<event.subjectName);
                         }
+                        else {
+                            APE_LOG_DEBUG("A clone with the same name already exists, repoint it "<< event.subjectName);
+                            auto cnt = app.mpInstancesMap[event.subjectName].index;
+                            auto root = app.instances[nameOfGeometry][cnt]->getRoot();
+                            app.names->addComponent(root);
+                            auto nameInstance = app.names->getInstance(root);
+                            if (nameInstance)
+                                app.names->setName(nameInstance, event.subjectName.c_str());
+                        }
                     }
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME:
