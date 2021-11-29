@@ -958,9 +958,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 }
                 if (app.updateinfo.playerNamePositions.find(event.subjectName.substr(0, event.subjectName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
                     app.updateinfo.playerNamePositions.erase(event.subjectName.substr(0, event.subjectName.find("_vlft")));
-                    app.updateinfo.newMessage.push_back(event.subjectName.substr(0, event.subjectName.find("_vlft")) + " left the room");
                     app.updateinfo.newChatMessage = true;
-                    app.updateinfo.playerMapPositions.erase(event.subjectName);
                 }
 
                 app.playerNamesToShow.erase(event.subjectName);
@@ -976,7 +974,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     app.engine->destroy(app.mpEntities[event.subjectName]);
 
                 }
+                if(event.subjectName.find("_vlft") != std::string::npos && event.subjectName.find("_TextNode") == std::string::npos && event.subjectName.find("_StateNode") == std::string::npos)
+                    app.updateinfo.newMessage.push_back(event.subjectName.substr(0, event.subjectName.find("_vlft")) + " left the room");
                 app.playerAnimations.erase(event.subjectName);
+                app.updateinfo.playerMapPositions.erase(event.subjectName);
                 APE_LOG_DEBUG("Node deleted: " << event.subjectName);
                
 			}
