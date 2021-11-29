@@ -77,6 +77,7 @@ ape::FilamentApplicationPlugin::FilamentApplicationPlugin( )
     mCameraBookmark = mCamManipulator->getCurrentBookmark();
     logoAnimTime = 0;
     mUserName = "DefaultUser";
+    mPostUserName = "";
     initKeyMap();
 	APE_LOG_FUNC_LEAVE();
 }
@@ -3241,7 +3242,7 @@ void ape::FilamentApplicationPlugin::Step()
                 logo->setVisible(false);
                 logo->setChildrenVisibility(false);
             }
-            while(mpCoreConfig->getNetworkGUID() == "" && !app.updateinfo.inSinglePlayer){
+            while((mpCoreConfig->getNetworkGUID() == ""  || mpCoreConfig->getNetworkGUID() == mPostUserName)&& !app.updateinfo.inSinglePlayer){
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
             }
             if(app.updateinfo.isAdmin)
