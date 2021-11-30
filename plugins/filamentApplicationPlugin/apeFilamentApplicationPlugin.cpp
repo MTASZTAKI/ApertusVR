@@ -1044,6 +1044,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         else if (runningAnimation == 0 || runningAnimation == 1) {
                             app.playerAnimations[parentNodeName].keysDown = false;
+                            app.playerAnimations[parentNodeName].keyCurrentAnimation = runningAnimation;
                         }
                         else {
                             app.playerAnimations[parentNodeName].mouseDown = false;
@@ -4657,7 +4658,7 @@ void ape::FilamentApplicationPlugin::Step()
                     animator->applyAnimation(3, timeDiff);
                 }else{
                     app.animationData.animatedClick = true;
-                    animator->applyAnimation(3, 0);
+                    animator->applyAnimation(0, 0);
                     if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
                         userGeometry->stopAnimation("3");
                     }
@@ -4667,13 +4668,14 @@ void ape::FilamentApplicationPlugin::Step()
                 timeDiff = now - app.animationData.keyStartTime;
                 if(!app.animationData.keysDown){
                     app.animationData.animatedKey = true;
-                    animator->applyAnimation(3, 0);
+                    animator->applyAnimation(0, 0);
                     if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
-                        userGeometry->stopAnimation("3");
+                        std::string anim = std::to_string(app.animationData.keyCurrentAnimation);
+                        userGeometry->stopAnimation(anim);
                     }
-                    if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
+                   /* if (auto userGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName + "characterModel").lock())) {
                         userGeometry->stopAnimation("1");
-                    }
+                    }*/
                 }
                 else{
                     auto cnt = animator->getAnimationCount();
