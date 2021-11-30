@@ -127,8 +127,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     app.mpEntities[nodeName] = filamentEntity;
                     app.names->addComponent(filamentEntity);
                     auto nameInstance = app.names->getInstance(filamentEntity);
-                    if(nameInstance)
+                    if (nameInstance) {
+                        if(nodeName.find(mUserName) != std::string::npos)
+                            APE_LOG_DEBUG("NODE NAME ADDED: " << nodeName);
                         app.names->setName(nameInstance, nodeName.c_str());
+                    }
 					app.mpTransformManager->create(filamentEntity);
 					auto filamentTransform = app.mpTransformManager->getInstance(filamentEntity);
                     app.mpTransforms[nodeName] = filamentTransform;
@@ -164,7 +167,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         entities.resize(10);
                         if (auto parentNode = node->getParentNode().lock())
                             parentNodeName = parentNode->getName();
-                        
                         std::size_t pos = nodeName.find("_vlftStudent");
                         if(pos != std::string::npos){
                             if(node->getOwner() != mpCoreConfig->getNetworkGUID()){
@@ -1440,8 +1442,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 auto root = app.instances[nameOfGeometry][cnt]->getRoot();
                                 app.names->addComponent(root);
                                 auto nameInstance = app.names->getInstance(root);
-                                if(nameInstance)
-                                  app.names->setName(nameInstance, event.subjectName.c_str());
+                                if (nameInstance) {
+                                    std::string nameToSet = event.subjectName + "_clone";
+                                    app.names->setName(nameInstance, nameToSet.c_str());
+                                }
+                                 
                                 if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
                                     if(node->isVisible() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
                                         app.mpScene->addEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
@@ -1505,8 +1510,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto root = app.instances[nameOfGeometry][cnt]->getRoot();
                             app.names->addComponent(root);
                             auto nameInstance = app.names->getInstance(root);
-                            if (nameInstance)
-                                app.names->setName(nameInstance, event.subjectName.c_str());
+                            if (nameInstance) {
+                                std::string nameToSet = event.subjectName + "_clone";
+                                app.names->setName(nameInstance, nameToSet.c_str());
+                            }
                         }
                     }
                     break;
