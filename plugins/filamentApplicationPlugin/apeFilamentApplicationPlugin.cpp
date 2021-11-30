@@ -1005,9 +1005,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             APE_LOG_DEBUG("The asset connected to the parent node has not been loaded yet: " << fileName);
                     }
                     else{
-                        auto filamentAssetRootEntity = app.mpLoadedAssets[fileName]->getRoot();
+                      /*  auto filamentAssetRootEntity = app.mpLoadedAssets[fileName]->getRoot();
                         auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
-                        app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
+                        app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);*/
                     }
 				}
 					break;
