@@ -138,7 +138,6 @@ float ape::FileGeometryImpl::getUnitScale()
 
 void ape::FileGeometryImpl::playAnimation(std::string animationID)
 {
-	APE_LOG_DEBUG("PLAYANIMATION " << animationID);
 	mRunningAnimation = animationID;
 	mIsAnimationRunChanged = !mIsAnimationRunChanged;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION));
@@ -146,7 +145,6 @@ void ape::FileGeometryImpl::playAnimation(std::string animationID)
 
 void ape::FileGeometryImpl::stopAnimation(std::string animationID)
 {
-	APE_LOG_DEBUG("STOPANIMATION " << animationID);
 	mStoppedAnimation = animationID;
 	mIsAnimationStopChanged = !mIsAnimationStopChanged;
 	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_FILE_STOPANIMATION));
