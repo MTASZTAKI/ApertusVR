@@ -4031,7 +4031,7 @@ void ape::FilamentApplicationPlugin::Step()
             vec3<float> camPos, camTarget, camUp;
             manipulator->getLookAt(&camPos, &camTarget, &camUp);
             app.mainCamera->lookAt(camPos, camTarget, camUp);
-            if (auto node =  mpSceneManager->createNode("VLFTlogo", false, mpCoreConfig->getNetworkGUID()).lock()) {
+            if (auto node =  mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
                 {
                     geometryClone->setParentNode(node);
