@@ -1471,6 +1471,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if(app.instances.find(nameOfGeometry) != app.instances.end() && app.mpInstancesMap[event.subjectName].index == -1){
                             if(app.instanceCount[nameOfGeometry] < 10){
                                 int cnt = app.instanceCount[nameOfGeometry]++;
+                                APE_LOG_DEBUG("CLONE created: " << event.subjectName);
                                 app.mpInstancesMap[event.subjectName] =  InstanceData(cnt, nameOfGeometry, app.instances[nameOfGeometry][cnt]);
                                 auto root = app.instances[nameOfGeometry][cnt]->getRoot();
                                 app.names->addComponent(root);
@@ -3326,14 +3327,6 @@ void ape::FilamentApplicationPlugin::Step()
                     textGeometry->setParentNode(userTextNode);
                 }
             }
-            if (auto node = mNode.lock()) {
-                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
-                {
-                    geometryClone->setParentNode(node);
-                    node->setChildrenVisibility(true);
-                }
-            }
-
            // app.worldMap.mapVertexBuffer = VertexBuffer::Builder()
            //     .vertexCount(16)
            //     .bufferCount(1)
@@ -3422,6 +3415,14 @@ void ape::FilamentApplicationPlugin::Step()
 
             initAnimations();
             
+
+            if (auto node = mNode.lock()) {
+                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
+                {
+                    geometryClone->setParentNode(node);
+                    node->setChildrenVisibility(true);
+                }
+            }
             /*app.worldMap.playerVertexBuffer = VertexBuffer::Builder()
                 .vertexCount(6)
                 .bufferCount(1)
