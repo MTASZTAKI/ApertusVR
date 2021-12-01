@@ -980,35 +980,20 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 
                 //app.playerNamesToShow.erase(event.subjectName);
 
+                if (app.mpTransforms.find(event.subjectName) != app.mpTransforms.end()) {
+                    app.mpTransformManager->destroy(app.mpEntities[event.subjectName]);
+                    app.mpTransforms.erase(event.subjectName);
+                }
+
                 if(app.mpEntities.find(event.subjectName) != app.mpEntities.end()){
                     if(app.mpScene->hasEntity(app.mpEntities[event.subjectName])){
                         app.mpScene->remove(app.mpEntities[event.subjectName]);
                     }
-                    //if(app.mpTransforms.find(event.subjectName) != app.mpTransforms.end()){
-                    //    app.mpTransformManager->destroy(app.mpEntities[event.subjectName]);
-                    //    app.mpTransforms.erase(event.subjectName);
-                    //}
+                  
                     app.engine->destroy(app.mpEntities[event.subjectName]);
 
                 }
-             /*   std::string cloneName = event.subjectName + "_clone";
-                if (app.mpEntities.find(cloneName) != app.mpEntities.end()) {
-                    if (app.mpScene->hasEntity(app.mpEntities[cloneName])) {
-                        app.mpScene->remove(app.mpEntities[cloneName]);
-                    }
-                    if (app.mpTransformManager->hasComponent(app.mpEntities[cloneName]));
-                        app.mpTransformManager->destroy(app.mpEntities[cloneName]);
-                    if (app.mpTransforms.find(cloneName) != app.mpTransforms.end()) {
-                        app.mpTransforms.erase(cloneName);
-                    }
-                    app.engine->destroy(app.mpEntities[cloneName]);
 
-                }*/
-
-               /* if (app.mpTransforms.find(event.subjectName) != app.mpTransforms.end()) {
-                    app.mpTransformManager->destroy(app.mpEntities[event.subjectName]);
-                    app.mpTransforms.erase(event.subjectName);
-                }*/
                 if(event.subjectName.find("_vlft") != std::string::npos && event.subjectName.find("_TextNode") == std::string::npos && event.subjectName.find("_StateNode") == std::string::npos)
                     app.updateinfo.newMessage.push_back(event.subjectName.substr(0, event.subjectName.find("_vlft")) + " left the room");
                 app.playerAnimations.erase(event.subjectName);
@@ -1250,8 +1235,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 if(app.resourceLoader)
                     delete app.resourceLoader;
                 app.resourceLoader = nullptr;
-                app.loader->destroyAsset(app.asset[event.subjectName]);
-                app.asset.erase(event.subjectName);
+                /*app.loader->destroyAsset(app.asset[event.subjectName]);
+                app.asset.erase(event.subjectName);*/
 			}
 		}
         else if(event.group == ape::Event::Group::GEOMETRY_INDEXEDLINESET){
