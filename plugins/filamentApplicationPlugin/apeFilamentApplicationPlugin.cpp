@@ -1467,12 +1467,12 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 app.mpInstancesMap[event.subjectName] =  InstanceData(freeInd, nameOfGeometry, app.instances[nameOfGeometry][freeInd]);
                                 app.freeInstances[nameOfGeometry][freeInd] = false;
                                 auto root = app.instances[nameOfGeometry][freeInd]->getRoot();
-                               /* app.names->addComponent(root);
+                                app.names->addComponent(root);
                                 auto nameInstance = app.names->getInstance(root);
                                 if (nameInstance) {
                                     std::string nameToSet = event.subjectName+"_clone";
                                     app.names->setName(nameInstance, nameToSet.c_str());
-                                }*/
+                                }
                                  
                                 if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
                                     if(node->isVisible() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
