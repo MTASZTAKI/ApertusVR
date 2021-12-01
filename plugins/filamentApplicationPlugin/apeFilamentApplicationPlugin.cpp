@@ -3292,9 +3292,9 @@ void ape::FilamentApplicationPlugin::Step()
             else
                 mPostUserName = "_vlftStudent"+ mpCoreConfig->getNetworkGUID();
             //auto mCamNode = mpSceneManager->createNode(mUserName + mPostUserName+"_cam", true, mpCoreConfig->getNetworkGUID());
-            auto mNode = mpSceneManager->createNode(mUserName + mPostUserName, true, mpCoreConfig->getNetworkGUID());
+            mpSceneManager->createNode(mUserName + mPostUserName, true, mpCoreConfig->getNetworkGUID());
             //if(auto camNode = mCamNode.lock())
-            if (auto node = mNode.lock())
+            if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock())
             {
                 //camNode->setPosition(ape::Vector3(0.0, 0.0, 0.0));
                 //node->setParentNode(camNode);
@@ -3414,15 +3414,16 @@ void ape::FilamentApplicationPlugin::Step()
            // app.mpTransformManager->setTransform(rfTM, rfTransform);
 
             initAnimations();
-            
-            //std::this_thread::sleep_for(std::chrono::milliseconds(200));
-          /*  if (auto node = mNode.lock()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
                 {
                     geometryClone->setParentNode(node);
                     node->setChildrenVisibility(true);
                 }
-            }*/
+            }
+
+            //std::this_thread::sleep_for(std::chrono::milliseconds(200));
             /*app.worldMap.playerVertexBuffer = VertexBuffer::Builder()
                 .vertexCount(6)
                 .bufferCount(1)
@@ -4031,13 +4032,6 @@ void ape::FilamentApplicationPlugin::Step()
             vec3<float> camPos, camTarget, camUp;
             manipulator->getLookAt(&camPos, &camTarget, &camUp);
             app.mainCamera->lookAt(camPos, camTarget, camUp);
-            if (auto node =  mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
-                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
-                {
-                    geometryClone->setParentNode(node);
-                    node->setChildrenVisibility(true);
-                }
-            }
         }
         app.updateinfo.now = now;
         filament::math::vec3<float> origin;
