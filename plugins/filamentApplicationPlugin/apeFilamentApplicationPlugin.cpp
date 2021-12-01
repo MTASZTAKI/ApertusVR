@@ -3415,7 +3415,7 @@ void ape::FilamentApplicationPlugin::Step()
 
             initAnimations();
             
-
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
             if (auto node = mNode.lock()) {
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
                 {
