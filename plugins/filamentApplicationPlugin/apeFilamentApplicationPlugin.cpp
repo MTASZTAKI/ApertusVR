@@ -134,6 +134,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     }
 					app.mpTransformManager->create(filamentEntity);
 					auto filamentTransform = app.mpTransformManager->getInstance(filamentEntity);
+                    if (nodeName.find("_vlft") != std::string::npos)
+                        APE_LOG_DEBUG("TRANSFORM ADDED: " << nodeName);
                     app.mpTransforms[nodeName] = filamentTransform;
                     app.mpScene->addEntity(filamentEntity);
 //                    std::string postName = "_vlftStudent";
@@ -174,6 +176,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end()){
                                         auto camEntity = app.mainCamera->getEntity();
                                         auto camTm = app.mpTransformManager->getInstance(camEntity);
+                                        APE_LOG_DEBUG("Set NODE Student parent:" << nodeName << " " << parentNodeName);
                                         app.mpTransformManager->setParent(camTm, app.mpTransforms[parentNodeName]);
                                         auto filaTm = filament::math::mat4f(1,0,0,0,
                                                               0,1,0,0,
@@ -185,9 +188,12 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                         }
-                        if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+                        if(nodeName == parentNodeName)
+                            APE_LOG_DEBUG("SAME NAME NODE parent:" << nodeName << " " << parentNodeName);
+                        if(nodeName != parentNodeName && app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                             if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end())
                             {
+                                APE_LOG_DEBUG("Set NODE TRANSFORMS parent:" << nodeName << " " << parentNodeName);
                                 app.mpTransformManager->setParent(app.mpTransforms[nodeName], app.mpTransforms[parentNodeName]);
                             }
                             if(parentNodeName.find_first_of(".") != std::string::npos){
@@ -204,6 +210,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     if(cnt2 > 0 ){
                                         if(app.mpTransformManager->hasComponent(parentEntities[parentIndex])){
                                             auto parentTM = app.mpTransformManager->getInstance(parentEntities[parentIndex]);
+                                            APE_LOG_DEBUG("Set NODE DOT1 parent:" << nodeName << " " << parentNodeName);
                                             app.mpTransformManager->setParent(app.mpTransforms[nodeName], parentTM);
                                         }
                                     }
@@ -211,7 +218,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 
                             }
                         }
-                        if(nodeName.find_first_of(".") != std::string::npos){
+                        if(nodeName != parentNodeName && nodeName.find_first_of(".") != std::string::npos){
                             std::string nodeClone = nodeName.substr(0,nodeName.find_last_of("."));
                             std::string nodeGltfName = nodeName.substr(nodeName.find_last_of(".")+1);
                             if(idGltfMap.find(parentNodeName) != idGltfMap.end())
@@ -227,6 +234,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         auto nodeTM = app.mpTransformManager->getInstance(nodeEntities[nodeIndex]);
                                         if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end())
                                         {
+                                            APE_LOG_DEBUG("Set NODE DOT2 parent:" << nodeName << " " << parentNodeName);
                                             app.mpTransformManager->setParent(nodeTM, app.mpTransforms[parentNodeName]);
                                         }
                                         if(parentNodeName.find_first_of("." ) != std::string::npos){
@@ -243,6 +251,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                                 if(cnt > 0 ){
                                                     if(app.mpTransformManager->hasComponent(parentEntities[parentIndex])){
                                                         auto parentTM = app.mpTransformManager->getInstance(parentEntities[parentIndex]);
+                                                        APE_LOG_DEBUG("Set NODE DOT3 parent:" << nodeName << " " << parentNodeName);
                                                         app.mpTransformManager->setParent(nodeTM, parentTM);
                                                     }
                                                 }
@@ -418,7 +427,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             {
                                 std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
                                 std::string subNodeName = glftNodeName.substr(glftNodeName.find_last_of(".")+1);
-                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() &&app.mpInstancesMap[cloneName].index > -1){
+                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end() && app.mpInstancesMap[cloneName].index > -1){
                                     int entitiyIndex = app.mpInstancesMap[cloneName].index;
                                     std::vector<utils::Entity> entities;
                                     entities.resize(10);
@@ -1370,6 +1379,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].index > -1){
                             auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                             auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
+                            APE_LOG_DEBUG("Set CLONE parent:" << event.subjectName+"_clone" << " " << parentNodeName);
                             app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
                             if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
                                 if(node->getChildrenVisibility() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
@@ -1443,7 +1453,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 app.names->addComponent(root);
                                 auto nameInstance = app.names->getInstance(root);
                                 if (nameInstance) {
-                                    std::string nameToSet = event.subjectName + "_clone";
+                                    std::string nameToSet = event.subjectName+"_clone";
                                     app.names->setName(nameInstance, nameToSet.c_str());
                                 }
                                  
@@ -1470,7 +1480,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                   app.names->addComponent(root);
                                   auto nameInstance = app.names->getInstance(root);
                                   if(nameInstance)
-                                    app.names->setName(nameInstance, event.subjectName.c_str());
+                                    app.names->setName(nameInstance, (event.subjectName+"_clone").c_str());
 
                             }
                             if (nameOfGeometry.find("characterModel") != std::string::npos) {
@@ -1511,7 +1521,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             app.names->addComponent(root);
                             auto nameInstance = app.names->getInstance(root);
                             if (nameInstance) {
-                                std::string nameToSet = event.subjectName + "_clone";
+                                std::string nameToSet = event.subjectName+"_clone";
                                 app.names->setName(nameInstance, nameToSet.c_str());
                             }
                         }
