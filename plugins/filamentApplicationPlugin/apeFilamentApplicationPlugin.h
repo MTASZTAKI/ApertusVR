@@ -253,7 +253,7 @@ struct App {
     bool recomputeAabb = false;
     bool actualSize = false;
     bool firstRun = true;
-    bool setManpipulator = false;
+    bool setManipulator = false;
     bool playVR = false;
     bool vrPlaying = false;
     int vrCnt = 0;

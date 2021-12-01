@@ -2984,7 +2984,7 @@ void ape::FilamentApplicationPlugin::Step()
             node->setChildrenVisibility(true);
             node->setVisible(true);
         }
-        app.setManpipulator = true;
+        app.setManipulator = true;
         app.sunLight = utils::EntityManager::get().create();
         LightManager::Builder(LightManager::Type::SUN)
             .color(filament::Color::toLinear<ACCURATE>(sRGBColor(0.95f, 0.95f, 0.95f)))
@@ -3415,7 +3415,7 @@ void ape::FilamentApplicationPlugin::Step()
 
             initAnimations();
             
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(200));
             if (auto node = mNode.lock()) {
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
                 {
@@ -4023,14 +4023,21 @@ void ape::FilamentApplicationPlugin::Step()
         ;
     };
     auto userInput = [&](Engine* engine, View* view, Scene* scene, filament::camutils::Manipulator<float>* manipulator,int x, int y, SDL_Event event, int width, int height, double now){
-        if(app.setManpipulator){
+        if(app.setManipulator){
             manipulator->jumpToBookmark(mCameraBookmark);
             mCamManipulator = manipulator;
-            app.setManpipulator = false;
+            app.setManipulator = false;
             app.mainCamera = &view->getCamera();
             vec3<float> camPos, camTarget, camUp;
             manipulator->getLookAt(&camPos, &camTarget, &camUp);
             app.mainCamera->lookAt(camPos, camTarget, camUp);
+            if (auto node =  mpSceneManager->createNode("VLFTlogo", false, mpCoreConfig->getNetworkGUID()).lock()) {
+                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
+                {
+                    geometryClone->setParentNode(node);
+                    node->setChildrenVisibility(true);
+                }
+            }
         }
         app.updateinfo.now = now;
         filament::math::vec3<float> origin;
