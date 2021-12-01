@@ -955,43 +955,43 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 			}
 			else if (event.type == ape::Event::Type::NODE_DELETE)
 			{
-                if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() >= 0) {
-                    auto cloneRoot = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
-                    if (app.mpScene->hasEntity(cloneRoot)) {
-                        //app.names->removeComponent(cloneRoot);
-                        app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
-                    }
-                    else {
-                        int cnt = app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount();
-                        if (cnt > 0 && app.mpScene->hasEntity(app.mpInstancesMap[event.subjectName].mpInstance->getEntities()[0])) {
-                            app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
-                        }
-                    }
-                }
-                if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end()) {
-                    app.instanceCount[app.mpInstancesMap[event.subjectName].assetName]--;
-                    app.freeInstances[app.mpInstancesMap[event.subjectName].assetName][app.mpInstancesMap[event.subjectName].index] = true;
-                    app.mpInstancesMap.erase(event.subjectName);
-                }
-                if (app.updateinfo.playerNamePositions.find(event.subjectName.substr(0, event.subjectName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
-                    app.updateinfo.playerNamePositions.erase(event.subjectName.substr(0, event.subjectName.find("_vlft")));
-                    app.updateinfo.newChatMessage = true;
-                }
+                //if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount() >= 0) {
+                //    auto cloneRoot = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
+                //    if (app.mpScene->hasEntity(cloneRoot)) {
+                //        //app.names->removeComponent(cloneRoot);
+                //        app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                //    }
+                //    else {
+                //        int cnt = app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount();
+                //        if (cnt > 0 && app.mpScene->hasEntity(app.mpInstancesMap[event.subjectName].mpInstance->getEntities()[0])) {
+                //            app.mpScene->removeEntities(app.mpInstancesMap[event.subjectName].mpInstance->getEntities(), app.mpInstancesMap[event.subjectName].mpInstance->getEntityCount());
+                //        }
+                //    }
+                //}
+                //if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end()) {
+                //    app.instanceCount[app.mpInstancesMap[event.subjectName].assetName]--;
+                //    app.freeInstances[app.mpInstancesMap[event.subjectName].assetName][app.mpInstancesMap[event.subjectName].index] = true;
+                //    app.mpInstancesMap.erase(event.subjectName);
+                //}
+                //if (app.updateinfo.playerNamePositions.find(event.subjectName.substr(0, event.subjectName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
+                //    app.updateinfo.playerNamePositions.erase(event.subjectName.substr(0, event.subjectName.find("_vlft")));
+                //    app.updateinfo.newChatMessage = true;
+                //}
 
-                app.playerNamesToShow.erase(event.subjectName);
+                //app.playerNamesToShow.erase(event.subjectName);
 
                 if(app.mpEntities.find(event.subjectName) != app.mpEntities.end()){
                     if(app.mpScene->hasEntity(app.mpEntities[event.subjectName])){
                         app.mpScene->remove(app.mpEntities[event.subjectName]);
                     }
-                    if(app.mpTransforms.find(event.subjectName) != app.mpTransforms.end()){
-                        app.mpTransformManager->destroy(app.mpEntities[event.subjectName]);
-                        app.mpTransforms.erase(event.subjectName);
-                    }
+                    //if(app.mpTransforms.find(event.subjectName) != app.mpTransforms.end()){
+                    //    app.mpTransformManager->destroy(app.mpEntities[event.subjectName]);
+                    //    app.mpTransforms.erase(event.subjectName);
+                    //}
                     app.engine->destroy(app.mpEntities[event.subjectName]);
 
                 }
-                std::string cloneName = event.subjectName + "_clone";
+             /*   std::string cloneName = event.subjectName + "_clone";
                 if (app.mpEntities.find(cloneName) != app.mpEntities.end()) {
                     if (app.mpScene->hasEntity(app.mpEntities[cloneName])) {
                         app.mpScene->remove(app.mpEntities[cloneName]);
@@ -1003,12 +1003,12 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     }
                     app.engine->destroy(app.mpEntities[cloneName]);
 
-                }
+                }*/
 
-                if (app.mpTransforms.find(event.subjectName) != app.mpTransforms.end()) {
+               /* if (app.mpTransforms.find(event.subjectName) != app.mpTransforms.end()) {
                     app.mpTransformManager->destroy(app.mpEntities[event.subjectName]);
                     app.mpTransforms.erase(event.subjectName);
-                }
+                }*/
                 if(event.subjectName.find("_vlft") != std::string::npos && event.subjectName.find("_TextNode") == std::string::npos && event.subjectName.find("_StateNode") == std::string::npos)
                     app.updateinfo.newMessage.push_back(event.subjectName.substr(0, event.subjectName.find("_vlft")) + " left the room");
                 app.playerAnimations.erase(event.subjectName);
@@ -1483,12 +1483,12 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 app.mpInstancesMap[event.subjectName] =  InstanceData(freeInd, nameOfGeometry, app.instances[nameOfGeometry][freeInd]);
                                 app.freeInstances[nameOfGeometry][freeInd] = false;
                                 auto root = app.instances[nameOfGeometry][freeInd]->getRoot();
-                                app.names->addComponent(root);
+                               /* app.names->addComponent(root);
                                 auto nameInstance = app.names->getInstance(root);
                                 if (nameInstance) {
                                     std::string nameToSet = event.subjectName+"_clone";
                                     app.names->setName(nameInstance, nameToSet.c_str());
-                                }
+                                }*/
                                  
                                 if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
                                     if(node->isVisible() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
@@ -1510,10 +1510,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             else{
                                   FilamentInstance* instance = app.loader->createInstance(app.asset[nameOfGeometry]);
                                   auto root = instance->getRoot();
-                                  app.names->addComponent(root);
+                               /*   app.names->addComponent(root);
                                   auto nameInstance = app.names->getInstance(root);
                                   if(nameInstance)
-                                    app.names->setName(nameInstance, (event.subjectName+"_clone").c_str());
+                                    app.names->setName(nameInstance, (event.subjectName+"_clone").c_str());*/
 
                             }
                             if (nameOfGeometry.find("characterModel") != std::string::npos) {
@@ -1549,14 +1549,14 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         else {
                             APE_LOG_DEBUG("A clone with the same name already exists, repoint it "<< event.subjectName);
-                            auto cnt = app.mpInstancesMap[event.subjectName].index;
+                            /*auto cnt = app.mpInstancesMap[event.subjectName].index;
                             auto root = app.instances[nameOfGeometry][cnt]->getRoot();
                             app.names->addComponent(root);
                             auto nameInstance = app.names->getInstance(root);
                             if (nameInstance) {
                                 std::string nameToSet = event.subjectName+"_clone";
                                 app.names->setName(nameInstance, nameToSet.c_str());
-                            }
+                            }*/
                         }
                     }
                     break;
