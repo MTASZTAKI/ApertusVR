@@ -1445,7 +1445,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                         else{
                             
-                            APE_LOG_ERROR("The clone does not exist yet "<<event.subjectName);
+                            APE_LOG_ERROR("The clone does not exist yet "<<event.subjectName <<" parent: " << parentNodeName);
                         }
                     }
                     break;
