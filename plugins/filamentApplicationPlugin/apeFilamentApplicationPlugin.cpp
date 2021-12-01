@@ -3306,7 +3306,7 @@ void ape::FilamentApplicationPlugin::Step()
                     if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(mUserName + mPostUserName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
                     {
                         geometryClone->setSourceGeometry(gltfNode);
-                        geometryClone->setParentNode(node);
+                        //geometryClone->setParentNode(node);
                         node->setChildrenVisibility(true);
                     }
                 }
@@ -3324,6 +3324,13 @@ void ape::FilamentApplicationPlugin::Step()
             if (auto textNode = stateTextNode.lock()) {
                 if (auto textGeometry = std::static_pointer_cast<ape::ITextGeometry>(mpSceneManager->createEntity(mUserName + mPostUserName + "_StateText", ape::Entity::GEOMETRY_TEXT, true, mpCoreConfig->getNetworkGUID()).lock())) {
                     textGeometry->setParentNode(userTextNode);
+                }
+            }
+            if (auto node = mNode.lock()) {
+                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
+                {
+                    geometryClone->setParentNode(node);
+                    node->setChildrenVisibility(true);
                 }
             }
 
