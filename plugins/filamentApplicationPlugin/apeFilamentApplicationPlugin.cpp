@@ -402,19 +402,19 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         auto nodePosition = node->getPosition();
                         auto nodeWorldPos = node->getDerivedPosition();
                         auto nodeScale = node->getScale();
-                        auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
+                        filament::math::mat4f nodeTransforms;
+                        if (app.mpTransforms.find(nodeName) != app.mpTransforms.end())
+                            nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                         float divider = 1.0;
                         filament::math::mat4f filamentTransform;
-                        
-                        if((pos != std::string::npos || pos2 != std::string::npos) && nodeName.find(mUserName+mPostUserName) == std::string::npos){
+                        if((app.mpTransforms.find(nodeName) != app.mpTransforms.end()) && (pos != std::string::npos || pos2 != std::string::npos) && nodeName.find(mUserName+mPostUserName) == std::string::npos){
                                 filamentTransform = filament::math::mat4f(
                                     nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
                                     nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
                                     nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
                                     nodePosition.getX()/divider, nodePosition.getY()/divider, nodePosition.getZ()/divider, nodeTransforms[3][3]);
-                                app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
-
-                               
+                                    app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+  
                         }
                         else if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
                             filamentTransform = filament::math::mat4f(
@@ -460,7 +460,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                         }
                                     }
                                 }
-                        if (app.updateinfo.playerMapPositions.find(event.subjectName) != app.updateinfo.playerMapPositions.end() && nodeName.find(mUserName + mPostUserName) == std::string::npos) {
+                        if (app.mpTransforms.find(nodeName) != app.mpTransforms.end() && app.updateinfo.playerMapPositions.find(event.subjectName) != app.updateinfo.playerMapPositions.end() && nodeName.find(mUserName + mPostUserName) == std::string::npos) {
                             auto cam = app.mainCamera->getPosition();
                             //auto camWorld = app.mainCamera->getModelMatrix();
                             auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
@@ -557,7 +557,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             }
 
                         }
-                        else if (nodeName.find(mUserName + mPostUserName) != std::string::npos) {
+                        else if (nodeName.find(mUserName + mPostUserName) != std::string::npos && app.mpTransforms.find(nodeName) != app.mpTransforms.end()) {
                             auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
                             //auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
                             //auto playerTransform = app.mpTransformManager->getTransform(playerTM);
@@ -593,16 +593,20 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                         }
-                        
-                        auto nodeOrientation= node->getModelMatrix().transpose();
-                        auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
+                        auto nodeOrientation = node->getModelMatrix().transpose();
+                        filament::math::mat4f nodeTransforms;
+                        if(app.mpTransforms.find(nodeName) != app.mpTransforms.end())
+                            nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
                         math::mat4f transform;
                         auto filamentTransform = math::mat4f(
                             nodeOrientation[0][0], nodeOrientation[0][1], nodeOrientation[0][2], nodeTransforms[0][3],
                             nodeOrientation[1][0], nodeOrientation[1][1], nodeOrientation[1][2], nodeTransforms[1][3],
                             nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2], nodeTransforms[2][3],
                             nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
-                        app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+
+                        if (app.mpTransforms.find(nodeName) != app.mpTransforms.end()) {
+                            app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+                        }
                         if (nodeName.find_first_of(".") != std::string::npos)
                         {
                             std::string cloneName = glftNodeName.substr(0,glftNodeName.find_last_of("."));
@@ -621,7 +625,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 }
                             }
                         }
-                        if (app.updateinfo.playerMapPositions.find(event.subjectName) != app.updateinfo.playerMapPositions.end() && nodeName.find(mUserName + mPostUserName) == std::string::npos) {
+                        if (app.updateinfo.playerMapPositions.find(event.subjectName) != app.updateinfo.playerMapPositions.end() && nodeName.find(mUserName + mPostUserName) == std::string::npos && app.mpTransforms.find(nodeName) != app.mpTransforms.end()) {
                             auto cam = app.mainCamera->getPosition();
                             //auto camWorld = app.mainCamera->getModelMatrix();
                             auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
@@ -714,7 +718,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             }
 
                         }
-                        else if (nodeName.find(mUserName + mPostUserName) != std::string::npos) {
+                        else if (nodeName.find(mUserName + mPostUserName) != std::string::npos && app.mpTransforms.find(nodeName) != app.mpTransforms.end()) {
                             auto nodeWorldTransforms = app.mpTransformManager->getWorldTransform(app.mpTransforms[nodeName]);
                             //auto playerTM = app.mpTransformManager->getInstance(app.worldMap.playerTriangles[nodeName]);
                             //auto playerTransform = app.mpTransformManager->getTransform(playerTM);
@@ -985,6 +989,24 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     }
                     app.engine->destroy(app.mpEntities[event.subjectName]);
 
+                }
+                std::string cloneName = event.subjectName + "_clone";
+                if (app.mpEntities.find(cloneName) != app.mpEntities.end()) {
+                    if (app.mpScene->hasEntity(app.mpEntities[cloneName])) {
+                        app.mpScene->remove(app.mpEntities[cloneName]);
+                    }
+                    if (app.mpTransformManager->hasComponent(app.mpEntities[cloneName]));
+                        app.mpTransformManager->destroy(app.mpEntities[cloneName]);
+                    if (app.mpTransforms.find(cloneName) != app.mpTransforms.end()) {
+                        app.mpTransforms.erase(cloneName);
+                    }
+                    app.engine->destroy(app.mpEntities[cloneName]);
+
+                }
+
+                if (app.mpTransforms.find(event.subjectName) != app.mpTransforms.end()) {
+                    app.mpTransformManager->destroy(app.mpEntities[event.subjectName]);
+                    app.mpTransforms.erase(event.subjectName);
                 }
                 if(event.subjectName.find("_vlft") != std::string::npos && event.subjectName.find("_TextNode") == std::string::npos && event.subjectName.find("_StateNode") == std::string::npos)
                     app.updateinfo.newMessage.push_back(event.subjectName.substr(0, event.subjectName.find("_vlft")) + " left the room");
@@ -1380,7 +1402,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                             auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
                             APE_LOG_DEBUG("Set CLONE parent:" << event.subjectName+"_clone" << " " << parentNodeName);
-                            app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
+                            if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end())
+                                app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
                             if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
                                 if(node->getChildrenVisibility() && parentNodeName.find(mUserName+mPostUserName) == std::string::npos){
                                     auto rcm = app.mpRenderableManager;
