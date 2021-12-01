@@ -970,6 +970,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 }
                 if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end()) {
                     app.instanceCount[app.mpInstancesMap[event.subjectName].assetName]--;
+                    app.freeInstances[app.mpInstancesMap[event.subjectName].assetName][app.mpInstancesMap[event.subjectName].index] = true;
                     app.mpInstancesMap.erase(event.subjectName);
                 }
                 if (app.updateinfo.playerNamePositions.find(event.subjectName.substr(0, event.subjectName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
@@ -1038,9 +1039,9 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             APE_LOG_DEBUG("The asset connected to the parent node has not been loaded yet: " << fileName);
                     }
                     else{
-                      /*  auto filamentAssetRootEntity = app.mpLoadedAssets[fileName]->getRoot();
+                        auto filamentAssetRootEntity = app.mpLoadedAssets[fileName]->getRoot();
                         auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
-                        app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);*/
+                        app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
                     }
 				}
 					break;
@@ -1171,6 +1172,10 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                     else
                                         app.instances[geometryName].resize(1);
                                     app.instanceCount[geometryName] = 0;
+                                    app.freeInstances[geometryName];
+                                    for (int i = 0; i < 10; i++) {
+                                        app.freeInstances[geometryName][i] = true;
+                                    }
                                     app.asset[geometryName] = app.loader->createInstancedAsset(buffer.data(), buffer.size(), app.instances[geometryName].data(), app.instances[geometryName].size());
                                     buffer.clear();
                                     buffer.shrink_to_fit();
@@ -1471,9 +1476,13 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if(app.instances.find(nameOfGeometry) != app.instances.end() && app.mpInstancesMap[event.subjectName].index == -1){
                             if(app.instanceCount[nameOfGeometry] < 10){
                                 int cnt = app.instanceCount[nameOfGeometry]++;
+                                int freeInd = 0;
+                                while (!app.freeInstances[nameOfGeometry][freeInd])
+                                    freeInd++;
                                 APE_LOG_DEBUG("CLONE created: " << event.subjectName);
-                                app.mpInstancesMap[event.subjectName] =  InstanceData(cnt, nameOfGeometry, app.instances[nameOfGeometry][cnt]);
-                                auto root = app.instances[nameOfGeometry][cnt]->getRoot();
+                                app.mpInstancesMap[event.subjectName] =  InstanceData(freeInd, nameOfGeometry, app.instances[nameOfGeometry][freeInd]);
+                                app.freeInstances[nameOfGeometry][freeInd] = false;
+                                auto root = app.instances[nameOfGeometry][freeInd]->getRoot();
                                 app.names->addComponent(root);
                                 auto nameInstance = app.names->getInstance(root);
                                 if (nameInstance) {
@@ -1576,6 +1585,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 }
                 if (app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end()) {
                     app.instanceCount[app.mpInstancesMap[event.subjectName].assetName]--;
+                    app.freeInstances[app.mpInstancesMap[event.subjectName].assetName][app.mpInstancesMap[event.subjectName].index] = true;
                     app.mpInstancesMap.erase(event.subjectName);
                 }
                 if (app.updateinfo.playerNamePositions.find(event.subjectName.substr(0, event.subjectName.find("_vlft"))) != app.updateinfo.playerNamePositions.end()) {
@@ -3414,7 +3424,7 @@ void ape::FilamentApplicationPlugin::Step()
            // app.mpTransformManager->setTransform(rfTM, rfTransform);
 
             initAnimations();
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
             if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))
                 {
@@ -3660,6 +3670,7 @@ void ape::FilamentApplicationPlugin::Step()
                 app.instances.erase(item);
             }
             app.instanceCount.clear();
+            app.freeInstances.clear();
             to_erase.clear();
             app.geometryNameMap.clear();
             

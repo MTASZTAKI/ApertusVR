@@ -215,6 +215,7 @@ struct App {
     NameComponentManager* names;
     std::map<std::string,std::vector<FilamentInstance*>> instances;
     std::map<std::string, int> instanceCount;
+    std::map<std::string, bool[10]> freeInstances;
     std::map<std::string, std::vector<std::string>> geometryNameMap;
     std::set<std::string> playerNamesToShow;
     
