@@ -1,0 +1,11 @@
+Model Information:
+* title:	Solar system [REAL SCALE] 2k textures
+* source:	https://sketchfab.com/3d-models/solar-system-real-scale-2k-textures-febde2b6e3f64b06965620fd3ddc97c2
+* author:	FyorDev (https://sketchfab.com/FyorDev)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Solar system [REAL SCALE] 2k textures" (https://sketchfab.com/3d-models/solar-system-real-scale-2k-textures-febde2b6e3f64b06965620fd3ddc97c2) by FyorDev (https://sketchfab.com/FyorDev) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

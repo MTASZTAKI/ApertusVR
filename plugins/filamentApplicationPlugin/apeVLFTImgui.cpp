@@ -647,6 +647,114 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
     ImGui::InputFloat("y", &mpUpdateInfo->lightDirection[1]);
     ImGui::SameLine();
     ImGui::InputFloat("z", &mpUpdateInfo->lightDirection[2]);
+    if (mpUpdateInfo->inRoom) {
+        static char saveRoomName[255];
+        ImGui::SetCursorPosX(width / 3);
+        ImGui::InputText(u8"RoomName", saveRoomName, IM_ARRAYSIZE(saveRoomName));
+        ImGui::SameLine(width / 3 * 2);
+        if (ImGui::Button("Save room", ImVec2(width / 8, height / 15)))
+        {
+            std::ofstream outJson;
+            outJson.open("savedRoom.json");
+            outJson << "{\n\t\"context\":{\n\t\t\"untiOfMeasureScale\":1.0,\n\t\t\"Zup\":false,\n\t\t\"RepoPath\":\"\"\n\t},";
+
+
+            auto nodes = mpSceneManager->getNodes();
+            std::vector<std::string> sceneNodes;
+            outJson << "\n\t\"scene\": [\n";
+            bool first = true;
+            for (auto node : nodes)
+            {
+                if (auto nodeSP = node.second.lock())
+                {
+                    if (nodeSP->isVisible()) {
+                        if (!first) {
+                            outJson << ",\n";
+                        }
+                        first = false;
+                        outJson << "\t\t\"" << nodeSP->getName() << "\"";
+                       
+                    }
+                }
+            }
+            outJson << "\n\t],\n\t\"assets\": [\n";
+            first = true;
+            for (auto node : nodes)
+            {
+                if (!first)
+                    outJson << ",\n";
+                first = false;
+                outJson << "\t\t{\n";
+                if (auto nodeSP = node.second.lock())
+                {
+                    quicktype::Asset nodeAsset;
+                    bool assetExists = false;
+                    for (auto asset : mScene.get_assets()) {
+                        if (asset.get_id() == nodeSP->getName()) {
+                            nodeAsset = asset;
+                            assetExists = true;
+                        }
+                    }
+                    outJson << "\t\t\t\"id\": \"" << nodeSP->getName() << "\",\n";
+                    if (assetExists) {
+                        outJson << "\t\t\t\"type\": \"" << nodeAsset.get_type() << "\",\n";
+                        if(nodeAsset.get_descr())
+                            outJson << "\t\t\t\"descr\": \"" << *nodeAsset.get_descr() << "\",\n";
+                        if (nodeAsset.get_representations()) {
+                            outJson << "\t\t\t\"representations\": [\n";
+                            for (auto representation : *nodeAsset.get_representations())
+                            {
+                                outJson << "\t\t\t{";
+                                std::string filePath = representation.get_file();
+                                outJson << "\t\t\t\t\"file\": \"" << filePath << "\",\n";
+                                std::string fileUnit = std::to_string(*representation.get_unit());
+                                outJson << "\t\t\t\t\"unit\": \"" << fileUnit << "\",\n";
+                                outJson << "\t\t\t}";
+                            }
+                        }
+                        if (nodeAsset.get_model()) {
+                            outJson << "\t\t\t\"model\": \"" << *nodeAsset.get_model() << "\",\n";
+                        }
+                    }
+                    auto pos = nodeSP->getPosition();
+                    outJson << "\t\t\t\"position\": [\n";
+                    outJson << "\t\t\t\t" << std::to_string(pos.getX()) << ",\n";
+                    outJson << "\t\t\t\t" << std::to_string(pos.getY()) << ",\n";
+                    outJson << "\t\t\t\t" << std::to_string(pos.getZ()) << "\n";
+                    outJson << "\t\t\t],\n";
+
+                    auto rot = nodeSP->getOrientation();
+                    outJson << "\t\t\t\"position\": [\n";
+                    outJson << "\t\t\t\t" << std::to_string(rot.getW()) << ",\n";
+                    outJson << "\t\t\t\t" << std::to_string(rot.getX()) << ",\n";
+                    outJson << "\t\t\t\t" << std::to_string(rot.getY()) << ",\n";
+                    outJson << "\t\t\t\t" << std::to_string(rot.getZ()) << "\n";
+                    outJson << "\t\t\t],\n";
+                    if (assetExists) {
+                        if (nodeAsset.get_placement_rel_to()) {
+                            outJson << "\t\t\t\"placementRelTo\": \"" << *nodeAsset.get_placement_rel_to() << "\",\n";
+                        }
+                    }
+                    if (auto parent = nodeSP->getParentNode().lock()) {
+                        outJson << "\t\t\t\"parentObject\": \"" << parent->getName() << "\",\n";
+                    }
+                    else {
+                        if (assetExists) {
+                            if (nodeAsset.get_parent_object()) {
+                                outJson << "\t\t\t\"parentObject\": \"" << *nodeAsset.get_parent_object() << "\",\n";
+                            }
+                        }
+                    }
+                }
+
+
+                outJson << "\t\t}";
+            }
+            outJson << "]";
+            outJson << "}";
+            outJson.close();
+        }
+    }
     ImGui::PopItemWidth();
     ImGui::SetCursorPos(ImVec2(0,height-(height/15+25)));
     if(mpUpdateInfo->leftRoom == false && mpUpdateInfo->inRoom){
@@ -1311,27 +1419,32 @@ void ape::VLFTImgui::openFileBrowser() {
         fileName = fileName.substr(fileName.find_last_of("/")+1);
         std::string nodeName = "gltfNode_"+fileName;
         std::string entityName = "gltfEntity_"+fileName;
-        auto mNode = mpSceneManager->createNode(nodeName, true, mpCoreConfig->getNetworkGUID());
-        if (auto node = mNode.lock())
+        mpSceneManager->createNode(nodeName, true, mpCoreConfig->getNetworkGUID());
+        //if(auto camNode = mCamNode.lock())
+        if (auto node = mpSceneManager->getNode(nodeName).lock())
         {
-            if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(entityName, ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+            //camNode->setPosition(ape::Vector3(0.0, 0.0, 0.0));
+            //node->setParentNode(camNode);
+            if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(entityName, ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
             {
-                gltfMeshFile->setFileName(filePath);
-                gltfMeshFile->setParentNode(node);
+                gltfNode->setFileName(fileName);
+                gltfNode->setParentNode(node);
             }
-        }
-        std::string cloneName = "Clone1_"+fileName;
-        std::string cloneEntityName = "Clone1Entity_"+fileName;
-        auto mCloneNode = mpSceneManager->createNode(cloneName, true, mpCoreConfig->getNetworkGUID());
-        if(auto cloneNode = mCloneNode.lock()){
-            if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(cloneEntityName, ape::Entity::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
-            {
-                if (auto gltfMeshFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())){
-                    geometryClone->setSourceGeometry(gltfMeshFile);
-                    geometryClone->setParentNode(cloneNode);
-                    cloneNode->setChildrenVisibility(true);
-                    cloneNode->setVisible(true);
+            if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())) {
+                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(nodeName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                {
+                    geometryClone->setSourceGeometry(gltfNode);
+                    node->setChildrenVisibility(true);
                 }
+            }
+            node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
+        }
+
+        if (auto node = mpSceneManager->getNode(nodeName).lock()) {
+            if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(nodeName).lock()))
+            {
+                geometryClone->setParentNode(node);
+                node->setChildrenVisibility(true);
             }
         }
     }
