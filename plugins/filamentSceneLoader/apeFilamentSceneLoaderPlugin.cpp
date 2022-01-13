@@ -269,12 +269,54 @@ void ape::FilamentSceneLoaderPlugin::parseVisibleNodes()
 
 void ape::FilamentSceneLoaderPlugin::createResourceList()
 {
+	auto networkConfig = mpCoreConfig->getNetworkConfig();
 	APE_LOG_FUNC_ENTER();
-	for (const auto& entry : std::filesystem::directory_iterator(mpCoreConfig->getConfigFolderPath()))
-		std::cout << entry.path() << std::endl;
+	for (const auto& entry : std::filesystem::directory_iterator(mpCoreConfig->getConfigFolderPath() + "\\rooms\\" + networkConfig.lobbyConfig.roomName)) {
+		if (entry.path().extension() == ".gltf" || entry.path().extension() == ".glb") {
+			mModelPaths.push_back(entry.path().u8string());
+		}
 
-
+	}
 	APE_LOG_FUNC_LEAVE();
+}
+
+void ape::FilamentSceneLoaderPlugin::parseModels()
+{
+	for (auto modelPath : mModelPaths) {
+		std::filesystem::path fullPath = modelPath;
+		std::string fileName = fullPath.filename().u8string();
+		std::string entityName = fileName + "_gltfEntity";
+		if (auto node = mpSceneManager->createNode(fileName, true, mpCoreConfig->getNetworkGUID()).lock())
+		{
+			mApeNodes.push_back(fileName);
+			if (mpSceneManager->getEntity(fileName).lock()) {
+				;
+			}
+			else if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(entityName, ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+			{
+				mApeEntities.push_back(entityName);
+				fileGeometry->setFileName(modelPath);
+				fileGeometry->setParentNode(node);
+			}
+			if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())) {
+				if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(fileName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+				{
+					geometryClone->setSourceGeometry(fileGeometry);
+					node->setChildrenVisibility(true);
+				}
+			}
+			node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
+
+		}
+		if (auto node = mpSceneManager->getNode(fileName).lock()) {
+			if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(fileName).lock()))
+			{
+				geometryClone->setParentNode(node);
+				node->setChildrenVisibility(true);
+			}
+		}
+
+	}
 }
 
 void ape::FilamentSceneLoaderPlugin::Init()
@@ -298,6 +340,7 @@ void ape::FilamentSceneLoaderPlugin::Run()
 	setInitialState();*/
 	//fclose(mApeFilamentSceneLoaderPluginConfigFile);
 	createResourceList();
+	parseModels();
 	while (!mStopCalled)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));

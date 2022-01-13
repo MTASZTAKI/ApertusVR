@@ -284,7 +284,9 @@ void ape::VLFTImgui::connectToRoom(){
             urls.push_back(urlSceneConfig);
             locations.push_back(locationSceneConfig);
             mpSceneNetwork->downloadConfigs(urls, locations);
-            mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
+            auto &networkConfig = mpCoreConfig->getNetworkConfig();
+            networkConfig.lobbyConfig.roomName = roomName;
+            mpPluginManager->loadPlugin("apeFilamentSceneLoaderPlugin");
             
             mpMainMenuInfo.inRoomGui = true;
             mpMainMenuInfo.inSinglePlayerMode = true;

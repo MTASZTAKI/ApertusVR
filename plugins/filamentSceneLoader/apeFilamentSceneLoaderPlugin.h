@@ -81,7 +81,7 @@ namespace ape
 
 		std::vector<std::string> mApeEntities;
 
-		std::vector<std::string> mResourceFiles;
+		std::vector<std::string> mModelPaths;
 
 		bool mStopCalled;
 
@@ -98,6 +98,8 @@ namespace ape
 		void parseVisibleNodes();
 
 		void createResourceList();
+
+		void parseModels();
 
 		void cloneGeometry(ape::FileGeometrySharedPtr fileGeometry, std::string id, ape::NodeSharedPtr parentNode);
 
