@@ -274,6 +274,7 @@ void ape::FilamentSceneLoaderPlugin::createResourceList()
 	for (const auto& entry : std::filesystem::directory_iterator(mpCoreConfig->getConfigFolderPath() + "\\rooms\\" + networkConfig.lobbyConfig.roomName)) {
 		if (entry.path().extension() == ".gltf" || entry.path().extension() == ".glb") {
 			mModelPaths.push_back(entry.path().u8string());
+			APE_LOG_DEBUG("Model file found: " << entry.path());
 		}
 
 	}
@@ -282,18 +283,21 @@ void ape::FilamentSceneLoaderPlugin::createResourceList()
 
 void ape::FilamentSceneLoaderPlugin::parseModels()
 {
+	APE_LOG_FUNC_ENTER();
 	for (auto modelPath : mModelPaths) {
 		std::filesystem::path fullPath = modelPath;
 		std::string fileName = fullPath.filename().u8string();
 		std::string entityName = fileName + "_gltfEntity";
 		if (auto node = mpSceneManager->createNode(fileName, true, mpCoreConfig->getNetworkGUID()).lock())
 		{
+			APE_LOG_DEBUG("File node created: " << fileName);
 			mApeNodes.push_back(fileName);
 			if (mpSceneManager->getEntity(fileName).lock()) {
 				;
 			}
 			else if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(entityName, ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
 			{
+				APE_LOG_DEBUG("File geometry created: " << entityName);
 				mApeEntities.push_back(entityName);
 				fileGeometry->setFileName(modelPath);
 				fileGeometry->setParentNode(node);
@@ -301,6 +305,7 @@ void ape::FilamentSceneLoaderPlugin::parseModels()
 			if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())) {
 				if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(fileName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
 				{
+					APE_LOG_DEBUG("Geometry clone created: " << entityName);
 					geometryClone->setSourceGeometry(fileGeometry);
 					node->setChildrenVisibility(true);
 				}
@@ -317,6 +322,7 @@ void ape::FilamentSceneLoaderPlugin::parseModels()
 		}
 
 	}
+	APE_LOG_FUNC_LEAVE();
 }
 
 void ape::FilamentSceneLoaderPlugin::Init()
