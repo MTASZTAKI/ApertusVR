@@ -70,6 +70,8 @@ void ape::FilamentSceneLoaderPlugin::parseGltfModel(std::string filePath)
 	if (!ret) {
 		APE_LOG_DEBUG("Failed to parse glTF: " << filePath);
 	}
+	mGltfModel[filePath].nodes;
+	gltf_ctx.WriteGltfSceneToFile(&mGltfModel[filePath], filePath);
 }
 
 void ape::FilamentSceneLoaderPlugin::parseRepresentations()

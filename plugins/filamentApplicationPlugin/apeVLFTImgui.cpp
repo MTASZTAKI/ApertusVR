@@ -123,7 +123,14 @@ void ape::VLFTImgui::listRoomNames(bool withState){
                 if (mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])
                 {
                     loadingRoomGUI();
-                    mpMainMenuInfo.connectToRoom = true;
+                    auto systemCommand = [this]() {
+                        mpUpdateInfo->resourcesUpdated = false;
+                        mpSceneNetwork->updateResources();
+                        mpUpdateInfo->resourcesUpdated = true;
+                        mpMainMenuInfo.connectToRoom = true;
+                    };
+                    std::thread systemThread(systemCommand);
+                    systemThread.detach();
                     mpUpdateInfo->loadingRoom = true;
                 }
             }
@@ -303,7 +310,14 @@ void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height
         if (ImGui::Button("Start",ImVec2(width/8, height/15))){
             if (mpMainMenuInfo.current_selected != -1) {
                 loadingRoomGUI();
-                mpMainMenuInfo.connectToRoom = true;
+                auto systemCommand = [this]() {
+                    mpUpdateInfo->resourcesUpdated = false;
+                    mpSceneNetwork->updateResources();
+                    mpUpdateInfo->resourcesUpdated = true;
+                    mpMainMenuInfo.connectToRoom = true;
+                };
+                std::thread systemThread(systemCommand);
+                systemThread.detach();
                 mpUpdateInfo->loadingRoom = true;
             }
         }
@@ -313,7 +327,14 @@ void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height
             curlData();
             if (mpMainMenuInfo.current_selected != -1 && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected]) {
                 loadingRoomGUI();
-                mpMainMenuInfo.connectToRoom = true;
+                auto systemCommand = [this]() {
+                    mpUpdateInfo->resourcesUpdated = false;
+                    mpSceneNetwork->updateResources();
+                    mpUpdateInfo->resourcesUpdated = true;
+                    mpMainMenuInfo.connectToRoom = true;
+                };
+                std::thread systemThread(systemCommand);
+                systemThread.detach();
                 mpUpdateInfo->loadingRoom = true;
             }
               

@@ -3,8 +3,8 @@
     "apeFilamentApplicationPlugin"
   ],
   "network": {
-    "user": "",
-    "participant": "",
+    "user": "vlft_server",
+    "participant": "host",
     "internet": {
           "natPunchThrough": {
             "ip": "195.111.2.95",
@@ -24,8 +24,9 @@
         "resourceZipUrl": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/virtualLearningFactory.zip",
         "resourceMd5Url": "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/virtualLearningFactory.md5",
         "resourceDownloadLocation": "../../samples",
-    "resourceLocations": [
-      "/plugins/scene/photorealisticScene/resources"
+        "resourceDownloadLocation": "../../samples/FilamentScene",
+		"resourceLocations": [
+    ]
     ]
   }
 }
