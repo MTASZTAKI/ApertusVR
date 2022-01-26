@@ -82,6 +82,8 @@ namespace ape
 
 		bool downloadResources(const std::string& url, const std::string& location, const std::string& md5 = "");
 
+		bool downloadRoomResources(const std::string& url, const std::string& location, const std::string& roomName, const std::string& md5 = "");
+
 		bool downloadConfig(const std::string& url, const std::string& location);
 	};
 }

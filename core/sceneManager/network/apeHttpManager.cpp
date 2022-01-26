@@ -25,6 +25,7 @@ SOFTWARE.*/
 #include <string>
 #include <fstream>
 #include <streambuf>
+#include <filesystem>
 #include <thread>
 #include <chrono>
 #include "apeHttpManager.h"
@@ -43,6 +44,10 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 	*((std::stringstream*) stream) << data << std::endl;
 	return size * nmemb;
 }
+
+bool gLoadRemoteVersionFinished = false;
+
+bool gDownloadRemoteVersionFinished = false;
 
 bool gLoadRemoteMD5Finished = false;
 
@@ -65,6 +70,20 @@ size_t loadRemoteMD5(void *ptr, size_t size, size_t nmemb, void *stream)
 size_t downloadRemoteMD5(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 	size_t written = fwrite(ptr, size, nmemb, stream);
 	gDownloadRemoteMD5Finished = true;
+	return written;
+}
+
+size_t loadRemoteVersion(void* ptr, size_t size, size_t nmemb, void* stream)
+{
+	std::string data((const char*)ptr, (size_t)size * nmemb);
+	*((std::stringstream*) stream) << data << std::endl;
+	gLoadRemoteVersionFinished = true;
+	return size * nmemb;
+}
+
+size_t downloadRemoteVersion(void* ptr, size_t size, size_t nmemb, FILE* stream) {
+	size_t written = fwrite(ptr, size, nmemb, stream);
+	gDownloadRemoteVersionFinished = true;
 	return written;
 }
 
@@ -278,6 +297,213 @@ bool ape::HttpManager::downloadResources(const std::string& url, const std::stri
 				{
 					std::stringstream resourceLocationPath;
 					resourceLocationPath << APE_SOURCE_DIR << location;
+					extractLocation << resourceLocationPath.str();
+				}
+			}
+			APE_LOG_DEBUG("try to unzip: " << zipFilePath.str() << " to: " << extractLocation.str());
+			int arg = 2;
+			int unzipErrorCode = zip_extract(zipFilePath.str().c_str(), extractLocation.str().c_str(), unzip, &arg);
+			APE_LOG_DEBUG("unzip error code: " << unzipErrorCode);
+			while (!gUnzipFinished)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+		}
+	}
+#endif
+	return false;
+}
+
+bool ape::HttpManager::downloadRoomResources(const std::string& url, const std::string& location, const std::string& roomName, const std::string& md5)
+{
+	gLoadRemoteVersionFinished = false;
+	gDownloadRemoteVersionFinished = false;
+	std::string version = url + "/" + roomName + "/version.txt";
+#ifdef HTTPMANAGER_USE_CURL
+	if (mpCurl)
+	{
+		bool isNeedToDownload = false;
+		if (version.size())
+		{
+			APE_LOG_DEBUG("try to download version from: " << url<<"/"<<roomName);
+			std::string versionUrl = url + "/" + roomName + "/verson.txt";
+			std::stringstream remoteVersionNumber;
+			curl_easy_setopt(mpCurl, CURLOPT_URL, versionUrl.c_str());
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, loadRemoteVersion);
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, &remoteVersionNumber);
+			CURLcode res = curl_easy_perform(mpCurl);
+			if (res != CURLE_OK)
+			{
+				APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(res));
+			}
+			else
+			{
+				APE_LOG_DEBUG("curl_easy_perform() succes: " << curl_easy_strerror(res));
+			}
+			while (!gLoadRemoteVersionFinished)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+			auto posLastFwdSlash = roomName.find_first_of("/");
+			auto fileName = version.substr(posLastFwdSlash + 1, version.length())+".zip";
+			std::stringstream filePath;
+			std::size_t found = location.find(":");
+			if (found != std::string::npos)
+			{
+				filePath << location << "/" << roomName;
+			}
+			else
+			{
+				found = location.find("./");
+				if (found != std::string::npos)
+				{
+					filePath << location << "/" << roomName;
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location;
+					filePath << resourceLocationPath.str() << "/" << roomName;
+				}
+			}
+			APE_LOG_DEBUG("try to open local md5 hash from: " << filePath.str()<<"/version.txt");
+			std::ifstream localVersion((filePath.str()+"/verson.txt").c_str());
+			if (localVersion.is_open())
+			{
+				std::string localVersionNumber((std::istreambuf_iterator<char>(localVersion)), std::istreambuf_iterator<char>());
+				std::string remoteVersionNumberStr = remoteVersionNumber.str();
+				APE_LOG_DEBUG("local: " << localVersionNumber << " remote: " << remoteVersionNumberStr);
+				if (localVersionNumber != remoteVersionNumberStr)
+				{
+					APE_LOG_DEBUG("need to update the resources...");
+					isNeedToDownload = true;
+				}
+				else
+				{
+					APE_LOG_DEBUG("resources are up-to-date");
+					isNeedToDownload = false;
+				}
+			}
+			else
+			{
+				isNeedToDownload = true;
+			}
+		}
+		if (isNeedToDownload)
+		{
+			FILE* downloadedVersionNumber;
+			//auto md5PosLastFwdSlash = version.find_last_of("/");
+			//auto md5FileName = version.substr(md5PosLastFwdSlash + 1, version.length());
+			std::stringstream versionFilePath;
+			std::size_t versionFound = location.find(":");
+			auto forwardSlash = roomName.find_first_of("/");
+
+			if (versionFound != std::string::npos)
+			{
+				versionFilePath << location << "/" << roomName<<"/version.txt";
+				std::filesystem::create_directory(location + "/" + roomName.substr(0, forwardSlash));
+				std::filesystem::create_directory(location + "/" + roomName);
+			}
+			else
+			{
+				versionFound = location.find("./");
+				if (versionFound != std::string::npos)
+				{
+					versionFilePath << location << "/" << roomName << "/version.txt";
+					std::filesystem::create_directory(location + "/" + roomName.substr(0, forwardSlash));
+					std::filesystem::create_directory(location + "/" + roomName);
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location;
+					versionFilePath << resourceLocationPath.str() << "/" << roomName << "/version.txt";
+					std::filesystem::create_directory(APE_SOURCE_DIR+location + "/" + roomName.substr(0, forwardSlash));
+					std::filesystem::create_directory(APE_SOURCE_DIR+location + "/" + roomName);
+				}
+			}
+			APE_LOG_DEBUG("try to download from: " << version << " to: " << versionFilePath.str());
+
+			downloadedVersionNumber = fopen(versionFilePath.str().c_str(), "wb");
+			curl_easy_setopt(mpCurl, CURLOPT_URL, version.c_str());
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, downloadRemoteVersion);
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, downloadedVersionNumber);
+			CURLcode res = curl_easy_perform(mpCurl);
+			if (res != CURLE_OK)
+			{
+				APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(res));
+			}
+			else
+			{
+				APE_LOG_DEBUG("curl_easy_perform() succes: " << curl_easy_strerror(res));
+			}
+			while (!gDownloadRemoteVersionFinished)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+			fclose(downloadedVersionNumber);
+			FILE* downloadedZip;
+			auto zipPosLastFwdSlash = roomName.find_first_of("/");
+			auto zipFileName = roomName.substr(zipPosLastFwdSlash + 1, roomName.length())+".zip";
+			auto userName = roomName.substr(0,zipPosLastFwdSlash);
+			std::stringstream zipFilePath;
+			std::size_t zipFound = location.find(":");
+			if (zipFound != std::string::npos)
+			{
+				zipFilePath << location << "/" << roomName << ".zip";
+			}
+			else
+			{
+				zipFound = location.find("./");
+				if (zipFound != std::string::npos)
+				{
+					zipFilePath << location << "/" << roomName << ".zip";
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location;
+					zipFilePath << resourceLocationPath.str() << "/" <<roomName << ".zip";
+				}
+			}
+			APE_LOG_DEBUG("try to download from: " << url <<"/"<< roomName << "/" << zipFileName << " to: " << zipFilePath.str());
+			auto zipUrl = url+"/" + roomName + "/" + zipFileName;
+			gDownloadRemoteZipFinished = false;
+			downloadedZip = fopen(zipFilePath.str().c_str(), "wb");
+			curl_easy_setopt(mpCurl, CURLOPT_URL, zipUrl.c_str());
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, downloadRemoteZip);
+			curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, downloadedZip);
+			CURLcode zipRes = curl_easy_perform(mpCurl);
+			if (zipRes != CURLE_OK)
+			{
+				APE_LOG_DEBUG("curl_easy_perform() failed: " << curl_easy_strerror(zipRes));
+			}
+			else
+			{
+				APE_LOG_DEBUG("curl_easy_perform() succes: " << curl_easy_strerror(zipRes));
+			}
+			while (!gDownloadRemoteZipFinished)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			}
+			fclose(downloadedZip);
+			std::stringstream extractLocation;
+			std::size_t found = location.find(":");
+			if (found != std::string::npos)
+			{
+				extractLocation << location<<"/"<< roomName.substr(0, roomName.find_first_of("/"));
+			}
+			else
+			{
+				found = location.find("./");
+				if (found != std::string::npos)
+				{
+					extractLocation << location << "/" << roomName.substr(0, roomName.find_first_of("/"));
+				}
+				else
+				{
+					std::stringstream resourceLocationPath;
+					resourceLocationPath << APE_SOURCE_DIR << location << "/" << roomName.substr(0, roomName.find_first_of("/"));
 					extractLocation << resourceLocationPath.str();
 				}
 			}

@@ -125,7 +125,8 @@ void ape::VLFTImgui::listRoomNames(bool withState){
                     loadingRoomGUI();
                     auto systemCommand = [this]() {
                         mpUpdateInfo->resourcesUpdated = false;
-                        mpSceneNetwork->updateResources();
+                        mpUpdateInfo->userName;
+                        mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpCoreConfig->getNetworkConfig().lobbyConfig.roomName);
                         mpUpdateInfo->resourcesUpdated = true;
                         mpMainMenuInfo.connectToRoom = true;
                     };
@@ -312,7 +313,7 @@ void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height
                 loadingRoomGUI();
                 auto systemCommand = [this]() {
                     mpUpdateInfo->resourcesUpdated = false;
-                    mpSceneNetwork->updateResources();
+                    mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpCoreConfig->getNetworkConfig().lobbyConfig.roomName);
                     mpUpdateInfo->resourcesUpdated = true;
                     mpMainMenuInfo.connectToRoom = true;
                 };
@@ -329,7 +330,7 @@ void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height
                 loadingRoomGUI();
                 auto systemCommand = [this]() {
                     mpUpdateInfo->resourcesUpdated = false;
-                    mpSceneNetwork->updateResources();
+                    mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpCoreConfig->getNetworkConfig().lobbyConfig.roomName);
                     mpUpdateInfo->resourcesUpdated = true;
                     mpMainMenuInfo.connectToRoom = true;
                 };
@@ -1028,7 +1029,7 @@ void ape::VLFTImgui::waitWindow(){
 }
 
 void ape::VLFTImgui::update(){
-    if(!mpUpdateInfo->resourcesUpdated){
+    if(false && !mpUpdateInfo->resourcesUpdated){
         updateResources();
     }
     else{

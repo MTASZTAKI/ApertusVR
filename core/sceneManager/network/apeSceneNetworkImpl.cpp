@@ -167,8 +167,17 @@ void ape::SceneNetworkImpl::updateResources(){
         if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
         {
             APE_LOG_DEBUG("use lobbyManager to update the resources...");
-            mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
+            //mpLobbyManager->downloadResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, mpCoreConfig->getNetworkConfig().resourceMd5Url);
         }
+}
+
+void ape::SceneNetworkImpl::updateRoomResources(std::string roomName)
+{
+	if (mpCoreConfig->getNetworkConfig().resourceZipUrl.size() && mpCoreConfig->getNetworkConfig().resourceDownloadLocation.size())
+	{
+		APE_LOG_DEBUG("use lobbyManager to update the room's resources...");
+		mpLobbyManager->downloadRoomResources(mpCoreConfig->getNetworkConfig().resourceZipUrl, mpCoreConfig->getNetworkConfig().resourceDownloadLocation, roomName, mpCoreConfig->getNetworkConfig().resourceMd5Url);
+	}
 }
 
 void ape::SceneNetworkImpl::eventCallBack(const ape::Event & event)

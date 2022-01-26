@@ -167,6 +167,8 @@ namespace ape
         
         void updateResources() override;
 
+		void updateRoomResources(std::string roomName) override;
+
 		std::string getCurrentRoomName() override;
         
         void leave() override;
