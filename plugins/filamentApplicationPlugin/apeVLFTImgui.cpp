@@ -126,7 +126,7 @@ void ape::VLFTImgui::listRoomNames(bool withState){
                     auto systemCommand = [this]() {
                         mpUpdateInfo->resourcesUpdated = false;
                         mpUpdateInfo->userName;
-                        mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpCoreConfig->getNetworkConfig().lobbyConfig.roomName);
+                        mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected]);
                         mpUpdateInfo->resourcesUpdated = true;
                         mpMainMenuInfo.connectToRoom = true;
                     };
@@ -212,8 +212,8 @@ void ape::VLFTImgui::connectToRoom(){
     std::string roomName;
     if(mPreChosenRoomName != ""){
         roomName = mPreChosenRoomName;
-        std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
-        std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
+        std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeFilamentSceneLoaderPlugin.json";
+        std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeFilamentSceneLoaderPlugin.json";
         std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
         std::string locationAnimationConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTAnimationPlayerPlugin.json";
         if(mpMainMenuInfo.multiPlayer){
@@ -244,7 +244,7 @@ void ape::VLFTImgui::connectToRoom(){
 //            locations.push_back(locationSceneConfig);
             //mpSceneNetwork->downloadConfigs(urls, locations);
             
-            mpPluginManager->loadPlugin("apeVLFTSceneLoaderPlugin");
+            mpPluginManager->loadPlugin("apeFilamentSceneLoaderPlugin");
             mpMainMenuInfo.inRoomGui = true;
             mpMainMenuInfo.inSinglePlayerMode = true;
             mpUpdateInfo->inSinglePlayer = true;
@@ -254,9 +254,10 @@ void ape::VLFTImgui::connectToRoom(){
         
     }
     else{
-        roomName= mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected];
-        std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
-        std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
+        roomName= mpUpdateInfo->userName+"/"+ mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected];
+        std::string urlSceneConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeFilamentSceneLoaderPlugin.json";
+        std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeFilamentSceneLoaderPlugin.json";
+        std::string locationSceneConfig2 = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
         std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTAnimationPlayerPlugin.json";
         std::string locationAnimationConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTAnimationPlayerPlugin.json";
         if((mpMainMenuInfo.multiPlayer || (mpMainMenuInfo.adminMenu && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])) && !mpMainMenuInfo.inRoomGui){
@@ -283,7 +284,7 @@ void ape::VLFTImgui::connectToRoom(){
             
             downloadConfig(urlSceneConfig, locationSceneConfig);
             downloadConfig(urlAnimationConfig, locationAnimationConfig);
-            mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
+            mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig2.c_str(), "r");
             mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
             std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
             
@@ -313,7 +314,7 @@ void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height
                 loadingRoomGUI();
                 auto systemCommand = [this]() {
                     mpUpdateInfo->resourcesUpdated = false;
-                    mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpCoreConfig->getNetworkConfig().lobbyConfig.roomName);
+                    mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected]);
                     mpUpdateInfo->resourcesUpdated = true;
                     mpMainMenuInfo.connectToRoom = true;
                 };
@@ -330,7 +331,7 @@ void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height
                 loadingRoomGUI();
                 auto systemCommand = [this]() {
                     mpUpdateInfo->resourcesUpdated = false;
-                    mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpCoreConfig->getNetworkConfig().lobbyConfig.roomName);
+                    mpSceneNetwork->updateRoomResources(mpUpdateInfo->userName + "/" + mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected]);
                     mpUpdateInfo->resourcesUpdated = true;
                     mpMainMenuInfo.connectToRoom = true;
                 };

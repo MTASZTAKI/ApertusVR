@@ -326,7 +326,7 @@ bool ape::HttpManager::downloadRoomResources(const std::string& url, const std::
 		if (version.size())
 		{
 			APE_LOG_DEBUG("try to download version from: " << url<<"/"<<roomName);
-			std::string versionUrl = url + "/" + roomName + "/verson.txt";
+			std::string versionUrl = url + "/" + roomName + "/version.txt";
 			std::stringstream remoteVersionNumber;
 			curl_easy_setopt(mpCurl, CURLOPT_URL, versionUrl.c_str());
 			curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, loadRemoteVersion);
@@ -350,28 +350,29 @@ bool ape::HttpManager::downloadRoomResources(const std::string& url, const std::
 			std::size_t found = location.find(":");
 			if (found != std::string::npos)
 			{
-				filePath << location << "/" << roomName;
+				filePath << location << "/" << roomName << "/version.txt";
 			}
 			else
 			{
 				found = location.find("./");
 				if (found != std::string::npos)
 				{
-					filePath << location << "/" << roomName;
+					filePath << location << "/" << roomName << "/version.txt";
 				}
 				else
 				{
 					std::stringstream resourceLocationPath;
 					resourceLocationPath << APE_SOURCE_DIR << location;
-					filePath << resourceLocationPath.str() << "/" << roomName;
+					filePath << resourceLocationPath.str() << "/" << roomName << "/version.txt";
 				}
 			}
-			APE_LOG_DEBUG("try to open local md5 hash from: " << filePath.str()<<"/version.txt");
-			std::ifstream localVersion((filePath.str()+"/verson.txt").c_str());
+			APE_LOG_DEBUG("try to open local md5 hash from: " << filePath.str());
+			//"../../samples/filamentScene/rooms/Teacher/solar_system/version.txt"
+			std::ifstream localVersion(filePath.str());
 			if (localVersion.is_open())
 			{
 				std::string localVersionNumber((std::istreambuf_iterator<char>(localVersion)), std::istreambuf_iterator<char>());
-				std::string remoteVersionNumberStr = remoteVersionNumber.str();
+				std::string remoteVersionNumberStr = remoteVersionNumber.str().substr(0, remoteVersionNumber.str().length() - 1);;
 				APE_LOG_DEBUG("local: " << localVersionNumber << " remote: " << remoteVersionNumberStr);
 				if (localVersionNumber != remoteVersionNumberStr)
 				{

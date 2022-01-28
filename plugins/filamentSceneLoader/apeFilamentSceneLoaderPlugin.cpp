@@ -36,7 +36,7 @@ void ape::FilamentSceneLoaderPlugin::eventCallBack(const ape::Event & event)
 	
 }
 
-void ape::FilamentSceneLoaderPlugin::parseGltfModel(std::string filePath)
+/*void ape::FilamentSceneLoaderPlugin::parseGltfModel(std::string filePath)
 {
 	tinygltf::TinyGLTF gltf_ctx;
 	std::string err;
@@ -72,9 +72,9 @@ void ape::FilamentSceneLoaderPlugin::parseGltfModel(std::string filePath)
 	}
 	mGltfModel[filePath].nodes;
 	gltf_ctx.WriteGltfSceneToFile(&mGltfModel[filePath], filePath);
-}
+}*/
 
-void ape::FilamentSceneLoaderPlugin::parseRepresentations()
+/*void ape::FilamentSceneLoaderPlugin::parseRepresentations()
 {
 	for (auto asset : mScene.get_assets())
 	{
@@ -108,9 +108,9 @@ void ape::FilamentSceneLoaderPlugin::parseRepresentations()
 			}
 		}
 	}
-}
+}*/
 
-std::string ape::FilamentSceneLoaderPlugin::findGeometryNameByModelName(std::string modelName)
+/*std::string ape::FilamentSceneLoaderPlugin::findGeometryNameByModelName(std::string modelName)
 {
 	for (auto modelID : mModelsIDs)
 	{
@@ -130,7 +130,7 @@ std::string ape::FilamentSceneLoaderPlugin::findGeometryNameByModelName(std::str
 	{
 		return std::string();
 	}
-}
+}*/
 
 void ape::FilamentSceneLoaderPlugin::setInitialState()
 {
@@ -154,7 +154,7 @@ void ape::FilamentSceneLoaderPlugin::cloneGeometry(ape::FileGeometrySharedPtr fi
 	}
 }
 
-void ape::FilamentSceneLoaderPlugin::parseModelsAndNodes()
+/*void ape::FilamentSceneLoaderPlugin::parseModelsAndNodes()
 {
 	for (auto asset : mScene.get_assets())
 	{
@@ -185,9 +185,9 @@ void ape::FilamentSceneLoaderPlugin::parseModelsAndNodes()
             
         }
 	}
-}
+}*/
 
-void ape::FilamentSceneLoaderPlugin::parsePlacementRelTo()
+/*void ape::FilamentSceneLoaderPlugin::parsePlacementRelTo()
 {
 	for (auto asset : mScene.get_assets())
 	{
@@ -228,9 +228,9 @@ void ape::FilamentSceneLoaderPlugin::parsePlacementRelTo()
 			}
 		}
 	}
-}
+}*/
 
-void ape::FilamentSceneLoaderPlugin::parseModelsIDs()
+/*void ape::FilamentSceneLoaderPlugin::parseModelsIDs()
 {
 	for (auto asset : mScene.get_assets())
 	{
@@ -240,9 +240,9 @@ void ape::FilamentSceneLoaderPlugin::parseModelsIDs()
 			mModelsIDs.insert(std::make_pair(*asset.get_model(), asset.get_id()));
 		}
 	}
-}
+}*/
 
-void ape::FilamentSceneLoaderPlugin::parseVisibleNodes()
+/*void ape::FilamentSceneLoaderPlugin::parseVisibleNodes()
 {
 	for (auto asset : mScene.get_assets())
 	{
@@ -267,19 +267,26 @@ void ape::FilamentSceneLoaderPlugin::parseVisibleNodes()
 			}
 		}
 	}
-}
+}*/
 
 void ape::FilamentSceneLoaderPlugin::createResourceList()
 {
 	auto networkConfig = mpCoreConfig->getNetworkConfig();
+	auto folder = mSceneDesc.get_context().get_repo_path();
+	for (auto sceneNode : mSceneDesc.get_scene()) {
+		std::stringstream fileFullPath;
+		fileFullPath << "..\\..\\samples\\filamentScene\\rooms\\"<<folder<<"\\"<< sceneNode;
+		mModelPaths.push_back(fileFullPath.str());
+	}
+
 	APE_LOG_FUNC_ENTER();
-	for (const auto& entry : std::filesystem::directory_iterator(mpCoreConfig->getConfigFolderPath() + "\\rooms\\" + networkConfig.lobbyConfig.roomName)) {
+	/*for (const auto& entry : std::filesystem::directory_iterator(mpCoreConfig->getConfigFolderPath() + "\\rooms\\" + networkConfig.lobbyConfig.roomName)) {
 		if (entry.path().extension() == ".gltf" || entry.path().extension() == ".glb") {
 			mModelPaths.push_back(entry.path().u8string());
 			APE_LOG_DEBUG("Model file found: " << entry.path());
 		}
 
-	}
+	}*/
 	APE_LOG_FUNC_LEAVE();
 }
 
@@ -330,10 +337,11 @@ void ape::FilamentSceneLoaderPlugin::parseModels()
 void ape::FilamentSceneLoaderPlugin::Init()
 {
 	APE_LOG_FUNC_ENTER();
-	//std::stringstream fileFullPath;
-	//fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeFilamentSceneLoaderPlugin.json";
-	//mApeFilamentSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
-	//mScene = nlohmann::json::parse(mApeFilamentSceneLoaderPluginConfigFile);
+	std::stringstream fileFullPath;
+	fileFullPath << mpCoreConfig->getConfigFolderPath() << "/apeFilamentSceneLoaderPlugin.json";
+	mApeFilamentSceneLoaderPluginConfigFile = std::fopen(fileFullPath.str().c_str(), "r");
+	mSceneDesc = nlohmann::json::parse(mApeFilamentSceneLoaderPluginConfigFile);
+
 	APE_LOG_FUNC_LEAVE();
 }
 

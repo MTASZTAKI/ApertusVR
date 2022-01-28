@@ -1,0 +1,20 @@
+{
+    "context": {
+        "UnitOfMeasureScale": 1.0,
+        "Zup": false,
+        "RepoPath": "Teacher\\solar_system"
+    },
+    "scene": [
+		"scene.gltf",
+		"skull.gltf"
+    ],
+    "clones": [
+		1,
+		2
+    ],
+	"positions": [
+		[0.0, 0.0,0.0],
+		[2.0, 2.0, 2.0],
+		[5.0, 5.0, 5.0]
+	]
+}

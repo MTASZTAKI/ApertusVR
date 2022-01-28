@@ -71,7 +71,7 @@ namespace ape
 
 		ape::ICoreConfig* mpCoreConfig;
 
-		quicktype::Scene mScene;
+		quicktype::SceneDescription mSceneDesc;
 
 		FILE* mApeFilamentSceneLoaderPluginConfigFile;
 
