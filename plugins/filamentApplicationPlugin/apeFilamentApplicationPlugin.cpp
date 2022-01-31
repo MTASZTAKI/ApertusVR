@@ -1390,7 +1390,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if(app.mpInstancesMap.find(event.subjectName) != app.mpInstancesMap.end() && app.mpInstancesMap[event.subjectName].index > -1){
                             auto filamentAssetRootEntity = app.mpInstancesMap[event.subjectName].mpInstance->getRoot();
                             auto filamentAssetRootTransform = app.mpTransformManager->getInstance(filamentAssetRootEntity);
-                            APE_LOG_DEBUG("Set CLONE parent:" << event.subjectName+"_clone" << " " << parentNodeName);
+                            APE_LOG_DEBUG("Set CLONE parent:" << event.subjectName << " " << parentNodeName);
                             if(app.mpTransforms.find(parentNodeName) != app.mpTransforms.end())
                                 app.mpTransformManager->setParent(filamentAssetRootTransform, app.mpTransforms[parentNodeName]);
                             if(auto node = mpSceneManager->getNode(parentNodeName).lock()){
@@ -1470,7 +1470,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                                 app.names->addComponent(root);
                                 auto nameInstance = app.names->getInstance(root);
                                 if (nameInstance) {
-                                    std::string nameToSet = event.subjectName+"_clone";
+                                    std::string nameToSet = event.subjectName;
                                     app.names->setName(nameInstance, nameToSet.c_str());
                                 }
                                  
@@ -3407,7 +3407,7 @@ void ape::FilamentApplicationPlugin::Step()
            // rfTransform[3][2] = 0.0001;
            // app.mpTransformManager->setTransform(rfTM, rfTransform);
 
-            initAnimations();
+            //initAnimations();
             //std::this_thread::sleep_for(std::chrono::milliseconds(500));
             if (auto node = mpSceneManager->getNode(mUserName + mPostUserName).lock()) {
                 if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mUserName + mPostUserName).lock()))

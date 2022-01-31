@@ -293,6 +293,7 @@ void ape::FilamentSceneLoaderPlugin::createResourceList()
 void ape::FilamentSceneLoaderPlugin::parseModels()
 {
 	APE_LOG_FUNC_ENTER();
+	int cnt = 0, posCnt = 0;
 	for (auto modelPath : mModelPaths) {
 		std::filesystem::path fullPath = modelPath;
 		std::string fileName = fullPath.filename().u8string();
@@ -312,24 +313,39 @@ void ape::FilamentSceneLoaderPlugin::parseModels()
 				fileGeometry->setParentNode(node);
 			}
 			if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())) {
-				if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(fileName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
-				{
-					APE_LOG_DEBUG("Geometry clone created: " << entityName);
-					geometryClone->setSourceGeometry(fileGeometry);
-					node->setChildrenVisibility(true);
-				}
+				for (size_t i = 0; i < mSceneDesc.get_clones()[cnt]; i++) {
+					std::string cloneName = fileName + "_Clone" + std::to_string(i);
+					if (auto cloneNode = mpSceneManager->createNode(cloneName, true, mpCoreConfig->getNetworkGUID()).lock())
+					{
+						if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(cloneName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+						{
+							mApeEntities.push_back(cloneName);
+							APE_LOG_DEBUG("Geometry clone created: " << cloneName);
+							geometryClone->setSourceGeometry(fileGeometry);
+						}
+						cloneNode->setParentNode(node);
+					}
+				}	
 			}
+			node->setChildrenVisibility(true);
 			node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
 
 		}
 		if (auto node = mpSceneManager->getNode(fileName).lock()) {
-			if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(fileName).lock()))
-			{
-				geometryClone->setParentNode(node);
-				node->setChildrenVisibility(true);
+			for (size_t i = 0; i < mSceneDesc.get_clones()[cnt]; i++) {
+				std::string cloneName = fileName + "_Clone" + std::to_string(i);
+				if (auto cloneNode = mpSceneManager->getNode(cloneName).lock()) {
+					if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(cloneName).lock()))
+					{
+						geometryClone->setParentNode(cloneNode);
+						node->setChildrenVisibility(true);
+					}
+					auto pos = mSceneDesc.get_positions()[posCnt++];
+					cloneNode->setPosition(ape::Vector3(pos[0], pos[1], pos[2]));
+				}
 			}
 		}
-
+		cnt++;
 	}
 	APE_LOG_FUNC_LEAVE();
 }
