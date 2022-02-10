@@ -36,15 +36,15 @@ void ape::FilamentSceneLoaderPlugin::eventCallBack(const ape::Event & event)
 	
 }
 
-/*void ape::FilamentSceneLoaderPlugin::parseGltfModel(std::string filePath)
+void ape::FilamentSceneLoaderPlugin::parseGltfModel(std::string filePath)
 {
 	tinygltf::TinyGLTF gltf_ctx;
 	std::string err;
 	std::string warn;
 	std::string fileExtension = filePath.substr(filePath.find_last_of("."));
     std::size_t pos = filePath.find("./");
-    if (pos == std::string::npos)
-        filePath = "../../samples/virtualLearningFactory/"+filePath;
+    //if (pos == std::string::npos)
+        //filePath = "../../samples/virtualLearningFactory/"+filePath;
 	bool ret = false;
 	if (fileExtension.compare(".glb") == 0) {
 		std::cout << "Reading binary glTF" << std::endl;
@@ -70,9 +70,42 @@ void ape::FilamentSceneLoaderPlugin::eventCallBack(const ape::Event & event)
 	if (!ret) {
 		APE_LOG_DEBUG("Failed to parse glTF: " << filePath);
 	}
+	//mGltfModel[filePath].nodes;
+	//gltf_ctx.WriteGltfSceneToFile(&mGltfModel[filePath], filePath);
 	mGltfModel[filePath].nodes;
-	gltf_ctx.WriteGltfSceneToFile(&mGltfModel[filePath], filePath);
-}*/
+	tinygltf::Node asd = tinygltf::Node();
+	std::string encoded = "data:application/octet-stream;base64,AAAAAAAAgD4AAAA/AABAPwAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAD0/TQ/9P00PwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAPT9ND/0/TS/AAAAAAAAAAAAAAAAAACAPw==";
+	std::string mime_type = "";
+	std::vector<unsigned char> out;
+	auto decoded = tinygltf::DecodeDataURI(&out, mime_type,encoded,100,false);
+	std::cout << decoded << std::endl;
+
+	std::vector<float> decodedNums;
+
+	std::vector<std::vector<float>> decodedVec3;
+
+	decodedVec3.resize(5);
+
+	decodedNums.resize(5);
+
+	for (size_t i = 0; i < 5; i++) 
+	{
+		memcpy(&decodedNums[i], &out[i*4], (sizeof(float)));
+		decodedVec3[i].resize(4);
+	}
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			memcpy(&decodedVec3[i][j], &out[20 + j*4+i*16], (sizeof(float)));
+		}
+	}
+
+
+
+	std::cout << "success" << std::endl;
+}
 
 /*void ape::FilamentSceneLoaderPlugin::parseRepresentations()
 {
@@ -277,6 +310,7 @@ void ape::FilamentSceneLoaderPlugin::createResourceList()
 		std::stringstream fileFullPath;
 		fileFullPath << "..\\..\\samples\\filamentScene\\rooms\\"<<folder<<"\\"<< sceneNode;
 		mModelPaths.push_back(fileFullPath.str());
+		//parseGltfModel(fileFullPath.str());
 	}
 
 	APE_LOG_FUNC_ENTER();
@@ -372,6 +406,7 @@ void ape::FilamentSceneLoaderPlugin::Run()
 	setInitialState();*/
 	//fclose(mApeFilamentSceneLoaderPluginConfigFile);
 	createResourceList();
+	mGltfModel;
 	parseModels();
 	while (!mStopCalled)
 	{

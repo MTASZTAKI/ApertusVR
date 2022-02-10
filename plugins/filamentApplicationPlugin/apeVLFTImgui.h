@@ -213,6 +213,14 @@ namespace ape
         updateInfo* mpUpdateInfo;
 
         double posX=0, posY=0, posZ = 0, rotAngle = 0, upX = 0, upY = 0, upZ = 0;
+
+        std::vector<std::vector<float>> animInfo;
+
+        bool isAnimInfoRotation;
+
+        float inputs[5] = { 0,0,0,0,0 };
+
+        int animRowNumber = 0;
         
         std::vector<std::string> chatMessages;
         
@@ -249,6 +257,8 @@ namespace ape
         void screenshotPanelGUI();
         
         void manipulatorPanelGUI();
+
+        void animationCreatorPanelGUI();
         
         void studentPanelGUI();
 

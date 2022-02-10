@@ -49,6 +49,9 @@ void ape::VLFTImgui::init(updateInfo *updateinfo)
 {
 //    std::stringstream fileFullPath;
 //    fileFullPath << APE_SOURCE_DIR << "/samples/virtualLearningFactory/apeVLFTSceneLoaderPlugin.json";
+    isAnimInfoRotation = false;
+    animInfo.resize(1);
+    animInfo[0].resize(5);
     mpUpdateInfo = updateinfo;
     if(!mpUpdateInfo->resourcesUpdated)
         updateResources();
@@ -1092,9 +1095,10 @@ void ape::VLFTImgui::update(){
 
             ImGui::GetStyle().Alpha = 0.95;
             leftPanelGUI();
+            animationCreatorPanelGUI();
             if(mpUpdateInfo->isAdmin ||!mpMainMenuInfo.multiPlayer){
                 animationPanelGUI();
-                manipulatorPanelGUI();
+                //manipulatorPanelGUI();
                 studentPanelGUI();
             }
             //screenshotPanelGUI();
@@ -1653,6 +1657,64 @@ void ape::VLFTImgui::manipulatorPanelGUI(){
     ImGui::SameLine(120);
     if(ImGui::Button("Drop", ImVec2(110,25)) && mpUpdateInfo->pickedItem != ""){
         mpUpdateInfo->drop = true;
+    }
+    ImGui::End();
+}
+
+
+void ape::VLFTImgui::animationCreatorPanelGUI() {
+    ImGui::SetNextWindowPos(ImVec2(0, 400), ImGuiCond_Appearing);
+    if (mpUpdateInfo->rePositionUI) {
+        ImGui::SetNextWindowPos(ImVec2(0, 400));
+    }
+    ImGui::SetNextWindowSize(ImVec2(250, 245), ImGuiCond_Once);
+    ImGui::Begin("Animation editor", nullptr);
+    const float width = ImGui::GetWindowWidth();
+    const float height = ImGui::GetWindowHeight();
+
+    static char animName[255];
+
+    
+    if (mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode) {
+        ImGui::PushItemWidth((width - 80) / 3);
+        ImGui::InputText(u8"Animation name", animName, IM_ARRAYSIZE(animName));
+        ImGui::SliderInt("", &animRowNumber,0, animInfo.size()-1);
+        if (ImGui::IsItemDeactivatedAfterChange()) {
+            inputs[0] = animInfo[animRowNumber][0];
+            inputs[1] = animInfo[animRowNumber][1];
+            inputs[2] = animInfo[animRowNumber][2];
+            inputs[3] = animInfo[animRowNumber][3];
+        }
+        ImGui::Checkbox("Rotation", &isAnimInfoRotation);
+
+        ImGui::InputFloat("time stamp", &inputs[0]);
+        ImGui::InputFloat("x", &inputs[1]);
+        ImGui::SameLine();
+        ImGui::InputFloat("y", &inputs[2]);
+        ImGui::SameLine();
+        ImGui::InputFloat("z", &inputs[3]);
+
+        int numberOfValues = 4;
+        if (isAnimInfoRotation) {
+            ImGui::SameLine();
+            ImGui::InputFloat("w", &inputs[4]);
+            numberOfValues = 5;
+        }
+        ImGui::PopItemWidth();
+        if (ImGui::Button("Edit row", ImVec2(110, 25))) {
+            for (size_t i = 0; i < numberOfValues; i++)
+            {
+                animInfo[animRowNumber][i] = inputs[i];
+            }
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Add new row", ImVec2(110, 25))) {
+            animInfo.push_back(std::vector<float>(inputs, inputs + sizeof(inputs) / sizeof(inputs[0])));
+            inputs[0] = animInfo[animRowNumber][0];
+            inputs[1] = animInfo[animRowNumber][1];
+            inputs[2] = animInfo[animRowNumber][2];
+            inputs[3] = animInfo[animRowNumber][3];
+        }
     }
     ImGui::End();
 }
