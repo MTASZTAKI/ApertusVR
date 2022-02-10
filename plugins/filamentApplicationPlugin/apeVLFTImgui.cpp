@@ -8,6 +8,12 @@
 #include "apeVLFTImgui.h"
 #include "NativeWindowHelper.h"
 #include "nfd.h"
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STBI_MSC_SECURE_CRT
+#include "tiny_gltf.h"
+
 #ifdef __APPLE__
 #include <sys/stat.h>
 #else
@@ -1636,12 +1642,7 @@ void ape::VLFTImgui::manipulatorPanelGUI(){
         mpUpdateInfo->deleteSelected = true;
     }
     ImGui::SameLine(120);
-    if(ImGui::Button("Browse files",ImVec2(110,25)))
-    {
-        openFileBrowser();
-        
-    }
-    
+      
     if(mpUpdateInfo->pickedItem == ""){
         if(ImGui::Button("Pick up",ImVec2(110,25)))
         {
@@ -1661,6 +1662,13 @@ void ape::VLFTImgui::manipulatorPanelGUI(){
     ImGui::End();
 }
 
+static bool vectorGetter(void* vec, int idx, const char** out_text)
+{
+    auto& vector = *static_cast<std::vector<std::string>*>(vec);
+    if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
+    *out_text = vector.at(idx).c_str();
+    return true;
+}
 
 void ape::VLFTImgui::animationCreatorPanelGUI() {
     ImGui::SetNextWindowPos(ImVec2(0, 400), ImGuiCond_Appearing);
@@ -1673,20 +1681,36 @@ void ape::VLFTImgui::animationCreatorPanelGUI() {
     const float height = ImGui::GetWindowHeight();
 
     static char animName[255];
-
-    
+    std::string chosenModel = "Chosen model: ";
+    if (mpUpdateInfo->selectedModel != "")
+        chosenModel += mpUpdateInfo->selectedModel.substr(mpUpdateInfo->selectedModel.find_last_of("\\")+1);
+    ImGui::Text(chosenModel.c_str());
     if (mpUpdateInfo->isAdmin || mpMainMenuInfo.inSinglePlayerMode) {
-        ImGui::PushItemWidth((width - 80) / 3);
+        ImGui::PushItemWidth(width - 120);
         ImGui::InputText(u8"Animation name", animName, IM_ARRAYSIZE(animName));
+        int oldaAnimNum = animRowNumber;
+        if (ImGui::Button("-", ImVec2(20, 20)) && animRowNumber > 0) {
+            animRowNumber--;
+        }
+        ImGui::SameLine();
+        ImGui::PopItemWidth();
+        ImGui::PushItemWidth(width - 75);
         ImGui::SliderInt("", &animRowNumber,0, animInfo.size()-1);
-        if (ImGui::IsItemDeactivatedAfterChange()) {
+        ImGui::PopItemWidth();
+        ImGui::SameLine();
+        if (ImGui::Button("+", ImVec2(20, 20)) && animRowNumber < (animInfo.size()-1)) {
+            animRowNumber++;
+        }
+    
+        if (oldaAnimNum != animRowNumber) {
             inputs[0] = animInfo[animRowNumber][0];
             inputs[1] = animInfo[animRowNumber][1];
             inputs[2] = animInfo[animRowNumber][2];
             inputs[3] = animInfo[animRowNumber][3];
         }
-        ImGui::Checkbox("Rotation", &isAnimInfoRotation);
 
+        ImGui::PushItemWidth((width - 80) / 3);
+        ImGui::Checkbox("Rotation", &isAnimInfoRotation);
         ImGui::InputFloat("time stamp", &inputs[0]);
         ImGui::InputFloat("x", &inputs[1]);
         ImGui::SameLine();
@@ -1710,11 +1734,225 @@ void ape::VLFTImgui::animationCreatorPanelGUI() {
         ImGui::SameLine();
         if (ImGui::Button("Add new row", ImVec2(110, 25))) {
             animInfo.push_back(std::vector<float>(inputs, inputs + sizeof(inputs) / sizeof(inputs[0])));
-            inputs[0] = animInfo[animRowNumber][0];
-            inputs[1] = animInfo[animRowNumber][1];
-            inputs[2] = animInfo[animRowNumber][2];
-            inputs[3] = animInfo[animRowNumber][3];
+            animRowNumber = animInfo.size()-1;
         }
+
+        if (ImGui::Button("Add animation", ImVec2(110, 25)) && mpUpdateInfo->selectedModel != "") {
+            saveAnimation(animName);
+        }
+
+        if (ImGui::Button("Browse files", ImVec2(110, 25)))
+        {
+            openFileBrowser();
+        }
+        if (mpUpdateInfo->modelAnimations.size() > 0) {
+            ImGui::ListBox("Animation list", 0,vectorGetter, static_cast<void*>(&mpUpdateInfo->modelAnimations), mpUpdateInfo->modelAnimations.size());
+            if (ImGui::Button("Play animation", ImVec2(110, 25)) && mpUpdateInfo->selectedModelAnimation > -1) {
+                mpUpdateInfo->playAnimation = true;
+            }
+        }
+        
     }
     ImGui::End();
+}
+
+
+void ape::VLFTImgui::saveAnimation(std::string animationName) {
+    tinygltf::Model gltfModel;
+    tinygltf::TinyGLTF gltf_ctx;
+    std::string err;
+    std::string warn;
+    std::string fileExtension = mpUpdateInfo->selectedModel.substr(mpUpdateInfo->selectedModel.find_last_of("."));
+    bool ret = false;
+    if (fileExtension.compare(".glb") == 0) {
+        // assume binary glTF.
+        ret = gltf_ctx.LoadBinaryFromFile(&gltfModel, &err, &warn,
+            mpUpdateInfo->selectedModel.c_str());
+    }
+    else {
+        std::cout << "Reading ASCII glTF" << std::endl;
+        // assume ascii glTF.
+        ret =
+            gltf_ctx.LoadASCIIFromFile(&gltfModel, &err, &warn, mpUpdateInfo->selectedModel.c_str());
+    }
+
+    if (!warn.empty()) {
+        APE_LOG_DEBUG("warning: " << warn << " filename: " << mpUpdateInfo->selectedModel);
+    }
+
+    if (!err.empty()) {
+        APE_LOG_DEBUG("Err: " << err << " filename: " << mpUpdateInfo->selectedModel);
+    }
+
+    if (!ret) {
+        APE_LOG_DEBUG("Failed to parse glTF: " << mpUpdateInfo->selectedModel);
+    }
+   
+    std::vector<uint8_t> bitInfo;
+    int sizeOfBin = animInfo.size() * 4 * 4;
+    int sizeOfTimeData = animInfo.size() * 4;
+    int sizeOfTranslationData = sizeOfBin - sizeOfTimeData;
+    bitInfo.resize(sizeOfBin);
+
+    for (size_t i = 0; i < animInfo.size(); i++)
+    {
+        memcpy(&bitInfo[i * 4], &animInfo[i][0], (sizeof(float)));
+    }
+    std::vector<float> maxValues, minValues;
+    for (size_t i = 0; i < 3; i++)
+    {
+        maxValues.push_back(animInfo[0][i+1]);
+        minValues.push_back(animInfo[0][i+1]);
+    }
+    for (size_t i = 0; i < animInfo.size(); i++)
+    {
+        for (size_t j = 0; j < 3; j++)
+        {
+            if (maxValues[j] < animInfo[i][j + 1])
+                maxValues[j] = animInfo[i][j + 1];
+            if (minValues[j] > animInfo[i][j + 1])
+                minValues[j] = animInfo[i][j + 1];
+
+            memcpy(&bitInfo[animInfo.size()*4+j*4+i * 12], &animInfo[i][j+1], (sizeof(float)));
+        }
+        
+    }
+    auto encoded = "data:application/octet-stream;base64,"+ tinygltf::base64_encode(bitInfo.data(), sizeOfBin);
+
+    tinygltf::Buffer tmpBuffer = tinygltf::Buffer();
+    tmpBuffer.uri = encoded;
+    tmpBuffer.data = bitInfo;
+    gltfModel.buffers.push_back(tmpBuffer);
+
+    tinygltf::BufferView tmpBfView = tinygltf::BufferView();
+    tmpBfView.buffer = gltfModel.buffers.size()-1;
+    tmpBfView.byteOffset = 0;
+    tmpBfView.byteLength = sizeOfBin;
+    gltfModel.bufferViews.push_back(tmpBfView);
+
+    tinygltf::Accessor tmpAccessor = tinygltf::Accessor();
+    tmpAccessor.bufferView = gltfModel.bufferViews.size() - 1;
+    tmpAccessor.byteOffset = 0;
+    tmpAccessor.componentType = 5126;
+    tmpAccessor.count = animInfo.size();
+    tmpAccessor.type = TINYGLTF_TYPE_SCALAR;
+    tmpAccessor.maxValues.push_back(animInfo[animInfo.size()-1][0]);
+    tmpAccessor.minValues.push_back(animInfo[0][0]);
+    gltfModel.accessors.push_back(tmpAccessor);
+
+    tmpAccessor.byteOffset = sizeOfTimeData;
+    tmpAccessor.type = TINYGLTF_TYPE_VEC3;
+    tmpAccessor.maxValues = std::vector<double>{ maxValues[0],maxValues[1],maxValues[2] };
+    tmpAccessor.minValues = std::vector<double>{ minValues[0],minValues[1],minValues[2] };
+    gltfModel.accessors.push_back(tmpAccessor);
+
+    tinygltf::Animation tmpAnimation = tinygltf::Animation();
+    tmpAnimation.name = animationName;
+    tmpAnimation.samplers.push_back(tinygltf::AnimationSampler());
+    tmpAnimation.channels.push_back(tinygltf::AnimationChannel());
+
+    tmpAnimation.samplers[0].input = gltfModel.accessors.size() - 2;
+    tmpAnimation.samplers[0].output = gltfModel.accessors.size() - 1;
+    tmpAnimation.samplers[0].interpolation = "LINEAR";
+    tmpAnimation.channels[0].sampler = 0;
+    tmpAnimation.channels[0].target_path = "translation";
+    tmpAnimation.channels[0].target_node = 0;
+    gltfModel.animations.push_back(tmpAnimation);
+
+    gltf_ctx.WriteGltfSceneToFile(&gltfModel, mpUpdateInfo->selectedModel.substr(0,mpUpdateInfo->selectedModel.find_last_of("\\")+1)+"newSkull.gltf");
+
+    //std::vector<float> decodedNums;
+
+    //std::vector<std::vector<float>> decodedVec3;
+
+    //decodedVec3.resize(animInfo.size());
+
+    //decodedNums.resize(animInfo.size());
+
+    //for (size_t i = 0; i < animInfo.size(); i++)
+    //{
+    //    memcpy(&decodedNums[i], &out[i * 4], (sizeof(float)));
+    //    decodedVec3[i].resize(3);
+    //}
+
+    //for (size_t i = 0; i < animInfo.size(); i++)
+    //{
+    //    for (size_t j = 0; j < 3; j++)
+    //    {
+    //        memcpy(&decodedVec3[i][j], &out[animInfo.size()*4 + j * 4 + i * 12], (sizeof(float)));
+    //    }
+    //}
+
+    std::cout << "success" << std::endl;
+}
+
+void ape::VLFTImgui::loadGltfModel(std::string filePath)
+{
+    std::map<std::string, tinygltf::Model> mGltfModel;
+    tinygltf::TinyGLTF gltf_ctx;
+    std::string err;
+    std::string warn;
+    std::string fileExtension = filePath.substr(filePath.find_last_of("."));
+    std::size_t pos = filePath.find("./");
+    //if (pos == std::string::npos)
+        //filePath = "../../samples/virtualLearningFactory/"+filePath;
+    bool ret = false;
+    if (fileExtension.compare(".glb") == 0) {
+        // assume binary glTF.
+        ret = gltf_ctx.LoadBinaryFromFile(&mGltfModel[filePath], &err, &warn,
+            filePath.c_str());
+    }
+    else {
+        std::cout << "Reading ASCII glTF" << std::endl;
+        // assume ascii glTF.
+        ret =
+            gltf_ctx.LoadASCIIFromFile(&mGltfModel[filePath], &err, &warn, filePath.c_str());
+    }
+
+    if (!warn.empty()) {
+        APE_LOG_DEBUG("warning: " << warn << " filename: " << filePath);
+    }
+
+    if (!err.empty()) {
+        APE_LOG_DEBUG("Err: " << err << " filename: " << filePath);
+    }
+
+    if (!ret) {
+        APE_LOG_DEBUG("Failed to parse glTF: " << filePath);
+    }
+    //mGltfModel[filePath].nodes;
+    //gltf_ctx.WriteGltfSceneToFile(&mGltfModel[filePath], filePath);
+    mGltfModel[filePath].nodes;
+    tinygltf::Node asd = tinygltf::Node();
+    std::string encoded = "data:application/octet-stream;base64,AAAAAAAAgD4AAAA/AABAPwAAgD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAD0/TQ/9P00PwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAPT9ND/0/TS/AAAAAAAAAAAAAAAAAACAPw==";
+    std::string mime_type = "";
+    std::vector<unsigned char> out;
+    auto decoded = tinygltf::DecodeDataURI(&out, mime_type, encoded, 100, false);
+    std::cout << decoded << std::endl;
+
+    std::vector<float> decodedNums;
+
+    std::vector<std::vector<float>> decodedVec3;
+
+    decodedVec3.resize(5);
+
+    decodedNums.resize(5);
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        memcpy(&decodedNums[i], &out[i * 4], (sizeof(float)));
+        decodedVec3[i].resize(4);
+    }
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        for (size_t j = 0; j < 4; j++)
+        {
+            memcpy(&decodedVec3[i][j], &out[20 + j * 4 + i * 16], (sizeof(float)));
+        }
+    }
+
+
+
+    std::cout << "success" << std::endl;
 }

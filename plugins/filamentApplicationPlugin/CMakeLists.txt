@@ -151,6 +151,7 @@ if(WIN32)
 				${FILAMENT_PREBUILD_DIR}/filament-1.9.9/third_party/robin-map
                 ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 				${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nativefiledialog
+				${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/tinygltf
  				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader
 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty
 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty/tinygltf
@@ -187,6 +188,7 @@ elseif(APPLE)
                 ${FILAMENT_PREBUILD_DIR}/filament-1.9.9-build/samples
                 ${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/rapidjson/include
 				${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/nativefiledialog
+				${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/tinygltf
  				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader
 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty
 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty/tinygltf

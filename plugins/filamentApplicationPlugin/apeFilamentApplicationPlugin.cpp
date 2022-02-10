@@ -4230,8 +4230,30 @@ void ape::FilamentApplicationPlugin::Step()
                                         tmInstance = app.mpTransformManager->getInstance(app.selectedNode.first);
                                         parent = app.mpTransformManager->getParent(tmInstance);
                                         std::string sceneNodeName = "";
+
+                                        bool foundModelName = false;
+                                      
+                                        for (auto gmNames : app.geometryNameMap) {
+                                            for (auto gmName : gmNames.second) {
+                                                if (app.selectedNode.second == gmName) {
+                                                    app.updateinfo.selectedModel = gmNames.first;
+                                                    APE_LOG_DEBUG("FOUND MODEL NAME: " << gmNames.first);
+                                                    foundModelName = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (foundModelName) break;
+                                        }
+
                                         while(parent && !found){
                                             if(app.asset[app.selectedNode.second]->getName(parent)){
+                                                auto animator = app.instances[app.selectedNode.second][0]->getAnimator();
+                                                app.updateinfo.modelAnimations.clear();
+                                                for (size_t i = 0; i < animator->getAnimationCount(); i++)
+                                                {
+                                                    app.updateinfo.modelAnimations.push_back(animator->getAnimationName(i));
+                                                    app.updateinfo.selectedModelAnimation = -1;
+                                                }
                                                 parentName = app.asset[app.selectedNode.second]->getName(parent);
                                                 for(auto  const& x: sceneNodes){
                                                     sceneNodeName = x.first;
@@ -4239,6 +4261,7 @@ void ape::FilamentApplicationPlugin::Step()
                                                         app.selectedNode.first = parent;
                                                         app.selectedNode.second = parentName;
                                                         app.updateinfo.selectedItem = parentName;
+
                                                         found = true;
                                                         break;
                                                     }

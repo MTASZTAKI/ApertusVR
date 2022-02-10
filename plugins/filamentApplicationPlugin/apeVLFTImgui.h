@@ -22,7 +22,6 @@ SOFTWARE.*/
 
 #ifndef APE_VLFTIMGUI_H
 #define APE_VLFTIMGUI_H
-
 #include <chrono>
 #include <fstream>
 #include <iostream>
@@ -104,10 +103,12 @@ struct updateInfo{
     std::vector<std::string> stateOfObjects = std::vector<std::string>();
     std::vector<std::string> nameOfState = std::vector<std::string>();
     std::vector<std::string> newMessage = std::vector<std::string>();
+    std::vector<std::string> modelAnimations = std::vector<std::string>();
     std::string userName = "";
     std::string password = "";
     std::string messageToSend ="";
     std::string changeKeyCode = "";
+    std::string selectedModel = "";
     std::string selectedItem = "";
     std::string rootOfSelected = "";
     std::string pickedItem = "";
@@ -155,12 +156,14 @@ struct updateInfo{
     bool lightOn = true;
     bool changeLightDir = false;
     bool loadingRoom = false;
+    bool playAnimation = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;
     double now = 0;
     int ChoosedBookmarkedAnimationID = 0;
     int BookmarkID = -1;
+    int selectedModelAnimation = -1;
     unsigned long long ClickedBookmarkTime = 0;
     float TimeToSleepFactor = 1.0f;
     float playerRotation = 0.0f;
@@ -263,6 +266,10 @@ namespace ape
         void studentPanelGUI();
 
         void drawUserNames();
+
+        void loadGltfModel(std::string filePath);
+
+        void saveAnimation(std::string animationName);
         
         bool curlData();
         
