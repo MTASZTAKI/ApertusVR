@@ -157,13 +157,14 @@ struct updateInfo{
     bool changeLightDir = false;
     bool loadingRoom = false;
     bool playAnimation = false;
+    bool reloadModel = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;
     double now = 0;
     int ChoosedBookmarkedAnimationID = 0;
     int BookmarkID = -1;
-    int selectedModelAnimation = -1;
+    int selectedModelAnimation = 0;
     unsigned long long ClickedBookmarkTime = 0;
     float TimeToSleepFactor = 1.0f;
     float playerRotation = 0.0f;

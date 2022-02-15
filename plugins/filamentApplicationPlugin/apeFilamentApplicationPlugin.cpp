@@ -3459,6 +3459,27 @@ void ape::FilamentApplicationPlugin::Step()
                                 viewMatrix[3][0], 1.5, viewMatrix[3][2],viewMatrix[3][3]
                                              ));
         }
+
+        if (app.updateinfo.reloadModel) {
+            std::string modelName = app.updateinfo.selectedModel;
+            
+            for (size_t i = 0; i < app.instances[modelName].size(); i++) {
+                if (app.instances[modelName][i]->getEntityCount() > 0)
+                {
+                    auto entity = app.instances[modelName][i]->getRoot();
+                    if (app.mpScene->hasEntity(entity))
+                        app.mpScene->removeEntities(app.instances[modelName][i]->getEntities(), app.instances[modelName][i]->getEntityCount());
+                }
+            }
+            app.instances.erase(modelName);
+            app.mpInstancesMap.erase(modelName);
+            app.mpLoadedAssets.erase(modelName);
+            app.loader->destroyAsset(app.asset[modelName]);
+            app.asset.erase(modelName);
+            app.updateinfo.reloadModel = false;
+        }
+
+
         if(app.updateinfo.logMovements){
             if(!app.updateinfo.mIsStudentsMovementLogging){
                 app.updateinfo.mIsStudentsMovementLogging = true;

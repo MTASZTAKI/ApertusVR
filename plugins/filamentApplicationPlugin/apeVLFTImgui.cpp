@@ -1453,7 +1453,7 @@ void ape::VLFTImgui::openFileBrowser() {
         std::string fileName = filePath;
         fileName = fileName.substr(fileName.find_last_of("/")+1);
         std::string nodeName = "gltfNode_"+fileName;
-        std::string entityName = "gltfEntity_"+fileName;
+        std::string entityName = fileName;
         mpSceneManager->createNode(nodeName, true, mpCoreConfig->getNetworkGUID());
         //if(auto camNode = mCamNode.lock())
         if (auto node = mpSceneManager->getNode(nodeName).lock())
@@ -1662,11 +1662,10 @@ void ape::VLFTImgui::manipulatorPanelGUI(){
     ImGui::End();
 }
 
-static bool vectorGetter(void* vec, int idx, const char** out_text)
+static bool vectorGetter(void* data, int n, const char** out_text)
 {
-    auto& vector = *static_cast<std::vector<std::string>*>(vec);
-    if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
-    *out_text = vector.at(idx).c_str();
+    const std::vector<std::string>* v = (std::vector<std::string>*)data;
+    *out_text = v->at(n).c_str();
     return true;
 }
 
@@ -1675,7 +1674,7 @@ void ape::VLFTImgui::animationCreatorPanelGUI() {
     if (mpUpdateInfo->rePositionUI) {
         ImGui::SetNextWindowPos(ImVec2(0, 400));
     }
-    ImGui::SetNextWindowSize(ImVec2(250, 245), ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(250, 300), ImGuiCond_Once);
     ImGui::Begin("Animation editor", nullptr);
     const float width = ImGui::GetWindowWidth();
     const float height = ImGui::GetWindowHeight();
@@ -1711,6 +1710,10 @@ void ape::VLFTImgui::animationCreatorPanelGUI() {
 
         ImGui::PushItemWidth((width - 80) / 3);
         ImGui::Checkbox("Rotation", &isAnimInfoRotation);
+        if (isAnimInfoRotation) {
+            ImGui::PopItemWidth();
+            ImGui::PushItemWidth((width - 80) / 4);
+        }
         ImGui::InputFloat("time stamp", &inputs[0]);
         ImGui::InputFloat("x", &inputs[1]);
         ImGui::SameLine();
@@ -1740,18 +1743,19 @@ void ape::VLFTImgui::animationCreatorPanelGUI() {
         if (ImGui::Button("Add animation", ImVec2(110, 25)) && mpUpdateInfo->selectedModel != "") {
             saveAnimation(animName);
         }
-
+        ImGui::SameLine();
         if (ImGui::Button("Browse files", ImVec2(110, 25)))
         {
             openFileBrowser();
         }
+        ImGui::PushItemWidth(width - 125);
         if (mpUpdateInfo->modelAnimations.size() > 0) {
-            ImGui::ListBox("Animation list", 0,vectorGetter, static_cast<void*>(&mpUpdateInfo->modelAnimations), mpUpdateInfo->modelAnimations.size());
+            ImGui::Combo("Animation list", &mpUpdateInfo->selectedModelAnimation,vectorGetter, static_cast<void*>(&mpUpdateInfo->modelAnimations), mpUpdateInfo->modelAnimations.size());
             if (ImGui::Button("Play animation", ImVec2(110, 25)) && mpUpdateInfo->selectedModelAnimation > -1) {
                 mpUpdateInfo->playAnimation = true;
             }
         }
-        
+        ImGui::PopItemWidth();
     }
     ImGui::End();
 }
@@ -1789,31 +1793,35 @@ void ape::VLFTImgui::saveAnimation(std::string animationName) {
     }
    
     std::vector<uint8_t> bitInfo;
-    int sizeOfBin = animInfo.size() * 4 * 4;
-    int sizeOfTimeData = animInfo.size() * 4;
+    int numOfValues = 4;
+    int sizeOfType = 4;
+    if (isAnimInfoRotation)
+        numOfValues = 5;
+    int sizeOfBin = animInfo.size() * numOfValues * sizeOfType;
+    int sizeOfTimeData = animInfo.size() * sizeOfType;
     int sizeOfTranslationData = sizeOfBin - sizeOfTimeData;
     bitInfo.resize(sizeOfBin);
 
     for (size_t i = 0; i < animInfo.size(); i++)
     {
-        memcpy(&bitInfo[i * 4], &animInfo[i][0], (sizeof(float)));
+        memcpy(&bitInfo[i * sizeOfType], &animInfo[i][0], (sizeof(float)));
     }
-    std::vector<float> maxValues, minValues;
-    for (size_t i = 0; i < 3; i++)
+    std::vector<double> maxValues, minValues;
+    for (size_t i = 0; i < (numOfValues-1); i++)
     {
         maxValues.push_back(animInfo[0][i+1]);
         minValues.push_back(animInfo[0][i+1]);
     }
     for (size_t i = 0; i < animInfo.size(); i++)
     {
-        for (size_t j = 0; j < 3; j++)
+        for (size_t j = 0; j < (numOfValues - 1); j++)
         {
             if (maxValues[j] < animInfo[i][j + 1])
                 maxValues[j] = animInfo[i][j + 1];
             if (minValues[j] > animInfo[i][j + 1])
                 minValues[j] = animInfo[i][j + 1];
 
-            memcpy(&bitInfo[animInfo.size()*4+j*4+i * 12], &animInfo[i][j+1], (sizeof(float)));
+            memcpy(&bitInfo[animInfo.size()* sizeOfType +j* sizeOfType +i * (numOfValues-1)*sizeOfType], &animInfo[i][j+1], (sizeof(float)));
         }
         
     }
@@ -1842,8 +1850,12 @@ void ape::VLFTImgui::saveAnimation(std::string animationName) {
 
     tmpAccessor.byteOffset = sizeOfTimeData;
     tmpAccessor.type = TINYGLTF_TYPE_VEC3;
-    tmpAccessor.maxValues = std::vector<double>{ maxValues[0],maxValues[1],maxValues[2] };
-    tmpAccessor.minValues = std::vector<double>{ minValues[0],minValues[1],minValues[2] };
+    if (isAnimInfoRotation)
+        tmpAccessor.type = TINYGLTF_TYPE_VEC4;
+    std::vector<double> tmpMaxVector, tmpMinVector;
+
+    tmpAccessor.maxValues = maxValues;
+    tmpAccessor.minValues = minValues;
     gltfModel.accessors.push_back(tmpAccessor);
 
     tinygltf::Animation tmpAnimation = tinygltf::Animation();
@@ -1856,11 +1868,15 @@ void ape::VLFTImgui::saveAnimation(std::string animationName) {
     tmpAnimation.samplers[0].interpolation = "LINEAR";
     tmpAnimation.channels[0].sampler = 0;
     tmpAnimation.channels[0].target_path = "translation";
+    if(isAnimInfoRotation)
+        tmpAnimation.channels[0].target_path = "rotation";
     tmpAnimation.channels[0].target_node = 0;
     gltfModel.animations.push_back(tmpAnimation);
 
-    gltf_ctx.WriteGltfSceneToFile(&gltfModel, mpUpdateInfo->selectedModel.substr(0,mpUpdateInfo->selectedModel.find_last_of("\\")+1)+"newSkull.gltf");
+    gltf_ctx.WriteGltfSceneToFile(&gltfModel, mpUpdateInfo->selectedModel);
 
+
+    mpUpdateInfo->reloadModel = true;
     //std::vector<float> decodedNums;
 
     //std::vector<std::vector<float>> decodedVec3;
@@ -1883,7 +1899,6 @@ void ape::VLFTImgui::saveAnimation(std::string animationName) {
     //    }
     //}
 
-    std::cout << "success" << std::endl;
 }
 
 void ape::VLFTImgui::loadGltfModel(std::string filePath)
