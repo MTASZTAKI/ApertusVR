@@ -60,6 +60,14 @@ namespace ape
 
 		void Deserialize(RakNet::DeserializeParameters *deserializeParameters) override;
 
+		void playAnimation(std::string animationID) override;
+
+		void stopAnimation(std::string animationID) override;
+
+		std::string getRunningAnimation() override;
+
+		std::string getStoppedAnimation() override;
+
 	private:
 		ape::EventManagerImpl* mpEventManagerImpl;
 

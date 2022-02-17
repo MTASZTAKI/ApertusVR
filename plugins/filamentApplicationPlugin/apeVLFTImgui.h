@@ -109,6 +109,7 @@ struct updateInfo{
     std::string messageToSend ="";
     std::string changeKeyCode = "";
     std::string selectedModel = "";
+    std::string selectedCloneNode = "";
     std::string selectedItem = "";
     std::string rootOfSelected = "";
     std::string pickedItem = "";

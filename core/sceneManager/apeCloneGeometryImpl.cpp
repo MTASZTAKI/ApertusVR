@@ -138,3 +138,27 @@ void ape::CloneGeometryImpl::Deserialize(RakNet::DeserializeParameters * deseria
 	}
 	mVariableDeltaSerializer.EndDeserialize(&deserializationContext);
 }
+
+void ape::CloneGeometryImpl::playAnimation(std::string animationID)
+{
+	mRunningAnimation = animationID;
+	mIsAnimationRunChanged = !mIsAnimationRunChanged;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_PLAYANIMATION));
+}
+
+void ape::CloneGeometryImpl::stopAnimation(std::string animationID)
+{
+	mStoppedAnimation = animationID;
+	mIsAnimationStopChanged = !mIsAnimationStopChanged;
+	mpEventManagerImpl->fireEvent(ape::Event(mName, ape::Event::Type::GEOMETRY_CLONE_STOPANIMATION));
+}
+
+std::string ape::CloneGeometryImpl::getRunningAnimation()
+{
+	return mRunningAnimation;
+}
+
+std::string ape::CloneGeometryImpl::getStoppedAnimation()
+{
+	return mStoppedAnimation;
+}

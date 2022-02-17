@@ -1031,7 +1031,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					break;
                 case ape::Event::Type::GEOMETRY_FILE_PLAYANIMATION:
                 {
-                    if (parentNodeName != mUserName + mPostUserName) {
+                    if (parentNodeName != mUserName + mPostUserName && (parentNodeName.find("_vlftStudent") != std::string::npos || parentNodeName.find("_vlftTeacher") != std::string::npos)) {
                         app.playerAnimations[parentNodeName];
                         auto runningAnimation = std::stoi(geometryFile->getRunningAnimation());
                         if (runningAnimation == 3) {
@@ -1055,7 +1055,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 break;
                 case ape::Event::Type::GEOMETRY_FILE_STOPANIMATION:
                 {
-                    if (parentNodeName != mUserName + mPostUserName) {
+                    if (parentNodeName != mUserName + mPostUserName && (parentNodeName.find("_vlftStudent") != std::string::npos || parentNodeName.find("_vlftTeacher") != std::string::npos)) {
                         auto runningAnimation = std::stoi(geometryFile->getStoppedAnimation());
                         if (runningAnimation == 3) {
                             app.playerAnimations[parentNodeName].mouseDown = false;
@@ -1383,6 +1383,17 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     case ape::Event::Type::GEOMETRY_CLONE_CREATE:
                     {
                         app.mpInstancesMap[event.subjectName];
+                    }
+                    break;
+                    case ape::Event::Type::GEOMETRY_CLONE_PLAYANIMATION:
+                    {
+                       app.objectAnimations[event.subjectName].animationID = std::stoi(cloneGeometry->getRunningAnimation());
+                       app.objectAnimations[event.subjectName].startTime = app.currentTime;
+                    }
+                    break;
+                    case ape::Event::Type::GEOMETRY_CLONE_STOPANIMATION:
+                    {
+                        app.objectAnimations[event.subjectName].stopped = true;
                     }
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_PARENTNODE:
@@ -4252,6 +4263,7 @@ void ape::FilamentApplicationPlugin::Step()
                                         parent = app.mpTransformManager->getParent(tmInstance);
                                         std::string sceneNodeName = "";
 
+                                        app.updateinfo.selectedCloneNode = rootName;
                                         bool foundModelName = false;
                                       
                                         for (auto gmNames : app.geometryNameMap) {

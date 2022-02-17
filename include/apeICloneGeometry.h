@@ -58,6 +58,14 @@ namespace ape
 
 		virtual std::string getOwner() = 0;
 
+		virtual void playAnimation(std::string animationID) = 0;
+
+		virtual void stopAnimation(std::string animationID) = 0;
+
+		virtual std::string getRunningAnimation() = 0;
+
+		virtual std::string getStoppedAnimation() = 0;
+
 	};
 }
 

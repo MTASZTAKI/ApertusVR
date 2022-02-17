@@ -1752,7 +1752,9 @@ void ape::VLFTImgui::animationCreatorPanelGUI() {
         if (mpUpdateInfo->modelAnimations.size() > 0) {
             ImGui::Combo("Animation list", &mpUpdateInfo->selectedModelAnimation,vectorGetter, static_cast<void*>(&mpUpdateInfo->modelAnimations), mpUpdateInfo->modelAnimations.size());
             if (ImGui::Button("Play animation", ImVec2(110, 25)) && mpUpdateInfo->selectedModelAnimation > -1) {
-                mpUpdateInfo->playAnimation = true;
+                if (auto cloneNode = mpSceneManager->getNode(mpUpdateInfo->selectedCloneNode).lock()) {
+                    cloneNode;
+                }
             }
         }
         ImGui::PopItemWidth();

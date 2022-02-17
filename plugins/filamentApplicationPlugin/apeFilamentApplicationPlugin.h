@@ -201,6 +201,13 @@ struct AnimationData {
     int keyCurrentAnimation = -1;
 };
 
+struct ObjectAnimationData {
+    int animationID = -1;
+    float startTime = 0.0f;
+    bool stopped = false;
+    int nextAnimationID = -1;
+};
+
 struct App {
     Engine* engine;
     SimpleViewer* viewer;
@@ -337,6 +344,10 @@ struct App {
     AnimationData animationData;
     
     std::map<std::string, AnimationData> playerAnimations;
+
+    std::map<std::string, ObjectAnimationData> objectAnimations;
+
+    int currentObjectAnimationID = -1;
 
     std::map<std::string, SpaghettiLines> spaghettiLines;
     
