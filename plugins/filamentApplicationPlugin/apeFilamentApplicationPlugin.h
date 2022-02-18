@@ -204,8 +204,9 @@ struct AnimationData {
 struct ObjectAnimationData {
     int animationID = -1;
     float startTime = 0.0f;
-    bool stopped = false;
+    bool toPlay = true;
     int nextAnimationID = -1;
+    bool fullCycle = false;
 };
 
 struct App {

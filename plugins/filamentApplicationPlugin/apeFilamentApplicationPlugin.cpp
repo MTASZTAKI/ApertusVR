@@ -1389,11 +1389,13 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     {
                        app.objectAnimations[event.subjectName].animationID = std::stoi(cloneGeometry->getRunningAnimation());
                        app.objectAnimations[event.subjectName].startTime = app.currentTime;
+                       app.objectAnimations[event.subjectName].toPlay = true;
+                       APE_LOG_DEBUG("PLAY CLONE ANIMATION");
                     }
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_STOPANIMATION:
                     {
-                        app.objectAnimations[event.subjectName].stopped = true;
+                        app.objectAnimations[event.subjectName].toPlay = false;
                     }
                     break;
                     case ape::Event::Type::GEOMETRY_CLONE_PARENTNODE:
@@ -4696,6 +4698,28 @@ void ape::FilamentApplicationPlugin::Step()
         else if(app.updateinfo.IsPlayClicked){
             playAnimations(now);
         }
+
+        for (auto& objectAnim : app.objectAnimations) {
+            if (app.updateinfo.inRoom && app.mpInstancesMap.find(objectAnim.first) != app.mpInstancesMap.end()) {
+                auto animator = app.mpInstancesMap[objectAnim.first].mpInstance->getAnimator();
+                double timeDiff;
+                auto animID = objectAnim.second.animationID;
+                if (objectAnim.second.toPlay) {
+                    timeDiff = now - objectAnim.second.startTime;
+
+                    if (timeDiff > animator->getAnimationDuration(animID)) {
+                        APE_LOG_DEBUG("PLAY CLONE ANIMATION FINISHED");
+                        objectAnim.second.toPlay = false;
+                        animator->applyAnimation(animID, 0);
+                    }
+                    if (timeDiff <= animator->getAnimationDuration(animID)) {
+                        animator->applyAnimation(animID, timeDiff);
+                    }
+                }
+                animator->updateBoneMatrices();
+            }
+        }
+
         for (auto &playerAnim : app.playerAnimations) {
             if (app.updateinfo.inRoom && app.mpInstancesMap.find(playerAnim.first) != app.mpInstancesMap.end()) {
                 auto animator = app.mpInstancesMap[playerAnim.first].mpInstance->getAnimator();

@@ -1752,8 +1752,8 @@ void ape::VLFTImgui::animationCreatorPanelGUI() {
         if (mpUpdateInfo->modelAnimations.size() > 0) {
             ImGui::Combo("Animation list", &mpUpdateInfo->selectedModelAnimation,vectorGetter, static_cast<void*>(&mpUpdateInfo->modelAnimations), mpUpdateInfo->modelAnimations.size());
             if (ImGui::Button("Play animation", ImVec2(110, 25)) && mpUpdateInfo->selectedModelAnimation > -1) {
-                if (auto cloneNode = mpSceneManager->getNode(mpUpdateInfo->selectedCloneNode).lock()) {
-                    cloneNode;
+                if (auto userGeometry = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(mpUpdateInfo->selectedCloneNode).lock())) {
+                    userGeometry->playAnimation(std::to_string(mpUpdateInfo->selectedModelAnimation));
                 }
             }
         }
