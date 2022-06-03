@@ -34,6 +34,8 @@ SOFTWARE.*/
 #include "apeIIndexedFaceSetGeometry.h"
 #include "apeIManualMaterial.h"
 #include "apeITextGeometry.h"
+#include "apeIFileGeometry.h"
+#include "apeIIndexedLineSetGeometry.h"
 
 ape::PluginManagerImpl* gpPluginManagerImpl;
 ape::EventManagerImpl* gpEventManagerImpl;
@@ -87,13 +89,14 @@ void ApeSystemStart(char* configFolderPath)
 	gpCoreConfigImpl = new ape::CoreConfigImpl(std::string(configFolderPath));
 	gpEventManagerImpl = new ape::EventManagerImpl();
 	gpSceneManagerImpl = new ape::SceneManagerImpl();
+	//gpSceneManagerImpl->createNode(std::string("StartNode"), true, gpCoreConfigImpl->getNetworkGUID());
 }
 
 void ApeSystemStop()
 {
 	delete gpEventManagerImpl;
 	delete gpSceneManagerImpl;
-	delete gpPluginManagerImpl;
+	//delete gpPluginManagerImpl;
 	delete gpCoreConfigImpl;
 	delete gpLogManagerImpl;
 }
@@ -104,7 +107,7 @@ void ApeEventManager_RegisterCallback(ANSWERCB fp)
 	gpEventManagerImpl->connectEvent(ape::Event::Group::NODE, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(ApeEventListener, std::placeholders::_1));
-	gpEventManagerImpl->connectEvent(ape::Event::Group::NODE, std::bind(ApeEventListener, std::placeholders::_1));
+	/*gpEventManagerImpl->connectEvent(ape::Event::Group::NODE, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::LIGHT, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::CAMERA, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(ApeEventListener, std::placeholders::_1));
@@ -127,8 +130,9 @@ void ApeEventManager_RegisterCallback(ANSWERCB fp)
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_RAY, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::SKY, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::WATER, std::bind(ApeEventListener, std::placeholders::_1));
-	gpEventManagerImpl->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(ApeEventListener, std::placeholders::_1));
+	gpEventManagerImpl->connectEvent(ape::Event::Group::POINT_CLOUD, std::bind(ApeEventListener, std::placeholders::_1));*/
 }
+
 
 bool ApeSceneManager_GetIndexedFaceSet_GetVerticesSize(char* name, int* size)
 {
@@ -272,6 +276,50 @@ bool ApeSceneManager_GetNode_GetParent(char* name, char* parent)
 	return false;
 }
 
+bool ApeSceneManager_CreateNode(char* name)
+{
+	gpSceneManagerImpl->createNode(std::string(name), true, gpCoreConfigImpl->getNetworkGUID());
+
+	return true;
+}
+
+bool ApeSceneManager_DeleteNode(char* name)
+{
+	gpSceneManagerImpl->deleteNode(std::string(name));
+	return true;
+}
+
+bool ApeSceneManager_GetNode_DetachFromParent(char* name)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		node->detachFromParentNode();
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_GetCreator(char* name, char* creator)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		creator = new char[node->getCreator().length() + 1];
+		strcpy(creator, node->getCreator().c_str());
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_GetChildrenVisibility(char* name, bool* visible)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		*visible = node->getChildrenVisibility();
+		return true;
+	}
+	return false;
+}
+
 bool ApeSceneManager_GetText_GetCaption(char* name, char* caption)
 {
 	if (auto apeTextGeometry = std::static_pointer_cast<ape::ITextGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
@@ -287,4 +335,232 @@ bool ApeSceneManager_GetText_GetCaption(char* name, char* caption)
 	return false;
 }
 
+bool ApeSceneManager_GetNode_SetPosition(char* name, float* position)
+{
 
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		node->setPosition(ape::Vector3(position[0], position[1], position[2]));
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_SetOrientation(char* name, float* orientation)
+{
+
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		node->setOrientation(ape::Quaternion(orientation[0], orientation[1], orientation[2], orientation[3]));
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_SetScale(char* name, float* scale)
+{
+
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		node->setScale(ape::Vector3(scale[0], scale[1], scale[2]));
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_SetParentNode(char* name, char* parent)
+{
+
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		if (auto parentNode = gpSceneManagerImpl->getNode(std::string(parent)).lock())
+		{
+			node->setParentNode(parentNode);
+			return true;
+		}
+		
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_SetChildrenVisiblity(char* name, bool* visible)
+{
+
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		node->setChildrenVisibility(*visible);
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_CreateFileGeometry(char* name)
+{
+	gpSceneManagerImpl->createEntity(std::string(name), ape::Entity::GEOMETRY_FILE, true, gpCoreConfigImpl->getNetworkGUID());
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_GetParentNode(char* name, char* parent)
+{
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		if (auto parentNode = geometryFile->getParentNode().lock()) {
+			
+			parent = new char[parentNode->getName().length() + 1];
+			strcpy(parent, parentNode->getName().c_str());
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_SetParentNode(char* name, char* parent)
+{
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		if (auto parentNode = gpSceneManagerImpl->getNode(std::string(parent)).lock())
+		{
+			geometryFile->setParentNode(parentNode);
+			return true;
+		}
+
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_PlayAnimation(char* name, char* animationID)
+{
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		geometryFile->playAnimation(std::string(animationID));
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_StopAnimation(char* name, char* animationID)
+{
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		geometryFile->stopAnimation(std::string(animationID));
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_StopAnimation(char* name, char* fileName)
+{
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		geometryFile->setFileName(std::string(fileName));
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_GetFileName(char* name, char* fileName)
+{
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		fileName = new char[geometryFile->getFileName().length()+1];
+		strcpy(fileName, geometryFile->getFileName().c_str());
+		return true;
+	}
+	return false;
+}
+
+
+bool ApeSceneManager_GetFileGeometry_Delete(char* name)
+{
+
+	gpSceneManagerImpl->deleteEntity(std::string(name));
+	return true;
+}
+
+bool ApeSceneManager_GetGeometryIndexedLineSet_CreateIndexedLineSet(char* name)
+{
+	gpSceneManagerImpl->createEntity(std::string(name), ape::Entity::GEOMETRY_INDEXEDLINESET, true, gpCoreConfigImpl->getNetworkGUID());
+	if (auto geometryFile = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_GetParentNode(char* name, char* parent)
+{
+
+	if (auto indexedLineSet = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		if (auto parentNode = indexedLineSet->getParentNode().lock())
+		{
+			parent = new char[parentNode->getName().length() + 1];
+			strcpy(parent, parentNode->getName().c_str());
+			return true;
+		}
+
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_SetParameters(char* name, float* coord, int* indices, float* colors, int* size)
+{
+
+	if (auto indexedLineSet = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		auto params = indexedLineSet->getParameters();
+		auto pCoords = params.getCoordinates();
+		auto pIndices = params.getIndices();
+		for (size_t i = 0; i < *size; i++)
+		{
+			pCoords.push_back(coord[i*3]);
+			pCoords.push_back(coord[i*3+1]);
+			pCoords.push_back(coord[i*3+2]);
+			pIndices.push_back(indices[i]);
+		}
+		indexedLineSet->setParameters(pCoords, pIndices, ape::Color(colors[0],colors[1], colors[2]));
+		return true;
+
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_GetParameters(char* name, float* coord, int* indices, float* colors, int* size)
+{
+
+	if (auto indexedLineSet = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		auto params = indexedLineSet->getParameters();
+		auto pCoords = params.getCoordinates();
+		auto pIndices = params.getIndices();
+		auto pColor = params.getColor();
+		coord = new float[pCoords.size()];
+		indices = new int[pIndices.size()];
+		for (size_t i = 0; i < pIndices.size(); i++)
+		{
+			coord[i*3] = pCoords[i*3];
+			coord[i*3+1] = pCoords[i*3+1];
+			coord[i*3+2] = pCoords[i*3+2];
+			indices[i] = pIndices[i];
+		}
+		size[0] = int(pIndices.size());
+		colors = new float[4];
+		colors[0] = pColor.r;
+		colors[1] = pColor.g;
+		colors[2] = pColor.b;
+		colors[3] = pColor.a;
+		return true;
+
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_Delete(char* name)
+{
+	gpSceneManagerImpl->deleteEntity(std::string(name));
+	return true;
+}

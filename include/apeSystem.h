@@ -50,6 +50,7 @@ extern "C" APE_SYSTEM_DLL_EXPORT void ApeSystemStop();
 
 typedef void(__stdcall* ANSWERCB)(char*, int);
 static ANSWERCB cb;
+
 extern "C" APE_SYSTEM_DLL_EXPORT void ApeEventManager_RegisterCallback(ANSWERCB fp);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVerticesSize(char* name, int* size);
@@ -72,7 +73,58 @@ extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetScale(char* nam
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetParent(char* name, char* parent);
 
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetChildrenVisibility(char* name, bool* visible);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_DetachFromParent(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_CreateNode(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_DeleteNode(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetCreator(char* name, char* creator);
+
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetText_GetCaption(char* name, char* caption);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetPosition(char* name, float* position);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetOrientation(char* name, float* orientation);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetScale(char* name, float* scale);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetParentNode(char* name, char* parent);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetChildrenVisibility(char* name, bool* visible);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_CreateFileGeometry(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_GetParentNode(char* name, char *parent);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_SetParentNode(char* name, char *parent);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_PlayAnimation(char* name, char * animationID);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_StopAnimation(char* name, char * animationID);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_SetFileName(char* name, char * fileName);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_GetFileName(char* name, char * fileName);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_Delete(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryIndexedLineSet_CreateIndexedLineSet(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryIndexedLineSet_GetParentNode(char* name, char* parent);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryIndexedLineSet_SetParentNode(char* name, char* parent);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryIndexedLineSet_SetParameters(char* name, float* coord, int* indices, float* colors, int* size);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryIndexedLineSet_GetParameters(char* name, float* coord, int* indices, float* colors, int* size);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryIndexedLineSet_Delete(char* name);
+
+
+
 
 #endif
 
