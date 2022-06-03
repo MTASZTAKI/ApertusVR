@@ -123,8 +123,27 @@ extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryIndexedLineSet_
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryIndexedLineSet_Delete(char* name);
 
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryClone_CreateGeometryClone(char* name);
 
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryClone_GetParentNode(char* name, char* parent);
 
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryClone_SetParentNode(char* name, char* parent);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryClone_GetSourceGeomtry(char* name, char* sourceGeometry);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryClone_SetSourceGeomtry(char* name, char* sourceGeometry);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryClone_GetSourceGeomtryGroupName(char* name, char* sourceGeometryGroupName);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryClone_SetSourceGeomtryGroupName(char* name, char* sourceGeometryGroupName);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetGeometryClone_Delete(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetText_CreateTextGeometry(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetText_Delete(char* name);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetText_SetCaption(char* name, char* caption);
 
 #endif
 

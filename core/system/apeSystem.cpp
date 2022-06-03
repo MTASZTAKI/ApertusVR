@@ -36,6 +36,7 @@ SOFTWARE.*/
 #include "apeITextGeometry.h"
 #include "apeIFileGeometry.h"
 #include "apeIIndexedLineSetGeometry.h"
+#include "apeICloneGeometry.h"
 
 ape::PluginManagerImpl* gpPluginManagerImpl;
 ape::EventManagerImpl* gpEventManagerImpl;
@@ -452,7 +453,7 @@ bool ApeSceneManager_GetFileGeometry_StopAnimation(char* name, char* animationID
 	return false;
 }
 
-bool ApeSceneManager_GetFileGeometry_StopAnimation(char* name, char* fileName)
+bool ApeSceneManager_GetFileGeometry_SetFileName(char* name, char* fileName)
 {
 	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
@@ -491,7 +492,7 @@ bool ApeSceneManager_GetGeometryIndexedLineSet_CreateIndexedLineSet(char* name)
 	return false;
 }
 
-bool ApeSceneManager_GetFileGeometry_GetParentNode(char* name, char* parent)
+bool ApeSceneManager_GetGeometryIndexedLineSet_GetParentNode(char* name, char* parent)
 {
 
 	if (auto indexedLineSet = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
@@ -507,7 +508,7 @@ bool ApeSceneManager_GetFileGeometry_GetParentNode(char* name, char* parent)
 	return false;
 }
 
-bool ApeSceneManager_GetFileGeometry_SetParameters(char* name, float* coord, int* indices, float* colors, int* size)
+bool ApeSceneManager_GetGeometryIndexedLineSet_SetParameters(char* name, float* coord, int* indices, float* colors, int* size)
 {
 
 	if (auto indexedLineSet = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
@@ -529,7 +530,7 @@ bool ApeSceneManager_GetFileGeometry_SetParameters(char* name, float* coord, int
 	return false;
 }
 
-bool ApeSceneManager_GetFileGeometry_GetParameters(char* name, float* coord, int* indices, float* colors, int* size)
+bool ApeSceneManager_GetGeometryIndexedLineSet_GetParameters(char* name, float* coord, int* indices, float* colors, int* size)
 {
 
 	if (auto indexedLineSet = std::static_pointer_cast<ape::IIndexedLineSetGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
@@ -559,8 +560,129 @@ bool ApeSceneManager_GetFileGeometry_GetParameters(char* name, float* coord, int
 	return false;
 }
 
-bool ApeSceneManager_GetFileGeometry_Delete(char* name)
+bool ApeSceneManager_GetGeometryIndexedLineSet_Delete(char* name)
 {
 	gpSceneManagerImpl->deleteEntity(std::string(name));
 	return true;
+}
+
+bool ApeSceneManager_GetGeometryClone_CreateGeometryClone(char* name)
+{
+	gpSceneManagerImpl->createEntity(std::string(name), ape::Entity::GEOMETRY_CLONE, true, gpCoreConfigImpl->getNetworkGUID());
+	if (auto geometryFile = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetGeometryClone_GetParentNode(char* name, char* parent)
+{
+	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		if (auto parentNode = geometryClone->getParentNode().lock()) {
+
+			parent = new char[parentNode->getName().length() + 1];
+			strcpy(parent, parentNode->getName().c_str());
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetGeometryClone_SetParentNode(char* name, char* parent)
+{
+	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		if (auto parentNode = gpSceneManagerImpl->getNode(std::string(parent)).lock())
+		{
+			geometryClone->setParentNode(parentNode);
+			return true;
+		}
+
+	}
+	return false;
+}
+
+
+bool ApeSceneManager_GetGeometryClone_GetSourceGeomtry(char* name, char* sourceGeometry)
+{
+	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		if (auto sourceGeom = std::static_pointer_cast<ape::Geometry>(geometryClone->getSourceGeometry().lock())) {
+			sourceGeometry = new char[sourceGeom->getName().length() + 1];
+			strcpy(sourceGeometry, sourceGeom->getName().c_str());
+			return true;
+		}
+
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetGeometryClone_SetSourceGeomtry(char* name, char* sourceGeometry)
+{
+	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		if (auto sourceGeom = std::static_pointer_cast<ape::Geometry>(gpSceneManagerImpl->getEntity(std::string(sourceGeometry)).lock())) {
+			geometryClone->setSourceGeometry(sourceGeom);
+			return true;
+		}
+
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetGeometryClone_GetSourceGeomtryGroupName(char* name, char* sourceGeometryGroupName)
+{
+	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		
+		sourceGeometryGroupName = new char[geometryClone->getSourceGeometryGroupName().length() + 1];
+		strcpy(sourceGeometryGroupName, geometryClone->getSourceGeometryGroupName().c_str());
+		return true;
+
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetGeometryClone_SetSourceGeomtryGroupName(char* name, char* sourceGeometryGroupName)
+{
+	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		geometryClone->setSourceGeometryGroupName(std::string(sourceGeometryGroupName));
+		return true;
+
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetGeometryClone_Delete(char* name)
+{
+	gpSceneManagerImpl->deleteEntity(std::string(name));
+	return true;
+}
+
+bool ApeSceneManager_GetText_CreateTextGeometry(char* name)
+{
+	gpSceneManagerImpl->createEntity(std::string(name), ape::Entity::GEOMETRY_TEXT, true, gpCoreConfigImpl->getNetworkGUID());
+	if (auto geometryFile = std::static_pointer_cast<ape::ITextGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetText_Delete(char* name)
+{
+	gpSceneManagerImpl->deleteEntity(std::string(name));
+	return true;
+}
+bool ApeSceneManager_GetText_SetCaption(char* name, char* caption) 
+{
+	if (auto apeTextGeometry = std::static_pointer_cast<ape::ITextGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		apeTextGeometry->setCaption(std::string(caption));
+		return true;
+	}
+	return false;
 }
