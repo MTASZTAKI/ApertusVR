@@ -453,6 +453,28 @@ bool ApeSceneManager_GetFileGeometry_StopAnimation(char* name, char* animationID
 	return false;
 }
 
+bool ApeSceneManager_GetFileGeometry_GetRunningAnimation(char* name, char* animationID)
+{
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		animationID = new char[geometryFile->getRunningAnimation().length() + 1];
+		strcpy(animationID, geometryFile->getRunningAnimation().c_str());
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetFileGeometry_GetStoppedAnimation(char* name, char* animationID)
+{
+	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
+	{
+		animationID = new char[geometryFile->getStoppedAnimation().length() + 1];
+		strcpy(animationID, geometryFile->getStoppedAnimation().c_str());
+		return true;
+	}
+	return false;
+}
+
 bool ApeSceneManager_GetFileGeometry_SetFileName(char* name, char* fileName)
 {
 	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))

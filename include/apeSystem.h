@@ -105,6 +105,10 @@ extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_PlayAnimat
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_StopAnimation(char* name, char * animationID);
 
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_GetRunningAnimation(char* name, char * animationID);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_GetStoppedAnimation(char* name, char * animationID);
+
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_SetFileName(char* name, char * fileName);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_GetFileName(char* name, char * fileName);
