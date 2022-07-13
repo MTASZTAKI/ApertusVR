@@ -53,6 +53,10 @@ static ANSWERCB cb;
 
 extern "C" APE_SYSTEM_DLL_EXPORT void ApeEventManager_RegisterCallback(ANSWERCB fp);
 
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetEventNumber(int* eventNumber);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetEvents(char** subjectNames, int* eventTypes);
+
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVerticesSize(char* name, int* size);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetIndexedFaceSet_GetVertices(char* name, float* vertices);
@@ -73,7 +77,7 @@ extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetScale(char* nam
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetParent(char* name, char* parent);
 
-extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetChildrenVisibility(char* name, bool* visible);
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetChildrenVisibility(char* name, int* visible);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_DetachFromParent(char* name);
 
@@ -93,7 +97,11 @@ extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetScale(char* nam
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetParentNode(char* name, char* parent);
 
-extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetChildrenVisibility(char* name, bool* visible);
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetChildrenVisibility(char* name, int* visible);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_GetVisibility(char* name, int* visible);
+
+extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetNode_SetVisibility(char* name, int* visible);
 
 extern "C" APE_SYSTEM_DLL_EXPORT bool ApeSceneManager_GetFileGeometry_CreateFileGeometry(char* name);
 

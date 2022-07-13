@@ -37,12 +37,14 @@ SOFTWARE.*/
 #include "apeIFileGeometry.h"
 #include "apeIIndexedLineSetGeometry.h"
 #include "apeICloneGeometry.h"
+#include "apeDoubleQueue.h"
 
 ape::PluginManagerImpl* gpPluginManagerImpl;
 ape::EventManagerImpl* gpEventManagerImpl;
 ape::LogManagerImpl* gpLogManagerImpl;
 ape::SceneManagerImpl* gpSceneManagerImpl;
-ape::CoreConfigImpl* gpCoreConfigImpl;
+ape::CoreConfigImpl* gpCoreConfigImpl; 
+ape::DoubleQueue<std::pair<std::string, int>> mEventDoubleQueue;
 
 void ape::System::Start(const char* configFolderPath, bool isBlocking, std::function<void()> userThreadFunction, int step_interval)
 {
@@ -64,7 +66,6 @@ void ape::System::Start(const char* configFolderPath, bool isBlocking, std::func
     
     std::this_thread::sleep_for(std::chrono::milliseconds(step_interval));
 	gpPluginManagerImpl->callStepFunc();
-        
 }
 
 void ape::System::Stop()
@@ -81,7 +82,8 @@ void ApeEventListener(const ape::Event& event)
 {
 	auto subjectName = event.subjectName;
 	auto eventType = event.type;
-	cb(&subjectName[0], eventType);
+	mEventDoubleQueue.push(std::pair(subjectName, eventType));
+	//cb(&subjectName[0], eventType);
 }
 
 void ApeSystemStart(char* configFolderPath)
@@ -102,18 +104,44 @@ void ApeSystemStop()
 	delete gpLogManagerImpl;
 }
 
+void stringToCharPTR(std::string str, char* charPtr) {
+	for (int i = 0; i < str.length(); i++)
+	{
+		charPtr[i] = str[i];
+	}
+	charPtr[str.length()] = '\0';
+}
+
+bool ApeSceneManager_GetEventNumber(int* eventNumber) {
+	mEventDoubleQueue.swap();
+	eventNumber[0] = mEventDoubleQueue.sizePop();
+	return true;
+}
+
+bool ApeSceneManager_GetEvents(char** subjectNames, int* eventTypes) {
+	int i = 0;
+	while (!mEventDoubleQueue.emptyPop()) {
+		auto apeEvent = mEventDoubleQueue.front();
+		stringToCharPTR(apeEvent.first, subjectNames[i]);
+		eventTypes[i] = apeEvent.second;
+		i++;
+		mEventDoubleQueue.pop();
+	}
+	return true;
+}
+
 void ApeEventManager_RegisterCallback(ANSWERCB fp)
 {
 	cb = fp;
 	gpEventManagerImpl->connectEvent(ape::Event::Group::NODE, std::bind(ApeEventListener, std::placeholders::_1));
-	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(ApeEventListener, std::placeholders::_1));
+	//gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(ApeEventListener, std::placeholders::_1));
-	/*gpEventManagerImpl->connectEvent(ape::Event::Group::NODE, std::bind(ApeEventListener, std::placeholders::_1));
-	gpEventManagerImpl->connectEvent(ape::Event::Group::LIGHT, std::bind(ApeEventListener, std::placeholders::_1));
-	gpEventManagerImpl->connectEvent(ape::Event::Group::CAMERA, std::bind(ApeEventListener, std::placeholders::_1));
+	gpEventManagerImpl->connectEvent(ape::Event::Group::NODE, std::bind(ApeEventListener, std::placeholders::_1));
+	//gpEventManagerImpl->connectEvent(ape::Event::Group::LIGHT, std::bind(ApeEventListener, std::placeholders::_1));
+	//gpEventManagerImpl->connectEvent(ape::Event::Group::CAMERA, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_FILE, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_TEXT, std::bind(ApeEventListener, std::placeholders::_1));
-	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(ApeEventListener, std::placeholders::_1));
+	/*gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_PLANE, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_BOX, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_CYLINDER, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_CONE, std::bind(ApeEventListener, std::placeholders::_1));
@@ -121,9 +149,9 @@ void ApeEventManager_RegisterCallback(ANSWERCB fp)
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_SPHERE, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_TORUS, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDFACESET, std::bind(ApeEventListener, std::placeholders::_1));
-	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(ApeEventListener, std::placeholders::_1));
+	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_INDEXEDLINESET, std::bind(ApeEventListener, std::placeholders::_1));*/
 	gpEventManagerImpl->connectEvent(ape::Event::Group::GEOMETRY_CLONE, std::bind(ApeEventListener, std::placeholders::_1));
-	gpEventManagerImpl->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(ApeEventListener, std::placeholders::_1));
+	/*gpEventManagerImpl->connectEvent(ape::Event::Group::MATERIAL_FILE, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::MATERIAL_MANUAL, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::TEXTURE_MANUAL, std::bind(ApeEventListener, std::placeholders::_1));
 	gpEventManagerImpl->connectEvent(ape::Event::Group::TEXTURE_FILE, std::bind(ApeEventListener, std::placeholders::_1));
@@ -207,12 +235,14 @@ bool ApeSceneManager_GetIndexedFaceSet_GetParent(char* name, char* parent)
 	{
 		if (auto apeParent = indexedFaceSet->getParentNode().lock())
 		{
+			
 			auto apeParentName = apeParent->getName();
-			for (int i = 0; i < apeParentName.length(); i++)
+			stringToCharPTR(apeParentName, parent);
+			/*for (int i = 0; i < apeParentName.length(); i++)
 			{
 				parent[i] = apeParentName[i];
 			}
-			parent[apeParentName.length()] = '\0';
+			parent[apeParentName.length()] = '\0';*/
 			return true;
 		}
 	}
@@ -266,11 +296,7 @@ bool ApeSceneManager_GetNode_GetParent(char* name, char* parent)
 		if (auto apeParent = node->getParentNode().lock())
 		{
 			auto apeParentName = apeParent->getName();
-			for (int i = 0; i < apeParentName.length(); i++)
-			{
-				parent[i] = apeParentName[i];
-			}
-			parent[apeParentName.length()] = '\0';
+			stringToCharPTR(apeParentName, parent);
 			return true;
 		}
 	}
@@ -304,18 +330,46 @@ bool ApeSceneManager_GetNode_GetCreator(char* name, char* creator)
 {
 	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
 	{
-		creator = new char[node->getCreator().length() + 1];
-		strcpy(creator, node->getCreator().c_str());
+		stringToCharPTR(node->getCreator(), creator);
 		return true;
 	}
 	return false;
 }
 
-bool ApeSceneManager_GetNode_GetChildrenVisibility(char* name, bool* visible)
+bool ApeSceneManager_GetNode_GetChildrenVisibility(char* name, int* visible)
 {
 	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
 	{
-		*visible = node->getChildrenVisibility();
+		if (node->getChildrenVisibility())
+			visible[0] = 1;
+		else
+			visible[0] = 0;
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_GetVisibility(char* name, int* visible)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		if (node->isVisible())
+			visible[0] = 1;
+		else
+			visible[0] = 0;
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_SetVisibility(char* name, int* visible)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		if (visible[0] == 1)
+			node->setVisible(true);
+		else
+			node->setVisible(false);
 		return true;
 	}
 	return false;
@@ -326,11 +380,12 @@ bool ApeSceneManager_GetText_GetCaption(char* name, char* caption)
 	if (auto apeTextGeometry = std::static_pointer_cast<ape::ITextGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
 		auto apeCaption = apeTextGeometry->getCaption();
-		for (int i = 0; i < apeCaption.length(); i++)
+		stringToCharPTR(apeCaption, caption);
+		/*for (int i = 0; i < apeCaption.length(); i++)
 		{
 			caption[i] = apeCaption[i];
 		}
-		caption[apeCaption.length()] = '\0';
+		caption[apeCaption.length()] = '\0';*/
 		return true;
 	}
 	return false;
@@ -384,16 +439,20 @@ bool ApeSceneManager_GetNode_SetParentNode(char* name, char* parent)
 	return false;
 }
 
-bool ApeSceneManager_GetNode_SetChildrenVisiblity(char* name, bool* visible)
+bool ApeSceneManager_GetNode_SetChildrenVisiblity(char* name, int* visible)
 {
 
 	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
 	{
-		node->setChildrenVisibility(*visible);
+		if (visible[0] == 1)
+			node->setChildrenVisibility(true);
+		else
+			node->setChildrenVisibility(false);
 		return true;
 	}
 	return false;
 }
+
 
 bool ApeSceneManager_GetFileGeometry_CreateFileGeometry(char* name)
 {
@@ -411,8 +470,8 @@ bool ApeSceneManager_GetFileGeometry_GetParentNode(char* name, char* parent)
 	{
 		if (auto parentNode = geometryFile->getParentNode().lock()) {
 			
-			parent = new char[parentNode->getName().length() + 1];
-			strcpy(parent, parentNode->getName().c_str());
+			auto apeParentName = parentNode->getName();
+			stringToCharPTR(apeParentName, parent);
 			return true;
 		}
 	}
@@ -457,8 +516,8 @@ bool ApeSceneManager_GetFileGeometry_GetRunningAnimation(char* name, char* anima
 {
 	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		animationID = new char[geometryFile->getRunningAnimation().length() + 1];
-		strcpy(animationID, geometryFile->getRunningAnimation().c_str());
+		auto runningAnim = geometryFile->getRunningAnimation();
+		stringToCharPTR(runningAnim, animationID);
 		return true;
 	}
 	return false;
@@ -468,8 +527,8 @@ bool ApeSceneManager_GetFileGeometry_GetStoppedAnimation(char* name, char* anima
 {
 	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		animationID = new char[geometryFile->getStoppedAnimation().length() + 1];
-		strcpy(animationID, geometryFile->getStoppedAnimation().c_str());
+		auto runningAnim = geometryFile->getStoppedAnimation();
+		stringToCharPTR(runningAnim, animationID);
 		return true;
 	}
 	return false;
@@ -489,8 +548,8 @@ bool ApeSceneManager_GetFileGeometry_GetFileName(char* name, char* fileName)
 {
 	if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		fileName = new char[geometryFile->getFileName().length()+1];
-		strcpy(fileName, geometryFile->getFileName().c_str());
+		auto apeFileName = geometryFile->getFileName();
+		stringToCharPTR(apeFileName, fileName);
 		return true;
 	}
 	return false;
@@ -521,8 +580,8 @@ bool ApeSceneManager_GetGeometryIndexedLineSet_GetParentNode(char* name, char* p
 	{
 		if (auto parentNode = indexedLineSet->getParentNode().lock())
 		{
-			parent = new char[parentNode->getName().length() + 1];
-			strcpy(parent, parentNode->getName().c_str());
+			auto apeParentNode = parentNode->getName();
+			stringToCharPTR(apeParentNode, parent);
 			return true;
 		}
 
@@ -603,9 +662,9 @@ bool ApeSceneManager_GetGeometryClone_GetParentNode(char* name, char* parent)
 	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
 		if (auto parentNode = geometryClone->getParentNode().lock()) {
-
-			parent = new char[parentNode->getName().length() + 1];
-			strcpy(parent, parentNode->getName().c_str());
+			
+			auto apeParentNode = parentNode->getName();
+			stringToCharPTR(apeParentNode, parent);
 			return true;
 		}
 	}
@@ -632,8 +691,9 @@ bool ApeSceneManager_GetGeometryClone_GetSourceGeomtry(char* name, char* sourceG
 	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
 		if (auto sourceGeom = std::static_pointer_cast<ape::Geometry>(geometryClone->getSourceGeometry().lock())) {
-			sourceGeometry = new char[sourceGeom->getName().length() + 1];
-			strcpy(sourceGeometry, sourceGeom->getName().c_str());
+
+			auto apeSourceGeometry = sourceGeom->getName();
+			stringToCharPTR(apeSourceGeometry, sourceGeometry);
 			return true;
 		}
 
@@ -658,9 +718,8 @@ bool ApeSceneManager_GetGeometryClone_GetSourceGeomtryGroupName(char* name, char
 {
 	if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(gpSceneManagerImpl->getEntity(std::string(name)).lock()))
 	{
-		
-		sourceGeometryGroupName = new char[geometryClone->getSourceGeometryGroupName().length() + 1];
-		strcpy(sourceGeometryGroupName, geometryClone->getSourceGeometryGroupName().c_str());
+		auto apeSourceGeometryGroupName = geometryClone->getSourceGeometryGroupName();
+		stringToCharPTR(apeSourceGeometryGroupName, sourceGeometryGroupName);
 		return true;
 
 	}

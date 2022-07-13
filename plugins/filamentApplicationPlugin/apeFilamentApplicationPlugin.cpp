@@ -221,7 +221,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         if(nodeName != parentNodeName && nodeName.find_first_of(".") != std::string::npos){
                             std::string nodeClone = nodeName.substr(0,nodeName.find_last_of("."));
                             std::string nodeGltfName = nodeName.substr(nodeName.find_last_of(".")+1);
-                            if(idGltfMap.find(parentNodeName) != idGltfMap.end())
+                            if(idGltfMap.find(nodeName) != idGltfMap.end())
                                 nodeGltfName = idGltfMap[nodeName].substr( idGltfMap[nodeName].find_last_of(".")+1);
                             
                             if(app.mpInstancesMap.find(nodeClone) != app.mpInstancesMap.end() && app.mpInstancesMap[nodeClone].index > -1){
