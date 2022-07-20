@@ -443,23 +443,23 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                             }
                         }
                         for (auto studentWP : mStudents)
+                        {
+                            if (auto student = studentWP.lock())
+                            {
+                                if (event.subjectName == student->getName())
                                 {
-                                    if (auto student = studentWP.lock())
-                                    {
-                                        if (event.subjectName == student->getName())
-                                        {
-                                            std::chrono::milliseconds timeStamp = std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now().time_since_epoch());
-                                            std::stringstream data;
-                                            std::size_t pos = event.subjectName.find("_vlftStudent");
-                                            std::string studentName = event.subjectName;
-                                            if(pos != std::string::npos){
-                                                studentName = event.subjectName.substr(0,pos);
-                                            }
-                                            data << std::to_string(timeStamp.count()) << " name: " << studentName << " pos: " << student->getDerivedPosition().toString() << " ori: "  << student->getDerivedOrientation().toString() << std::endl;
-                                            mStudentsMovementLoggingFile << data.str();
-                                        }
+                                    std::chrono::milliseconds timeStamp = std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now().time_since_epoch());
+                                    std::stringstream data;
+                                    std::size_t pos = event.subjectName.find("_vlftStudent");
+                                    std::string studentName = event.subjectName;
+                                    if(pos != std::string::npos){
+                                        studentName = event.subjectName.substr(0,pos);
                                     }
+                                    data << std::to_string(timeStamp.count()) << " name: " << studentName << " pos: " << student->getDerivedPosition().toString() << " ori: "  << student->getDerivedOrientation().toString() << std::endl;
+                                    mStudentsMovementLoggingFile << data.str();
                                 }
+                            }
+                        }
                         if (app.mpTransforms.find(nodeName) != app.mpTransforms.end() && app.updateinfo.playerMapPositions.find(event.subjectName) != app.updateinfo.playerMapPositions.end() && nodeName.find(mUserName + mPostUserName) == std::string::npos) {
                             auto cam = app.mainCamera->getPosition();
                             //auto camWorld = app.mainCamera->getModelMatrix();

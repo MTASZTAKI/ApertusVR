@@ -38,6 +38,7 @@ SOFTWARE.*/
 #include "apeIIndexedLineSetGeometry.h"
 #include "apeICloneGeometry.h"
 #include "apeDoubleQueue.h"
+#include "apeMatrix4.h"
 
 ape::PluginManagerImpl* gpPluginManagerImpl;
 ape::EventManagerImpl* gpEventManagerImpl;
@@ -113,14 +114,16 @@ void stringToCharPTR(std::string str, char* charPtr) {
 }
 
 bool ApeSceneManager_GetEventNumber(int* eventNumber) {
-	mEventDoubleQueue.swap();
+	if (mEventDoubleQueue.sizePush() > 0) {
+		mEventDoubleQueue.swap();
+	}
 	eventNumber[0] = mEventDoubleQueue.sizePop();
 	return true;
 }
 
-bool ApeSceneManager_GetEvents(char** subjectNames, int* eventTypes) {
+bool ApeSceneManager_GetEvents(char** subjectNames, int* eventTypes, int* eventNumber) {
 	int i = 0;
-	while (!mEventDoubleQueue.emptyPop()) {
+	while (!mEventDoubleQueue.emptyPop() && i < eventNumber[0]) {
 		auto apeEvent = mEventDoubleQueue.front();
 		stringToCharPTR(apeEvent.first, subjectNames[i]);
 		eventTypes[i] = apeEvent.second;
@@ -254,10 +257,35 @@ bool ApeSceneManager_GetNode_GetOrientation(char* name, float* orientation)
 	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
 	{
 		auto apeOrientation = node->getOrientation();
+		
 		orientation[0] = apeOrientation.w;
 		orientation[1] = apeOrientation.x;
 		orientation[2] = apeOrientation.y;
 		orientation[3] = apeOrientation.z;
+		return true;
+	}
+	return false;
+}
+
+bool ApeSceneManager_GetNode_GetRotation(char* name, float* rotation)
+{
+	if (auto node = gpSceneManagerImpl->getNode(std::string(name)).lock())
+	{
+		float m_pi = 3.14159265359;
+		auto q = node->getOrientation();
+		float sinr_cosp = 2.0f * (q.w * q.x + q.y * q.z);
+		float cosr_cosp = 1.0f - 2.0f * (q.x * q.x + q.y * q.y);
+		rotation[0] = std::atan2(sinr_cosp, cosr_cosp)*180.0f/ m_pi;
+		float sinp = 2.0f * (q.w * q.y - q.z * q.x);
+		if (std::abs(sinp) >= 1)
+			rotation[1] = std::copysign(m_pi / 2, sinp) * 180.1f / m_pi; // use 90 degrees if out of range
+		else
+			rotation[1] = std::asin(sinp) * 180.0f / m_pi;
+
+		float siny_cosp = 2.0f * (q.w * q.z + q.x * q.y);
+		float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+		rotation[2] = std::atan2(siny_cosp, cosy_cosp) * 180.0f / m_pi;
+
 		return true;
 	}
 	return false;
