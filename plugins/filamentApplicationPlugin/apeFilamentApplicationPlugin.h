@@ -255,6 +255,8 @@ struct App {
     std::map<std::string, TransformManager::Instance> mpTransforms;
     std::map<std::string, FilamentAsset*> mpLoadedAssets;
     std::map<std::string, utils::Entity> mpEntities;
+    std::map<std::string, std::vector<float>> prevPositions;
+
     
     MaterialProvider* materials;
     MaterialSource materialSource = GENERATE_SHADERS;
@@ -455,7 +457,7 @@ namespace ape
         
         std::thread mAnimationThread;
         
-        quicktype::Scene mSceneJson;
+        quicktype::SceneDescription mSceneJson;
         
         std::vector<Animation> mParsedAnimations;
         

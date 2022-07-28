@@ -59,7 +59,8 @@ SOFTWARE.*/
 #include "apeIUnitTexture.h"
 #include "apeIWater.h"
 #include "apeUserInputMacro.h"
-#include "apeVLFTSceneLoaderPluginConfig.h"
+//#include "apeVLFTSceneLoaderPluginConfig.h"
+#include "apeFilamentSceneLoaderPluginConfig.h"
 #include "apeVLFTAnimationPlayerPluginConfig.h"
 #define APE_DOUBLEQUEUE_UNIQUE
 #include "apeDoubleQueue.h"
@@ -159,6 +160,8 @@ struct updateInfo{
     bool loadingRoom = false;
     bool playAnimation = false;
     bool reloadModel = false;
+    bool saveRoom = false;
+    bool cloneModel = false;
     double StartTime = -1.0;
     double pauseTime = 0.0;
     double leaveTime = 30.0;
@@ -205,7 +208,7 @@ namespace ape
         
         ape::ISceneManager* mpSceneManager;
         
-        quicktype::Scene mScene;
+        quicktype::SceneDescription mScene;
 
         std::string mUploadScene;
 

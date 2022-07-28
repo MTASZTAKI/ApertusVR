@@ -4,6 +4,7 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/filewritestream.h"
 #include "apeFilamentApplicationPlugin.h"
+#include <filesystem>
 
 
 using namespace filament;
@@ -997,6 +998,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                     app.updateinfo.newMessage.push_back(event.subjectName.substr(0, event.subjectName.find("_vlft")) + " left the room");
                 app.playerAnimations.erase(event.subjectName);
                 app.updateinfo.playerMapPositions.erase(event.subjectName);
+                app.engine->destroy(app.mpEntities[event.subjectName]);
+                app.mpEntities.erase(event.subjectName);
                 APE_LOG_DEBUG("Node deleted: " << event.subjectName);
                
 			}
@@ -1234,8 +1237,11 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                 if(app.resourceLoader)
                     delete app.resourceLoader;
                 app.resourceLoader = nullptr;
-                app.loader->destroyAsset(app.asset[event.subjectName]);
-                app.asset.erase(event.subjectName);
+                if (app.asset.find(event.subjectName) != app.asset.end()) {
+                    app.loader->destroyAsset(app.asset[event.subjectName]);
+                    app.asset.erase(event.subjectName);
+                }
+              
 			}
 		}
         else if(event.group == ape::Event::Group::GEOMETRY_INDEXEDLINESET){
@@ -3265,12 +3271,12 @@ void ape::FilamentApplicationPlugin::Step()
         }
         if(app.updateinfo.setUpRoom){
             
-            std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeVLFTSceneLoaderPlugin.json";
+            std::string locationSceneConfig = mpCoreConfig->getConfigFolderPath() + "/apeFilamentSceneLoaderPlugin.json";
             auto mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
             mSceneJson = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
             std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
             
-            for (auto asset : mSceneJson.get_assets())
+          /*  for (auto asset : mSceneJson.get_assets())
             {
                 std::weak_ptr<std::vector<quicktype::Representation>> representations = asset.get_representations();
                 if (representations.lock())
@@ -3285,7 +3291,7 @@ void ape::FilamentApplicationPlugin::Step()
                     }
                 }
                 
-            }
+            }*/
             
             if(auto logo = mpSceneManager->getNode("VLFTlogo").lock()){
                 logo->setVisible(false);
@@ -3473,24 +3479,215 @@ void ape::FilamentApplicationPlugin::Step()
                                              ));
         }
 
-        if (app.updateinfo.reloadModel) {
-            std::string modelName = app.updateinfo.selectedModel;
-            
-            for (size_t i = 0; i < app.instances[modelName].size(); i++) {
-                if (app.instances[modelName][i]->getEntityCount() > 0)
-                {
-                    auto entity = app.instances[modelName][i]->getRoot();
-                    if (app.mpScene->hasEntity(entity))
-                        app.mpScene->removeEntities(app.instances[modelName][i]->getEntities(), app.instances[modelName][i]->getEntityCount());
+        if (app.updateinfo.cloneModel) {
+            app.updateinfo.cloneModel = false;
+
+            std::filesystem::path fullPath = app.updateinfo.selectedModel;
+            std::string fileName = fullPath.filename().u8string();
+            std::string entityName = fileName + "_gltfEntity";
+
+
+            if (auto node = mpSceneManager->getNode(fileName).lock()) {
+                if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())) {
+                        std::string cloneName = fileName + "_Clone" + std::to_string(app.instanceCount[entityName]);
+                        if (auto cloneNode = mpSceneManager->createNode(cloneName, true, mpCoreConfig->getNetworkGUID()).lock())
+                        {
+                            if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(cloneName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                            {
+                                APE_LOG_DEBUG("Geometry clone created: " << cloneName);
+                                geometryClone->setSourceGeometry(fileGeometry);
+                            }
+                            cloneNode->setParentNode(node);
+                        }
+                }
+                node->setChildrenVisibility(true);
+            }
+
+            if (auto node = mpSceneManager->getNode(fileName).lock()) {
+                std::string cloneName = fileName + "_Clone" + std::to_string(app.instanceCount[entityName]);
+                if (auto cloneNode = mpSceneManager->getNode(cloneName).lock()) {
+                    if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(cloneName).lock()))
+                    {
+                        geometryClone->setParentNode(cloneNode);
+                        node->setChildrenVisibility(true);
+                    }
+                    auto root = app.mpInstancesMap[app.updateinfo.selectedCloneNode].mpInstance->getRoot(); //app.instances[entityName][0]->getRoot();
+                    auto worldTM = app.mpTransformManager->getWorldTransform(app.mpTransformManager->getInstance(root));
+                    //app.mpTransformManager->
+                    auto pos = app.prevPositions[cloneName];
+                    cloneNode->setPosition(ape::Vector3(worldTM[3][0], worldTM[3][1]+2, worldTM[3][2]));
                 }
             }
-            app.instances.erase(modelName);
-            app.mpInstancesMap.erase(modelName);
-            app.mpLoadedAssets.erase(modelName);
-            app.loader->destroyAsset(app.asset[modelName]);
-            app.asset.erase(modelName);
-            app.updateinfo.reloadModel = false;
+
         }
+
+        if (app.updateinfo.reloadModel) {
+          
+            std::filesystem::path fullPath = app.updateinfo.selectedModel;
+            std::string fileName = fullPath.filename().u8string();
+            std::string entityName = fileName + "_gltfEntity";
+
+            if (app.mpEntities.find(fileName) != app.mpEntities.end()) {
+
+                int cloneNum = app.instanceCount[entityName];
+
+                for (size_t i = 0; i < app.instanceCount[entityName]; i++) {
+                    auto root = app.instances[entityName][i]->getRoot();
+                    auto worldTM = app.mpTransformManager->getWorldTransform(app.mpTransformManager->getInstance(root));
+
+                    std::string cloneName = fileName + "_Clone" + std::to_string(i);
+                    for (int j = 0; j < 3; j++) {
+                        app.prevPositions[cloneName].push_back(worldTM[3][i]);
+                    }
+
+                    if (app.instances[entityName][i]->getEntityCount() > 0)
+                    {
+                        auto entity = app.instances[entityName][i]->getEntities()[0];
+                        if (app.mpScene->hasEntity(entity))
+                            app.mpScene->removeEntities(app.instances[entityName][i]->getEntities(), app.instances[entityName][i]->getEntityCount());
+                    }
+
+                    app.mpInstancesMap.erase(cloneName);
+                    app.engine->destroy(app.mpEntities[cloneName]);
+                    app.mpEntities.erase(cloneName);
+                }
+
+                for (size_t i = 0; i < cloneNum; i++)
+                {
+                    std::string cloneName = fileName + "_Clone" + std::to_string(i);
+                    mpSceneManager->deleteEntity(cloneName);
+                    mpSceneManager->deleteNode(cloneName);
+                }
+                mpSceneManager->deleteEntity(entityName);
+                mpSceneManager->deleteNode(fileName);
+
+                app.instances.erase(entityName);
+                app.instanceCount.erase(entityName);
+                app.mpLoadedAssets.erase(app.updateinfo.selectedModel);
+                app.loader->destroyAsset(app.asset[entityName]);
+                app.asset.erase(entityName);
+                app.engine->destroy(app.mpEntities[fileName]);
+                app.mpEntities.erase(fileName);
+            }
+            else {
+                app.updateinfo.reloadModel = false;
+                if (auto node = mpSceneManager->createNode(fileName, true, mpCoreConfig->getNetworkGUID()).lock())
+                {
+                    if (mpSceneManager->getEntity(fileName).lock()) {
+                        ;
+                    }
+                    else if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(entityName, ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                    {
+                        APE_LOG_DEBUG("File geometry created: " << entityName);
+                        fileGeometry->setFileName(app.updateinfo.selectedModel);
+                        fileGeometry->setParentNode(node);
+                    }
+                    if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())) {
+                        for (size_t i = 0; i < app.prevPositions.size(); i++) {
+                            std::string cloneName = fileName + "_Clone" + std::to_string(i);
+                            if (auto cloneNode = mpSceneManager->createNode(cloneName, true, mpCoreConfig->getNetworkGUID()).lock())
+                            {
+                                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(cloneName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                                {
+                                    APE_LOG_DEBUG("Geometry clone created: " << cloneName);
+                                    geometryClone->setSourceGeometry(fileGeometry);
+                                }
+                                cloneNode->setParentNode(node);
+                            }
+                        }
+                    }
+                    node->setChildrenVisibility(true);
+                    node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
+
+                }
+                if (auto node = mpSceneManager->getNode(fileName).lock()) {
+                    for (size_t i = 0; i < app.prevPositions.size(); i++) {
+                        std::string cloneName = fileName + "_Clone" + std::to_string(i);
+                        if (auto cloneNode = mpSceneManager->getNode(cloneName).lock()) {
+                            if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(cloneName).lock()))
+                            {
+                                geometryClone->setParentNode(cloneNode);
+                                node->setChildrenVisibility(true);
+                            }
+                            auto pos = app.prevPositions[cloneName];
+                            cloneNode->setPosition(ape::Vector3(pos[0], pos[1], pos[2]));
+                        }
+                    }
+                }
+            }
+        }
+
+        if (app.updateinfo.saveRoom) {
+            std::ofstream outJson;
+            std::string userName = mSceneJson.get_context().get_repo_path().substr(0, mSceneJson.get_context().get_repo_path().find_first_of("\\"));
+            std::string roomName = mSceneJson.get_context().get_repo_path().substr(mSceneJson.get_context().get_repo_path().find_first_of("\\")+1);
+            std::string filePath = "..\\..\\samples\\filamentScene\\rooms\\" + mSceneJson.get_context().get_repo_path() + "\\apeFilamentSceneLoaderPlugin.json";
+            outJson.open(filePath, std::ofstream::trunc);
+            outJson << "{\n\t\"context\":{\n\t\t\"untiOfMeasureScale\": 1.0,\n\t\t\"Zup\": false,\n\t\t\"RepoPath\": \"" << userName<<"\\\\"<<roomName << "\"\n\t},";
+
+
+            //auto nodes = mpSceneManager->getNodes();
+            std::vector<std::string> sceneNodes;
+            std::vector<std::string> geometryNames;
+            for (auto loadedAsset : app.mpLoadedAssets) {
+                if (loadedAsset.first.find("MC_Char") == std::string::npos && loadedAsset.first.find("VLTF_3Dlogo") == std::string::npos) {
+                    sceneNodes.push_back(loadedAsset.first.substr(loadedAsset.first.find_last_of("\\") + 1));
+                    for (auto gmName : app.geometryNameMap[loadedAsset.first]) {
+                        if (app.asset.find(gmName) != app.asset.end()) {
+                            geometryNames.push_back(gmName);
+                        }
+                    }
+                }
+            }
+            bool first = true;
+            outJson << "\n\t\"scene\": [\n";
+            for (auto node : sceneNodes)
+            {
+                if (!first) {
+                    outJson << ",\n";
+                }
+                outJson << "\t\t\"" << node << "\"";
+                first = false;
+               
+            }
+            outJson << "\n\t],\n\t\"clones\": [\n";
+            first = true;
+            for (auto gmName: geometryNames)
+            {
+                if (!first) {
+                    outJson << ",\n";
+                }
+                outJson << "\t\t" << app.instanceCount[gmName] << "";
+                first = false;
+            }
+            outJson << "\n\t],\n\t\"positions\": [\n";
+            first = true;
+            for (auto gmName : geometryNames)
+            {
+                for (int i = 0; i < app.instanceCount[gmName]; i++) {
+                    if (!first) {
+                        outJson << ",\n";
+                    }
+                    outJson << "\t\t[";
+
+                    auto root = app.instances[gmName][i]->getRoot();
+                    auto worldTM = app.mpTransformManager->getWorldTransform(app.mpTransformManager->getInstance(root));
+                    auto xPos = worldTM[3][0];
+                    auto yPos = worldTM[3][1];
+                    auto zPos = worldTM[3][2];
+                    std::stringstream floatToString;
+                    floatToString << std::fixed << std::setprecision(5) << xPos << "," << yPos << "," << zPos;
+                    outJson << floatToString.str() << "]";
+                }
+                first = false;
+            }
+            outJson << "\n\t]\n}";
+            outJson.close();
+
+            app.updateinfo.saveRoom = false;
+        }
+        
+        
 
 
         if(app.updateinfo.logMovements){
@@ -3725,6 +3922,7 @@ void ape::FilamentApplicationPlugin::Step()
             }
             for (auto item : to_erase) {
                 app.engine->destroy(app.mpEntities[item]);
+                app.mpEntities.erase(item);
             }
             to_erase.clear();
             app.mpTransforms.clear();

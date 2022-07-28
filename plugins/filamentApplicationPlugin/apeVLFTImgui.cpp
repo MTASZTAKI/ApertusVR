@@ -7,6 +7,7 @@
 #include <curl/easy.h>
 #include "apeVLFTImgui.h"
 #include "NativeWindowHelper.h"
+#include <filesystem>
 #include "nfd.h"
 #define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
@@ -293,7 +294,7 @@ void ape::VLFTImgui::connectToRoom(){
             
             downloadConfig(urlSceneConfig, locationSceneConfig);
             downloadConfig(urlAnimationConfig, locationAnimationConfig);
-            mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig2.c_str(), "r");
+            mApeVLFTSceneLoaderPluginConfigFile = std::fopen(locationSceneConfig.c_str(), "r");
             mScene = nlohmann::json::parse(mApeVLFTSceneLoaderPluginConfigFile);
             std::fclose(mApeVLFTSceneLoaderPluginConfigFile);
             
@@ -312,6 +313,7 @@ void ape::VLFTImgui::connectToRoom(){
             mpUpdateInfo->inSinglePlayer = true;
         }
     }
+ 
     mpUpdateInfo->leftRoom = false;
     mpUpdateInfo->setUpRoom = true;
 }
@@ -417,6 +419,7 @@ bool ape::VLFTImgui::curlData(){
             }
             return true;
         }
+      
     }
     return false;
 }
@@ -682,7 +685,7 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
     ImGui::SameLine();
     ImGui::InputFloat("z", &mpUpdateInfo->lightDirection[2]);
     if (mpUpdateInfo->inRoom) {
-        static char saveRoomName[255];
+        /*static char saveRoomName[255];
         ImGui::SetCursorPosX(width / 3);
         ImGui::InputText(u8"RoomName", saveRoomName, IM_ARRAYSIZE(saveRoomName));
         ImGui::SameLine(width / 3 * 2);
@@ -787,6 +790,12 @@ bool ape::VLFTImgui::createSettingsMenu(int width, int height){
             outJson << "]";
             outJson << "}";
             outJson.close();
+        }*/
+        
+        ImGui::SetCursorPosX(width / 3);
+        if (ImGui::Button("Save room", ImVec2(width / 8, height / 15)))
+        {
+            mpUpdateInfo->saveRoom = true;
         }
     }
     ImGui::PopItemWidth();
@@ -1450,36 +1459,45 @@ void ape::VLFTImgui::openFileBrowser() {
     if ( result == NFD_OKAY )
     {
         APE_LOG_DEBUG("Success! "<<filePath);
-        std::string fileName = filePath;
-        fileName = fileName.substr(fileName.find_last_of("/")+1);
-        std::string nodeName = "gltfNode_"+fileName;
-        std::string entityName = fileName;
-        mpSceneManager->createNode(nodeName, true, mpCoreConfig->getNetworkGUID());
-        //if(auto camNode = mCamNode.lock())
-        if (auto node = mpSceneManager->getNode(nodeName).lock())
+        std::filesystem::path fullPath = filePath;
+        std::string fileName = fullPath.filename().u8string();
+        std::string entityName = fileName + "_gltfEntity";
+
+        if (auto node = mpSceneManager->createNode(fileName, true, mpCoreConfig->getNetworkGUID()).lock())
         {
-            //camNode->setPosition(ape::Vector3(0.0, 0.0, 0.0));
-            //node->setParentNode(camNode);
-            if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(entityName, ape::Entity::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
-            {
-                gltfNode->setFileName(fileName);
-                gltfNode->setParentNode(node);
+            if (mpSceneManager->getEntity(fileName).lock()) {
+                ;
             }
-            if (auto gltfNode = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())) {
-                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(nodeName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+            else if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->createEntity(entityName, ape::Entity::Type::GEOMETRY_FILE, true, mpCoreConfig->getNetworkGUID()).lock()))
+            {
+                APE_LOG_DEBUG("File geometry created: " << entityName);
+                fileGeometry->setFileName(filePath);
+                fileGeometry->setParentNode(node);
+            }
+            if (auto fileGeometry = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(entityName).lock())) {
+                std::string cloneName = fileName + "_Clone0";
+                if (auto cloneNode = mpSceneManager->createNode(cloneName, true, mpCoreConfig->getNetworkGUID()).lock())
                 {
-                    geometryClone->setSourceGeometry(gltfNode);
-                    node->setChildrenVisibility(true);
+                    if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->createEntity(cloneName, ape::Entity::Type::GEOMETRY_CLONE, true, mpCoreConfig->getNetworkGUID()).lock()))
+                    {
+                        APE_LOG_DEBUG("Geometry clone created: " << cloneName);
+                        geometryClone->setSourceGeometry(fileGeometry);
+                    }
+                    cloneNode->setParentNode(node);
                 }
             }
+            node->setChildrenVisibility(true);
             node->setPosition(ape::Vector3(0.0, 0.0, 0.0));
-        }
 
-        if (auto node = mpSceneManager->getNode(nodeName).lock()) {
-            if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(nodeName).lock()))
-            {
-                geometryClone->setParentNode(node);
-                node->setChildrenVisibility(true);
+        }
+        if (auto node = mpSceneManager->getNode(fileName).lock()) {
+            std::string cloneName = fileName + "_Clone0";
+            if (auto cloneNode = mpSceneManager->getNode(cloneName).lock()) {
+                if (auto geometryClone = std::static_pointer_cast<ape::ICloneGeometry>(mpSceneManager->getEntity(cloneName).lock()))
+                {
+                    geometryClone->setParentNode(cloneNode);
+                    node->setChildrenVisibility(true);
+                }
             }
         }
     }
@@ -1533,7 +1551,7 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
     std::string logText = "Log: ";
     bool foundSelected = false;
     bool foundRoot = false;
-    if(mpUpdateInfo->selectedItem != "")
+    /*if(mpUpdateInfo->selectedItem != "")
     {
         for(auto asset : mScene.get_assets()){
             if(asset.get_id() == mpUpdateInfo->rootOfSelected){
@@ -1568,7 +1586,7 @@ void ape::VLFTImgui::getInfoAboutObject(float width, float height){
             auto ori = node->getDerivedOrientation();
             rotationText = "Rotation: " + convertApeQuaternionToString(ori, 2);
         }
-    }
+    }*/
     ImGui::BeginChild("InfoboxSelected", ImVec2(width-25,height/3-30));
     if(mpUpdateInfo->pickedItem != ""){
         ImGui::Text("This item is in your hand");
@@ -1756,7 +1774,13 @@ void ape::VLFTImgui::animationCreatorPanelGUI() {
                     userGeometry->playAnimation(std::to_string(mpUpdateInfo->selectedModelAnimation));
                 }
             }
+            ImGui::SameLine();
         }
+        if (ImGui::Button("Clone model", ImVec2(110, 25)) && mpUpdateInfo->selectedCloneNode != "")
+        {
+            mpUpdateInfo->cloneModel = true;
+        }
+       
         ImGui::PopItemWidth();
     }
     ImGui::End();

@@ -155,6 +155,7 @@ if(WIN32)
  				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader
 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty
 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty/tinygltf
+				${CMAKE_SOURCE_DIR}/plugins/filamentSceneLoader
 				${CURL_INCLUDE_DIRS}
         )
 elseif(APPLE)
@@ -192,6 +193,7 @@ elseif(APPLE)
  				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader
 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty
 				${CMAKE_SOURCE_DIR}/plugins/virtualLearningFactory/sceneLoader/3rdParty/tinygltf
+				${CMAKE_SOURCE_DIR}/plugins/filamentSceneLoader
        	        ${CURL_INCLUDE_DIRS}
         )
 endif()
