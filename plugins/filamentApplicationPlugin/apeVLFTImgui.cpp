@@ -35,6 +35,7 @@ void ape::VLFTImgui::init(updateInfo &updateinfo)
 
 
 void ape::VLFTImgui::tooltipFloat(std::string tooltipText){
+
     if (ImGui::IsItemActive() || ImGui::IsItemHovered()) {
         ImGui::SetTooltip(tooltipText.c_str());
     }
@@ -46,6 +47,7 @@ size_t ape::VLFTImgui::WriteCallback(void *contents, size_t size, size_t nmemb, 
 }
 
 void ape::VLFTImgui::listRoomNames(bool withState){
+
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     for (int n = 0; n < mpMainMenuInfo.roomNames.size(); n++)
@@ -69,6 +71,7 @@ void ape::VLFTImgui::listRoomNames(bool withState){
 }
 
 void ape::VLFTImgui::createStopButton(int width, int height){
+
     if (ImGui::Button("Stop",ImVec2(width/8, height/15))){
         if(mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected]){
         CURL *curl;
@@ -91,6 +94,7 @@ void ape::VLFTImgui::createStopButton(int width, int height){
 }
 
 void ape::VLFTImgui::connectToRoom(){
+
     std::string roomName = mpMainMenuInfo.roomNames[mpMainMenuInfo.current_selected];
     if((mpMainMenuInfo.multiPlayer || (mpMainMenuInfo.adminMenu && mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected])) && !mpMainMenuInfo.inRoomGui){
         std::string urlAnimationConfig = "http://srv.mvv.sztaki.hu/temp/vlft/virtualLearningFactory/rooms/" + roomName + "/apeVLFTSceneLoaderPlugin.json";
@@ -118,11 +122,13 @@ void ape::VLFTImgui::connectToRoom(){
 }
 
 void ape::VLFTImgui::createJoinButton(std::string userType,int width, int height){
+
     if (ImGui::Button("Join",ImVec2(width/8, height/15))){
         connectToRoom();
     }
 }
 void ape::VLFTImgui::createStartButton(int width, int height){
+
     if (ImGui::Button("Start",ImVec2(width/8, height/15))){
         if(true || !mpMainMenuInfo.running_rooms[mpMainMenuInfo.current_selected]){
         CURL *curl;
@@ -147,6 +153,7 @@ void ape::VLFTImgui::createStartButton(int width, int height){
 
 
 bool ape::VLFTImgui::curlData(){
+
     CURL *curl;
     CURLcode res;
     std::string readBuffer;
@@ -190,6 +197,7 @@ bool ape::VLFTImgui::curlData(){
 }
 
 void ape::VLFTImgui::uploadGUI(){
+
 //    const float width = ImGui::GetIO().DisplaySize.x;
 //    const float height = ImGui::GetIO().DisplaySize.y;
 //    ImGui::SetNextWindowPos(ImVec2(width-300, 0),ImGuiCond_FirstUseEver);
@@ -199,6 +207,7 @@ void ape::VLFTImgui::uploadGUI(){
 //    ImGui::Text("Enter the name of the room for uploading");
 //    ImGui::InputTextWithHint("", "write room name here", mpMainMenuInfo.uploadRoomName, IM_ARRAYSIZE(mpMainMenuInfo.uploadRoomName));
 //    ImGui::End();
+
 }
 
 void ape::VLFTImgui::studentRoomGUI(){
@@ -374,6 +383,7 @@ void ape::VLFTImgui::update(){
     }
 }
 void ape::VLFTImgui::leftPanelGUI() {
+
     ImGui::SetNextWindowPos(ImVec2(0, 0),ImGuiCond_Once);
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
@@ -403,6 +413,7 @@ void ape::VLFTImgui::leftPanelGUI() {
 }
 
 void ape::VLFTImgui::rightPanelGUI() {
+
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
     ImGui::SetNextWindowPos(ImVec2(width-201, 0),ImGuiCond_Once);
@@ -447,6 +458,7 @@ void ape::VLFTImgui::rightPanelGUI() {
 
 
 void ape::VLFTImgui::openFileBrowser() {
+
     char* filePath;
     nfdresult_t result = NFD_OpenDialog( "gltf,glb", NULL, &filePath );
     if ( result == NFD_OKAY )

@@ -42,8 +42,10 @@ namespace ape
 
 	class Interpolator
 	{
+
 	#define MAX_QUEUE_SIZE 20
 	#define TIME_CONTROL_SPLINE_RESOLUTION 50
+
 	public:
 		Interpolator() : mQueueSize(MAX_QUEUE_SIZE), mRepeat(false)
 		{
@@ -151,6 +153,7 @@ namespace ape
 				}
 			}
 		}
+
 	private:
 		struct SectionBase
 		{

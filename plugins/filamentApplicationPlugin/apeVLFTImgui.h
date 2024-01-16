@@ -73,6 +73,7 @@ SOFTWARE.*/
 //sunlight
 
 struct VLFTMainMenuInfo{
+
     int current_selected = -1;
     std::vector<bool> running_rooms;
     int sideBarWidth = 300;
@@ -87,8 +88,10 @@ struct VLFTMainMenuInfo{
     bool namesLoaded = false;
     bool inRoomGui = false;
     float cameraSpeed = 1.0f;
+
 };
 struct updateInfo{
+
     std::string selectedItem = "";
     std::string rootOfSelected = "";
     std::vector<float> position[3];
@@ -124,7 +127,6 @@ namespace ape
         ape::ICoreConfig* mpCoreConfig;
         ape::IPluginManager* mpPluginManager;
         ape::ISceneManager* mpSceneManager;
-        
         
         static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
         

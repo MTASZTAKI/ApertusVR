@@ -93,7 +93,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 				std::string nodeName = node->getName();
 				if (event.type == ape::Event::Type::NODE_CREATE)
 				{
-                
 					auto filamentEntity = app.mpEntityManager->create();
                     app.names->addComponent(filamentEntity);
                     auto nameInstance = app.names->getInstance(filamentEntity);
@@ -109,116 +108,140 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 				{
 					switch (event.type)
 					{
-					case ape::Event::Type::NODE_PARENTNODE:
-					{
-                        std::string parentNodeName = "";
-                        if (auto parentNode = node->getParentNode().lock())
-                            parentNodeName = parentNode->getName();
-                        if (parentNodeName.find_first_of(".") != std::string::npos)
-                            {
-                                std::string cloneName = parentNodeName.substr(0,parentNodeName.find_last_of("."));
-                                std::string subNodeName = parentNodeName.substr(parentNodeName.find_last_of(".")+1);
-                                if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
-                                    int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
-                                    std::vector<utils::Entity> entities;
-                                    entities.resize(app.mpInstancesMap.size());
-                                    int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.mpInstancesMap.size());
-                                    if(cnt > 0 ){
-                                        auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
-                                        if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
-                                            auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
-                                            app.mpTransformManager->setParent(app.mpTransforms[nodeName], entityTransform);
-                                        }
-
-                                    }
-                                }
-                            }
-                        
-					}
-						break;
-					case ape::Event::Type::NODE_DETACH:
-					{
-						;
-					}
-						break;
-					case ape::Event::Type::NODE_POSITION:
-					{
-                        if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
-                            auto nodePosition = node->getPosition();
-                            auto nodeScale = node->getScale();
-                            auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
-                            float divider = 1.0;
-//                            if(abs(nodePosition.getX()) >= 10 || abs(nodePosition.getY()) >= 10 || abs(nodePosition.getX()) >= 10 )
-//                                divider = 100.0;
-                            auto filamentTransform = filament::math::mat4f(
-                                nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
-                                nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
-                                nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
-                                nodePosition.getX()/divider, nodePosition.getY()/divider, nodePosition.getZ()/divider, nodeTransforms[3][3]);
-                            app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
-                                if (nodeName.find_first_of(".") != std::string::npos)
+					    case ape::Event::Type::NODE_PARENTNODE:
+					    {
+                            std::string parentNodeName = "";
+                            if (auto parentNode = node->getParentNode().lock())
+                                parentNodeName = parentNode->getName();
+                            if (parentNodeName.find_first_of(".") != std::string::npos)
                                 {
-                                    std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
-                                    std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
+                                    std::string cloneName = parentNodeName.substr(0,parentNodeName.find_last_of("."));
+                                    std::string subNodeName = parentNodeName.substr(parentNodeName.find_last_of(".")+1);
                                     if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
                                         int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
                                         std::vector<utils::Entity> entities;
                                         entities.resize(app.mpInstancesMap.size());
                                         int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.mpInstancesMap.size());
                                         if(cnt > 0 ){
+                                            auto rinstance = app.mpRenderableManager->getInstance(entities[entitiyIndex]);
                                             if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
                                                 auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
-                                                app.mpTransformManager->setTransform(entityTransform,filamentTransform);
+                                                app.mpTransformManager->setParent(app.mpTransforms[nodeName], entityTransform);
                                             }
 
                                         }
                                     }
                                 }
+                        
+					    }
+					    break;
+
+					    case ape::Event::Type::NODE_DETACH:
+					    {
+						    ;
+					    }
+					    break;
+
+					    case ape::Event::Type::NODE_POSITION:
+					    {
+                            if(app.mpTransforms.find(nodeName) != app.mpTransforms.end()){
+                                auto nodePosition = node->getPosition();
+                                auto nodeScale = node->getScale();
+                                auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
+                                float divider = 1.0;
+    //                            if(abs(nodePosition.getX()) >= 10 || abs(nodePosition.getY()) >= 10 || abs(nodePosition.getX()) >= 10 )
+    //                                divider = 100.0;
+                                auto filamentTransform = filament::math::mat4f(
+                                    nodeTransforms[0][0], nodeTransforms[0][1], nodeTransforms[0][2], nodeTransforms[0][3],
+                                    nodeTransforms[1][0], nodeTransforms[1][1], nodeTransforms[1][2], nodeTransforms[1][3],
+                                    nodeTransforms[2][0], nodeTransforms[2][1], nodeTransforms[2][2], nodeTransforms[2][3],
+                                    nodePosition.getX()/divider, nodePosition.getY()/divider, nodePosition.getZ()/divider, nodeTransforms[3][3]);
+                                app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+                                    if (nodeName.find_first_of(".") != std::string::npos)
+                                    {
+                                        std::string cloneName = nodeName.substr(0,nodeName.find_last_of("."));
+                                        std::string subNodeName = nodeName.substr(nodeName.find_last_of(".")+1);
+                                        if(app.mpInstancesMap.find(cloneName) != app.mpInstancesMap.end()){
+                                            int entitiyIndex = app.mpInstancesMap[cloneName].first.first;
+                                            std::vector<utils::Entity> entities;
+                                            entities.resize(app.mpInstancesMap.size());
+                                            int cnt = app.asset[app.mpInstancesMap[cloneName].first.second]->getEntitiesByName(subNodeName.c_str(), entities.data(), app.mpInstancesMap.size());
+                                            if(cnt > 0 ){
+                                                if(app.mpTransformManager->hasComponent(entities[entitiyIndex])){
+                                                    auto entityTransform = app.mpTransformManager->getInstance(entities[entitiyIndex]);
+                                                    app.mpTransformManager->setTransform(entityTransform,filamentTransform);
+                                                }
+
+                                            }
+                                        }
+                                    }
                             
-                        }
+                            }
                        
-					}
-						break;
-					case ape::Event::Type::NODE_ORIENTATION:
-					{
-                            auto nodeOrientation= node->getModelMatrix().transpose();
-                            auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
-                            auto filamentTransform = filament::math::mat4f(
-                                nodeOrientation[0][0]*nodeTransforms[0][0], nodeOrientation[0][1], nodeOrientation[0][2], nodeTransforms[0][3],
-                                nodeOrientation[1][0], nodeOrientation[1][1]*nodeTransforms[1][1], nodeOrientation[1][2], nodeTransforms[1][3],
-                                nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2]*nodeTransforms[2][2], nodeTransforms[2][3],
-                                nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
-                            app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
-					}
-						break;
-					case ape::Event::Type::NODE_SCALE:
+					    }
+					    break;
+
+					    case ape::Event::Type::NODE_ORIENTATION:
+					    {
+                                auto nodeOrientation= node->getModelMatrix().transpose();
+                                auto nodeTransforms = app.mpTransformManager->getTransform(app.mpTransforms[nodeName]);
+                                auto filamentTransform = filament::math::mat4f(
+                                    nodeOrientation[0][0]*nodeTransforms[0][0], nodeOrientation[0][1], nodeOrientation[0][2], nodeTransforms[0][3],
+                                    nodeOrientation[1][0], nodeOrientation[1][1]*nodeTransforms[1][1], nodeOrientation[1][2], nodeTransforms[1][3],
+                                    nodeOrientation[2][0], nodeOrientation[2][1], nodeOrientation[2][2]*nodeTransforms[2][2], nodeTransforms[2][3],
+                                    nodeTransforms[3][0], nodeTransforms[3][1], nodeTransforms[3][2], nodeTransforms[3][3]);
+                                app.mpTransformManager->setTransform(app.mpTransforms[nodeName], filamentTransform);
+					    }
+					    break;
+
+					    case ape::Event::Type::NODE_SCALE:
                         {
                             ;
                         }
-						break;
-					case ape::Event::Type::NODE_CHILDVISIBILITY:
-						;
-						break;
-					case ape::Event::Type::NODE_VISIBILITY:
-					{
-						;
-					}
-						break;
-					case ape::Event::Type::NODE_FIXEDYAW:
-						;
-						break;
-					case ape::Event::Type::NODE_INHERITORIENTATION:
-						;
-						break;
-					case ape::Event::Type::NODE_INITIALSTATE:
-						;
-						break;
-					case ape::Event::Type::NODE_SHOWBOUNDINGBOX:
-						;
-						break;
-					case ape::Event::Type::NODE_HIDEBOUNDINGBOX:
-						;
-						break;
+					    break;
+
+					    case ape::Event::Type::NODE_CHILDVISIBILITY:
+                        {
+                            ;
+                        }
+					    break;
+
+					    case ape::Event::Type::NODE_VISIBILITY:
+					    {
+						    ;
+					    }
+					    break;
+
+					    case ape::Event::Type::NODE_FIXEDYAW:
+                        {
+                            ;
+                        }
+					    break;
+
+					    case ape::Event::Type::NODE_INHERITORIENTATION:
+                        {
+                            ;
+                        }
+					    break;
+
+					    case ape::Event::Type::NODE_INITIALSTATE:
+                        {
+                            ;
+                        }
+					    break;
+
+					    case ape::Event::Type::NODE_SHOWBOUNDINGBOX:
+                        {
+                            ;
+                        }
+					    break;
+
+					    case ape::Event::Type::NODE_HIDEBOUNDINGBOX:
+                        {
+                            ;
+                        }
+					    break;
+
 					}
 				}
 			}
@@ -229,7 +252,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 		}
 		else if (event.group == ape::Event::Group::GEOMETRY_FILE)
 		{
-            
 			if (auto geometryFile = std::static_pointer_cast<ape::IFileGeometry>(mpSceneManager->getEntity(event.subjectName).lock()))
 			{
 				std::string geometryName = geometryFile->getName();
@@ -263,11 +285,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 						std::string fileExtension = fileName.substr(fileName.find_last_of("."));
 						if (fileExtension == ".mesh")
 						{
-							;
-						}
-						if (fileExtension == ".glb")
-						{
-							;
+							;//TODO load mesh files
 						}
 						if (fileExtension == ".gltf" || fileExtension == ".glb")
 						{
@@ -346,7 +364,6 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 							}
 							else
 							{
-
 								APE_LOG_DEBUG(filePath.str() << " was parsed");
                                 
                                 gltfio::ResourceConfiguration resourceConfiguration;
@@ -422,6 +439,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         ;
                     }
                     break;
+
                     case ape::Event::Type::GEOMETRY_CLONE_PARENTNODE:
                     {
                         //app.mpScene->remove(app.asset[sourceFileName]->getWireframe());
@@ -464,11 +482,13 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         app.mpScene->addEntities(app.asset[sourceFileName]->getEntities(), app.asset[sourceFileName]->getEntityCount());
                     }
                     break;
+
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRY:
                     {
                         ;
                     }
                     break;
+
                     case ape::Event::Type::GEOMETRY_CLONE_SOURCEGEOMETRYGROUP_NAME:
                     {
                         if(app.instances.size() == 1){
@@ -492,6 +512,7 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
                         }
                     }
                     break;
+
                     case ape::Event::Type::GEOMETRY_CLONE_DELETE:
                     {
                         ;
@@ -527,12 +548,8 @@ void ape::FilamentApplicationPlugin::processEventDoubleQueue()
 					case ape::Event::Type::LIGHT_TYPE:
 						break;
 					case ape::Event::Type::LIGHT_PARENTNODE:
-					{
-						;
-					}
-					break;
+					    break;
 					case ape::Event::Type::LIGHT_DELETE:
-						;
 						break;
 					}
 				}
